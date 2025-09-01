@@ -1,0 +1,69 @@
+import random as rand
+
+from BRICKS.BASESHAPE import BaseShape
+
+
+class SLGenerator: # 关卡生成器
+    def __init__(th, own): # 初始化
+        th.own = own
+
+        th.row = 0
+        th.cnt = 0
+
+        th.lv_ld = False # 判断是否加载了关卡
+
+    def ld_stg(th):
+        # 重置为第0行
+        th.row = 0
+        # 读取并加载关卡文件
+        with open(f'ASTS/STAGE{th.own.stg}-{th.own.lv}.stg') as file:
+            for line in file.readlines(): # 遍历文件行数
+                col = len(line)
+
+                for c in range(col - 1): # 遍历字符
+                    if line[c] != 'o': # 如果字符不是o
+                        brc_type = int(line[c]) # 存储砖块类型
+
+                        bd_id = [2, 4, 6] # 砖块厚度
+                        clr_dict = { # 砖块颜色字典
+                            1: (255, 128, 0), # 第一关（橙色
+                            6: (255, 255, 255) # 通用（白色
+                        }
+                        
+                        if rand.random() < 0.1 * th.own.stg + (th.own.lv - 1) / 100: # 生成厚砖块概率
+                            bd = rand.choice(bd_id)
+                        else: # 否则厚度为最薄
+                            bd = 2
+                        
+                        if rand.random() < 0.08: # 生成白色砖块
+                            clr = clr_dict[6]
+                        else: # 否则按照关卡数生成对应砖块
+                            clr = clr_dict.get(th.own.stg)
+                        # 创建砖块实例
+                        brc = BaseShape(15, 15, bd,
+                                        clr, brc_type)
+                        # 生命值及其排放
+                        brc.hp = 4 * brc.bd / 2
+                        brc.rect.x = 120 + c * 15
+                        brc.rect.y = 15 + th.row * 15
+                        # 加入砖块到砖块精灵组
+                        th.own.brc_grp.add(brc)
+                # 行数+1
+                th.row += 1
+
+        th.lv_ld = True # 加载完毕
+        th.own.no_hurt_cnt += 1 # 先连续无伤+1
+
+    def lgc(th): # 逻辑
+        stg_mgr = th.own.stg_mgr
+
+        if not th.lv_ld: # 计数生成关卡
+            th.cnt += 1
+
+            if th.cnt >= 90: # 计数到90后生成关卡
+                th.ld_stg()
+        else:
+            th.cnt = 0
+
+        if len(th.own.brc_grp) == 0 and th.lv_ld: # 没有砖块后进入结算画面
+            stg_mgr.summ = True
