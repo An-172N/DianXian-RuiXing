@@ -36,10 +36,10 @@ class Thunder:
         th.eff_range = eff_range
         # 数值
         th.players = 4
-        th.s_pt = 48
+        th.s_pt = 0
         th.ttl_s_pt = 0
         th.stg = 1
-        th.lv = 1
+        th.lv = 5
         th.sc_cnt = 0
         th.no_hurt_cnt = 0
         th.cooldown_ctr = 0

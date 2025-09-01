@@ -20,13 +20,17 @@ class SLGenerator: # 关卡生成器
             for line in file.readlines(): # 遍历文件行数
                 col = len(line)
 
-                for c in range(col - 1): # 遍历字符
-                    if line[c] != 'o': # 如果字符不是o
-                        brc_type = int(line[c]) # 存储砖块类型
+                for i in range(col - 1): # 遍历字符
+                    if line[i] != 'o': # 如果字符不是o
+                        brc_type = int(line[i]) # 存储砖块类型
 
                         bd_id = [2, 4, 6] # 砖块厚度
                         clr_dict = { # 砖块颜色字典
                             1: (255, 128, 0), # 第一关（橙色
+                            2: (255, 255, 0), # 第二关（黄色
+                            3: (0, 255, 0), # 第三关（绿色
+                            4: (128, 0, 128), # 第四关（紫色
+                            5: (255, 128, 0), # Extra关（橙色
                             6: (255, 255, 255) # 通用（白色
                         }
                         
@@ -44,7 +48,7 @@ class SLGenerator: # 关卡生成器
                                         clr, brc_type)
                         # 生命值及其排放
                         brc.hp = 4 * brc.bd / 2
-                        brc.rect.x = 120 + c * 15
+                        brc.rect.x = 120 + i * 15
                         brc.rect.y = 15 + th.row * 15
                         # 加入砖块到砖块精灵组
                         th.own.brc_grp.add(brc)

@@ -10,7 +10,9 @@ class CollideManager:
 
                     th.own.get_sc.blt_coll()
                     th.own.rm_mgr.brc_death(brc)
-                    blt.kill()
+
+                    if blt.type in (0, 1):
+                        blt.kill()
 
     def chk_item_coll(th):
         pln_mgr = th.own.pln_mgr
