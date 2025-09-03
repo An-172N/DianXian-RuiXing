@@ -194,6 +194,8 @@ while True:
                 elif evt.type == pyg.KEYDOWN:
                     if evt.key == pyg.K_z:
                         run = False
+                    elif evt.key == pyg.K_c:
+                        pass
                     elif evt.key == pyg.K_q:
                         sys.exit()
 
