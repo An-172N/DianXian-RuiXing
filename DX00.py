@@ -36,7 +36,7 @@ class Thunder:
         th.eff_range = eff_range
         # 数值
         th.players = 4
-        th.s_pt = 0
+        th.s_pt = 64
         th.ttl_s_pt = 0
         th.stg = 1
         th.lv = 5
@@ -101,7 +101,8 @@ while True:
                 game.item_mgr.combo_ctr()
                 
                 if (not game.stg_mgr.summ
-                    and game.sl_gen.lv_ld):
+                    and game.sl_gen.lv_ld
+                    and not game.stg_mgr.talk):
                     game.pln_mgr.upd_pos()
                     game.pln_mgr.upd_size()
                     game.pln_mgr.respwn()
@@ -145,7 +146,7 @@ while True:
                         game.pln_mgr.set_pln_spd(0)
                 elif evt.type == pyg.KEYDOWN: # 按下操作
                     if not game.stg_mgr.summ: # 非结算界面操作
-                        if not game.stg_mgr.pau: # 游戏主要操作
+                        if not game.stg_mgr.pau and not game.stg_mgr.talk: # 游戏主要操作
                             if evt.key == pyg.K_RIGHT:
                                 game.pln_mgr.mv_right = True
                             if evt.key == pyg.K_LEFT:
@@ -155,7 +156,12 @@ while True:
                             if evt.key == pyg.K_x:
                                 game.bomb_mgr.single_bomb()
                             if evt.key == pyg.K_ESCAPE:
-                                game.stg_mgr.pau_evt()   
+                                game.stg_mgr.pau_evt()
+                        elif game.stg_mgr.talk and not game.stg_mgr.pau:
+                            if evt.key == pyg.K_z:
+                                game.stg_mgr.text += 1
+                            if evt.key == pyg.K_x:
+                                game.stg_mgr.talk = False
                         else: # 主暂停界面操作
                             if not game.stg_mgr.ru_sure: # 暂停界面操作
                                 if evt.key == pyg.K_ESCAPE:

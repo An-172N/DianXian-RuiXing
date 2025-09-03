@@ -8,18 +8,32 @@ class StageManager:
         th.pau = False
         th.ru_sure = False
         th.summ = False
+        th.talk = False
+
+        th.text = 0
 
     def get_stg(th): # 关卡字典
         bg_dict = {
-            1: Stage1(th.own.scr)
+            1: Stage1(th, th.own.scr)
         }
 
         return bg_dict.get(th.own.stg)
     
+    def rt_text(th):
+        return th.get_stg().text().get(th.text)
+    
     def next_lv(th): # 下一关
-        th.own.lv += 1
+        if th.own.lv >= 6:
+            th.own.stg += 1
+            th.own.lv = 1
+        else:
+            th.own.lv += 1
+
         th.own.sl_gen.lv_ld = False
         th.summ = False
+
+        if th.own.lv == 6:
+            th.talk = True
         # 执行完后重置
         th.rst_game()
 
