@@ -9,12 +9,13 @@ class StageManager:
         th.ru_sure = False
         th.summ = False
         th.talk = False
+        th.is_spwn = False
 
         th.text = 0
 
     def get_stg(th): # 关卡字典
         bg_dict = {
-            1: Stage1(th, th.own.scr)
+            1: Stage1(th)
         }
 
         return bg_dict.get(th.own.stg)
@@ -67,3 +68,17 @@ class StageManager:
 
     def ru_sure_evt(th): # 确定界面反转
         th.ru_sure = not th.ru_sure
+
+    def spwn_shhm(th):
+        get_stg = th.get_stg()
+
+        if not th.is_spwn:
+            get_stg.char.rect.centerx = th.own.win.width // 2 + 120
+            get_stg.char.rect.y = 60
+
+            th.own.brc_grp.add(get_stg.char)
+            
+            th.is_spwn = True
+    
+    def move_shhm(th):
+        pass

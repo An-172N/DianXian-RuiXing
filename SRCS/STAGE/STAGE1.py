@@ -1,22 +1,25 @@
 import pygame as pyg
 
+from BRICKS.ONO import Ono
+
 
 class Stage1:
-    def __init__(th, own, scr):
-        th.own = own
-        th.scr = scr
+    def __init__(th, own):
+        th.stg_mgr = own
+
+        th.char = Ono()
 
         th.image = pyg.image.load('ASTS/IMG_STAGE1BG.png').convert_alpha()
         th.image.set_alpha(175)
 
     def blit(th):
-        th.scr.blit(th.image, (120, 15))
+        th.stg_mgr.own.scr.blit(th.image, (120, 15))
 
     def text(th):
         text_dict = {
-            0: f"我是璃",
-            1: f"我是罗",
-            2: f"我是诺"
+            0: f"测试1",
+            1: f"测试2",
+            2: f"测试3"
         }
 
         return text_dict

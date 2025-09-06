@@ -11,13 +11,13 @@ class BarrageManager:
     def __init__(th, own):
         th.own = own
 
-    def spwn_brg(th, sprite):
+    def spwn_brg(th, spr):
         if rand.random() <= 0.16:
             if rand.choice([0, 1, 2, 3]) == 0:
                 brg = BaseShape(9.5, 9.5, 0,
-                                sprite.clr, sprite.shape)
+                                spr.clr, spr.shape)
 
-                brg.rect.center = sprite.rect.center
+                brg.rect.center = spr.rect.center
 
                 brg.curr_ang = angle(th.own.pln_mgr.char, brg)
                 brg.spd = 2
@@ -26,9 +26,9 @@ class BarrageManager:
             else:
                 for i in range(-30, 31, 30):
                     brg = BaseShape(9.5, 9.5, 0,
-                                    sprite.clr, sprite.shape)
+                                    spr.clr, spr.shape)
 
-                    brg.rect.center = sprite.rect.center
+                    brg.rect.center = spr.rect.center
 
                     brg.curr_ang = angle(th.own.pln_mgr.char, brg) + i
                     brg.spd = 2

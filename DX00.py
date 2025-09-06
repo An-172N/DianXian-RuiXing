@@ -132,6 +132,8 @@ while True:
 
             game.sl_gen.lgc()
 
+            print(len(game.brc_grp))
+
             game.game_gui.show_fps()
                 
             for evt in pyg.event.get():

@@ -67,7 +67,10 @@ class SLGenerator: # 关卡生成器
             if th.cnt >= 90: # 计数到90后生成关卡
                 th.ld_stg()
         else:
+            if len(th.own.brc_grp) == 0:
+                stg_mgr.summ = True # 没有砖块后进入结算画面
+
             th.cnt = 0
 
-        if len(th.own.brc_grp) == 0 and th.lv_ld: # 没有砖块后进入结算画面
-            stg_mgr.summ = True
+        if th.own.lv == 6:
+            stg_mgr.spwn_shhm()
