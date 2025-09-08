@@ -2,6 +2,8 @@ import pygame as pyg
 
 from BRICKS.ONO import Ono
 
+from TOOLS.MOVE import mv
+
 
 class Stage1:
     def __init__(th, own):
@@ -23,3 +25,6 @@ class Stage1:
         }
 
         return text_dict
+    
+    def move(th, char):
+        mv(char, 4)

@@ -36,7 +36,7 @@ class Thunder:
         th.eff_range = eff_range
         # 数值
         th.players = 4
-        th.s_pt = 64
+        th.s_pt = 96
         th.ttl_s_pt = 0
         th.stg = 1
         th.lv = 5
@@ -106,6 +106,7 @@ while True:
                     game.pln_mgr.upd_pos()
                     game.pln_mgr.upd_size()
                     game.pln_mgr.respwn()
+                    game.stg_mgr.mv_shhm()
 
                     game.invinc.lgc()
 
@@ -131,8 +132,6 @@ while True:
                     game.coll_mgr.chk_item_coll()
 
             game.sl_gen.lgc()
-
-            print(len(game.brc_grp))
 
             game.game_gui.show_fps()
                 

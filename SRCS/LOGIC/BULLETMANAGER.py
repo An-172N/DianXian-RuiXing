@@ -9,14 +9,11 @@ class BulletManager:
         th.own = own
 
     def spwn_blts(th):
-        pln_mgr = th.own.pln_mgr
-        ptcl_mgr = th.own.ptcl_mgr
-
-        if not pln_mgr.is_wait_respwn:
+        if not th.own.pln_mgr.is_wait_respwn:
             for item in th.own.item_grp:
-                if pln_mgr.char.rect.colliderect(item.rect):
-                    ptcl_mgr.spwn_ptcl(pln_mgr.char,
-                                       (45, 194, 229))
+                if th.own.pln_mgr.char.rect.colliderect(item.rect):
+                    th.own.ptcl_mgr.spwn_ptcl(th.own.pln_mgr.char,
+                                              (45, 194, 229))
 
                     th.k_blt(0, 0,
                                0)

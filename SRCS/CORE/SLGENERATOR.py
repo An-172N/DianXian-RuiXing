@@ -59,8 +59,6 @@ class SLGenerator: # 关卡生成器
         th.own.no_hurt_cnt += 1 # 先连续无伤+1
 
     def lgc(th): # 逻辑
-        stg_mgr = th.own.stg_mgr
-
         if not th.lv_ld: # 计数生成关卡
             th.cnt += 1
 
@@ -68,9 +66,9 @@ class SLGenerator: # 关卡生成器
                 th.ld_stg()
         else:
             if len(th.own.brc_grp) == 0:
-                stg_mgr.summ = True # 没有砖块后进入结算画面
+                th.own.stg_mgr.summ = True # 没有砖块后进入结算画面
 
             th.cnt = 0
 
         if th.own.lv == 6:
-            stg_mgr.spwn_shhm()
+            th.own.stg_mgr.spwn_shhm()

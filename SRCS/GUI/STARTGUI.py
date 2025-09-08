@@ -28,7 +28,7 @@ class StartGUI:
     def blit(th):
         th.scr.fill((0, 0, 0))
         
-        th.scr.blit(th.title, (0, 0))
+        # th.scr.blit(th.title, (0, 0))
         th.scr.blit(th.rect(), (380, 160))
 
         th.scr.blit(th.start_text(), (405, 200))

@@ -39,13 +39,9 @@ class StageManager:
         th.rst_game()
 
     def rst_game(th): # 重置游戏
-        pln_mgr = th.own.pln_mgr
-        bomb_mgr = th.own.bomb_mgr
-        item_mgr = th.own.item_mgr
-        get_sc = th.own.get_sc
         # 加结算分
-        th.own.sc_cnt += get_sc.get_pow()
-        th.own.sc_cnt += get_sc.no_hurt()
+        th.own.sc_cnt += th.own.get_sc.get_pow()
+        th.own.sc_cnt += th.own.get_sc.no_hurt()
         # 清除精灵
         th.own.item_grp.empty()
         th.own.pln_grp.empty()
@@ -53,13 +49,13 @@ class StageManager:
         th.own.ptcl_grp.empty()
         th.own.brg_grp.empty()
         # 重置飞机和bomb    
-        pln_mgr.rst_pln()
-        bomb_mgr.rect_rainer.rst_bomb()
+        th.own.pln_mgr.rst_pln()
+        th.own.bomb_mgr.rect_rainer.rst_bomb()
         # 重置参数
-        pln_mgr.is_use_bomb = False
+        th.own.pln_mgr.is_use_bomb = False
         th.own.cooldown_ctr = 0
-        item_mgr.spwn_ctr = 0
-        item_mgr.bw_ctr = 0
+        th.own.item_mgr.spwn_ctr = 0
+        th.own.item_mgr.bw_ctr = 0
         th.own.ttl_s_pt = 0
         th.own.coll_mgr.ctr = 0
 
@@ -80,5 +76,8 @@ class StageManager:
             
             th.is_spwn = True
     
-    def move_shhm(th):
-        pass
+    def mv_shhm(th):
+        if th.own.lv == 6:
+            for char in th.own.brc_grp:
+                if char.type == 2:
+                    th.get_stg().move(char)

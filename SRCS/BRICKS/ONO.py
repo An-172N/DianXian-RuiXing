@@ -7,6 +7,8 @@ class Ono(pyg.sprite.Sprite):
         th.hp = 48
         th.clr = (255, 128, 0)
         th.shape = 2
+        th.curr_ang = 0
+        th.type = 2
 
         th.orig_image = pyg.image.load('ASTS\IMG_ONO.png').convert_alpha()
 
