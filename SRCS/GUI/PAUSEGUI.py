@@ -37,7 +37,7 @@ class PauseGUI:
         title = th.own.fnt.render(f"这一关是————",
                                   False,
                                   (255, 255, 255))
-        text1 = th.own.fnt.render(f"Stage {th.own.stg} - {th.own.lv}!!",
+        text1 = th.own.fnt.render(f"Stage {th.own.stg_mgr.stg} - {th.own.stg_mgr.lv}!!",
                                   False,
                                   (255, 255, 255))
         text2 = th.own.fnt.render(f"START!!!",
@@ -60,8 +60,6 @@ class PauseGUI:
         th.own.scr.blit(text, (205, 268))
 
     def blit(th): # 绘制逻辑
-        get_sc = th.own.get_sc
-
         if not th.own.sl_gen.lv_ld:
             th.wait_draw()
         elif th.own.stg_mgr.pau:
@@ -70,12 +68,12 @@ class PauseGUI:
             if th.own.stg_mgr.ru_sure:
                 th.pau_draw("不玩了吗？", "Y 不玩了", "N aa，按错了")
         elif th.own.stg_mgr.summ:
-            th.pau_draw(f"Stage {th.own.stg} - {th.own.lv} Cleaer! （Z 下一关）",
-                        f"得点 {th.own.ttl_s_pt} * 128 = {get_sc.get_pow()}",
-                        f"无伤 {th.own.no_hurt_cnt} * 2048 = {get_sc.no_hurt()}")
+            th.pau_draw(f"Stage {th.own.stg_mgr.stg} - {th.own.stg_mgr.lv} Cleaer! （Z 下一关）",
+                        f"得点 {th.own.pln_mgr.ttl_s_pt} * 256 = {th.own.sc_mgr.get_pow()}",
+                        f"无伤 {th.own.pln_mgr.no_hurt_cnt} * 4096 = {th.own.sc_mgr.no_hurt()}")
         elif th.own.stg_mgr.talk:
             th.talk_draw()
 
-            if th.own.stg_mgr.text >= len(th.own.stg_mgr.get_stg().text()):
+            if th.own.stg_mgr.talk_text >= len(th.own.stg_mgr.get_stg().text()):
                 th.own.stg_mgr.talk = False
-                th.own.stg_mgr.text = 0
+                th.own.stg_mgr.talk_text = 0

@@ -4,11 +4,11 @@ import pygame as pyg
 class Ono(pyg.sprite.Sprite):
     def __init__(th):
         super().__init__()
-        th.hp = 48
+        th.hp = 128
         th.clr = (255, 128, 0)
         th.shape = 2
         th.curr_ang = 0
-        th.type = 2
+        th.type = "fri"
 
         th.orig_image = pyg.image.load('ASTS\IMG_ONO.png').convert_alpha()
 

@@ -9,6 +9,11 @@ class PlaneManager:
     def __init__(th, own):
         th.own = own
 
+        th.players = 5
+        th.s_pt = 96
+        th.ttl_s_pt = 0
+        th.no_hurt_cnt = 0
+
         th.mv_right = False
         th.mv_left = False
         th.is_visitable = True
@@ -64,25 +69,25 @@ class PlaneManager:
                                                                12, 26))
                 
     def life_lgc(th):
-        if th.own.s_pt < 16:
+        if th.s_pt < 16:
             th.is_wait_respwn = True
-            th.own.players -= 1
-            th.own.no_hurt_cnt = 0
+            th.players -= 1
+            th.no_hurt_cnt = 0
 
             th.own.ptcl_mgr.spwn_ptcl(th.char,
                                       (255, 255, 255), (45, 194, 229))
 
             th.own.pln_grp.empty()
 
-            if th.own.players == 0:
+            if th.players == 0:
                 sys.exit()
         else:
-            th.own.s_pt -= 16
-            th.own.no_hurt_cnt = 0
+            th.s_pt -= 16
+            th.no_hurt_cnt = 0
 
     def respwn(th):
-        if th.is_wait_respwn and th.own.cooldown_ctr >= 30:
+        if th.is_wait_respwn and th.own.invinc.cd_ctr >= 30:
             th.rst_pln()
 
             th.is_wait_respwn = False
-            th.own.cooldown_ctr = 0
+            th.own.invinc.cd_ctr = 0

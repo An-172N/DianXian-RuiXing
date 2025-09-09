@@ -65,17 +65,17 @@ class GameGUI:
         th.own.pau_gui.blit()
         th.own.scr.blit(th.own.bg, (0, 0))
         # 绘制文字
-        th.own.scr.blit(th.show_situ(th.own.sc_cnt,
+        th.own.scr.blit(th.show_situ(th.own.sc_mgr.sc_cnt,
                                      "分　",
                                      '9d',
                                      ''),
                         (8, 25))
-        th.own.scr.blit(th.show_situ(th.own.s_pt,
+        th.own.scr.blit(th.show_situ(th.own.pln_mgr.s_pt,
                                      "形　",
                                      '02d',
-                                     f' , {th.own.ttl_s_pt:02d}'),
+                                     f' , {th.own.pln_mgr.ttl_s_pt:02d}'),
                         (8, 270))
-        th.own.scr.blit(th.show_situ(th.own.players,
+        th.own.scr.blit(th.show_situ(th.own.pln_mgr.players,
                                      "残　",
                                      '02d',
                                      ''),

@@ -8,34 +8,42 @@ class BulletManager:
     def __init__(th, own):
         th.own = own
 
+        th.fusillade_ctr = 0
+
+        th.is_cnt_fusillade = False
+
     def spwn_blts(th):
-        if not th.own.pln_mgr.is_wait_respwn:
-            for item in th.own.item_grp:
-                if th.own.pln_mgr.char.rect.colliderect(item.rect):
-                    th.own.ptcl_mgr.spwn_ptcl(th.own.pln_mgr.char,
-                                              (45, 194, 229))
+        if (not th.own.pln_mgr.is_wait_respwn
+            and not th.is_cnt_fusillade):
+            th.own.ptcl_mgr.spwn_ptcl(th.own.pln_mgr.char,
+                                      (45, 194, 229))
 
-                    th.k_blt(0, 0,
-                               0)
-                    th.k_blt(10, 12,
-                               4)
+            th.k_blt(0, 0,
+                     0)
+            th.k_blt(10, 12,
+                     4)
 
-                    if th.own.s_pt >= 24:
-                        th.k_blt(10, 12,
-                                   -4)
-                    if th.own.s_pt >= 48:
-                        th.k_blt(20, 24,
-                                   8)
-                        th.k_blt(20, 24,
-                                   -8)
+            if th.own.pln_mgr.s_pt >= 32:
+                th.k_blt(10, 12,
+                         -4)
+            if th.own.pln_mgr.s_pt >= 64:
+                th.k_blt(20, 24,
+                         8)
+                th.k_blt(20, 24,
+                         -8)
+                        
+    def fusillade(th):
+        if (th.fusillade_ctr > 0
+            and not th.is_cnt_fusillade):
+            th.spwn_blts()
+
+            th.fusillade_ctr -= 1
 
     def k_blt(th, dx, dy, ang):
-        pln_mgr = th.own.pln_mgr
-
         blt_type = [
-            {'pos': (pln_mgr.char.rect.left - dx, pln_mgr.char.rect.top + dy),
+            {'pos': (th.own.pln_mgr.char.rect.left - dx, th.own.pln_mgr.char.rect.top + dy),
              'ang': ang},
-            {'pos': (pln_mgr.char.rect.right + dx, pln_mgr.char.rect.top + dy),
+            {'pos': (th.own.pln_mgr.char.rect.right + dx, th.own.pln_mgr.char.rect.top + dy),
              'ang': -ang}
         ]
 
@@ -44,7 +52,7 @@ class BulletManager:
             ang = blt_info['ang']
 
             blt = BaseShape(2, 15, 0,
-                            (45, 194, 229), 1, 0)
+                            (45, 194, 229), 1, "blt")
 
             blt.rect.center = pos
             blt.curr_ang = ang
@@ -55,6 +63,6 @@ class BulletManager:
 
     def upd_blts(th):
         for blt in th.own.blt_grp:
-            if blt.type == 0:
+            if blt.type in ("blt", "blt-cros"):
                 rot(blt)
                 mv(blt, blt.spd)

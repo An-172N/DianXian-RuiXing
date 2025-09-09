@@ -16,7 +16,7 @@ class SLGenerator: # 关卡生成器
         # 重置为第0行
         th.row = 0
         # 读取并加载关卡文件
-        with open(f'ASTS/STAGE{th.own.stg}-{th.own.lv}.stg') as file:
+        with open(f'ASTS/STAGE{th.own.stg_mgr.stg}-{th.own.stg_mgr.lv}.stg') as file:
             for line in file.readlines(): # 遍历文件行数
                 col = len(line)
 
@@ -34,7 +34,7 @@ class SLGenerator: # 关卡生成器
                             6: (255, 255, 255) # 通用（白色
                         }
                         
-                        if rand.random() < 0.1 * th.own.stg + (th.own.lv - 1) / 100: # 生成厚砖块概率
+                        if rand.random() < 0.1 * th.own.stg_mgr.stg + (th.own.stg_mgr.lv - 1) / 100: # 生成厚砖块概率
                             bd = rand.choice(bd_id)
                         else: # 否则厚度为最薄
                             bd = 2
@@ -42,7 +42,7 @@ class SLGenerator: # 关卡生成器
                         if rand.random() < 0.08: # 生成白色砖块
                             clr = clr_dict[6]
                         else: # 否则按照关卡数生成对应砖块
-                            clr = clr_dict.get(th.own.stg)
+                            clr = clr_dict.get(th.own.stg_mgr.stg)
                         # 创建砖块实例
                         brc = BaseShape(15, 15, bd,
                                         clr, brc_type)
@@ -56,7 +56,7 @@ class SLGenerator: # 关卡生成器
                 th.row += 1
 
         th.lv_ld = True # 加载完毕
-        th.own.no_hurt_cnt += 1 # 先连续无伤+1
+        th.own.pln_mgr.no_hurt_cnt += 1 # 先连续无伤+1
 
     def lgc(th): # 逻辑
         if not th.lv_ld: # 计数生成关卡
@@ -70,5 +70,5 @@ class SLGenerator: # 关卡生成器
 
             th.cnt = 0
 
-        if th.own.lv == 6:
+        if th.own.stg_mgr.lv == 6:
             th.own.stg_mgr.spwn_shhm()

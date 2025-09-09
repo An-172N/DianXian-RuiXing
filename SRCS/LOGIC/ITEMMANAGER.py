@@ -31,12 +31,12 @@ class ItemManager:
 
         if th.bw_ctr <= 0:
             if 0 < th.combo <= 15:
-                th.own.get_sc.pts(th.combo)
+                th.own.sc_mgr.pts()
 
             th.combo = 0
             th.bw_ctr = 90
         elif th.combo >= 16:
-            th.own.get_sc.pts(th.combo)
+            th.own.sc_mgr.pts()
             th.combo = 0
 
     def item_upd(th):

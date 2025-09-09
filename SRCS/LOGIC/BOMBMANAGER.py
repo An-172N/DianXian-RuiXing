@@ -10,9 +10,9 @@ class BombManager:
     def single_bomb(th):
         if all([not th.own.pln_mgr.is_use_bomb,
                 not th.own.pln_mgr.is_wait_respwn,
-                th.own.s_pt >= 16]):
-            th.own.s_pt -= 16
-            th.own.cooldown_ctr = 0
+                th.own.pln_mgr.s_pt >= 16]):
+            th.own.pln_mgr.s_pt -= 16
+            th.own.invinc.cd_ctr = 0
             th.own.pln_mgr.is_use_bomb = True
 
     def use_bomb(th):

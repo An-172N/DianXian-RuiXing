@@ -12,7 +12,7 @@ class BarrageManager:
         th.own = own
 
     def spwn_brg(th, spr):
-        if rand.random() <= 0.16:
+        if rand.random() <= 0.24:
             if rand.choice([0, 1, 2, 3]) == 0:
                 brg = BaseShape(9.5, 9.5, 0,
                                 spr.clr, spr.shape)

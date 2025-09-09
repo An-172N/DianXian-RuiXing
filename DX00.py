@@ -8,7 +8,7 @@ sys.path.append(os.path.join(curr_dir, 'SRCS'))
 # 导入核心
 from CORE.SLGENERATOR import SLGenerator
 # 导入逻辑模块
-from LOGIC.GETSCORE import GetScore
+from LOGIC.SCOREMANAGER import ScoreManager
 from LOGIC.PLANEMANAGER import PlaneManager
 from LOGIC.BULLETMANAGER import BulletManager
 from LOGIC.COLLIDEMANAGER import CollideManager
@@ -34,17 +34,6 @@ class Thunder:
         th.clk = clk
         th.bg = game_bg
         th.eff_range = eff_range
-        # 数值
-        th.players = 4
-        th.s_pt = 96
-        th.ttl_s_pt = 0
-        th.stg = 1
-        th.lv = 5
-        th.sc_cnt = 0
-        th.no_hurt_cnt = 0
-        th.cooldown_ctr = 0
-        # 运行状态
-        th.run = False
         # 精灵组
         th.pln_grp = pyg.sprite.Group()
         th.blt_grp = pyg.sprite.Group()
@@ -55,7 +44,7 @@ class Thunder:
         # 核心类
         th.sl_gen = SLGenerator(th)
         # 逻辑类
-        th.get_sc = GetScore(th)
+        th.sc_mgr = ScoreManager(th)
         th.pln_mgr = PlaneManager(th)
         th.blt_mgr = BulletManager(th)
         th.coll_mgr = CollideManager(th)
@@ -113,7 +102,7 @@ while True:
                     game.item_mgr.spwn_regular()
                     game.item_mgr.item_upd()
 
-                    game.blt_mgr.spwn_blts()
+                    game.blt_mgr.fusillade()
                     game.blt_mgr.upd_blts()
 
                     game.ptcl_mgr.upd()
@@ -139,6 +128,8 @@ while True:
                 if evt.type == pyg.QUIT: # 保证可以退出
                     sys.exit()
                 elif evt.type == pyg.KEYUP: # 按完后操作
+                    if evt.key == pyg.K_z:
+                        game.blt_mgr.is_cnt_fusillade = False
                     if evt.key == pyg.K_RIGHT:
                         game.pln_mgr.mv_right = False
                     if evt.key == pyg.K_LEFT:
@@ -154,13 +145,15 @@ while True:
                                 game.pln_mgr.mv_left = True
                             if evt.key == pyg.K_LSHIFT:
                                 game.pln_mgr.set_pln_spd(1)
+                            if evt.key == pyg.K_z:
+                                game.blt_mgr.is_cnt_fusillade = True
                             if evt.key == pyg.K_x:
                                 game.bomb_mgr.single_bomb()
                             if evt.key == pyg.K_ESCAPE:
                                 game.stg_mgr.pau_evt()
                         elif game.stg_mgr.talk and not game.stg_mgr.pau:
                             if evt.key == pyg.K_z:
-                                game.stg_mgr.text += 1
+                                game.stg_mgr.talk_text += 1
                             if evt.key == pyg.K_x:
                                 game.stg_mgr.talk = False
                         else: # 主暂停界面操作

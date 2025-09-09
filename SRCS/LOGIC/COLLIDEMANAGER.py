@@ -8,25 +8,30 @@ class CollideManager:
                 if blt.rect.colliderect(brc.rect):
                     brc.hp -= blt.damage
 
-                    th.own.get_sc.blt_coll()
+                    th.own.sc_mgr.blt_coll()
                     th.own.rm_mgr.brc_death(brc)
 
-                    if blt.type in (0, 1):
+                    if blt.type in ("blt", "bomb"):
                         blt.kill()
 
     def chk_item_coll(th):
         for item in th.own.item_grp:
             if th.own.pln_mgr.char.rect.colliderect(item.rect):
+                th.own.blt_mgr.spwn_blts()
+
                 th.own.item_mgr.combo += 1
                 th.own.item_mgr.bw_ctr = 90
 
                 if item.type == 1:
-                    if th.own.s_pt <= 96:
-                        th.own.s_pt += 1
+                    if th.own.pln_mgr.s_pt < 96:
+                        th.own.pln_mgr.s_pt += 1
                         
-                    th.own.ttl_s_pt += 1
+                    th.own.pln_mgr.ttl_s_pt += 1
                 else:
                     pass
+
+                if th.own.blt_mgr.is_cnt_fusillade:
+                    th.own.blt_mgr.fusillade_ctr += 1
 
                 item.kill()
 
@@ -37,5 +42,5 @@ class CollideManager:
                          th.own.pln_mgr.is_use_bomb or
                          th.own.pln_mgr.is_wait_respwn)):
                 th.own.pln_mgr.coll = True
-                th.own.cooldown_ctr = 0
+                th.own.invinc.cd_ctr = 0
                 th.own.pln_mgr.life_lgc()
