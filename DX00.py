@@ -4,61 +4,11 @@ import os
 # 导入目录
 sys.dont_write_bytecode = True
 curr_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(curr_dir, 'SRCS'))
-# 导入核心
-from CORE.SLGENERATOR import SLGenerator
-# 导入逻辑模块
-from LOGIC.SCOREMANAGER import ScoreManager
-from LOGIC.PLANEMANAGER import PlaneManager
-from LOGIC.BULLETMANAGER import BulletManager
-from LOGIC.COLLIDEMANAGER import CollideManager
-from LOGIC.BARRAGEMANAGER import BarrageManager
-from LOGIC.ITEMMANAGER import ItemManager
-from LOGIC.BOMBMANAGER import BombManager
-from LOGIC.PARTICLEMANAGER import ParticleManager
-from LOGIC.INVINCIBILITY import Invincibility
-from LOGIC.WHITEBRICKPROCESS import WhiteBrickProcess
-from LOGIC.SPRITEREMOVER import SpriteRemove 
-from LOGIC.STAGEMANAGER import StageManager
-# 导入GUI
-from GUI.STARTGUI import StartGUI
-from GUI.GAMEGUI import GameGUI
-from GUI.PAUSEGUI import PauseGUI
-
-
-class Thunder:
-    def __init__(th, scr, fnt, clk):
-        th.scr = scr
-        th.fnt = fnt
-        th.clk = clk
-        # 游玩窗口
-        th.win = pyg.Rect((120, 15, 345, 330))
-        th.eff_range = pyg.Rect((105, 0, 375, 360))
-        # 精灵组
-        th.pln_grp = pyg.sprite.Group()
-        th.blt_grp = pyg.sprite.Group()
-        th.brc_grp = pyg.sprite.Group()
-        th.item_grp = pyg.sprite.Group()
-        th.brg_grp = pyg.sprite.Group()
-        th.ptcl_grp = pyg.sprite.Group()
-        # GUI类
-        th.game_gui = GameGUI(th)
-        th.pau_gui = PauseGUI(th)
-        # 核心类
-        th.sl_gen = SLGenerator(th)
-        # 逻辑类
-        th.sc_mgr = ScoreManager(th)
-        th.pln_mgr = PlaneManager(th)
-        th.blt_mgr = BulletManager(th)
-        th.coll_mgr = CollideManager(th)
-        th.brg_mgr = BarrageManager(th)
-        th.item_mgr = ItemManager(th)
-        th.bomb_mgr = BombManager(th)
-        th.ptcl_mgr = ParticleManager(th)
-        th.invinc = Invincibility(th)
-        th.w_brc_proc = WhiteBrickProcess(th)
-        th.rm_mgr = SpriteRemove(th)
-        th.stg_mgr = StageManager(th)
+sys.path.append(os.path.join(curr_dir, 'SRC'))
+# 导入开始界面
+from GUI.NONGAME.STARTGUI import StartGUI
+# 导入Kernel
+from CORE.KERNEL.KERNEL import Thunder
 
 
 pyg.init()
@@ -69,7 +19,7 @@ scr = pyg.display.set_mode((480, 360),
                            flg,
                            vsync=1)
 # 游戏字体和时钟
-fnt = pyg.font.Font('ASTS\FONT_GNUUNIFONT.otf', 15)
+fnt = pyg.font.Font('AST\FONT_GNUUNIFONT.otf', 15)
 clk = pyg.time.Clock()
 
 run = True
@@ -133,7 +83,8 @@ while True:
                         game.pln_mgr.set_pln_spd(0)
                 elif evt.type == pyg.KEYDOWN: # 按下操作
                     if not game.stg_mgr.summ: # 非结算界面操作
-                        if not game.stg_mgr.pau and not game.stg_mgr.talk: # 游戏主要操作
+                        if (not game.stg_mgr.pau
+                            and not game.stg_mgr.talk): # 游戏主要操作
                             if evt.key == pyg.K_RIGHT:
                                 game.pln_mgr.mv_right = True
                             if evt.key == pyg.K_LEFT:
@@ -146,7 +97,9 @@ while True:
                                 game.bomb_mgr.single_bomb()
                             if evt.key == pyg.K_ESCAPE:
                                 game.stg_mgr.pau_evt()
-                        elif game.stg_mgr.talk and not game.stg_mgr.pau:
+                        elif (game.stg_mgr.talk
+                              and not game.stg_mgr.pau
+                              and game.sl_gen.lv_ld):
                             if evt.key == pyg.K_z:
                                 game.stg_mgr.talk_text += 1
                             if evt.key == pyg.K_x:
