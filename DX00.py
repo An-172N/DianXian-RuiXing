@@ -27,13 +27,13 @@ from GUI.PAUSEGUI import PauseGUI
 
 
 class Thunder:
-    def __init__(th, scr, game_win, fnt, clk, game_bg, eff_range):
+    def __init__(th, scr, fnt, clk):
         th.scr = scr
-        th.win = game_win
         th.fnt = fnt
         th.clk = clk
-        th.bg = game_bg
-        th.eff_range = eff_range
+        # 游玩窗口
+        th.win = pyg.Rect((120, 15, 345, 330))
+        th.eff_range = pyg.Rect((105, 0, 375, 360))
         # 精灵组
         th.pln_grp = pyg.sprite.Group()
         th.blt_grp = pyg.sprite.Group()
@@ -41,6 +41,9 @@ class Thunder:
         th.item_grp = pyg.sprite.Group()
         th.brg_grp = pyg.sprite.Group()
         th.ptcl_grp = pyg.sprite.Group()
+        # GUI类
+        th.game_gui = GameGUI(th)
+        th.pau_gui = PauseGUI(th)
         # 核心类
         th.sl_gen = SLGenerator(th)
         # 逻辑类
@@ -56,9 +59,6 @@ class Thunder:
         th.w_brc_proc = WhiteBrickProcess(th)
         th.rm_mgr = SpriteRemove(th)
         th.stg_mgr = StageManager(th)
-        # GUI类
-        th.game_gui = GameGUI(th)
-        th.pau_gui = PauseGUI(th)
 
 
 pyg.init()
@@ -71,17 +71,12 @@ scr = pyg.display.set_mode((480, 360),
 # 游戏字体和时钟
 fnt = pyg.font.Font('ASTS\FONT_GNUUNIFONT.otf', 15)
 clk = pyg.time.Clock()
-# 游戏主背景和游玩窗口
-game_bg = pyg.image.load('ASTS\IMG_GAMEBG.png').convert_alpha()
-game_win = pyg.Rect((120, 15, 345, 330))
-eff_range = pyg.Rect((105, 0, 375, 360))
 
 run = True
 
 while True:
     if not run: # 游戏
-        game = Thunder(scr, game_win, fnt, clk,
-                       game_bg, eff_range)
+        game = Thunder(scr, fnt, clk)
 
         game.game_gui.mask() # 游戏窗口遮罩，只调用一次
 

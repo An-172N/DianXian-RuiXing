@@ -33,6 +33,8 @@ class BulletManager:
                          -8)
                         
     def fusillade(th):
+        if th.fusillade_ctr > 15:
+            th.is_cnt_fusillade = False
         if (th.fusillade_ctr > 0
             and not th.is_cnt_fusillade):
             th.spwn_blts()

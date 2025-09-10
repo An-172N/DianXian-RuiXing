@@ -3,9 +3,6 @@ import datetime as dt
 
 
 class GameGUI:
-    def __init__(th, own):
-        th.own = own
-
     def __init__(th, own): # 文本类初始化
         th.own = own
         # 先初始化帧数显示
@@ -13,6 +10,8 @@ class GameGUI:
         th.fps_text = th.own.fnt.render(f"{th.last_upd_time}",
                                         False,
                                         (255, 255, 255))
+        # 游戏主背景
+        th.bg = pyg.image.load('ASTS\IMG_GAMEBG.png').convert_alpha()
 
     def show_situ(th, cnt, state_name, digit, other): # 信息显示函数
         situ = cnt
@@ -45,8 +44,8 @@ class GameGUI:
 
     def mask(th): # 遮罩
         # 设置游戏窗口范围为透明
-        th.own.bg.set_clip(th.own.win)
-        th.own.bg.fill((0, 0, 0, 0))
+        th.bg.set_clip(th.own.win)
+        th.bg.fill((0, 0, 0, 0))
 
     def blit(th):
         # 绘制逻辑
@@ -63,7 +62,7 @@ class GameGUI:
         th.own.brg_grp.draw(th.own.scr)
         # 绘制暂停界面和主背景
         th.own.pau_gui.blit()
-        th.own.scr.blit(th.own.bg, (0, 0))
+        th.own.scr.blit(th.bg, (0, 0))
         # 绘制文字
         th.own.scr.blit(th.show_situ(th.own.sc_mgr.sc_cnt,
                                      "分　",
@@ -83,7 +82,7 @@ class GameGUI:
         th.own.scr.blit(th.show_situ(th.own.item_mgr.combo,
                                      "连　",
                                      '02d',
-                                     ''),
+                                     f' , {th.own.blt_mgr.fusillade_ctr:02d}'),
                         (8, 320))
         th.own.scr.blit(th.show_time(), (280, 344))
         th.own.scr.blit(th.fps_text, (395, 344))

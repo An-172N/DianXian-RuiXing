@@ -73,6 +73,7 @@ class PlaneManager:
             th.is_wait_respwn = True
             th.players -= 1
             th.no_hurt_cnt = 0
+            th.own.item_mgr.bw_ctr = 0
 
             th.own.ptcl_mgr.spwn_ptcl(th.char,
                                       (255, 255, 255), (45, 194, 229))
@@ -84,6 +85,7 @@ class PlaneManager:
         else:
             th.s_pt -= 16
             th.no_hurt_cnt = 0
+            th.own.item_mgr.bw_ctr = 0
 
     def respwn(th):
         if th.is_wait_respwn and th.own.invinc.cd_ctr >= 30:
