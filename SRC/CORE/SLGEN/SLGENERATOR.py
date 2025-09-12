@@ -38,8 +38,11 @@ class SLGenerator: # 关卡生成器
                             bd = rand.choice(bd_id)
                         else: # 否则厚度为最薄
                             bd = 2
-                        # 否则按照关卡数生成对应砖块
-                        clr = clr_dict.get(th.own.stg_mgr.stg)
+
+                        if rand.random() < 0.02: # 生成白色砖块概率
+                            clr = clr_dict[6]
+                        else: # 否则按照关卡数生成对应砖块
+                            clr = clr_dict.get(th.own.stg_mgr.stg)
                         # 创建砖块实例
                         brc = BaseShape(15, 15, bd,
                                         clr, brc_type)
