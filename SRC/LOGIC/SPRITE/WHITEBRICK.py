@@ -21,6 +21,29 @@ class WhiteBrick:
 
             th.own.blt_grp.add(blt)
 
+    def rect_brc(th, brc):
+        blt_index = [
+            {'ang': 0,
+             'pos': brc.rect.midleft},
+            {'ang': 90,
+             'pos': brc.rect.midbottom},
+            {'ang': 180,
+             'pos': brc.rect.midright},
+            {'ang': 270,
+             'pos': brc.rect.midtop}
+        ]
+    
+        for blt_info in blt_index:
+            blt = BaseShape(2, 15, 0,
+                            (45, 194, 229), 2, "blt-cros")
+
+            blt.rect.center = blt_info['pos']
+            blt.curr_ang = blt_info['ang']
+            blt.spd = 16
+            blt.damage = 4
+
+            th.own.blt_grp.add(blt)
+
     def polygon_brc(th, brc):
         blt_index = [
             {'ang': rand.choice([-30, -210]),
