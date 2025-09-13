@@ -12,7 +12,6 @@ class BaseShape(pyg.sprite.Sprite):
         th.shape = shape
         th.type = type_of
 
-        th.vel_y = 0
         th.curr_ang = 0
         th.damage = 0
         th.spd = 0

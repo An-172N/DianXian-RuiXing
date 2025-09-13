@@ -12,7 +12,7 @@ class Particle:
     def spwn_ptcl(th, sprite, clr1, clr2=None):
         rands = rand.randint(0, 360)
         
-        for i in range(0 + rands, 360 + rands, 20):
+        for i in range(0 + rands, 360 + rands, 30):
             if clr2 is None:
                 clr = clr1
             else:

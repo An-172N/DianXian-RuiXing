@@ -2,7 +2,7 @@ import random as rand
 
 from BRICK.BASE.BASESHAPE import BaseShape
 
-from LOGIC.PROCESS.MOVE import angle
+from LOGIC.PROCESS.MOVE import ang
 from LOGIC.PROCESS.MOVE import rot
 from LOGIC.PROCESS.MOVE import mv
 
@@ -19,7 +19,7 @@ class Barrage:
 
                 brg.rect.center = spr.rect.center
 
-                brg.curr_ang = angle(th.own.pln_mgr.char, brg)
+                brg.curr_ang = ang(th.own.pln_mgr.char, brg)
                 brg.spd = 2
 
                 th.own.brg_grp.add(brg)
@@ -30,7 +30,7 @@ class Barrage:
 
                     brg.rect.center = spr.rect.center
 
-                    brg.curr_ang = angle(th.own.pln_mgr.char, brg) + i
+                    brg.curr_ang = ang(th.own.pln_mgr.char, brg) + i
                     brg.spd = 2
 
                     th.own.brg_grp.add(brg)

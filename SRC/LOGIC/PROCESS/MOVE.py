@@ -2,7 +2,7 @@ import pygame as pyg
 import math
 
 
-def angle(tgt, src):
+def ang(tgt, src):
     dx = tgt.rect.centerx - src.rect.centerx
     dy = tgt.rect.centery - src.rect.centery
 
@@ -18,8 +18,9 @@ def dist(tgt, src):
     return math.hypot(dx, dy)
 
 
-def fric(spr, fric):
+def fric(spr, fric, vel_x=0):
     spr.x = getattr(spr, 'x', spr.rect.x)
+    spr.vel_x = getattr(spr, 'vel_x', vel_x)
 
     spr.vel_x *= fric
 
@@ -28,8 +29,9 @@ def fric(spr, fric):
     spr.rect.x = int(spr.x)
 
 
-def grav(spr, grav, max_vel=2):
+def grav(spr, grav, vel_y=0, max_vel=2):
     spr.y = getattr(spr, 'y', spr.rect.y)
+    spr.vel_y = getattr(spr, 'vel_y', vel_y)
 
     spr.vel_y += grav
 

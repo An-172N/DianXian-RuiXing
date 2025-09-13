@@ -1,5 +1,6 @@
 import pygame as pyg
 
+from BRICK.BASE.BASESHAPE import BaseShape
 
 class PauseGUI:
     def __init__(th, own): # 初始化暂停界面

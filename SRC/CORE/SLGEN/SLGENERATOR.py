@@ -24,7 +24,7 @@ class SLGenerator: # 关卡生成器
                     if line[i] != 'o': # 如果字符不是o
                         brc_type = int(line[i]) # 存储砖块类型
 
-                        bd_id = [2, 4, 6] # 砖块厚度
+                        bd_id = [2, 4, 6, 8] # 砖块厚度
                         clr_dict = { # 砖块颜色字典
                             1: (255, 128, 0), # 第一关（橙色
                             2: (255, 255, 0), # 第二关（黄色
@@ -38,11 +38,8 @@ class SLGenerator: # 关卡生成器
                             bd = rand.choice(bd_id)
                         else: # 否则厚度为最薄
                             bd = 2
-
-                        if rand.random() < 0.02: # 生成白色砖块概率
-                            clr = clr_dict[6]
-                        else: # 否则按照关卡数生成对应砖块
-                            clr = clr_dict.get(th.own.stg_mgr.stg)
+                        # 否则按照关卡数生成对应砖块
+                        clr = clr_dict.get(th.own.stg_mgr.stg)
                         # 创建砖块实例
                         brc = BaseShape(15, 15, bd,
                                         clr, brc_type)

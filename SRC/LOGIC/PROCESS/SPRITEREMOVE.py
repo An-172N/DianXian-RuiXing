@@ -16,14 +16,6 @@ class SpriteRemove:
                                           1,
                                           (45, 194, 229))
                 
-            if brc.clr == (255, 255, 255):
-                if brc.shape == 0:
-                    th.own.wb_p.polygon_brc(brc)
-                elif brc.shape == 1:
-                    pass
-                elif brc.shape == 2:
-                    th.own.wb_p.circle_brc(brc)
-                
             th.own.ptcl_mgr.spwn_ptcl(brc,
                                       (255, 255, 255), brc.clr)
             th.own.brg_mgr.spwn_brg(brc)

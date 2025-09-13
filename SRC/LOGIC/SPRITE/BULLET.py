@@ -27,7 +27,7 @@ class Bullet:
                         
     def fusillade(th):
         if th.fusillade_ctr > 0:
-            if th.fusillade_ctr > 1:
+            if th.fusillade_ctr >= 2:
                 th.is_cnt_fusillade = False
             if not th.is_cnt_fusillade:
                 th.spwn_blts()

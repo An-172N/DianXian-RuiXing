@@ -4,7 +4,7 @@ from SDIVIDE.KLI.RECTRAINER import RectRainer
 class Bomb:
     def __init__(th, own):
         th.own = own
-        
+
         th.rect_rainer = RectRainer(own)
 
     def single_bomb(th):
@@ -17,4 +17,5 @@ class Bomb:
 
     def use_bomb(th):
         if th.own.pln_mgr.is_use_bomb:
-            th.rect_rainer.lgc()
+            th.rect_rainer.spwn_rect()
+            th.rect_rainer.upd_rect()
