@@ -37,7 +37,7 @@ class GameGUI:
 
         if curr_time - th.last_upd_time >= 500: # 每隔0.5秒更新一次
             get_fps = th.own.clk.get_fps()
-            th.fps_text = th.own.fnt.render(f"{get_fps:.1f} FPS",
+            th.fps_text = th.own.fnt.render(f"{get_fps:.0f} FPS",
                                             False,
                                             (255, 255, 255))
             th.last_upd_time = curr_time
@@ -79,12 +79,12 @@ class GameGUI:
                                      '02d',
                                      ''),
                         (8, 295))
-        th.own.scr.blit(th.show_situ(th.own.item_mgr.combo,
+        th.own.scr.blit(th.show_situ(th.own.item_mgr.comb,
                                      "连　",
                                      '02d',
-                                     f' , {th.own.blt_mgr.fusillade_ctr:02d}'),
+                                     f' , {th.own.blt_mgr.fusil_cnt:02d}'),
                         (8, 320))
         th.own.scr.blit(th.show_time(), (280, 344))
-        th.own.scr.blit(th.fps_text, (395, 344))
+        th.own.scr.blit(th.fps_text, (405, 344))
 
         pyg.display.flip()

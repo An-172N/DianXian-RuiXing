@@ -34,7 +34,7 @@ class SLGenerator: # 关卡生成器
                             6: (255, 255, 255) # 通用（白色
                         }
                         
-                        if rand.random() < 0.1 * th.own.stg_mgr.stg + (th.own.stg_mgr.lv - 1) / 100: # 生成厚砖块概率
+                        if rand.random() < 0.12 * th.own.stg_mgr.stg + th.own.stg_mgr.lv / 50: # 生成厚砖块概率
                             bd = rand.choice(bd_id)
                         else: # 否则厚度为最薄
                             bd = 2

@@ -11,7 +11,7 @@ class Score:
         return th.own.pln_mgr.no_hurt_cnt * 4096
     
     def pts(th):
-        th.sc_cnt += 2 ** th.own.item_mgr.combo
+        th.sc_cnt += 2 ** th.own.item_mgr.comb
 
     def blt_coll(th):
         th.sc_cnt += 64

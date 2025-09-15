@@ -3,7 +3,7 @@ import math
 
 
 class BaseShape(pyg.sprite.Sprite):
-    def __init__(th, wid, hei, bd, clr, shape, type_of=0, x=0, y=0):
+    def __init__(th, wid, hei, bd, clr, shape, type_of=0, pos=(0, 0)):
         super().__init__()
         th.wid = wid
         th.hei = hei
@@ -13,14 +13,13 @@ class BaseShape(pyg.sprite.Sprite):
         th.type = type_of
 
         th.curr_ang = 0
-        th.damage = 0
+        th.dmg = 0
         th.spd = 0
 
         th.image = th.get_shape(shape)
         th.rect = th.image.get_rect()
 
-        th.rect.x = x
-        th.rect.y = y
+        th.rect.center = pos
 
     def get_shape(th, shape):
         if shape == 0:

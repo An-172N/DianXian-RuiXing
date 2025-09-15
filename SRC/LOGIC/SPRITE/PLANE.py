@@ -10,7 +10,7 @@ class Plane:
         th.own = own
 
         th.plyr = 5
-        th.s_pt = 47
+        th.s_pt = 17
         th.ttl_s_pt = 0
         th.no_hurt_cnt = 0
 
@@ -18,7 +18,7 @@ class Plane:
         th.mv_left = False
         th.is_visitable = True
         th.coll = False
-        th.is_use_bomb = False
+        th.is_use_sdivide = False
         th.is_wait_respwn = False
 
         th.char = Kli()
@@ -67,7 +67,7 @@ class Plane:
             else:
                 th.char.image = th.char.orig_image.subsurface((0, 0,
                                                                12, 26))
-                
+
     def life_lgc(th):
         if th.s_pt < 16:
             th.is_wait_respwn = True

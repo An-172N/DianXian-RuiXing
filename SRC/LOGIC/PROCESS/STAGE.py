@@ -7,7 +7,7 @@ class Stage:
 
         th.talk_text = 0
         th.stg = 1
-        th.lv = 1
+        th.lv = 5
 
         th.pau = False
         th.ru_sure = False
@@ -52,15 +52,13 @@ class Stage:
         th.own.brg_grp.empty()
         # 重置飞机和bomb    
         th.own.pln_mgr.rst_pln()
-        th.own.bomb_mgr.rect_rainer.rst_bomb()
         # 重置参数
-        th.own.pln_mgr.is_use_bomb = False
+        th.own.pln_mgr.is_use_sdivide = False
         th.own.invinc.cd_ctr = 0
         th.own.item_mgr.spwn_ctr = 0
         th.own.item_mgr.bw_ctr = 0
         th.own.pln_mgr.ttl_s_pt = 0
         th.own.coll_mgr.ctr = 0
-        th.own.blt_mgr.fusillade_ctr = 0
 
     def pau_evt(th): # 暂停界面反转
         th.pau = not th.pau

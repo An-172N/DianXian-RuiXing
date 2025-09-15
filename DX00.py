@@ -32,7 +32,7 @@ while True:
 
         while not run: # 其余为循环
             if not game.stg_mgr.pau: # 暂停、结算时不能更新
-                game.item_mgr.combo_ctr()
+                game.item_mgr.comb_ctr()
                 
                 if (not game.stg_mgr.summ
                     and game.sl_gen.lv_ld
@@ -47,12 +47,10 @@ while True:
                     game.item_mgr.spwn_regular()
                     game.item_mgr.item_upd()
 
-                    game.blt_mgr.fusillade()
+                    game.blt_mgr.rect_rain.lgc()
                     game.blt_mgr.upd_blts()
 
                     game.ptcl_mgr.upd()
-
-                    game.bomb_mgr.use_bomb()
 
                     game.brg_mgr.upd()
 
@@ -74,7 +72,7 @@ while True:
                     sys.exit()
                 elif evt.type == pyg.KEYUP: # 按完后操作
                     if evt.key == pyg.K_z:
-                        game.blt_mgr.is_cnt_fusillade = False
+                        game.blt_mgr.is_cnt_fusil = False
                     if evt.key == pyg.K_RIGHT:
                         game.pln_mgr.mv_right = False
                     if evt.key == pyg.K_LEFT:
@@ -83,27 +81,24 @@ while True:
                         game.pln_mgr.set_pln_spd(0)
                 elif evt.type == pyg.KEYDOWN: # 按下操作
                     if not game.stg_mgr.summ: # 非结算界面操作
-                        if (not game.stg_mgr.pau
-                            and not game.stg_mgr.talk): # 游戏主要操作
-                            if evt.key == pyg.K_RIGHT:
-                                game.pln_mgr.mv_right = True
-                            if evt.key == pyg.K_LEFT:
-                                game.pln_mgr.mv_left = True
-                            if evt.key == pyg.K_LSHIFT:
-                                game.pln_mgr.set_pln_spd(1)
-                            if evt.key == pyg.K_z:
-                                game.blt_mgr.is_cnt_fusillade = True
-                            if evt.key == pyg.K_x:
-                                game.bomb_mgr.single_bomb()
-                            if evt.key == pyg.K_ESCAPE:
-                                game.stg_mgr.pau_evt()
-                        elif (game.stg_mgr.talk
-                              and not game.stg_mgr.pau
-                              and game.sl_gen.lv_ld):
-                            if evt.key == pyg.K_z:
-                                game.stg_mgr.talk_text += 1
-                            if evt.key == pyg.K_x:
-                                game.stg_mgr.talk = False
+                        if not game.stg_mgr.pau:
+                            if not game.stg_mgr.talk: # 游戏主要操作
+                                if evt.key == pyg.K_RIGHT:
+                                    game.pln_mgr.mv_right = True
+                                if evt.key == pyg.K_LEFT:
+                                    game.pln_mgr.mv_left = True
+                                if evt.key == pyg.K_LSHIFT:
+                                    game.pln_mgr.set_pln_spd(1)
+                                if evt.key == pyg.K_z:
+                                    game.blt_mgr.is_cnt_fusil = True
+                                if evt.key == pyg.K_ESCAPE:
+                                    game.stg_mgr.pau_evt()
+                            elif (game.stg_mgr.talk
+                                  and game.sl_gen.lv_ld):
+                                if evt.key == pyg.K_z:
+                                    game.stg_mgr.talk_text += 1
+                                if evt.key == pyg.K_x:
+                                    game.stg_mgr.talk = False
                         else: # 主暂停界面操作
                             if not game.stg_mgr.ru_sure: # 暂停界面操作
                                 if evt.key == pyg.K_ESCAPE:

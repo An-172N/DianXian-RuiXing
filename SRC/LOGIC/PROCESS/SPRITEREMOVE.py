@@ -12,9 +12,9 @@ class SpriteRemove:
     def brc_death(th, brc):
         if brc.hp <= 0:
             if rand.random() <= 0.24:
-                th.own.item_mgr.item_spwn(brc.rect.x, brc.rect.y,
-                                          1,
-                                          (45, 194, 229))
+                th.own.item_mgr.item_spwn(1,
+                                          (45, 194, 229),
+                                          (brc.rect.centerx, brc.rect.centery))
                 
             th.own.ptcl_mgr.spwn_ptcl(brc,
                                       (255, 255, 255), brc.clr)

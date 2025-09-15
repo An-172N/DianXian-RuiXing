@@ -5,13 +5,12 @@ class Invincibility:
         th.cd_ctr = 0
 
     def lgc(th):
-        th.cd_ctr += 1
+        if th.own.pln_mgr.is_use_sdivide or th.own.pln_mgr.coll:
+            th.cd_ctr += 1
 
-        if th.own.pln_mgr.is_use_bomb or th.own.pln_mgr.coll:
             if th.cd_ctr >= 256:
-                if th.own.pln_mgr.is_use_bomb:
-                    th.own.pln_mgr.is_use_bomb = False
-                    th.own.bomb_mgr.rect_rainer.rst_bomb()
+                if th.own.pln_mgr.is_use_sdivide:
+                    th.own.pln_mgr.is_use_sdivide = False
 
                 th.own.pln_mgr.coll = False
                 th.own.pln_mgr.is_visitable = True

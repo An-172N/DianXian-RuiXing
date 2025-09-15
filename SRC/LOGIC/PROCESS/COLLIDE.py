@@ -6,7 +6,7 @@ class Collide:
         for blt in th.own.blt_grp:
             for brc in th.own.brc_grp:
                 if blt.rect.colliderect(brc.rect):
-                    brc.hp -= blt.damage
+                    brc.hp -= blt.dmg
 
                     th.own.sc_mgr.blt_coll()
                     th.own.rm_mgr.brc_death(brc)
@@ -17,21 +17,21 @@ class Collide:
     def chk_item_coll(th):
         for item in th.own.item_grp:
             if th.own.pln_mgr.char.rect.colliderect(item.rect):
-                th.own.blt_mgr.spwn_blts()
-
-                th.own.item_mgr.combo += 1
+                th.own.item_mgr.comb += 1
                 th.own.item_mgr.bw_ctr = 90
+
+                if (not th.own.blt_mgr.is_cnt_fusil
+                    or th.own.pln_mgr.is_use_sdivide):
+                    th.own.blt_mgr.spwn_blts()
+                else:
+                    if th.own.pln_mgr.s_pt > th.own.blt_mgr.fusil_cnt * 2 + 1:
+                        th.own.blt_mgr.fusil_cnt += 1
 
                 if item.type == 1:
                     if th.own.pln_mgr.s_pt < 80:
                         th.own.pln_mgr.s_pt += 1
                         
                     th.own.pln_mgr.ttl_s_pt += 1
-                else:
-                    pass
-
-                if th.own.blt_mgr.is_cnt_fusillade:
-                    th.own.blt_mgr.fusillade_ctr += 1
 
                 item.kill()
 
@@ -39,7 +39,7 @@ class Collide:
         for brg in th.own.brg_grp:
             if (brg.rect.collidepoint(th.own.pln_mgr.dec_pt.rect.center)
                 and not (th.own.pln_mgr.coll or
-                         th.own.pln_mgr.is_use_bomb or
+                         th.own.pln_mgr.is_use_sdivide or
                          th.own.pln_mgr.is_wait_respwn)):
                 th.own.pln_mgr.coll = True
                 th.own.invinc.cd_ctr = 0

@@ -6,7 +6,6 @@ from LOGIC.SPRITE.PLANE import Plane
 from LOGIC.SPRITE.BULLET import Bullet
 from LOGIC.SPRITE.BARRAGE import Barrage
 from LOGIC.SPRITE.ITEM import Item
-from LOGIC.SPRITE.BOMB import Bomb
 from LOGIC.SPRITE.PARTICLE import Particle
 from LOGIC.PROCESS.SCORE import Score
 from LOGIC.PROCESS.COLLIDE import Collide
@@ -45,7 +44,6 @@ class Thunder:
         th.coll_mgr = Collide(th)
         th.brg_mgr = Barrage(th)
         th.item_mgr = Item(th)
-        th.bomb_mgr = Bomb(th)
         th.ptcl_mgr = Particle(th)
         th.invinc = Invincibility(th)
         th.rm_mgr = SpriteRemove(th)

@@ -13,7 +13,7 @@ class Barrage:
 
     def spwn_brg(th, spr):
         if rand.random() <= 0.32:
-            if rand.choice([0, 1, 2, 3]) == 0:
+            if rand.random() <= 0.32:
                 brg = BaseShape(9, 9, 0,
                                 spr.clr, spr.shape)
 
