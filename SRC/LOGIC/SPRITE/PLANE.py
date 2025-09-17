@@ -10,7 +10,7 @@ class Plane:
         th.own = own
 
         th.plyr = 5
-        th.s_pt = 17
+        th.s_pt = 80
         th.ttl_s_pt = 0
         th.no_hurt_cnt = 0
 
@@ -28,8 +28,8 @@ class Plane:
         th.rst_pln()
 
     def rst_pln(th):
-        th.char.rect.centerx = th.own.win.width // 2 + 120
-        th.char.rect.y = 319
+        th.char.rect.center = (292, 331)
+
         th.own.pln_grp.add(th.char)
         th.own.pln_grp.add(th.dec_pt)
 

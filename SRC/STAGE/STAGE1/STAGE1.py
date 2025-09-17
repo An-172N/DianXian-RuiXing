@@ -26,5 +26,5 @@ class Stage1:
 
         return text_dict
     
-    def move(th, char):
-        mv(char, 4)
+    def mv_char(th):
+        mv(th.char, -4)

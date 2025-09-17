@@ -51,7 +51,7 @@ class GameGUI:
         # 绘制逻辑
         th.own.scr.fill((0, 0, 0)) # 黑色为底
         # 绘制副背景
-        th.own.stg_bg = th.own.stg_mgr.get_stg().blit()
+        th.own.stg_bg = th.own.stg_mgr.curr_stg.blit()
         # 绘制精灵
         th.own.blt_grp.draw(th.own.scr)
         if th.own.pln_mgr.is_visitable:
@@ -60,8 +60,12 @@ class GameGUI:
         th.own.item_grp.draw(th.own.scr)
         th.own.ptcl_grp.draw(th.own.scr)
         th.own.brg_grp.draw(th.own.scr)
-        # 绘制暂停界面和主背景
-        th.own.pau_gui.blit()
+        # 绘制暂停界面
+        if th.own.run:
+            th.own.pau_gui.blit()
+        else:
+            th.own.start_gui.blit()
+        # 绘制主背景
         th.own.scr.blit(th.bg, (0, 0))
         # 绘制文字
         th.own.scr.blit(th.show_situ(th.own.sc_mgr.sc_cnt,
@@ -75,7 +79,7 @@ class GameGUI:
                                      f' , {th.own.pln_mgr.ttl_s_pt:02d}'),
                         (8, 270))
         th.own.scr.blit(th.show_situ(th.own.pln_mgr.plyr,
-                                     "残　",
+                                     "闪　",
                                      '02d',
                                      ''),
                         (8, 295))

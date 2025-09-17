@@ -6,11 +6,8 @@ class PauseGUI:
     def __init__(th, own): # 初始化暂停界面
         th.own = own
 
-        th.wid = 345
-        th.hei = 85
-
     def draw_rect(th): # 绘制通用矩形
-        surface = pyg.Surface((th.wid, th.hei), pyg.SRCALPHA)
+        surface = pyg.Surface((345, 85), pyg.SRCALPHA)
 
         pyg.draw.rect(surface, (0, 0, 0),
                       surface.get_rect(),
@@ -75,6 +72,6 @@ class PauseGUI:
         elif th.own.stg_mgr.talk:
             th.talk_draw()
 
-            if th.own.stg_mgr.talk_text >= len(th.own.stg_mgr.get_stg().text()):
+            if th.own.stg_mgr.talk_text >= len(th.own.stg_mgr.curr_stg.text()):
                 th.own.stg_mgr.talk = False
                 th.own.stg_mgr.talk_text = 0

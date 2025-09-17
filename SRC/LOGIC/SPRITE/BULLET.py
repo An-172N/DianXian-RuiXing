@@ -12,9 +12,9 @@ class Bullet:
 
         th.rect_rain = RectRainer(th)
 
-        th.fusil_cnt = 0
-
         th.is_cnt_fusil = False
+
+        th.fusil_cnt = 0
 
     def spwn_blts(th):
         th.own.ptcl_mgr.spwn_ptcl(th.own.pln_mgr.char,
@@ -49,8 +49,32 @@ class Bullet:
 
             th.own.blt_grp.add(blt)
 
+    def use_fusil(th):
+        if th.fusil_cnt > 0:
+            if not th.is_cnt_fusil:
+                th.spwn_blts()
+
+                th.fusil_cnt -= 1
+                th.own.pln_mgr.s_pt -= 2
+            
+            if th.own.pln_mgr.s_pt < th.fusil_cnt * 2 + 1:
+                th.fusil_cnt = th.own.pln_mgr.s_pt // 2
+
+    def single_bomb(th):
+        if all([not th.own.pln_mgr.is_use_sdivide,
+                not th.own.pln_mgr.is_wait_respwn,
+                th.own.pln_mgr.s_pt >= 16]):
+            th.own.pln_mgr.s_pt -= 16
+            th.own.invinc.cd_ctr = 0
+            th.own.pln_mgr.is_use_sdivide = True
+
+    def use_bomb(th):
+        if th.own.pln_mgr.is_use_sdivide:
+            th.rect_rain.spwn_rect()
+            th.rect_rain.upd_rect()
+
     def upd_blts(th):
         for blt in th.own.blt_grp:
-            if blt.type == "blt":
+            if blt.type in ("blt", "blt-cros"):
                 rot(blt)
                 mv(blt, blt.spd)

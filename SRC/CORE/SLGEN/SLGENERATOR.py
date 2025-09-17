@@ -45,8 +45,7 @@ class SLGenerator: # 关卡生成器
                                         clr, brc_type)
                         # 生命值及其排放
                         brc.hp = 4 * brc.bd / 2
-                        brc.rect.x = 120 + i * 15
-                        brc.rect.y = 15 + th.row * 15
+                        brc.rect.center = (127 + i * 15, 22 + th.row * 15)
                         # 加入砖块到砖块精灵组
                         th.own.brc_grp.add(brc)
                 # 行数+1
@@ -67,5 +66,6 @@ class SLGenerator: # 关卡生成器
 
             th.cnt = 0
 
-        if th.own.stg_mgr.lv == 6:
+        if (th.own.stg_mgr.lv == 6
+            and not th.own.stg_mgr.is_spwn_fri):
             th.own.stg_mgr.spwn_shhm()

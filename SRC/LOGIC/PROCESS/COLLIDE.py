@@ -20,11 +20,11 @@ class Collide:
                 th.own.item_mgr.comb += 1
                 th.own.item_mgr.bw_ctr = 90
 
-                if (not th.own.blt_mgr.is_cnt_fusil
-                    or th.own.pln_mgr.is_use_sdivide):
+                if not th.own.blt_mgr.is_cnt_fusil:
                     th.own.blt_mgr.spwn_blts()
                 else:
-                    if th.own.pln_mgr.s_pt > th.own.blt_mgr.fusil_cnt * 2 + 1:
+                    if (th.own.pln_mgr.s_pt > th.own.blt_mgr.fusil_cnt * 2 + 1
+                        and th.own.blt_mgr.fusil_cnt <= 1):
                         th.own.blt_mgr.fusil_cnt += 1
 
                 if item.type == 1:

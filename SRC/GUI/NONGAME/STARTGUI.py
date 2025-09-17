@@ -2,37 +2,29 @@ import pygame as pyg
 
 
 class StartGUI:
-    def __init__(th, scr, fnt, clk):
-        th.scr = scr
-        th.fnt = fnt
-        th.clk = clk
+    def __init__(th, own):
+        th.own = own
 
         th.title = pyg.image.load('AST\IMG_TITLE.png').convert_alpha()
 
-    def start_text(th):
-        return th.fnt.render("Z 开始", False, (255, 255, 255))
-    
-    def choose_stg_text(th):
-        return th.fnt.render("C 选关", False, (255, 255, 255))
-    
-    def exit_text(th):
-        return th.fnt.render("Q 退出", False, (255, 255, 255))
-    
-    def rect(th):
-        surface = pyg.Surface((100, 200), pyg.SRCALPHA)
+    def start_draw(th):
+        text1 = th.own.fnt.render("Z 开始", False, (255, 255, 255))
+        text2 = th.own.fnt.render("C 选关", False, (255, 255, 255))
+        text3 = th.own.fnt.render("Q 退出", False, (255, 255, 255))
 
-        pyg.draw.rect(surface, (255, 255, 255), surface.get_rect(), 4)
+        th.own.scr.blit(th.draw_rect(), (120, 15))
+        th.own.scr.blit(text1, (390, 185))
+        th.own.scr.blit(text2, (390, 235))
+        th.own.scr.blit(text3, (390, 285))
+    
+    def draw_rect(th):
+        surface = pyg.Surface((345, 330), pyg.SRCALPHA)
+
+        pyg.draw.rect(surface, (0, 0, 0), surface.get_rect(), 0)
 
         return surface
-
+    
     def blit(th):
-        th.scr.fill((0, 0, 0))
-        
-        # th.scr.blit(th.title, (0, 0))
-        th.scr.blit(th.rect(), (380, 160))
+        th.start_draw()
 
-        th.scr.blit(th.start_text(), (405, 200))
-        th.scr.blit(th.choose_stg_text(), (405, 250))
-        th.scr.blit(th.exit_text(), (405, 300))
-        
-        pyg.display.flip()
+        # th.own.scr.blit(th.title, (120, 15))
