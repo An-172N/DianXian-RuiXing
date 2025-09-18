@@ -13,6 +13,9 @@ class Item:
         th.comb = 0
         th.bw_ctr = 90
 
+        th.item_cnt = 0
+        th.coll_item_cnt = 0
+
     def item_spwn(th, item, clr, pos=(0, 0)):
         th.own.item_grp.add(BaseShape(9, 9, 2,
                                       clr, 1, item,

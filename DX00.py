@@ -17,7 +17,7 @@ scr = pyg.display.set_mode((480, 360),
                            flg,
                            vsync=1)
 # 游戏字体和时钟
-fnt = pyg.font.Font('AST\FONT_GNUUNIFONT.otf', 15)
+fnt = pyg.font.Font('AST\FNT_GNUUNIFONT.otf', 15)
 clk = pyg.time.Clock()
 
 game = Thunder(scr, fnt, clk)
@@ -25,7 +25,8 @@ game = Thunder(scr, fnt, clk)
 game.game_gui.mask() # 游戏窗口遮罩，只调用一次
 
 while True:
-    if game.run:
+    if (game.run
+        and not game.sav_mgr.is_sav):
         if not game.stg_mgr.pau: # 暂停、结算时不能更新
             game.item_mgr.comb_ctr()
                 
@@ -93,8 +94,8 @@ while True:
             }
 
             key_dict_talk = {
-                pyg.K_z: lambda: setattr(game.stg_mgr, "talk_text",
-                                         game.stg_mgr.talk_text + 1),
+                pyg.K_z: lambda: setattr(game.stg_mgr, "talk_txt",
+                                         game.stg_mgr.talk_txt + 1),
                 pyg.K_x: lambda: setattr(game.stg_mgr, "talk",
                                          False)
             }
@@ -118,11 +119,23 @@ while True:
                 pyg.K_q: lambda: sys.exit()
             }
 
+            key_dict_over = {
+                pyg.K_RETURN: lambda: game.sav_mgr.exit(),
+                pyg.K_BACKSPACE: lambda: setattr(game.sav_mgr, "name",
+                                                 game.sav_mgr.name[:-1]),
+                pyg.K_ESCAPE: lambda: game.rst_mgr.rst_game()
+            }
+
             if not game.run:
                 if evt.key in key_dict_start:
                     key_dict_start[evt.key]()
             else:
-                if not game.stg_mgr.summ: # 非结算界面操作
+                if game.sav_mgr.is_sav:
+                    if evt.key in key_dict_over:
+                        key_dict_over[evt.key]()
+                    else:
+                        game.sav_mgr.name += evt.unicode
+                elif not game.stg_mgr.summ: # 非结算界面操作
                     if not game.stg_mgr.pau:
                         if not game.stg_mgr.talk: # 游戏主要操作
                             if evt.key in key_dict_game:

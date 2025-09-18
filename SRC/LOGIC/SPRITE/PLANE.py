@@ -1,5 +1,4 @@
 import pygame as pyg
-import sys
 
 from BRICK.HUMAN.KLI import Kli
 from BRICK.BASE.BASESHAPE import BaseShape
@@ -9,7 +8,7 @@ class Plane:
     def __init__(th, own):
         th.own = own
 
-        th.plyr = 5
+        th.plyr = 1
         th.s_pt = 80
         th.ttl_s_pt = 0
         th.no_hurt_cnt = 0
@@ -69,23 +68,18 @@ class Plane:
                                                                12, 26))
 
     def life_lgc(th):
-        if th.s_pt < 16:
-            th.is_wait_respwn = True
-            th.plyr -= 1
-            th.no_hurt_cnt = 0
-            th.own.item_mgr.bw_ctr = 0
+        th.is_wait_respwn = True
+        th.plyr -= 1
+        th.no_hurt_cnt = 0
+        th.own.item_mgr.bw_ctr = 0
 
-            th.own.ptcl_mgr.spwn_ptcl(th.char,
-                                      (255, 255, 255), (45, 194, 229))
+        th.own.ptcl_mgr.spwn_ptcl(th.char,
+                                  (255, 255, 255), (45, 194, 229))
 
-            th.own.pln_grp.empty()
+        th.own.pln_grp.empty()
 
-            if th.plyr == 0:
-                sys.exit()
-        else:
-            th.s_pt -= 16
-            th.no_hurt_cnt = 0
-            th.own.item_mgr.bw_ctr = 0
+        if th.plyr == 0:
+            th.own.sav_mgr.is_sav = True
 
     def respwn(th):
         if th.is_wait_respwn and th.own.invinc.cd_ctr >= 30:

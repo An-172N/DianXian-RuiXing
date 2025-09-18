@@ -1,13 +1,15 @@
 import pygame as pyg
+import datetime as dt
 # 导入核心
-from CORE.SLGEN.SLGENERATOR import SLGenerator
+from CORE.LOAD.SLGEN import SLGenerator
+from CORE.KERNEL.RESET import Reset
+from CORE.LOAD.SAVE import Save
 # 导入逻辑模块
 from LOGIC.SPRITE.PLANE import Plane
 from LOGIC.SPRITE.BULLET import Bullet
 from LOGIC.SPRITE.BARRAGE import Barrage
 from LOGIC.SPRITE.ITEM import Item
 from LOGIC.SPRITE.PARTICLE import Particle
-from LOGIC.PROCESS.RESET import Reset
 from LOGIC.PROCESS.SCORE import Score
 from LOGIC.PROCESS.COLLIDE import Collide
 from LOGIC.PROCESS.INVINCIBILITY import Invincibility
@@ -15,6 +17,7 @@ from LOGIC.PROCESS.REMOVE import Remove
 from LOGIC.PROCESS.STAGE import Stage
 # 导入GUI
 from GUI.NONGAME.STARTGUI import StartGUI
+from GUI.NONGAME.SAVEGUI import SaveGUI
 from GUI.GAME.GAMEGUI import GameGUI
 from GUI.GAME.PAUSEGUI import PauseGUI
 
@@ -40,10 +43,13 @@ class Thunder:
         th.ptcl_grp = pyg.sprite.Group()
         # GUI类
         th.start_gui = StartGUI(th)
+        th.sav_gui = SaveGUI(th)
         th.game_gui = GameGUI(th)
         th.pau_gui = PauseGUI(th)
         # 核心类
         th.sl_gen = SLGenerator(th)
+        th.rst_mgr = Reset(th)
+        th.sav_mgr = Save(th)
         # 逻辑类
         th.sc_mgr = Score(th)
         th.pln_mgr = Plane(th)
@@ -55,4 +61,23 @@ class Thunder:
         th.invinc = Invincibility(th)
         th.rm_mgr = Remove(th)
         th.stg_mgr = Stage(th)
-        th.rst_mgr = Reset(th)
+
+    def draw_rect(th, wid, hei, bd, clr):
+        surface = pyg.Surface((wid, hei), pyg.SRCALPHA)
+
+        pyg.draw.rect(surface, clr, surface.get_rect(), bd)
+
+        return surface
+
+    def txt_func(th, txt):
+        return th.fnt.render(f"{txt}",
+                             False,
+                             (255, 255, 255))
+    
+    @staticmethod
+    def date():
+        return dt.datetime.now().strftime('%Y-%m-%d')
+    
+    @staticmethod
+    def time():
+        return dt.datetime.now().strftime("%H:%M:%S")

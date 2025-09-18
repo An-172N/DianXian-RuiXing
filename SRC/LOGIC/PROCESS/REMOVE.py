@@ -16,6 +16,8 @@ class Remove:
                                           (45, 194, 229),
                                           (brc.rect.centerx, brc.rect.centery))
                 
+                th.own.item_mgr.item_cnt += 1
+                
             th.own.ptcl_mgr.spwn_ptcl(brc,
                                       (255, 255, 255), brc.clr)
             th.own.brg_mgr.spwn_brg(brc)

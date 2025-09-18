@@ -9,7 +9,7 @@ class Stage:
     def __init__(th, own):
         th.own = own
 
-        th.talk_text = 0
+        th.talk_txt = 0
         th.stg = 1
         th.lv = 5
 
@@ -39,8 +39,8 @@ class Stage:
         th.own.rst_mgr.add_sc()
         th.own.rst_mgr.rst_stage()
 
-    def rt_text(th):
-        return th.curr_stg.text().get(th.talk_text)
+    def rt_txt(th):
+        return th.curr_stg.txt().get(th.talk_txt)
 
     def spwn_shhm(th):
         th.curr_stg.char.rect.center = (292, 60)

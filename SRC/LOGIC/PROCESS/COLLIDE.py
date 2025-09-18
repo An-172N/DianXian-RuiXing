@@ -32,6 +32,7 @@ class Collide:
                         th.own.pln_mgr.s_pt += 1
                         
                     th.own.pln_mgr.ttl_s_pt += 1
+                    th.own.item_mgr.coll_item_cnt += 1
 
                 item.kill()
 

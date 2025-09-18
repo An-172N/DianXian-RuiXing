@@ -21,9 +21,11 @@ class Bullet:
                                   (45, 194, 229))
 
         p = 2 ** (th.own.pln_mgr.s_pt // 48)
+        q = 2 * (th.own.pln_mgr.s_pt // 24)
+        r = 1 if q == 0 else q
 
         for i in range(0, p):
-            for j in range(-8, 9, 8):
+            for j in range(-q, q + 1, r):
                 th.k_blt(0 + i * 10, 0 + i * 12,
                          j)
 

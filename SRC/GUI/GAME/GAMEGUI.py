@@ -1,5 +1,4 @@
 import pygame as pyg
-import datetime as dt
 
 
 class GameGUI:
@@ -7,39 +6,39 @@ class GameGUI:
         th.own = own
         # 先初始化帧数显示
         th.last_upd_time = pyg.time.get_ticks()
-        th.fps_text = th.own.fnt.render(f"{th.last_upd_time}",
-                                        False,
-                                        (255, 255, 255))
+        th.fps_txt = th.own.txt_func(th.last_upd_time)
         # 游戏主背景
         th.bg = pyg.image.load('AST\IMG_GAMEBG.png').convert_alpha()
+    
+    def show_situ(th):
+        sc = f"分　{th.own.sc_mgr.sc_cnt:9d}"
+        sh = f"形　{th.own.pln_mgr.s_pt:02d} , {th.own.pln_mgr.ttl_s_pt:02d}"
+        fl = f"闪　{th.own.pln_mgr.plyr:02d}"
+        cmb = f"连　{th.own.item_mgr.comb:02d} , {th.own.blt_mgr.fusil_cnt:02d}"
 
-    def show_situ(th, cnt, state_name, digit, other): # 信息显示函数
-        situ = cnt
-        text = th.own.fnt.render(f"{state_name}{situ:{digit}}{other}",
-                                 False,
-                                 (255, 255, 255))
-
-        return text
+        th.own.scr.blit(th.own.txt_func(sc),
+                        (8, 25))
+        
+        th.own.scr.blit(th.own.txt_func(sh),
+                        (8, 270))
+        th.own.scr.blit(th.own.txt_func(fl),
+                        (8, 295))
+        th.own.scr.blit(th.own.txt_func(cmb),
+                        (8, 320))
 
     def show_time(th): # 显示时间
-        hou = dt.datetime.now().hour
-        min = dt.datetime.now().minute
-        sec = dt.datetime.now().second
+        tm = f"TIME {th.own.time()}"
 
-        text = th.own.fnt.render(f"TIME {hou:02d}:{min:02d}:{sec:02d}",
-                                 False,
-                                 (255, 255, 255))
-        
-        return text
+        th.own.scr.blit(th.own.txt_func(tm),
+                        (280, 344))
 
     def show_fps(th): # 显示帧数
         curr_time = pyg.time.get_ticks()
 
         if curr_time - th.last_upd_time >= 500: # 每隔0.5秒更新一次
             get_fps = th.own.clk.get_fps()
-            th.fps_text = th.own.fnt.render(f"{get_fps:.0f} FPS",
-                                            False,
-                                            (255, 255, 255))
+            th.fps_txt = th.own.txt_func(f"{get_fps:.0f} FPS")
+
             th.last_upd_time = curr_time
 
     def mask(th): # 遮罩
@@ -47,8 +46,7 @@ class GameGUI:
         th.bg.set_clip(th.own.win)
         th.bg.fill((0, 0, 0, 0))
 
-    def blit(th):
-        # 绘制逻辑
+    def blit(th): # 绘制逻辑y
         th.own.scr.fill((0, 0, 0)) # 黑色为底
         # 绘制副背景
         th.own.stg_bg = th.own.stg_mgr.curr_stg.blit()
@@ -65,30 +63,14 @@ class GameGUI:
             th.own.pau_gui.blit()
         else:
             th.own.start_gui.blit()
+        if th.own.sav_mgr.is_sav:
+            th.own.sav_gui.blit()
         # 绘制主背景
         th.own.scr.blit(th.bg, (0, 0))
         # 绘制文字
-        th.own.scr.blit(th.show_situ(th.own.sc_mgr.sc_cnt,
-                                     "分　",
-                                     '9d',
-                                     ''),
-                        (8, 25))
-        th.own.scr.blit(th.show_situ(th.own.pln_mgr.s_pt,
-                                     "形　",
-                                     '02d',
-                                     f' , {th.own.pln_mgr.ttl_s_pt:02d}'),
-                        (8, 270))
-        th.own.scr.blit(th.show_situ(th.own.pln_mgr.plyr,
-                                     "闪　",
-                                     '02d',
-                                     ''),
-                        (8, 295))
-        th.own.scr.blit(th.show_situ(th.own.item_mgr.comb,
-                                     "连　",
-                                     '02d',
-                                     f' , {th.own.blt_mgr.fusil_cnt:02d}'),
-                        (8, 320))
-        th.own.scr.blit(th.show_time(), (280, 344))
-        th.own.scr.blit(th.fps_text, (405, 344))
+        th.show_situ()
+
+        th.show_time()
+        th.own.scr.blit(th.fps_txt, (405, 344))
 
         pyg.display.flip()
