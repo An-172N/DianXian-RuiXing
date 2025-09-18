@@ -21,8 +21,6 @@ class Plane:
         th.is_wait_respwn = False
 
         th.char = Kli()
-        th.dec_pt = BaseShape(4, 4, 0,
-                              (112, 112, 112), 1)
         
         th.rst_pln()
 
@@ -30,7 +28,6 @@ class Plane:
         th.char.rect.center = (292, 331)
 
         th.own.pln_grp.add(th.char)
-        th.own.pln_grp.add(th.dec_pt)
 
     def set_pln_spd(th, mod):
         th.char.pln_spd_mod = mod
@@ -41,8 +38,6 @@ class Plane:
             th.char.rect.x += th.char.pln_spd
         if th.mv_left:
             th.char.rect.x -= th.char.pln_spd
-
-        th.dec_pt.rect.center = th.char.rect.center
 
         th.keep_pos()
 

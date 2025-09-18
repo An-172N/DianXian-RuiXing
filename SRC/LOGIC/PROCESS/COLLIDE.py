@@ -38,7 +38,7 @@ class Collide:
 
     def chk_brg_coll(th):
         for brg in th.own.brg_grp:
-            if (brg.rect.collidepoint(th.own.pln_mgr.dec_pt.rect.center)
+            if (brg.rect.collidepoint(th.own.pln_mgr.char.rect.center)
                 and not (th.own.pln_mgr.coll or
                          th.own.pln_mgr.is_use_sdivide or
                          th.own.pln_mgr.is_wait_respwn)):

@@ -1,8 +1,9 @@
 import pygame as pyg
 import datetime as dt
 # 导入核心
+from CORE.KERNEL.EVENT import Event
 from CORE.LOAD.SLGEN import SLGenerator
-from CORE.KERNEL.RESET import Reset
+from CORE.LOAD.RESET import Reset
 from CORE.LOAD.SAVE import Save
 # 导入逻辑模块
 from LOGIC.SPRITE.PLANE import Plane
@@ -47,8 +48,9 @@ class Thunder:
         th.game_gui = GameGUI(th)
         th.pau_gui = PauseGUI(th)
         # 核心类
-        th.sl_gen = SLGenerator(th)
+        th.evt_mgr = Event(th)
         th.rst_mgr = Reset(th)
+        th.sl_gen = SLGenerator(th)
         th.sav_mgr = Save(th)
         # 逻辑类
         th.sc_mgr = Score(th)

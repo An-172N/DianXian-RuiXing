@@ -19,6 +19,10 @@ class StartGUI:
                         (390, 235))
         th.own.scr.blit(th.own.txt_func("Q 退出"),
                         (390, 285))
+        th.own.scr.blit(th.own.txt_func("Copyright (c) 2025 An_172N"),
+                        (128, 295))
+        th.own.scr.blit(th.own.txt_func("源（GPL3.0）神，启动（开源）！"),
+                        (128, 320))
 
     def blit(th):
         th.bg_draw()
