@@ -25,17 +25,19 @@ game = Thunder(scr, fnt, clk)
 game.game_gui.mask() # 游戏窗口遮罩，只调用一次
 
 while True:
-    if (game.run
-        and not game.sav_mgr.is_sav):
+    if (game.run and
+        not game.sav_mgr.is_sav):
         if not game.stg_mgr.pau: # 暂停、结算时不能更新
             game.item_mgr.comb_ctr()
                 
-            if (not game.stg_mgr.summ
-                and game.sl_gen.lv_ld
-                and not game.stg_mgr.talk):
+            if (not game.stg_mgr.summ and
+                not game.stg_mgr.talk and
+                game.sl_gen.lv_ld):
                 game.pln_mgr.upd_pos()
+                game.pln_mgr.keep_pos()
                 game.pln_mgr.upd_size()
-                game.pln_mgr.respwn()
+                
+                game.life_mgr.respwn()
 
                 game.stg_mgr.mv_shhm()
 
@@ -65,8 +67,8 @@ while True:
                 
     game.evt_mgr.chk_evt()
 
-    game.game_gui.blit()
-
     game.game_gui.show_fps()
+
+    game.game_gui.blit()
 
     clk.tick(60)
