@@ -68,7 +68,6 @@ while True:
     game.evt_mgr.chk_evt()
 
     game.game_gui.show_fps()
-
     game.game_gui.blit()
 
     clk.tick(60)
