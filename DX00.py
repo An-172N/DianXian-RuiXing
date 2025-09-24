@@ -22,11 +22,11 @@ clk = pyg.time.Clock()
 
 game = Thunder(scr, fnt, clk)
 
-game.game_gui.mask() # 游戏窗口遮罩，只调用一次
+game.main_gui.mask() # 游戏窗口遮罩，只调用一次
 
 while True:
     if (game.run and
-        not game.sav_mgr.is_sav):
+        not game.stg_mgr.sav):
         if not game.stg_mgr.pau: # 暂停、结算时不能更新
             game.item_mgr.comb_ctr()
                 
@@ -53,7 +53,6 @@ while True:
                 game.ptcl_mgr.upd()
 
                 game.brg_mgr.upd()
-
                 game.rm_mgr.rm_sprs(game.blt_grp)
                 game.rm_mgr.rm_sprs(game.brg_grp)
                 game.rm_mgr.rm_sprs(game.item_grp)
@@ -67,7 +66,7 @@ while True:
                 
     game.evt_mgr.chk_evt()
 
-    game.game_gui.show_fps()
-    game.game_gui.blit()
+    game.main_gui.show_fps()
+    game.main_gui.blit()
 
     clk.tick(60)
