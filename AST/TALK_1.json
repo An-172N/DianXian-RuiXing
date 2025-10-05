@@ -1,0 +1,41 @@
+{
+    "1": {
+        "0": {
+            "human": "test_name1",
+            "info": "test_text",
+            "talk": true
+        },
+
+        "1": {
+            "human": "test_name2",
+            "info": "test_text",
+            "talk": true
+        },
+
+        "2": {
+            "human": "",
+            "info": "",
+            "talk": false
+        }
+    },
+
+    "2": {
+        "0": {
+            "human": "test_name3",
+            "info": "test_text",
+            "talk": true
+        },
+
+        "1": {
+            "human": "test_name4",
+            "info": "test_text",
+            "talk": true
+        },
+
+        "2": {
+            "human": "",
+            "info": "",
+            "talk": false
+        }
+    }
+}
