@@ -1,1 +1,0 @@
-from TYPE.ARRANGE import Arrange
