@@ -9,8 +9,7 @@ sys.path.append(os.path.join(curr_dir, 'SRC'))
 import KERNEL
 
 
-pyg.display.init()
-pyg.font.init()
+pyg.init()
 pyg.display.set_caption('DX_RSX')
 
 flg = pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN|pyg.SCALED
@@ -61,6 +60,8 @@ while True:
 
         game.stg_mgr.lv_proc()
 
-    game.evt_mgr.chk_evt()
+    game.evt_mgr.chk_key()
 
     game.game_gui.blit()
+
+    clk.tick(60)

@@ -1,41 +1,37 @@
 {
-    "1": {
+    "0": {
         "0": {
             "human": "test_name1",
             "info": "test_text",
-            "talk": true
+            "sw": true
         },
-
         "1": {
             "human": "test_name2",
             "info": "test_text",
-            "talk": true
+            "sw": true
         },
-
         "2": {
             "human": "",
             "info": "",
-            "talk": false
+            "sw": false
         }
     },
 
-    "2": {
+    "1": {
         "0": {
             "human": "test_name3",
             "info": "test_text",
-            "talk": true
+            "sw": true
         },
-
         "1": {
             "human": "test_name4",
             "info": "test_text",
-            "talk": true
+            "sw": true
         },
-
         "2": {
             "human": "",
             "info": "",
-            "talk": false
+            "sw": false
         }
     }
 }
