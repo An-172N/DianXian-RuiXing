@@ -1,4 +1,3 @@
-import pygame as pyg
 import sys
 import os
 
@@ -6,7 +5,10 @@ sys.dont_write_bytecode = True
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(curr_dir, 'SRC'))
 
+import pygame as pyg
+
 import KERNEL
+from FUNC import Collide
 
 
 pyg.init()
@@ -29,9 +31,6 @@ while True:
         if (not game.summ and
             not game.talk and
             game.lv_ld):
-            game.item_mgr.spwn_rglr()
-
-            game.blt_mgr.use_fusil()
             game.blt_mgr.use_bomb()
 
             game.pln_grp.update()
@@ -41,20 +40,20 @@ while True:
             game.ptcl_grp.update()
             game.brc_grp.update()
 
-            game.coll_mgr.rm_spr(game.blt_grp)
-            game.coll_mgr.rm_spr(game.brg_grp)
-            game.coll_mgr.rm_spr(game.item_grp)
-            game.coll_mgr.rm_spr(game.ptcl_grp)
+            Collide.rm_spr(game.eff, game.blt_grp)
+            Collide.rm_spr(game.eff, game.brg_grp)
+            Collide.rm_spr(game.win, game.item_grp)
+            Collide.rm_spr(game.win, game.ptcl_grp)
 
-            game.coll_mgr.chk_coll(game.brg_grp, game.pln_grp,
-                                   1, True,
-                                   game.pln_mgr.coll_brg)
-            game.coll_mgr.chk_coll(game.blt_grp, game.brc_grp,
-                                   0, True,
-                                   game.blt_mgr.blt_coll)
-            game.coll_mgr.chk_coll(game.item_grp, game.pln_grp,
-                                   0, True,
-                                   game.item_mgr.item_coll)
+            Collide.chk_coll(game.brg_grp, game.pln_grp,
+                             1,
+                             game.pln_mgr.coll_brg)
+            Collide.chk_coll(game.blt_grp, game.brc_grp,
+                             0,
+                             game.blt_mgr.blt_coll)
+            Collide.chk_coll(game.item_grp, game.pln_grp,
+                             0,
+                             game.item_mgr.item_coll)
 
         game.item_mgr.comb_ctr()
 
