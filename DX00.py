@@ -8,7 +8,7 @@ sys.path.append(os.path.join(curr_dir, 'SRC'))
 import pygame as pyg
 
 import KERNEL
-from FUNC import Collide
+import FUNC
 
 
 pyg.init()
@@ -23,6 +23,17 @@ fnt = pyg.font.Font('AST\FNT_GNUUNIFONT.otf', 15)
 clk = pyg.time.Clock()
 
 game = KERNEL.Thunder(scr, fnt, clk)
+
+info_list = [
+    "点线锐山行 ~ Thunder Out of the Mountain",
+    "Ver 0.01",
+    "Copyright (c) 2025 An_172N",
+    "本游戏遵循 GPL 3.0 开源协议",
+    " ",
+    "(代码写的好寄吧烂"
+]
+for i in info_list:
+    print(i)
 
 while True:
     if (game.run and
@@ -40,27 +51,34 @@ while True:
             game.ptcl_grp.update()
             game.brc_grp.update()
 
-            Collide.rm_spr(game.eff, game.blt_grp)
-            Collide.rm_spr(game.eff, game.brg_grp)
-            Collide.rm_spr(game.win, game.item_grp)
-            Collide.rm_spr(game.win, game.ptcl_grp)
+            [spr.kill() for spr in game.blt_grp
+             if not game.eff.collidepoint(spr.rect.center)]
+            [spr.kill() for spr in game.brg_grp
+             if not game.eff.collidepoint(spr.rect.center)]
+            [spr.kill() for spr in game.item_grp
+             if not game.win.collidepoint(spr.rect.center)]
+            [spr.kill() for spr in game.ptcl_grp
+             if not game.win.collidepoint(spr.rect.center)]
 
-            Collide.chk_coll(game.brg_grp, game.pln_grp,
-                             1,
-                             game.pln_mgr.coll_brg)
-            Collide.chk_coll(game.blt_grp, game.brc_grp,
-                             0,
-                             game.blt_mgr.blt_coll)
-            Collide.chk_coll(game.item_grp, game.pln_grp,
-                             0,
-                             game.item_mgr.item_coll)
+            coll1 = FUNC.Process.find_match(game.brg_grp, game.pln_grp,
+                                            lambda src, tar: src.rect.collidepoint(tar.rect.center))
+            for src, tar in coll1:
+                game.pln_mgr.coll_brg(src, tar)
+            coll2 = FUNC.Process.find_match(game.blt_grp, game.brc_grp,
+                                            lambda src, tar: src.rect.colliderect(tar.rect))
+            for src, tar in coll2:
+                game.blt_mgr.blt_coll(src, tar)
+            coll3 = FUNC.Process.find_match(game.item_grp, game.pln_grp,
+                                            lambda src, tar: src.rect.colliderect(tar.rect))
+            for src, tar in coll3:
+                game.item_mgr.item_coll(src, tar)
 
         game.item_mgr.comb_ctr()
 
         game.stg_mgr.lv_proc()
 
-    game.evt_mgr.chk_key()
+    game.key_mgr.chk_key()
 
-    game.game_gui.blit()
+    game.gui.blit()
 
     clk.tick(60)
