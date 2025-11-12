@@ -1,0 +1,79 @@
+{
+    "0": {
+        "0": {
+            "human": "？？？",
+            "info": "……",
+            "info2": "",
+            "sw": true
+        },
+        "1": {
+            "human": "璃",
+            "info": "罗！",
+            "info2": "",
+            "sw": true
+        },
+        "2": {
+            "human": "罗",
+            "info": "……",
+            "info2": "",
+            "sw": true
+        },
+        "3": {
+            "human": "璃",
+            "info": "你怎么了？",
+            "info2": "",
+            "sw": true
+        },
+        "4": {
+            "human": "罗",
+            "info": "……！",
+            "info2": "",
+            "sw": true
+        },
+        "5": {
+            "human": "璃",
+            "info": "啊！！",
+            "info2": "",
+            "sw": true
+        },
+        "6": {
+            "human": "",
+            "info": "",
+            "info2": "",
+            "sw": false
+        }
+    },
+
+    "1": {
+        "0": {
+            "human": "璃",
+            "info": "……",
+            "info2": "",
+            "sw": true
+        },
+        "1": {
+            "human": "璃",
+            "info": "你没事吧？",
+            "info2": "哇啊啊啊……",
+            "sw": true
+        },
+        "2": {
+            "human": "璃",
+            "info": "……",
+            "info2": "还有呼吸……",
+            "sw": true
+        },
+        "3": {
+            "human": "璃",
+            "info": "……",
+            "info2": "没有离开我就好……",
+            "sw": true
+        },
+        "4": {
+            "human": "",
+            "info": "",
+            "info2": "",
+            "sw": false
+        }
+    }
+}

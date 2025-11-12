@@ -1,23 +1,42 @@
-def find_match(source_group, target_group, match_func):
-    match_list = []
+def load_files(file_key_list, load_func):
+    """
+    加载多个文件
+    
+    Args:
+        file_key_list: 一个列表，里面存有若干个由文件名和键值组成的元组
+        load_func: 加载函数，它接收文件
 
-    for i in source_group:
-        for j in target_group:
-            if match_func(i, j):
-                match_list.append((i, j))
+    Returns:
+        存有加载完毕后的文件的字典
+    """
 
-    return match_list
-
-
-def load_files(file_with_key, load_func):
     file_dict = {}
 
-    for file, key in file_with_key:
+    for file, key in file_key_list:
         file_dict[key] = load_func(file)
 
     return file_dict
 
 
-def process_file(file, mode, process_func):
-    with open(file, mode) as f:
-        return process_func(f)
+def process_file(file, process_func):
+    """
+    处理文件中的数据
+
+    Args:
+        file: 要处理的文件
+        process_func: 处理函数，它接收行号和行内容
+
+    Returns:
+        文件处理的行数
+    """
+    line_count = 0
+
+    with open(file, 'r') as f:
+        for row, line in enumerate(f):
+            line = line.rstrip('\n')
+
+            process_func(row, line)
+
+            line_count += 1
+
+    return line_count

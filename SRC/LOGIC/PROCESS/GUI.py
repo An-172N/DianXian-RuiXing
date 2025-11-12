@@ -63,6 +63,9 @@ class GUI:
         info = (txt[f"{th.own.stg_mgr.txt_pt}"]
                 [f"{th.own.stg_mgr.txt_num}"]
                 ["info"])
+        info2 = (txt[f"{th.own.stg_mgr.txt_pt}"]
+                [f"{th.own.stg_mgr.txt_num}"]
+                ["info2"])
         sw = (txt[f"{th.own.stg_mgr.txt_pt}"]
               [f"{th.own.stg_mgr.txt_num}"]
               ["sw"])
@@ -73,7 +76,7 @@ class GUI:
                   th.own.fnt,
                   human,
                   info,
-                  "")
+                  info2)
         
     def summ_menu(th):
         stg = (f"Stage {th.own.stg_mgr.stg} - "
@@ -100,6 +103,8 @@ class GUI:
     def sav_menu(th):
         tm = f"今天是：{dt.datetime.now().strftime('%Y-%m-%d')}"
         sc = f"得到了 {th.own.pln_mgr.sc} 分"
+        stg = f"最远达到的地方是 {th.own.stg_mgr.stg} - {th.own.stg_mgr.lv}"
+        spt = f"拾形点率为 {th.own.item_mgr.cal_spt()}"
         name = f"由 {th.own.key_mgr.name} 助记"
 
         full_menu(th.own.scr,
@@ -107,6 +112,8 @@ class GUI:
                   tit="抚形日志",
                   txt1=tm,
                   txt2=sc,
+                  txt3= stg,
+                  txt4= spt,
                   ctl1="Ent 记录",
                   ctl2="ESC 不了",
                   oth=name)
@@ -144,8 +151,11 @@ class GUI:
         pyg.display.flip()
 
 
+shape = DRAW.ShapeDraw
+
+
 def full_menu(sur, fnt, tit="",
-              txt1="", txt2="", txt3="",
+              txt1="", txt2="", txt3="", txt4="",
               ctl1="", ctl2="",
               oth=""):
     txt_type = [
@@ -153,12 +163,13 @@ def full_menu(sur, fnt, tit="",
         {"txt": txt1, "pos": (128, 75)},
         {"txt": txt2, "pos": (128, 100)},
         {"txt": txt3, "pos": (128, 125)},
+        {"txt": txt4, "pos": (128, 150)},
         {"txt": ctl1, "pos": (390, 235)},
         {"txt": ctl2, "pos": (390, 285)},
         {"txt": oth, "pos": (128, 320)}
     ]
 
-    sur.blit(DRAW.rect(345, 330, 0, (0, 0, 0)),
+    sur.blit(shape(345, 330, 0, (0, 0, 0)).rect(),
              (120, 15))
     
     for txt_info in txt_type:
@@ -173,7 +184,7 @@ def half_menu(sur, fnt, tit, txt1, txt2):
         {"txt": txt2, "pos": (125, 318)}
     ]
 
-    sur.blit(DRAW.rect(345, 85, 0, (0, 0, 0)),
+    sur.blit(shape(345, 85, 0, (0, 0, 0)).rect(),
              (120, 260))
     
     for txt_info in txt_type:

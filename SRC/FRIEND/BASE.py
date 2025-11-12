@@ -2,8 +2,8 @@ import math
 
 import pygame as pyg
 
-from FUNC import Calculate
-import DRAW
+import FUNC
+from DRAW import ShapeDraw
 
 
 class Base(pyg.sprite.Sprite):
@@ -12,7 +12,7 @@ class Base(pyg.sprite.Sprite):
     CIRCLE = 2
     LINE = 3
 
-    def __init__(th, val, clr, shape, type=0, start=(0, 0), end=(0, 0)):
+    def __init__(th, val, clr, shape, type=0):
         super().__init__()
         th.wid = val[0]
         th.hei = val[1]
@@ -20,8 +20,8 @@ class Base(pyg.sprite.Sprite):
         th.clr = clr
         th.type = type
         th.shape = shape
-        th.start_pos = start
-        th.end_pos = end
+
+        th.base_draw = ShapeDraw(th.wid, th.hei, th.bd, th.clr)
 
         th.curr_ang = 0
         th.spd = 0
@@ -32,10 +32,9 @@ class Base(pyg.sprite.Sprite):
 
     def get_shape(th, shape):
         shape_dict = {
-            th.POLYGON: lambda: DRAW.polygon(th.wid, th.hei, th.bd, th.clr),
-            th.RECT: lambda: DRAW.rect(th.wid, th.hei, th.bd, th.clr),
-            th.CIRCLE: lambda: DRAW.circle(th.wid, th.hei, th.bd, th.clr),
-            th.LINE: lambda: DRAW.line(th.start_pos, th.end_pos, th.bd, th.clr)
+            th.POLYGON: lambda: th.base_draw.polygon(),
+            th.RECT: lambda: th.base_draw.rect(),
+            th.CIRCLE: lambda: th.base_draw.circle(),
         }
 
         return shape_dict[shape]()
@@ -47,5 +46,5 @@ class Base(pyg.sprite.Sprite):
         th.x = getattr(th, 'x', th.rect.centerx)
         th.y = getattr(th, 'y', th.rect.centery)
         rad = math.radians(th.curr_ang)
-        th.x, th.y = Calculate.coordinate_difference((th.x, th.y), (math.sin(rad) * th.spd, math.cos(rad) * th.spd))
+        th.x, th.y = FUNC.Calculate.delta_position((th.x, th.y), (math.sin(rad) * th.spd, math.cos(rad) * th.spd))
         th.rect.center = (int(th.x), int(th.y))

@@ -12,6 +12,8 @@ class BulletMgr:
 
         th.spt = 16
         th.ttl_spt = 0
+        th.stg_ttl_spt = 0
+        th.ttl_spwn_spt = 0
 
     def spwn_blt(th):
         p = 2 ** (th.spt // 32)
@@ -77,7 +79,7 @@ class BulletMgr:
         if brc.clr == DICT.clr_dict[6]:
             proc_dict = {
                 0: polygon_brc,
-                1: rect_brc,
+                1: line_brc,
                 2: circle_brc
             }
 
@@ -85,14 +87,15 @@ class BulletMgr:
                                  th.own.blt_grp,
                                  16)
 
-        if rand.random() <= 0.32:
+        difficulty = FUNC.Calculate.generalized_fibonacci(1, 2, th.own.stg_mgr.stg + 1) / 100
+        if rand.random() <= 0.32 + difficulty:
             tupl = rand.choice([(0, 1, 1), (-30, 31, 30)])
             char = th.own.pln_mgr.char
             for i in range(tupl[0], tupl[1], tupl[2]):
                 spr = Base((9, 9, 0), brc.clr, brc.shape)
                 spr.spd = 2
                 spr.rect.center = brc_pos
-                two_pt = FUNC.Calculate.coordinate_difference(char.rect.center, spr.rect.center)
+                two_pt = FUNC.Calculate.delta_position(char.rect.center, spr.rect.center)
                 spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1])) + i
                 th.own.brg_grp.add(spr)
 
@@ -100,35 +103,13 @@ class BulletMgr:
 def circle_brc(spr, src, spr_grp, spd):
     rands = rand.randint(0, 45)
 
-    for i in range(0 + rands, 360 + rands, 30):
+    for i in range(0 + rands, 360 + rands, 15):
         curr_spr = spr((2, 15, 0), (45, 194, 229), 1, "blt")
         if not hasattr(curr_spr, "dmg"):
             curr_spr.dmg = 4
         curr_spr.spd = spd
         curr_spr.rect.center = src.rect.center
         curr_spr.curr_ang = i
-        spr_grp.add(curr_spr)
-
-
-def rect_brc(spr, src, spr_grp, spd):
-    blt_index = [
-        {'ang': 0,
-         'pos': src.rect.midleft},
-        {'ang': 90,
-         'pos': src.rect.midbottom},
-        {'ang': 180,
-         'pos': src.rect.midright},
-        {'ang': 270,
-         'pos': src.rect.midtop}
-    ]
-    
-    for blt_info in blt_index:
-        curr_spr = spr((2, 15, 0), (45, 194, 229), 1, "blt-cros")
-        if not hasattr(curr_spr, "dmg"):
-            curr_spr.dmg = 4
-        curr_spr.spd = spd
-        curr_spr.rect.center = blt_info['pos']
-        curr_spr.curr_ang = blt_info['ang']
         spr_grp.add(curr_spr)
 
 
@@ -152,14 +133,12 @@ def polygon_brc(spr, src, spr_grp, spd):
         spr_grp.add(curr_spr)
 
 
-def point_brc(spr, _, spr_grp, spd):
-    pos = (rand.randint(120, 465), rand.randint(15, 345))
-
+def line_brc(spr, src, spr_grp, spd):
     for _ in range(12):
-        curr_spr = spr((2, 15, 0), (45, 194, 229), 1, "blt")
+        curr_spr = spr((2, rand.randint(15, 75), 0), (45, 194, 229), 1, "blt")
         if not hasattr(curr_spr, "dmg"):
-            curr_spr.dmg = 4
+            curr_spr.dmg = 6
         curr_spr.spd = spd
-        curr_spr.rect.center = pos
+        curr_spr.rect.center = src.rect.center
         curr_spr.curr_ang = rand.randint(0, 360)
         spr_grp.add(curr_spr)

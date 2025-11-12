@@ -16,9 +16,13 @@ class StageMgr:
         th.txt_pt = 0
         th.ctr = 0
         th.stg = 1
-        th.lv = 5
+        th.lv = 0
 
-        th.bg = pyg.image.load(f'AST/IMG_STAGE{th.stg}BG.png').convert_alpha()
+        pic_list = [('AST/IMG_STAGE1BG.png', 1),
+                    ('AST/IMG_STAGE2BG.png', 2)]
+        th.pic = FUNC.Process.load_files(pic_list, lambda f: pyg.image.load(f).convert_alpha())
+
+        th.bg = th.pic[th.stg]
         th.bg.set_alpha(159)
 
         th.char = None
@@ -49,12 +53,8 @@ class StageMgr:
 
                 th.own.brc_grp.add(th.char)
             else:
-                ld_stg((th.stg, th.lv),
-                       (DICT.clr_dict[th.stg], DICT.clr_dict[6], 0.04),
-                       (127, 22),
-                       (15, 15, 4),
-                       th.own.brc_grp
-                )
+                FUNC.Process.process_file(f"AST/STG_{th.stg}-{th.lv}.stg",
+                                          th.ld_stg)
 
             th.ctr = 0
             th.own.lv_ld = True
@@ -66,11 +66,18 @@ class StageMgr:
                 th.ctr += 1
                 th.own.summ = True
             else:
-                th.next_lv()
-                th.lv_lgc()
+                if th.stg >= 2 and th.lv == 6:
+                    th.own.summ = False
+                    th.own.sav = True
+                    th.ctr = 0
+                    th.bg = th.pic[th.stg]
+                    th.bg.set_alpha(159)
+                else:
+                    th.next_lv()
+                    th.lv_lgc()
 
-                th.own.summ = False
-                th.ctr = 0
+                    th.own.summ = False
+                    th.ctr = 0
 
     def lv_proc(th):
         if not th.own.lv_ld:
@@ -82,7 +89,7 @@ class StageMgr:
         if th.lv >= 6:
             th.stg += 1
             th.lv = 1
-            th.bg = pyg.image.load(f'AST/IMG_STAGE{th.stg}BG.png').convert_alpha()
+            th.bg = th.pic[th.stg]
             th.bg.set_alpha(159)
         else:
             th.lv += 1
@@ -95,33 +102,27 @@ class StageMgr:
         th.txt_num = 0
 
         th.own.talk = True
-    
 
-def ld_stg(stg, clr, pos, val, spr_grp):
-    file = f"AST/STG_{stg[0]}-{stg[1]}.stg"
-    row = 0
-
-    for line in FUNC.Process.process_file(file, 'r', lambda f: f.read()).splitlines():
+    def ld_stg(th, row, line):
         for i in range(len(line)):
             if line[i] != 'o':
                 shape = int(line[i])
-                c = clr[0] if rand.random() >= clr[2] else clr[1]
-                x = pos[0] + i * val[0]
-                y = pos[1] + row * val[1]
+                c = DICT.clr_dict[th.stg] if rand.random() >= 0.04 else DICT.clr_dict[6]
+                x = 127 + i * 15
+                y = 22 + row * 15
 
-                brc = Base((val[0], val[1], 2),
-                            c, shape)
+                brc = Base((15, 15, 2),
+                           c, shape)
 
                 if not hasattr(brc, "hp"):
                     brc.hp = 4
                 brc.rect.center = (x, y)
 
-                spr_grp.add(brc)
-
-        row += 1
+                th.own.brc_grp.add(brc)
 
 
 def ld_txt(stg):
     file = f"AST/TALK_{stg}.json"
 
-    return json.loads(FUNC.Process.process_file(file, 'r', lambda f: f.read()))
+    with open(file, 'r', encoding="utf-8") as f:
+        return json.load(f)

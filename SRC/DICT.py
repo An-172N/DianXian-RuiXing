@@ -4,6 +4,7 @@ import pygame as pyg
 
 from FRIEND import Ono
 from FRIEND import Kli
+from FRIEND import Hro
 
 
 clr_dict = {
@@ -17,6 +18,7 @@ clr_dict = {
 
 char_dict = {
         1: Ono,
+        2: Hro,
         4: Kli
 }
 
@@ -41,6 +43,10 @@ rst_dict = {
             "brg_grp": lambda th: th.brg_grp.empty()
         },
         "pln": {
+            "coll": lambda th: setattr(th.pln_mgr, "coll",
+                                       True),
+            "is_sdivide": lambda th: setattr(th.pln_mgr, "is_sdivide",
+                                             False),
             "cd_ctr": lambda th: setattr(th.pln_mgr, "cd_ctr",
                                          0),
             "bomb_cnt": lambda th: setattr(th.pln_mgr.char.bomb, "bomb_cnt",
@@ -57,6 +63,12 @@ rst_dict = {
                                            0),
             "bw_ctr": lambda th: setattr(th.item_mgr, "bw_ctr",
                                          0)
+        },
+        "stg":{
+            "txt_pt": lambda th: setattr(th.stg_mgr, "txt_pt",
+                                         0),
+            "txt_num": lambda th: setattr(th.pln_mgr, "txt_num",
+                                          0)
         }
     },
     "rst2": {

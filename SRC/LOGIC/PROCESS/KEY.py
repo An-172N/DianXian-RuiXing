@@ -1,13 +1,11 @@
 import sys
 import os
 import json
-import re
 import datetime as dt
 
 import pygame as pyg
 
 import DICT
-import FUNC
 
 
 class Key:
@@ -51,30 +49,23 @@ class Key:
                     DICT.rst_dict[cls][bra][evt](th.own)
 
     def sav_file(th, sc, stg, lv, game, tit):
+        date = dt.datetime.now().strftime('%Y-%m-%d')
+        time = dt.datetime.now().strftime('%H-%M-%s')
+
         folder = f'{os.environ["USERPROFILE"]}/Saved Games/{game}'
-        pattern = re.compile(rf'^{re.escape(th.name)}(\d+){re.escape(".json")}$')
+        file = f'{os.environ["USERPROFILE"]}/Saved Games/{game}/{th.name}-{date}-{time}.json'
 
         if not os.path.exists(folder):
             os.makedirs(folder)
-        num =[]
-        for i in os.listdir(folder):
-            match = pattern.match(i)
-            if match:
-                num.append(int(match.group(1)))
 
-        if num:
-            next_num = max(num) + 1
-        else:
-            next_num = 1
-
-        file = f'{os.environ["USERPROFILE"]}/Saved Games/{game}/{th.name}{next_num}.json'
         dump = [tit]
         dump.append({
                         'Nickname': th.name,
                         'Score': sc,
                         'The farthest place that you reached': f"{stg} - {lv}",
+                        'Pick up SPT rate': th.own.item_mgr.cal_spt(),
                         'Record date': dt.datetime.now().strftime('%Y-%m-%d'),
                     })
-
-        str = json.dumps(dump, indent=4)
-        FUNC.Process.process_file(file, 'r', lambda f: f.write(str))
+        
+        with open(file, 'w') as f:
+            json.dump(dump, f, indent=4)

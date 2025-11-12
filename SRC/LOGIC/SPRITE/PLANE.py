@@ -77,11 +77,11 @@ class PlaneMgr:
             th.coll):
             th.cd_ctr += 1
 
-            if th.cd_ctr >= 240:
+            if th.cd_ctr >= 150:
                 if th.is_sdivide:
                     th.is_sdivide = False
-                    for evt in DICT.rst_dict["rst1"]["blt"]:
-                        DICT.rst_dict["rst1"]["blt"][evt](th.own)
+                    for evt in DICT.rst_dict["rst1"]["pln"]:
+                        DICT.rst_dict["rst1"]["pln"][evt](th.own)
 
                 th.coll = False
             else:

@@ -35,7 +35,7 @@ class Ono(pyg.sprite.Sprite):
         th.ctr += 1
 
         if th.ctr % 120 == 0:
-            th.tar_x = rand.choice([150, 292, 435])
+            th.tar_x = rand.choice([150, 220, 292, 365, 435])
 
             th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
@@ -55,8 +55,9 @@ class Ono(pyg.sprite.Sprite):
             th.rect.center = tar_pos
         else:
             if dis > 0:
-                unit_direction = FUNC.Calculate.normalize(dir, dis)
-            th.rect.center = FUNC.Calculate.coordinate_difference(th.rect.center, (-(unit_direction[0] * 4), -(unit_direction[1] * 4)))
+                unit_direction = (dir[0] / dis,
+                                  dir[1] / dis)
+            th.rect.center = FUNC.Calculate.delta_position(th.rect.center, (-(unit_direction[0] * 4), -(unit_direction[1] * 4)))
 
         if not th.is_free:
             th.bomb.fire()

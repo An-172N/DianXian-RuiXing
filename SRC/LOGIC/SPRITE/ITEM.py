@@ -33,17 +33,20 @@ class ItemMgr:
             spr.spd = -2
             spr.rect.center = brc_pos
             th.own.item_grp.add(spr)
+            th.own.blt_mgr.ttl_spwn_spt += 1
         elif rand.random() <= 0.01:
             clr = DICT.clr_dict[2]
             spr = Base((9, 9, 2), clr, 1, 2)
             spr.spd = -2
             spr.rect.center = brc_pos
             th.own.item_grp.add(spr)
+            th.own.blt_mgr.ttl_spwn_spt += 1
     
     def item_coll(th, src, _):
         th.comb += 1
         th.bw_ctr = 150
         th.own.blt_mgr.ttl_spt += 1
+        th.own.blt_mgr.stg_ttl_spt += 1
 
         if (src.type == 1 and
             th.own.blt_mgr.spt < 32):
@@ -52,3 +55,9 @@ class ItemMgr:
             th.own.pln_mgr.plyr += 1
             
         src.kill()
+
+    def cal_spt(th):
+        try:
+            return f"{th.own.blt_mgr.stg_ttl_spt / th.own.blt_mgr.ttl_spwn_spt * 100:.2f} %"
+        except ZeroDivisionError:
+            return "0.00 %"

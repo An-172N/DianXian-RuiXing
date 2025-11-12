@@ -34,7 +34,7 @@ class RectRaining:
     def free(th):
         th.ctr += 1
 
-        if (th.ctr >= 60 and
+        if (th.ctr >= 30 and
             th.ctr % 1 == 0 and
             th.bomb_cnt < 6):
             for i in range(120, 466, 15):

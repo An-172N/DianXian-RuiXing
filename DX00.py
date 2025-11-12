@@ -1,5 +1,6 @@
 import sys
 import os
+import itertools
 
 sys.dont_write_bytecode = True
 curr_dir = os.path.dirname(os.path.abspath(__file__))
@@ -8,7 +9,6 @@ sys.path.append(os.path.join(curr_dir, 'SRC'))
 import pygame as pyg
 
 import KERNEL
-import FUNC
 
 
 pyg.init()
@@ -60,18 +60,18 @@ while True:
             [spr.kill() for spr in game.ptcl_grp
              if not game.win.collidepoint(spr.rect.center)]
 
-            coll1 = FUNC.Process.find_match(game.brg_grp, game.pln_grp,
-                                            lambda src, tar: src.rect.collidepoint(tar.rect.center))
+            coll1 = itertools.product(game.brg_grp, game.pln_grp)
             for src, tar in coll1:
-                game.pln_mgr.coll_brg(src, tar)
-            coll2 = FUNC.Process.find_match(game.blt_grp, game.brc_grp,
-                                            lambda src, tar: src.rect.colliderect(tar.rect))
+                if src.rect.collidepoint(tar.rect.center):
+                    game.pln_mgr.coll_brg(src, tar)
+            coll2 = itertools.product(game.blt_grp, game.brc_grp)
             for src, tar in coll2:
-                game.blt_mgr.blt_coll(src, tar)
-            coll3 = FUNC.Process.find_match(game.item_grp, game.pln_grp,
-                                            lambda src, tar: src.rect.colliderect(tar.rect))
+                if src.rect.colliderect(tar.rect):
+                    game.blt_mgr.blt_coll(src, tar)
+            coll3 = itertools.product(game.item_grp, game.pln_grp)
             for src, tar in coll3:
-                game.item_mgr.item_coll(src, tar)
+                if src.rect.colliderect(tar.rect):
+                    game.item_mgr.item_coll(src, tar)
 
         game.item_mgr.comb_ctr()
 
