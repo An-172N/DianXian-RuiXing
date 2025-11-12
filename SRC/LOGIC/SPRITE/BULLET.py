@@ -10,7 +10,7 @@ class BulletMgr:
     def __init__(th, own):
         th.own = own
 
-        th.spt = 16
+        th.spt = 0
         th.ttl_spt = 0
         th.stg_ttl_spt = 0
         th.ttl_spwn_spt = 0
