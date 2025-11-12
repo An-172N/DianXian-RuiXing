@@ -44,7 +44,7 @@ rst_dict = {
         },
         "pln": {
             "coll": lambda th: setattr(th.pln_mgr, "coll",
-                                       True),
+                                       False),
             "is_sdivide": lambda th: setattr(th.pln_mgr, "is_sdivide",
                                              False),
             "cd_ctr": lambda th: setattr(th.pln_mgr, "cd_ctr",
@@ -78,19 +78,21 @@ rst_dict = {
             "lv": lambda th: setattr(th.stg_mgr, "lv",
                                         0),
             "char": lambda th: setattr(th.stg_mgr, "char",
-                                          None)
+                                       None)
         },
         "pln": {
             "no_hurt": lambda th: setattr(th.pln_mgr, "no_hurt",
                                              0),
             "plyr": lambda th: setattr(th.pln_mgr, "plyr",
-                                          4),
+                                          3),
             "sc": lambda th: setattr(th.pln_mgr, "sc",
                                         0)
         },
         "blt": {
             "spt": lambda th: setattr(th.blt_mgr, "spt",
-                                         0)
+                                      0),
+            "can_shoot": lambda th: setattr(th.blt_mgr, "can_shoot",
+                                            False)
         },
         "item": {
             "spwn_ctr": lambda th: setattr(th.item_mgr, "comb",
@@ -155,7 +157,9 @@ key_dict = {
                                            False),
             pyg.K_LSHIFT: lambda th: setattr(th.pln_mgr, "is_slow",
                                              False),
-            pyg.K_z: lambda th: th.blt_mgr.spwn_blt()
+            pyg.K_z: lambda th: (th.blt_mgr.spwn_blt(),
+                                 setattr(th.blt_mgr, "can_shoot",
+                                         True))
         }
     }
 }

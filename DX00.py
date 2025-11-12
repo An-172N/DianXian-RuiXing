@@ -26,7 +26,7 @@ game = KERNEL.Thunder(scr, fnt, clk)
 
 info_list = [
     "点线锐山行 ~ Thunder Out of the Mountain",
-    "Ver 0.01",
+    "Ver 0.5",
     "Copyright (c) 2025 An_172N",
     "本游戏遵循 GPL 3.0 开源协议",
     " ",

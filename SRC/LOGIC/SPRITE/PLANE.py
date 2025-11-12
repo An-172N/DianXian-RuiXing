@@ -10,7 +10,7 @@ class PlaneMgr:
     def __init__(th, own):
         th.own = own
 
-        th.plyr = 4
+        th.plyr = 3
         th.no_hurt = 0
         th.sc = 0
         th.cd_ctr = 0
@@ -77,7 +77,7 @@ class PlaneMgr:
             th.coll):
             th.cd_ctr += 1
 
-            if th.cd_ctr >= 150:
+            if th.cd_ctr >= 180:
                 if th.is_sdivide:
                     th.is_sdivide = False
                     for evt in DICT.rst_dict["rst1"]["pln"]:

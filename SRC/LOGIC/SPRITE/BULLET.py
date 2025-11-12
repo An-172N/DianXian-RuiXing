@@ -15,23 +15,26 @@ class BulletMgr:
         th.stg_ttl_spt = 0
         th.ttl_spwn_spt = 0
 
+        th.can_shoot = False
+
     def spwn_blt(th):
-        p = 2 ** (th.spt // 32)
-        q = 2 ** (th.spt // 16)
+        if th.can_shoot:
+            p = 2 ** (th.spt // 32)
+            q = 2 ** (th.spt // 16)
 
-        for i in range(0, p):
-            for j in range(-q, q + 1, q):
-                th.own.pln_mgr.char.bomb.fire(0 + i * 10, 0 + i * 12,
-                                              j)
+            for i in range(0, p):
+                for j in range(-q, q + 1, q):
+                    th.own.pln_mgr.char.bomb.fire(0 + i * 10, 0 + i * 12,
+                                                  j)
 
-        char = th.own.pln_mgr.char
-        rands = rand.randint(0, 45)
-        for i in range(0 + rands, 360 + rands, 45):
-            spr = Base((2, 2, 0), char.clr, 1)
-            spr.spd = rand.randint(6, 10)
-            spr.rect.center = char.rect.center
-            spr.curr_ang = i
-            th.own.ptcl_grp.add(spr)
+            char = th.own.pln_mgr.char
+            rands = rand.randint(0, 45)
+            for i in range(0 + rands, 360 + rands, 45):
+                spr = Base((2, 2, 0), char.clr, 1)
+                spr.spd = rand.randint(6, 10)
+                spr.rect.center = char.rect.center
+                spr.curr_ang = i
+                th.own.ptcl_grp.add(spr)
 
     def single_bomb(th):
         if (not th.own.pln_mgr.is_sdivide and
@@ -133,12 +136,12 @@ def polygon_brc(spr, src, spr_grp, spd):
         spr_grp.add(curr_spr)
 
 
-def line_brc(spr, src, spr_grp, spd):
+def line_brc(spr, src, spr_grp, _):
     for _ in range(12):
-        curr_spr = spr((2, rand.randint(15, 75), 0), (45, 194, 229), 1, "blt")
+        curr_spr = spr((2, rand.randint(30, 180), 0), (45, 194, 229), 1, "blt")
         if not hasattr(curr_spr, "dmg"):
             curr_spr.dmg = 6
-        curr_spr.spd = spd
+        curr_spr.spd = 0
         curr_spr.rect.center = src.rect.center
         curr_spr.curr_ang = rand.randint(0, 360)
         spr_grp.add(curr_spr)
