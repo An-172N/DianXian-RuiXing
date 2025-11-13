@@ -36,18 +36,31 @@ class PlaneMgr:
             th.char.rect.right = th.own.win.right
     
     def turn_side(th):
-        turn_side_image = th.char.orig_image.subsurface((12, 0,
-                                                         12, 26))
-        flipped_image = pyg.transform.flip(turn_side_image,
-                                           True, False)
+        turn_side_image = th.char.orig_image.subsurface(
+            (12,
+             0,
+             12,
+             26
+            )
+        )
+        flipped_image = pyg.transform.flip(
+            turn_side_image,
+            True,
+            False
+        )
 
         if th.mv_right:
             th.char.image = flipped_image
         elif th.mv_left:
             th.char.image = turn_side_image
         else:
-            th.char.image = th.char.orig_image.subsurface((0, 0,
-                                                           12, 26))
+            th.char.image = th.char.orig_image.subsurface(
+                (0,
+                 0,
+                 12,
+                 26
+                )
+            )
             
     def coll_brg(th, src, _):
         if (not (th.coll or

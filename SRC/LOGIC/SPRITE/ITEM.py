@@ -28,15 +28,13 @@ class ItemMgr:
 
     def item_spwn(th, brc_pos):
         if rand.random() <= 0.08:
-            clr = DICT.clr_dict[5]
-            spr = Base((9, 9, 2), clr, 1, 1)
+            spr = Base((9, 9, 2), DICT.clr_dict[5], 1, 1)
             spr.spd = -2
             spr.rect.center = brc_pos
             th.own.item_grp.add(spr)
             th.own.blt_mgr.ttl_spwn_spt += 1
         elif rand.random() <= 0.01:
-            clr = DICT.clr_dict[2]
-            spr = Base((9, 9, 2), clr, 1, 2)
+            spr = Base((9, 9, 2), DICT.clr_dict[2], 1, 2)
             spr.spd = -2
             spr.rect.center = brc_pos
             th.own.item_grp.add(spr)

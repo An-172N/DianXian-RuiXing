@@ -18,8 +18,10 @@ class StageMgr:
         th.stg = 1
         th.lv = 0
 
-        pic_list = [('AST/IMG_STAGE1BG.png', 1),
-                    ('AST/IMG_STAGE2BG.png', 2)]
+        pic_list = [
+            ('AST/IMG_STAGE1BG.png', 1),
+            ('AST/IMG_STAGE2BG.png', 2)
+        ]
         th.pic = FUNC.Process.load_files(pic_list, lambda f: pyg.image.load(f).convert_alpha())
 
         th.bg = th.pic[th.stg]
@@ -39,6 +41,8 @@ class StageMgr:
         th.own.pln_mgr.no_hurt += 1
         th.own.pln_mgr.char.rect.center = (292, 331)
         th.own.pln_grp.add(th.own.pln_mgr.char)
+        th.bg = th.pic[th.stg]
+        th.bg.set_alpha(159)
 
     def lv_ld(th):
         if th.ctr <= 60:
@@ -53,8 +57,12 @@ class StageMgr:
 
                 th.own.brc_grp.add(th.char)
             else:
-                FUNC.Process.process_file(f"AST/STG_{th.stg}-{th.lv}.stg",
-                                          th.ld_stg)
+                FUNC.Process.process_file(
+                    f"AST/STG_{th.stg}-{th.lv}.stg",
+                    'ascii',
+                    0,
+                    th.ld_stg
+                )
 
             th.ctr = 0
             th.own.lv_ld = True
@@ -70,8 +78,6 @@ class StageMgr:
                     th.own.summ = False
                     th.own.sav = True
                     th.ctr = 0
-                    th.bg = th.pic[th.stg]
-                    th.bg.set_alpha(159)
                 else:
                     th.next_lv()
                     th.lv_lgc()

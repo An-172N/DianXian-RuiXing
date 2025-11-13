@@ -47,8 +47,7 @@ class Ono(pyg.sprite.Sprite):
                 0
             )
         tar_pos = (th.tar_x, 60)
-        two_pt = (tar_pos[0] - th.rect.centerx,
-                  tar_pos[1] - th.rect.centery)
+        two_pt = FUNC.Calculate.delta_position(tar_pos, th.rect.center)
         dis = math.hypot(two_pt[0], two_pt[1])
 
         if dis < 4:

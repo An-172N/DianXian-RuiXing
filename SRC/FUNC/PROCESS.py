@@ -18,25 +18,23 @@ def load_files(file_key_list, load_func):
     return file_dict
 
 
-def process_file(file, process_func):
+def process_file(file, encoding, start_line, process_func):
     """
     处理文件中的数据
 
     Args:
         file: 要处理的文件
+        encoding: 指定的编码格式
+        start_line: 开始处理的行数
         process_func: 处理函数，它接收行号和行内容
 
     Returns:
-        文件处理的行数
+        最后一个处理函数返回的值
     """
-    line_count = 0
 
-    with open(file, 'r') as f:
-        for row, line in enumerate(f):
+    with open(file, 'r', encoding=encoding) as f:
+        for row, line in enumerate(f, start=start_line):
             line = line.rstrip('\n')
+            content = process_func(row, line)
 
-            process_func(row, line)
-
-            line_count += 1
-
-    return line_count
+    return content

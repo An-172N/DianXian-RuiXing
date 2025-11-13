@@ -17,9 +17,9 @@ clr_dict = {
 }
 
 char_dict = {
-        1: Ono,
-        2: Hro,
-        4: Kli
+    1: Ono,
+    2: Hro,
+    4: Kli
 }
 
 rst_dict = {

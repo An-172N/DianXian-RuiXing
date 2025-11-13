@@ -15,9 +15,11 @@ pyg.init()
 pyg.display.set_caption('DX_RSX')
 
 flg = pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN|pyg.SCALED
-scr = pyg.display.set_mode((480, 360),
-                           flg,
-                           vsync=1)
+scr = pyg.display.set_mode(
+    (480, 360),
+    flg,
+    vsync=1
+)
 
 fnt = pyg.font.Font('AST\FNT_GNUUNIFONT.otf', 15)
 clk = pyg.time.Clock()

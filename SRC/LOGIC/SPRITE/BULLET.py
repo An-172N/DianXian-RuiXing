@@ -24,8 +24,11 @@ class BulletMgr:
 
             for i in range(0, p):
                 for j in range(-q, q + 1, q):
-                    th.own.pln_mgr.char.bomb.fire(0 + i * 10, 0 + i * 12,
-                                                  j)
+                    th.own.pln_mgr.char.bomb.fire(
+                        0 + i * 10,
+                        0 + i * 12,
+                        j
+                    )
 
             char = th.own.pln_mgr.char
             rands = rand.randint(0, 45)
@@ -86,11 +89,18 @@ class BulletMgr:
                 2: circle_brc
             }
 
-            proc_dict[brc.shape](Base, brc,
-                                 th.own.blt_grp,
-                                 16)
+            proc_dict[brc.shape](
+                Base,
+                brc,
+                th.own.blt_grp,
+                16
+            )
 
-        difficulty = FUNC.Calculate.generalized_fibonacci(1, 2, th.own.stg_mgr.stg + 1) / 100
+        difficulty = FUNC.Calculate.fibonacci(
+            1,
+            2,
+            th.own.stg_mgr.stg + 1
+        ) / 100
         if rand.random() <= 0.32 + difficulty:
             tupl = rand.choice([(0, 1, 1), (-30, 31, 30)])
             char = th.own.pln_mgr.char

@@ -16,7 +16,7 @@ def delta_position(target_position, source_position):
     return dx, dy
 
 
-def generalized_fibonacci(first_number, second_number, frequency):
+def fibonacci(first_number, second_number, frequency):
     """
     计算广义斐波那契数列的第 frequency 项
 
