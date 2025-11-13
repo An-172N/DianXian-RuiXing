@@ -92,11 +92,11 @@ class PolyX:
             current_step = (th.bomb_cnt * 20)
             current_pos = FUNC.Calculate.delta_position(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step)))
                 
-            for j in range(180, 270, 45):
+            for j in range(45, 136, 90):
                 spr = Base((9, 9, 0), th.char.clr, 0)
                 spr.spd = 4
                 spr.rect.center = (current_pos[0], current_pos[1])
-                spr.curr_ang = j + th.dl
+                spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1])) + j + th.dl
                 th.char.stg_mgr.own.brg_grp.add(spr)
 
             start_pos = (292 - 140, 100 - 140)
@@ -112,11 +112,11 @@ class PolyX:
             current_step = (th.bomb_cnt * 20)
             current_pos = FUNC.Calculate.delta_position(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step)))
                 
-            for j in range(270, 360, 45):
+            for j in range(45, 136, 90):
                 spr = Base((9, 9, 0), th.char.clr, 0)
                 spr.spd = 4
                 spr.rect.center = (current_pos[0], current_pos[1])
-                spr.curr_ang = j + th.dl
+                spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1])) + j + th.dl
                 th.char.stg_mgr.own.brg_grp.add(spr)
         
             th.bomb_cnt += 1
