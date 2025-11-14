@@ -5,6 +5,7 @@ import pygame as pyg
 from FRIEND import Ono
 from FRIEND import Kli
 from FRIEND import Hro
+from FRIEND import Nre
 
 
 clr_dict = {
@@ -19,6 +20,7 @@ clr_dict = {
 char_dict = {
     1: Ono,
     2: Hro,
+    3: Nre,
     4: Kli
 }
 

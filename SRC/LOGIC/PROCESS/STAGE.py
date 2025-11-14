@@ -15,12 +15,13 @@ class StageMgr:
         th.txt_num = 0
         th.txt_pt = 0
         th.ctr = 0
-        th.stg = 1
+        th.stg = 3
         th.lv = 0
 
         pic_list = [
             (1, 'AST/IMG_STAGE1BG.png'),
-            (2, 'AST/IMG_STAGE2BG.png')
+            (2, 'AST/IMG_STAGE2BG.png'),
+            (3, 'AST/IMG_STAGE3BG.png')
         ]
         th.pic = FUNC.Process.load_files(pic_list, lambda f: pyg.image.load(f).convert_alpha())
 

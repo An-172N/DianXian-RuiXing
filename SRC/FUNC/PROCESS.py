@@ -29,7 +29,7 @@ def process_file(file, encoding, start_line, process_func):
         process_func: 处理函数，它接收行号和行内容
 
     Yields:
-        所有处理函数返回的值
+        处理函数返回的值
     """
 
     with open(file, 'r', encoding=encoding) as f:
