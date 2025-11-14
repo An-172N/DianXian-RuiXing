@@ -7,7 +7,7 @@ def delta_position(target_position, source_position):
         source_position: 源头对象的二维坐标元组
 
     Returns:
-        两点 x 和 y 的差值
+        两点 x 和 y 的差值元组
     """
 
     dx = target_position[0] - source_position[0]

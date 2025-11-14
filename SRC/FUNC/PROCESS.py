@@ -3,7 +3,7 @@ def load_files(file_key_list, load_func):
     加载多个文件
     
     Args:
-        file_key_list: 一个列表，里面存有若干个由文件名和键值组成的元组
+        file_key_list: 一个列表，里面存有若干个由键和文件名组成的元组
         load_func: 加载函数，它接收文件
 
     Returns:
