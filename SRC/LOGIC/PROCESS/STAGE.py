@@ -19,8 +19,8 @@ class StageMgr:
         th.lv = 0
 
         pic_list = [
-            ('AST/IMG_STAGE1BG.png', 1),
-            ('AST/IMG_STAGE2BG.png', 2)
+            (1, 'AST/IMG_STAGE1BG.png'),
+            (2, 'AST/IMG_STAGE2BG.png')
         ]
         th.pic = FUNC.Process.load_files(pic_list, lambda f: pyg.image.load(f).convert_alpha())
 
@@ -57,12 +57,13 @@ class StageMgr:
 
                 th.own.brc_grp.add(th.char)
             else:
-                FUNC.Process.process_file(
-                    f"AST/STG_{th.stg}-{th.lv}.stg",
-                    'ascii',
-                    0,
-                    th.ld_stg
-                )
+                for i in FUNC.Process.process_file(
+                             f"AST/STG_{th.stg}-{th.lv}.stg",
+                             'ascii',
+                             0,
+                             th.ld_stg
+                         ):
+                    print(i)
 
             th.ctr = 0
             th.own.lv_ld = True

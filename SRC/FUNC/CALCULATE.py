@@ -13,7 +13,7 @@ def delta_position(target_position, source_position):
     dx = target_position[0] - source_position[0]
     dy = target_position[1] - source_position[1]
 
-    return dx, dy
+    return (dx, dy)
 
 
 def fibonacci(first_number, second_number, frequency):

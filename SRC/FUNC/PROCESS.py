@@ -12,7 +12,7 @@ def load_files(file_key_list, load_func):
 
     file_dict = {}
 
-    for file, key in file_key_list:
+    for key, file in file_key_list:
         file_dict[key] = load_func(file)
 
     return file_dict
@@ -28,8 +28,8 @@ def process_file(file, encoding, start_line, process_func):
         start_line: 开始处理的行数
         process_func: 处理函数，它接收行号和行内容
 
-    Returns:
-        最后一个处理函数返回的值
+    Yields:
+        所有处理函数返回的值
     """
 
     with open(file, 'r', encoding=encoding) as f:
@@ -37,4 +37,4 @@ def process_file(file, encoding, start_line, process_func):
             line = line.rstrip('\n')
             content = process_func(row, line)
 
-    return content
+            yield content
