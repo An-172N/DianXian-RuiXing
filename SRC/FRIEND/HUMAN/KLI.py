@@ -2,6 +2,7 @@ import pygame as pyg
 
 import DICT
 from ..BASE import Base
+from DRAW import ShapeDraw
 
 
 class Kli(pyg.sprite.Sprite):
@@ -22,6 +23,15 @@ class Kli(pyg.sprite.Sprite):
         th.pln_mgr.mv_pln()
 
         th.pln_mgr.invinc()
+
+
+class DecPt(pyg.sprite.Sprite):
+    def __init__(th):
+        super().__init__()
+        th.orig_image = ShapeDraw(4, 4, 0, (127, 127, 127)).rect()
+        th.image = th.orig_image
+        th.rect = th.image.get_rect()
+        th.mask = pyg.mask.from_surface(th.image)
 
 
 class RectRaining:

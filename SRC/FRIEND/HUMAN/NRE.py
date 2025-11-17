@@ -39,7 +39,8 @@ class Nre(pyg.sprite.Sprite):
 
             th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
-            th.bomb.dl = 0
+            th.bomb.ctr = 0
+            th.bomb.blt_ctr = 0
             th.is_free = not th.is_free
 
         dir = (
@@ -69,68 +70,71 @@ class StraightThunder:
     def __init__(th, own):
         th.char = own
 
+        th.ctr = 0
         th.bomb_cnt = 0
         th.bullet_cnt = 0
-        th.ctr = 0
-        th.dl = 0
+        th.blt_ctr = 0
 
     def free(th):
         th.ctr += 1
-        th.dl -= 6
 
-        if th.ctr % 1 == 0 and th.bomb_cnt < 24:
-            start_pos = (292 + 140, 100 - 140)
-            end_pos = (292 - 140, 100 + 140)
+        if th.ctr % 1 == 0 and th.bomb_cnt < 1:
+            for _ in range(24):
+                start_pos = (rand.randint(120, 465), rand.randint(-15, 300))
+                end_pos = (rand.randint(120, 465), 360)
         
-            dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
-            distance = math.hypot(dpos[0], dpos[1])
-        
-            if distance > 0:
-                unit_dx = dpos[0] / distance
-                unit_dy = dpos[1] / distance
-
-            current_step = (th.bomb_cnt * 20)
-            current_pos = FUNC.Calculate.delta_position(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step)))
+                dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
+                distance = math.hypot(dpos[0], dpos[1])
                 
-            for j in range(45, 136, 90):
-                spr = Base((9, 9, 0), th.char.clr, 0)
-                spr.spd = 4
-                spr.rect.center = (current_pos[0], current_pos[1])
-                spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1])) + j + th.dl
+                spr = Base((2, distance, 0), (255, 255, 255), 1)
+                spr.spd = 0
+                spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
+                spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
+                spr.update()
                 th.char.stg_mgr.own.brg_grp.add(spr)
 
-            start_pos = (292 - 140, 100 - 140)
-            end_pos = (292 + 140, 100 + 140)
-        
-            dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
-            distance = math.hypot(dpos[0], dpos[1])
-        
-            if distance > 0:
-                unit_dx = dpos[0] / distance
-                unit_dy = dpos[1] / distance
-
-            current_step = (th.bomb_cnt * 20)
-            current_pos = FUNC.Calculate.delta_position(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step)))
-                
-            for j in range(45, 136, 90):
-                spr = Base((9, 9, 0), th.char.clr, 0)
-                spr.spd = 4
-                spr.rect.center = (current_pos[0], current_pos[1])
-                spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1])) + j + th.dl
-                th.char.stg_mgr.own.brg_grp.add(spr)
-        
             th.bomb_cnt += 1
 
+        if th.ctr >= 30:
+            for i in th.char.stg_mgr.own.brg_grp:
+                i.clr = DICT.clr_dict[3]
+                temp_surface = pyg.Surface(i.image.get_size(), pyg.SRCALPHA)
+                temp_surface.fill(i.clr)
+
+                i.image.blit(temp_surface, (0, 0), special_flags=pyg.BLEND_RGBA_MIN)
+        if th.ctr >= 60:
+            for i in th.char.stg_mgr.own.brg_grp:
+                i.kill()
+
     def fire(th):
+        th.blt_ctr += 1
+
         if th.bullet_cnt < 1:
-            pos = th.char.rect.center
             char_pos = th.char.stg_mgr.own.pln_mgr.char.rect.center
-            for i in range(-30, 31, 30):
-                spr = Base((9, 9, 0), th.char.clr, 0)
-                spr.spd = 4
-                spr.rect.center = pos
-                two_pt = FUNC.Calculate.delta_position(char_pos, pos)
-                spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1])) + i
+
+            for i in range(char_pos[0] - 30, char_pos[0] + 31, 20):
+                end_pos = (i, 360)
+                start_pos = (i, 0)
+
+                dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
+                distance = math.hypot(dpos[0], dpos[1])
+
+                spr = Base((2, distance, 0), (255, 255, 255), 1)
+                spr.spd = 0
+                spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
+                spr.curr_ang = 0
+                spr.update()
                 th.char.stg_mgr.own.brg_grp.add(spr)
 
             th.bullet_cnt += 1
+
+        if th.blt_ctr >= 45:
+            for i in th.char.stg_mgr.own.brg_grp:
+                i.clr = DICT.clr_dict[3]
+                temp_surface = pyg.Surface(i.image.get_size(), pyg.SRCALPHA)
+                temp_surface.fill(i.clr)
+
+                i.image.blit(temp_surface, (0, 0), special_flags=pyg.BLEND_RGBA_MIN)
+        if th.blt_ctr >= 90:
+            for i in th.char.stg_mgr.own.brg_grp:
+                i.kill()

@@ -16,7 +16,7 @@ class StageMgr:
         th.txt_pt = 0
         th.ctr = 0
         th.stg = 3
-        th.lv = 0
+        th.lv = 5
 
         pic_list = [
             (1, 'AST/IMG_STAGE1BG.png'),
@@ -42,6 +42,7 @@ class StageMgr:
         th.own.pln_mgr.no_hurt += 1
         th.own.pln_mgr.char.rect.center = (292, 331)
         th.own.pln_grp.add(th.own.pln_mgr.char)
+        th.own.pln_grp.add(th.own.pln_mgr.d_pt)
         th.bg = th.pic[th.stg]
         th.bg.set_alpha(159)
 

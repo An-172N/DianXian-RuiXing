@@ -4,6 +4,7 @@ import pygame as pyg
 
 import DICT
 from FRIEND import Base
+from FRIEND import DecPt
 
 
 class PlaneMgr:
@@ -23,6 +24,7 @@ class PlaneMgr:
         th.coll = True
 
         th.char = DICT.char_dict[4](th)
+        th.d_pt = DecPt()
     
     def mv_pln(th):
         if th.mv_right:
@@ -34,6 +36,8 @@ class PlaneMgr:
             th.char.rect.left = th.own.win.left
         elif th.char.rect.right > th.own.win.right:
             th.char.rect.right = th.own.win.right
+
+        th.d_pt.rect.center = th.char.rect.center
     
     def turn_side(th):
         turn_side_image = th.char.orig_image.subsurface(
@@ -62,7 +66,7 @@ class PlaneMgr:
                 )
             )
             
-    def coll_brg(th, src, _):
+    def coll_brg(th, src):
         if (not (th.coll or
                  th.is_sdivide)):
             th.coll = True

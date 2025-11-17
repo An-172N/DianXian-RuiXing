@@ -62,10 +62,9 @@ while True:
             [spr.kill() for spr in game.ptcl_grp
              if not game.win.collidepoint(spr.rect.center)]
 
-            coll1 = itertools.product(game.brg_grp, game.pln_grp)
-            for src, tar in coll1:
-                if src.rect.collidepoint(tar.rect.center):
-                    game.pln_mgr.coll_brg(src, tar)
+            for brg in game.brg_grp:
+                if pyg.sprite.collide_mask(brg, game.pln_mgr.d_pt) and brg.clr != (255, 255, 255):
+                    game.pln_mgr.coll_brg(brg)
             coll2 = itertools.product(game.blt_grp, game.brc_grp)
             for src, tar in coll2:
                 if src.rect.colliderect(tar.rect):

@@ -29,6 +29,7 @@ class Base(pyg.sprite.Sprite):
         th.orig_image = th.get_shape(shape)
         th.image = th.orig_image
         th.rect = th.image.get_rect()
+        th.mask = pyg.mask.from_surface(th.image)
 
     def get_shape(th, shape):
         shape_dict = {
@@ -42,6 +43,7 @@ class Base(pyg.sprite.Sprite):
     def update(th):
         th.image = pyg.transform.rotate(th.orig_image, th.curr_ang)
         th.rect = th.image.get_rect(center=th.rect.center)
+        th.mask = pyg.mask.from_surface(th.image)
 
         th.x = getattr(th, 'x', th.rect.centerx)
         th.y = getattr(th, 'y', th.rect.centery)
