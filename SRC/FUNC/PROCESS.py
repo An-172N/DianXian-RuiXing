@@ -21,7 +21,7 @@ def load_files(file_key_list, load_func):
 def process_file(file, encoding, start_line, process_func):
     """
     处理文件中的数据
-
+c
     Args:
         file: 要处理的文件
         encoding: 指定的编码格式

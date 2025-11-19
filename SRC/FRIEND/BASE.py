@@ -48,5 +48,5 @@ class Base(pyg.sprite.Sprite):
         th.x = getattr(th, 'x', th.rect.centerx)
         th.y = getattr(th, 'y', th.rect.centery)
         rad = math.radians(th.curr_ang)
-        th.x, th.y = FUNC.Calculate.delta_position((th.x, th.y), (math.sin(rad) * th.spd, math.cos(rad) * th.spd))
+        th.x, th.y, _ = FUNC.Calculate.delta_tuple((th.x, th.y, 0), (math.sin(rad) * th.spd, math.cos(rad) * th.spd, 0))
         th.rect.center = (int(th.x), int(th.y))

@@ -108,7 +108,7 @@ class BulletMgr:
                 spr = Base((9, 9, 0), brc.clr, brc.shape)
                 spr.spd = 2
                 spr.rect.center = brc_pos
-                two_pt = FUNC.Calculate.delta_position(char.rect.center, spr.rect.center)
+                two_pt = FUNC.Calculate.delta_tuple((char.rect.centerx, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
                 spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1])) + i
                 th.own.brg_grp.add(spr)
 

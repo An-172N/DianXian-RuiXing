@@ -57,7 +57,8 @@ class Hro(pyg.sprite.Sprite):
             if dis > 0:
                 unit_direction = (dir[0] / dis,
                                   dir[1] / dis)
-            th.rect.center = FUNC.Calculate.delta_position(th.rect.center, (-(unit_direction[0] * 4), -(unit_direction[1] * 4)))
+            pos = FUNC.Calculate.delta_tuple((th.rect.centerx, th.rect.centery, 0), (-(unit_direction[0] * 4), -(unit_direction[1] * 4), 0))
+            th.rect.center = pos[:-1]
 
         if not th.is_free:
             th.bomb.fire()
@@ -79,10 +80,10 @@ class PolyX:
         th.dl -= 6
 
         if th.ctr % 1 == 0 and th.bomb_cnt < 24:
-            start_pos = (292 + 140, 100 - 140)
-            end_pos = (292 - 140, 100 + 140)
+            start_pos = (292 + 140, 100 - 140, 0)
+            end_pos = (292 - 140, 100 + 140, 0)
         
-            dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
+            dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
         
             if distance > 0:
@@ -90,7 +91,7 @@ class PolyX:
                 unit_dy = dpos[1] / distance
 
             current_step = (th.bomb_cnt * 20)
-            current_pos = FUNC.Calculate.delta_position(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step)))
+            current_pos = FUNC.Calculate.delta_tuple(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step), 0))
                 
             for j in range(45, 136, 90):
                 spr = Base((9, 9, 0), th.char.clr, 0)
@@ -99,10 +100,10 @@ class PolyX:
                 spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1])) + j + th.dl
                 th.char.stg_mgr.own.brg_grp.add(spr)
 
-            start_pos = (292 - 140, 100 - 140)
-            end_pos = (292 + 140, 100 + 140)
+            start_pos = (292 - 140, 100 - 140, 0)
+            end_pos = (292 + 140, 100 + 140, 0)
         
-            dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
+            dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
         
             if distance > 0:
@@ -110,7 +111,7 @@ class PolyX:
                 unit_dy = dpos[1] / distance
 
             current_step = (th.bomb_cnt * 20)
-            current_pos = FUNC.Calculate.delta_position(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step)))
+            current_pos = FUNC.Calculate.delta_tuple(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step), 0))
                 
             for j in range(45, 136, 90):
                 spr = Base((9, 9, 0), th.char.clr, 0)
@@ -122,14 +123,16 @@ class PolyX:
             th.bomb_cnt += 1
 
     def fire(th):
-        if th.bullet_cnt < 1:
+        th.ctr += 1
+
+        if th.ctr % 8 == 0 and th.bullet_cnt < 3:
             pos = th.char.rect.center
             char_pos = th.char.stg_mgr.own.pln_mgr.char.rect.center
             for i in range(-30, 31, 30):
                 spr = Base((9, 9, 0), th.char.clr, 0)
                 spr.spd = 4
                 spr.rect.center = pos
-                two_pt = FUNC.Calculate.delta_position(char_pos, pos)
+                two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1], 0), (pos[0], pos[1], 0))
                 spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1])) + i
                 th.char.stg_mgr.own.brg_grp.add(spr)
 

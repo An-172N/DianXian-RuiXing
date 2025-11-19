@@ -1,19 +1,21 @@
-def delta_position(target_position, source_position):
+def delta_tuple(first_tuple, second_tuple):
     """
-    计算二维坐标差
+    计算两个元组内的三个值的值差
+    计算方式是 first_tuple 减去 second_tuple
     
     Args:
-        target_position: 目标对象的二维坐标元组
-        source_position: 源头对象的二维坐标元组
+        first_tuple: 第一个元组
+        second_tuple: 第二个元组
 
     Returns:
-        两点 x 和 y 的差值元组
+        两个元组内的三个值的值差元组
     """
 
-    dx = target_position[0] - source_position[0]
-    dy = target_position[1] - source_position[1]
+    dx = first_tuple[0] - second_tuple[0]
+    dy = first_tuple[1] - second_tuple[1]
+    dz = first_tuple[2] - second_tuple[2]
 
-    return (dx, dy)
+    return (dx, dy, dz)
 
 
 def fibonacci(first_number, second_number, frequency):

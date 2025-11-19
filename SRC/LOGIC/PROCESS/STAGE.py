@@ -15,8 +15,8 @@ class StageMgr:
         th.txt_num = 0
         th.txt_pt = 0
         th.ctr = 0
-        th.stg = 3
-        th.lv = 5
+        th.stg = 1
+        th.lv = 0
 
         pic_list = [
             (1, 'AST/IMG_STAGE1BG.png'),

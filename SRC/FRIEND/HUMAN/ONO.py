@@ -46,17 +46,18 @@ class Ono(pyg.sprite.Sprite):
                 th.tar_x - th.rect.centerx,
                 0
             )
-        tar_pos = (th.tar_x, 60)
-        two_pt = FUNC.Calculate.delta_position(tar_pos, th.rect.center)
+        tar_pos = (th.tar_x, 60, 0)
+        two_pt = FUNC.Calculate.delta_tuple(tar_pos, (th.rect.centerx, th.rect.centery, 0))
         dis = math.hypot(two_pt[0], two_pt[1])
 
         if dis < 4:
-            th.rect.center = tar_pos
+            th.rect.center = tar_pos[:-1]
         else:
             if dis > 0:
                 unit_direction = (dir[0] / dis,
                                   dir[1] / dis)
-            th.rect.center = FUNC.Calculate.delta_position(th.rect.center, (-(unit_direction[0] * 4), -(unit_direction[1] * 4)))
+            pos = FUNC.Calculate.delta_tuple((th.rect.centerx, th.rect.centery, 0), (-(unit_direction[0] * 4), -(unit_direction[1] * 4), 0))
+            th.rect.center = pos[:-1]
 
         if not th.is_free:
             th.bomb.fire()

@@ -58,7 +58,8 @@ class Nre(pyg.sprite.Sprite):
             if dis > 0:
                 unit_direction = (dir[0] / dis,
                                   dir[1] / dis)
-            th.rect.center = FUNC.Calculate.delta_position(th.rect.center, (-(unit_direction[0] * 4), -(unit_direction[1] * 4)))
+            pos = FUNC.Calculate.delta_tuple((th.rect.centerx,th.rect.centery, 0), (-(unit_direction[0] * 4), -(unit_direction[1] * 4), 0))
+            th.rect.center = pos[:-1]
 
         if not th.is_free:
             th.bomb.fire()
@@ -79,11 +80,11 @@ class StraightThunder:
         th.ctr += 1
 
         if th.ctr % 1 == 0 and th.bomb_cnt < 1:
-            for _ in range(24):
-                start_pos = (rand.randint(120, 465), rand.randint(-15, 300))
-                end_pos = (rand.randint(120, 465), 360)
+            for _ in range(16):
+                start_pos = (rand.randint(100, 480), 0, 0)
+                end_pos = (rand.randint(100, 490), 360, 0)
         
-                dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
+                dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
                 
                 spr = Base((2, distance, 0), (255, 255, 255), 1)
@@ -95,14 +96,14 @@ class StraightThunder:
 
             th.bomb_cnt += 1
 
-        if th.ctr >= 30:
+        if th.ctr >= 45:
             for i in th.char.stg_mgr.own.brg_grp:
                 i.clr = DICT.clr_dict[3]
                 temp_surface = pyg.Surface(i.image.get_size(), pyg.SRCALPHA)
                 temp_surface.fill(i.clr)
 
                 i.image.blit(temp_surface, (0, 0), special_flags=pyg.BLEND_RGBA_MIN)
-        if th.ctr >= 60:
+        if th.ctr >= 90:
             for i in th.char.stg_mgr.own.brg_grp:
                 i.kill()
 
@@ -113,10 +114,10 @@ class StraightThunder:
             char_pos = th.char.stg_mgr.own.pln_mgr.char.rect.center
 
             for i in range(char_pos[0] - 30, char_pos[0] + 31, 20):
-                end_pos = (i, 360)
-                start_pos = (i, 0)
+                end_pos = (i, 360, 0)
+                start_pos = (i, 0, 0)
 
-                dpos = FUNC.Calculate.delta_position(end_pos, start_pos)
+                dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
 
                 spr = Base((2, distance, 0), (255, 255, 255), 1)
