@@ -15,7 +15,7 @@ screen = pygame.display.set_mode(
     pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN|pygame.SCALED,
     vsync=1
 )
-font = pygame.font.Font('ASSET\FNT_GNUUNIFONT.otf', 15)
+font = pygame.font.Font('ASSET\FNT\FNT_GNUUNIFONT.otf', 15)
 clock = pygame.time.Clock()
 
 import SCRIPT
