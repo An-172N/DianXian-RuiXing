@@ -54,3 +54,5 @@
 **项目使用Nuitka工具进行打包分发，并使用--standalone --onefile模式构建**
 
 **项目网址：https://github.com/An-172N/DianXian-RuiXing**
+
+**——An_172N**
