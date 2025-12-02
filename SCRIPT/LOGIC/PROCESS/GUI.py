@@ -1,0 +1,171 @@
+import datetime as dt
+
+import pygame as pyg
+
+import SCRIPT.DRAW
+import SCRIPT.VARIABLE
+from ..SPRITE import ITEM
+
+
+def show_situ(scr, fnt, clk):
+    curr_time = pyg.time.get_ticks()
+    if curr_time - SCRIPT.VARIABLE.last_time >= 500:
+        SCRIPT.VARIABLE.fps_txt = f"{clk.get_fps():.0f} FPS"
+
+        SCRIPT.VARIABLE.last_time = curr_time
+
+    sc = f"分　{SCRIPT.VARIABLE.sc:9d}"
+    sh = (f"形　{SCRIPT.VARIABLE.spt:02d} , "
+          f"{SCRIPT.VARIABLE.ttl_spt:02d}")
+    fl = f"闪　{SCRIPT.VARIABLE.player:02d}"
+    comb = f"连　{SCRIPT.VARIABLE.comb:02d}"
+
+    situ(scr,
+         fnt,
+         sc,
+         sh,
+         fl,
+         comb,
+         SCRIPT.VARIABLE.fps_txt)
+
+
+def pau_menu(scr, fnt):
+    half_menu(scr,
+              fnt,
+              "休息ing",
+              "ESC 休息好了",
+              "Q 不玩了")
+
+
+def ld_menu(scr, fnt):
+    stg = (f"Stage {SCRIPT.VARIABLE.stage} - "
+           f"{SCRIPT.VARIABLE.level} !!")
+
+    half_menu(scr,
+              fnt,
+              "这一关是————",
+              stg,
+              "START!!!!")
+
+
+def talk_menu(scr, fnt):
+    txt = SCRIPT.VARIABLE.txt
+        
+    human = (txt[f"{SCRIPT.VARIABLE.txt_pt}"]
+             [f"{SCRIPT.VARIABLE.txt_num}"]
+             ["human"])
+    info = (txt[f"{SCRIPT.VARIABLE.txt_pt}"]
+            [f"{SCRIPT.VARIABLE.txt_num}"]
+            ["info"])
+    info2 = (txt[f"{SCRIPT.VARIABLE.txt_pt}"]
+            [f"{SCRIPT.VARIABLE.txt_num}"]
+            ["info2"])
+    sw = (txt[f"{SCRIPT.VARIABLE.txt_pt}"]
+          [f"{SCRIPT.VARIABLE.txt_num}"]
+          ["sw"])
+        
+    SCRIPT.VARIABLE.talk = sw
+
+    half_menu(scr,
+              fnt,
+              human,
+              info,
+              info2)
+
+
+def summ_menu(scr, fnt):
+    stg = (f"Stage {SCRIPT.VARIABLE.stage} - "
+           f"{SCRIPT.VARIABLE.level} Cleaer!")
+    pt = (f"得点 {SCRIPT.VARIABLE.ttl_spt} * 512 "
+          f"= {SCRIPT.VARIABLE.ttl_spt * 512}")
+    hurt = (f"无伤 {SCRIPT.VARIABLE.no_hurt} * 4096 "
+            f"= {SCRIPT.VARIABLE.no_hurt * 4096}")
+
+    half_menu(scr,
+              fnt,
+              stg,
+              pt,
+              hurt)
+
+
+def start_menu(scr, fnt):
+    full_menu(scr,
+              fnt,
+              tit="锐行 ~ Thunder Out of the Mountain",
+              ctl1="Z 开始",
+              ctl2="Q 退出",
+              oth="Copyright (c) 2025 An_172N")
+
+
+def sav_menu(scr, fnt):
+    tm = f"今天是：{dt.datetime.now().strftime('%Y-%m-%d')}"
+    sc = f"得到了 {SCRIPT.VARIABLE.sc} 分"
+    stg = f"最远达到的地方是 {SCRIPT.VARIABLE.stage} - {SCRIPT.VARIABLE.level}"
+    spt = f"拾形点率为 {ITEM.cal_spt()}"
+    sflash = f"使用了 {SCRIPT.VARIABLE.sflash} 次形闪"
+    name = f"由 {SCRIPT.VARIABLE.name} 助记"
+
+    full_menu(scr,
+              fnt,
+              tit=f"抚形日志",
+              txt1=tm,
+              txt2=sc,
+              txt3= stg,
+              txt4= spt,
+              txt5 = sflash,
+              ctl1="Ent 记录",
+              ctl2="ESC 不了",
+              oth=name)
+
+
+def full_menu(sur, fnt, tit="",
+              txt1="", txt2="", txt3="", txt4="", txt5="",
+              ctl1="", ctl2="",
+              oth=""):
+    txt_type = [
+        {"txt": tit, "pos": (128, 25)},
+        {"txt": txt1, "pos": (128, 75)},
+        {"txt": txt2, "pos": (128, 100)},
+        {"txt": txt3, "pos": (128, 125)},
+        {"txt": txt4, "pos": (128, 150)},
+        {"txt": txt5, "pos": (128, 175)},
+        {"txt": ctl1, "pos": (390, 235)},
+        {"txt": ctl2, "pos": (390, 285)},
+        {"txt": oth, "pos": (128, 320)}
+    ]
+
+    sur.blit(SCRIPT.DRAW.ShapeDraw(345, 330, 0, (0, 0, 0)).rect(),
+             (120, 15))
+    
+    for txt_info in txt_type:
+        txt = fnt.render(f"{txt_info['txt']}", False, (255, 255, 255))
+        sur.blit(txt, txt_info["pos"])
+
+
+def half_menu(sur, fnt, tit, txt1, txt2):
+    txt_type = [
+        {"txt": tit, "pos": (125, 268)},
+        {"txt": txt1, "pos": (125, 293)},
+        {"txt": txt2, "pos": (125, 318)}
+    ]
+
+    sur.blit(SCRIPT.DRAW.ShapeDraw(345, 85, 0, (0, 0, 0)).rect(),
+             (120, 260))
+    
+    for txt_info in txt_type:
+        txt = fnt.render(f"{txt_info['txt']}", False, (255, 255, 255))
+        sur.blit(txt, txt_info["pos"])
+
+
+def situ(sur, fnt, txt1, txt2, txt3, txt4, fps):
+    txt_type = [
+        {"txt": txt1, "pos": (8, 25)},
+        {"txt": txt2, "pos": (8, 270)},
+        {"txt": txt3, "pos": (8, 295)},
+        {"txt": txt4, "pos": (8, 320)},
+        {"txt": fps, "pos": (405, 343)}
+    ]
+    
+    for txt_info in txt_type:
+        txt = fnt.render(f"{txt_info['txt']}", False, (255, 255, 255))
+        sur.blit(txt, txt_info["pos"])
