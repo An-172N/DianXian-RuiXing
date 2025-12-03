@@ -74,42 +74,27 @@ class StraightThunder:
         th.ctr = 0
         th.bomb_cnt = 0
         th.bullet_cnt = 0
-        th.blt_ctr = 0
 
     def free(th):
         th.ctr += 1
 
-        if th.ctr % 1 == 0 and th.bomb_cnt < 1:
-            for _ in range(16):
-                start_pos = (rand.randint(100, 480), 0, 0)
-                end_pos = (rand.randint(100, 490), 360, 0)
+        if th.ctr % 1 == 0 and th.bomb_cnt < 24:
+            start_pos = (rand.randint(80, 500), 0, 0)
+            end_pos = (rand.randint(100, 490), 360, 0)
         
-                dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
-                distance = math.hypot(dpos[0], dpos[1])
+            dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
+            distance = math.hypot(dpos[0], dpos[1])
                 
-                spr = Base((2, distance, 0), (255, 255, 255), 1)
-                spr.spd = 0
-                spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
-                spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
-                spr.update()
-                SCRIPT.VARIABLE.brg_grp.add(spr)
+            spr = Base((2, distance, 0), (255, 255, 255), 1)
+            spr.spd = 0
+            spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
+            spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
+            spr.update()
+            SCRIPT.VARIABLE.brg_grp.add(spr)
 
             th.bomb_cnt += 1
 
-        if th.ctr >= 45:
-            for i in SCRIPT.VARIABLE.brg_grp:
-                i.clr = SCRIPT.DICT.clr_dict[3]
-                temp_surface = pyg.Surface(i.image.get_size(), pyg.SRCALPHA)
-                temp_surface.fill(i.clr)
-
-                i.image.blit(temp_surface, (0, 0), special_flags=pyg.BLEND_RGBA_MIN)
-        if th.ctr >= 90:
-            for i in SCRIPT.VARIABLE.brg_grp:
-                i.kill()
-
     def fire(th):
-        th.blt_ctr += 1
-
         if th.bullet_cnt < 1:
             char_pos = SCRIPT.VARIABLE.main_char.rect.center
 
@@ -128,14 +113,3 @@ class StraightThunder:
                 SCRIPT.VARIABLE.brg_grp.add(spr)
 
             th.bullet_cnt += 1
-
-        if th.blt_ctr >= 45:
-            for i in SCRIPT.VARIABLE.brg_grp:
-                i.clr = SCRIPT.DICT.clr_dict[3]
-                temp_surface = pyg.Surface(i.image.get_size(), pyg.SRCALPHA)
-                temp_surface.fill(i.clr)
-
-                i.image.blit(temp_surface, (0, 0), special_flags=pyg.BLEND_RGBA_MIN)
-        if th.blt_ctr >= 90:
-            for i in SCRIPT.VARIABLE.brg_grp:
-                i.kill()

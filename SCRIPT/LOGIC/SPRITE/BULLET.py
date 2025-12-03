@@ -63,7 +63,7 @@ def blt_coll(src, tar):
             SCRIPT.VARIABLE.ptcl_grp.add(spr)
             
         ITEM.item_spwn(tar_pos)
-        brc_death(tar, tar_pos)
+        brc_death(tar)
             
         tar.kill()
 
@@ -71,7 +71,7 @@ def blt_coll(src, tar):
         src.kill()
 
 
-def brc_death(brc, brc_pos):
+def brc_death(brc):
     if brc.clr == SCRIPT.DICT.clr_dict[6]:
         proc_dict = {
             0: polygon_brc,
@@ -87,20 +87,54 @@ def brc_death(brc, brc_pos):
         )
 
     difficulty = FUNC.Calculate.fibonacci(
+        0,
         1,
-        2,
         SCRIPT.VARIABLE.stage + 1
     ) / 100
-    if rand.random() <= 0.25 + difficulty:
-        tupl = rand.choice([(0, 1, 1), (-30, 31, 30)])
-        char = SCRIPT.VARIABLE.main_char
-        for i in range(tupl[0], tupl[1], tupl[2]):
-            spr = Base((9, 9, 0), brc.clr, brc.shape)
-            spr.spd = 2
-            spr.rect.center = brc_pos
-            two_pt = FUNC.Calculate.delta_tuple((char.rect.centerx, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
-            spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1])) + i
-            SCRIPT.VARIABLE.brg_grp.add(spr)
+    if rand.random() <= 0.5 + difficulty:
+        brg_dict = {
+            0: polygon_brg,
+            1: line_brg,
+            2: circle_brg
+        }
+        
+        brg_dict[brc.shape](brc)
+        
+
+def circle_brg(brc):
+    char = SCRIPT.VARIABLE.main_char
+    spr = Base((9, 9, 0), brc.clr, brc.shape)
+    spr.spd = 2
+    spr.rect.center = brc.rect.center
+    two_pt = FUNC.Calculate.delta_tuple((char.rect.centerx, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
+    spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
+    SCRIPT.VARIABLE.brg_grp.add(spr)
+
+
+def polygon_brg(brc):
+    char = SCRIPT.VARIABLE.main_char
+    for i in range(char.rect.centerx - 32, char.rect.centerx + 33, 64):
+        spr = Base((9, 9, 0), brc.clr, brc.shape)
+        spr.spd = 3
+        spr.rect.center = brc.rect.center
+        two_pt = FUNC.Calculate.delta_tuple((i, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
+        spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
+        SCRIPT.VARIABLE.brg_grp.add(spr)
+
+
+def line_brg(_):
+    start_pos = (rand.randint(100, 480), 0, 0)
+    end_pos = (SCRIPT.VARIABLE.main_char.rect.centerx, SCRIPT.VARIABLE.main_char.rect.centery, 0)
+        
+    dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
+    distance = math.hypot(dpos[0], dpos[1])
+                
+    spr = Base((2, distance, 0), (255, 255, 255), 1)
+    spr.spd = 0
+    spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
+    spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
+    spr.update()
+    SCRIPT.VARIABLE.brg_grp.add(spr)
 
 
 def circle_brc(spr, src, spr_grp, spd):

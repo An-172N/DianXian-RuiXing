@@ -96,7 +96,7 @@ def ld_stg(row, line):
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
-            c = SCRIPT.DICT.clr_dict[SCRIPT.VARIABLE.stage] if rand.random() >= 0.031 else SCRIPT.DICT.clr_dict[6]
+            c = SCRIPT.DICT.clr_dict[SCRIPT.VARIABLE.stage] if rand.random() >= 0.042 else SCRIPT.DICT.clr_dict[6]
             x = 127 + i * 15
             y = 22 + row * 15
 
