@@ -40,26 +40,23 @@ class Nre(pyg.sprite.Sprite):
             th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
             th.bomb.ctr = 0
-            th.bomb.blt_ctr = 0
             th.is_free = not th.is_free
 
-        dir = (
-                th.tar_x - th.rect.centerx,
-                0
-            )
-        tar_pos = (th.tar_x, 60)
-        two_pt = (tar_pos[0] - th.rect.centerx,
-                  tar_pos[1] - th.rect.centery)
-        dis = math.hypot(two_pt[0], two_pt[1])
+        dir = pyg.math.Vector2(th.tar_x - th.rect.centerx, 0)
+        current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
+        target_pos = pyg.math.Vector2(th.tar_x, 60)
 
-        if dis < 4:
-            th.rect.center = tar_pos
+        delta_vec = target_pos - current_pos
+        distance = delta_vec.length()
+
+        if distance < 4:
+            th.rect.center = target_pos
         else:
-            if dis > 0:
-                unit_direction = (dir[0] / dis,
-                                  dir[1] / dis)
-            pos = FUNC.Calculate.delta_tuple((th.rect.centerx,th.rect.centery, 0), (-(unit_direction[0] * 4), -(unit_direction[1] * 4), 0))
-            th.rect.center = pos[:-1]
+            if distance > 0:
+                dir.normalize_ip()
+
+            new_pos = current_pos + dir * 4
+            th.rect.center = new_pos
 
         if not th.is_free:
             th.bomb.fire()

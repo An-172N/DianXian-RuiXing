@@ -1,4 +1,7 @@
-def load_files(key_file_list, load_func):
+from typing import Callable, Any
+
+
+def load_files(key_file_list: list, load_func: Callable[[str], Any]) -> dict:
     file_dict = {}
 
     for key, file in key_file_list:
@@ -7,7 +10,7 @@ def load_files(key_file_list, load_func):
     return file_dict
 
 
-def process_file(file, encoding, start_line, process_func):
+def process_file(file: str, encoding: str, start_line: int, process_func: Callable[[int, str], Any]) -> Any:
     with open(file, 'r', encoding=encoding) as f:
         for row, line in enumerate(f, start=start_line):
             line = line.rstrip('\n')

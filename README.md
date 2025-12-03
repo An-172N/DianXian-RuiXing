@@ -1,7 +1,7 @@
 锐行 ~ Thunder Out of the Mountain
 =
 
-**这是自己正在做的一款小游戏**
+**这是自己做的一款小游戏**
 
 **在今年（2025）年初开始做的**
 
@@ -51,7 +51,9 @@
 
 **项目包含GNU Unifont字体，该字体也在GNU GPL-3.0条款下使用**
 
-**项目使用Nuitka工具进行打包分发，并使用--standalone --onefile模式构建**
+**项目使用的第三方库为Pygame**
+
+**项目使用Nuitka工具进行打包分发，并使用--standalone --onefile等模式构建，详细请看/PACK.bat**
 
 **项目网址：https://github.com/An-172N/DianXian-RuiXing**
 

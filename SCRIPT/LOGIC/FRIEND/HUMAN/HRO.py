@@ -42,23 +42,21 @@ class Hro(pyg.sprite.Sprite):
             th.bomb.dl = 0
             th.is_free = not th.is_free
 
-        dir = (
-                th.tar_x - th.rect.centerx,
-                0
-            )
-        tar_pos = (th.tar_x, 60)
-        two_pt = (tar_pos[0] - th.rect.centerx,
-                  tar_pos[1] - th.rect.centery)
-        dis = math.hypot(two_pt[0], two_pt[1])
+        dir = pyg.math.Vector2(th.tar_x - th.rect.centerx, 0)
+        current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
+        target_pos = pyg.math.Vector2(th.tar_x, 60)
 
-        if dis < 4:
-            th.rect.center = tar_pos
+        delta_vec = target_pos - current_pos
+        distance = delta_vec.length()
+
+        if distance < 4:
+            th.rect.center = target_pos
         else:
-            if dis > 0:
-                unit_direction = (dir[0] / dis,
-                                  dir[1] / dis)
-            pos = FUNC.Calculate.delta_tuple((th.rect.centerx, th.rect.centery, 0), (-(unit_direction[0] * 4), -(unit_direction[1] * 4), 0))
-            th.rect.center = pos[:-1]
+            if distance > 0:
+                dir.normalize_ip()
+
+            new_pos = current_pos + dir * 4
+            th.rect.center = new_pos
 
         if not th.is_free:
             th.bomb.fire(th.rect)
@@ -81,24 +79,23 @@ class PolyX:
         th.dl -= 3
 
         if th.ctr % 1 == 0 and th.bomb_cnt < 48:
-            start_pos = (292 + dx1, 100 - dx2, 0)
-            end_pos = (292 - dy1, 100 + dy2, 0)
-        
-            dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
-            distance = math.hypot(dpos[0], dpos[1])
-        
-            if distance > 0:
-                unit_dx = dpos[0] / distance
-                unit_dy = dpos[1] / distance
+            start_pos = pyg.math.Vector2(292 + dx1, 100 - dx2)
+            end_pos = pyg.math.Vector2(292 - dy1, 100 + dy2)
 
-            current_step = (th.bomb_cnt * 10)
-            current_pos = FUNC.Calculate.delta_tuple(start_pos, (-(unit_dx * current_step), -(unit_dy * current_step), 0))
+            delta_pos = end_pos - start_pos
+            distance = delta_pos.length()
+
+            if distance > 0:
+                delta_pos.normalize_ip()
+
+            current_step = th.bomb_cnt * 10
+            current_pos = start_pos + delta_pos * current_step
                 
             for j in range(45, 136, 90):
                 spr = Base((9, 9, 0), th.clr, 0)
                 spr.spd = 4
-                spr.rect.center = (current_pos[0], current_pos[1])
-                spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1])) + j + th.dl
+                spr.rect.center = (current_pos.x, current_pos.y)
+                spr.curr_ang = math.degrees(math.atan2(-delta_pos.x, -delta_pos.y)) + j + th.dl
                 SCRIPT.VARIABLE.brg_grp.add(spr)
         
             th.bomb_cnt += 1
