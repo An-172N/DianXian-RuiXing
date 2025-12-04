@@ -1,43 +1,43 @@
-import SCRIPT.VARIABLE
+import VARIABLE
 
 
 def rst1() -> None:
-    SCRIPT.VARIABLE.pau = False
-    SCRIPT.VARIABLE.summ = False
-    SCRIPT.VARIABLE.talk = False
-    SCRIPT.VARIABLE.sav = False
-    SCRIPT.VARIABLE.level_ld = False
+    VARIABLE.pau = False
+    VARIABLE.summ = False
+    VARIABLE.talk = False
+    VARIABLE.sav = False
+    VARIABLE.level_ld = False
 
-    SCRIPT.VARIABLE.item_grp.empty(),
-    SCRIPT.VARIABLE.brc_grp.empty(),
-    SCRIPT.VARIABLE.pln_grp.empty(),
-    SCRIPT.VARIABLE.blt_grp.empty(),
-    SCRIPT.VARIABLE.ptcl_grp.empty(),
-    SCRIPT.VARIABLE.brg_grp.empty()
+    VARIABLE.item_grp.empty(),
+    VARIABLE.brc_grp.empty(),
+    VARIABLE.pln_grp.empty(),
+    VARIABLE.blt_grp.empty(),
+    VARIABLE.ptcl_grp.empty(),
+    VARIABLE.brg_grp.empty()
 
-    SCRIPT.VARIABLE.coll = False
-    SCRIPT.VARIABLE.is_sdivide = False
-    SCRIPT.VARIABLE.cd_ctr = 0
-    SCRIPT.VARIABLE.main_char.bomb.bomb_cnt = 0
-    SCRIPT.VARIABLE.main_char.bomb.ctr = 0
-    SCRIPT.VARIABLE.ttl_s_power = 0
+    VARIABLE.coll = False
+    VARIABLE.is_sdivide = False
+    VARIABLE.cd_ctr = 0
+    VARIABLE.main_char.bomb.bomb_cnt = 0
+    VARIABLE.main_char.bomb.ctr = 0
+    VARIABLE.ttl_s_power = 0
 
-    SCRIPT.VARIABLE.txt_pt = 0
-    SCRIPT.VARIABLE.txt_num = 0
+    VARIABLE.txt_pt = 0
+    VARIABLE.txt_num = 0
 
 def rst2() -> None:
-    SCRIPT.VARIABLE.stage = 1
-    SCRIPT.VARIABLE.level = 0
-    SCRIPT.VARIABLE.char = None
+    VARIABLE.stage = 1
+    VARIABLE.level = 0
+    VARIABLE.char = None
 
-    SCRIPT.VARIABLE.no_hurt = 0
-    SCRIPT.VARIABLE.player = 4
-    SCRIPT.VARIABLE.sc = 0
-    SCRIPT.VARIABLE.sflash = 0
+    VARIABLE.no_hurt = 0
+    VARIABLE.player = 4
+    VARIABLE.sc = 0
+    VARIABLE.sflash = 0
 
-    SCRIPT.VARIABLE.s_power = 0
-    SCRIPT.VARIABLE.can_shoot = False
+    VARIABLE.s_power = 0
+    VARIABLE.can_shoot = False
 
-    SCRIPT.VARIABLE.comb = 0
+    VARIABLE.comb = 0
 
-    SCRIPT.VARIABLE.run = False
+    VARIABLE.run = False

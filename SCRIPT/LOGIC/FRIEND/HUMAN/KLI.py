@@ -1,7 +1,9 @@
+import os
+
 import pygame as pyg
 
 import SCRIPT.DICT
-import SCRIPT.VARIABLE
+import VARIABLE
 
 from ..BASE import Base
 from SCRIPT.DRAW import ShapeDraw
@@ -15,7 +17,7 @@ class Kli(pyg.sprite.Sprite):
 
         th.bomb = RectRaining()
 
-        th.orig_image = pyg.image.load('ASSET\IMG_KLI.png').convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_KLI.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0, 12, 26))
         th.rect = th.image.get_rect()
 
@@ -46,17 +48,17 @@ class RectRaining:
                     spr.dmg = 6
                 spr.spd = -24
                 spr.rect.center = (i, 0)
-                SCRIPT.VARIABLE.blt_grp.add(spr)
+                VARIABLE.blt_grp.add(spr)
 
             th.bomb_cnt += 1
 
     def fire(th, dx, dy, ang) -> None:
         blt_type = [
-            {'x': SCRIPT.VARIABLE.main_char.rect.left - dx,
-             'y': SCRIPT.VARIABLE.main_char.rect.top + dy,
+            {'x': VARIABLE.main_char.rect.left - dx,
+             'y': VARIABLE.main_char.rect.top + dy,
              'ang': ang},
-            {'x': SCRIPT.VARIABLE.main_char.rect.right + dx,
-             'y': SCRIPT.VARIABLE.main_char.rect.top + dy,
+            {'x': VARIABLE.main_char.rect.right + dx,
+             'y': VARIABLE.main_char.rect.top + dy,
              'ang': -ang}
         ]
 
@@ -67,4 +69,4 @@ class RectRaining:
             spr.spd = 16
             spr.rect.center = (blt_info['x'], blt_info['y'])
             spr.curr_ang = blt_info['ang']
-            SCRIPT.VARIABLE.blt_grp.add(spr)
+            VARIABLE.blt_grp.add(spr)

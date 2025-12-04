@@ -1,10 +1,11 @@
 import random as rand
 import math
+import os
 
 import pygame as pyg
 
 import SCRIPT.DICT
-import SCRIPT.VARIABLE
+import VARIABLE
 import FUNC
 
 from ..BASE import Base
@@ -21,7 +22,7 @@ class Nre(pyg.sprite.Sprite):
 
         th.bomb = StraightThunder(th.clr)
 
-        th.orig_image = pyg.image.load('ASSET\IMG_NRE.png').convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_NRE.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0,
                                              12, 26))
         th.rect = th.image.get_rect()
@@ -88,13 +89,13 @@ class StraightThunder:
             spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
             spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
             spr.update()
-            SCRIPT.VARIABLE.brg_grp.add(spr)
+            VARIABLE.brg_grp.add(spr)
 
             th.bomb_cnt += 1
 
     def fire(th) -> None:
         if th.bullet_cnt < 1:
-            char_pos = SCRIPT.VARIABLE.main_char.rect.center
+            char_pos = VARIABLE.main_char.rect.center
 
             for i in range(char_pos[0] - 30, char_pos[0] + 31, 20):
                 end_pos = (i, 360, 0)
@@ -108,6 +109,6 @@ class StraightThunder:
                 spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
                 spr.curr_ang = 0
                 spr.update()
-                SCRIPT.VARIABLE.brg_grp.add(spr)
+                VARIABLE.brg_grp.add(spr)
 
             th.bullet_cnt += 1

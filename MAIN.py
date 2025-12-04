@@ -1,5 +1,6 @@
 import argparse
 import sys
+import os
 
 sys.dont_write_bytecode = True
 
@@ -9,17 +10,20 @@ import pygame
 pygame.display.init()
 pygame.font.init()
 
-pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain - Ver0.5')
-pygame.display.set_icon(pygame.image.load('ASSET\IMG_ICON.png'))
 screen = pygame.display.set_mode(
     (480, 360),
     pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN|pygame.SCALED,
     vsync=1
 )
-font = pygame.font.Font('ASSET\FNT\FNT_GNUUNIFONT.otf', 15)
-clock = pygame.time.Clock()
 
 import SCRIPT
+import VARIABLE
+
+pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain - Ver0.5')
+pygame.display.set_icon(pygame.image.load(os.path.join(VARIABLE.asset_path, 'IMG_ICON.png')))
+
+font = pygame.font.Font(os.path.join(VARIABLE.asset_path, 'FNT\FNT_GNUUNIFONT.otf'), 15)
+clock = pygame.time.Clock()
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -43,10 +47,10 @@ parser.add_argument(
     default=0
 )
 args = parser.parse_args()
-SCRIPT.Variable.stage = args.stage
-SCRIPT.Variable.level = args.level
-SCRIPT.Variable.player = args.player
-SCRIPT.Variable.s_power = args.s_power
+VARIABLE.stage = args.stage
+VARIABLE.level = args.level
+VARIABLE.player = args.player
+VARIABLE.s_power = args.s_power
 game = SCRIPT.Game(screen, font, clock)
 
 while True:

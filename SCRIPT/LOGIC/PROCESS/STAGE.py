@@ -1,105 +1,106 @@
 import random as rand
 import json
+import os
 
 from typing import Optional, Any
 
 import FUNC
 import SCRIPT.DICT
-import SCRIPT.VARIABLE
+import VARIABLE
 import SCRIPT.RESET
 
 from SCRIPT.LOGIC.FRIEND import Base
 
 
 def next_lv() -> None:
-    SCRIPT.VARIABLE.sc += SCRIPT.VARIABLE.ttl_s_power * 512
-    SCRIPT.VARIABLE.sc += SCRIPT.VARIABLE.no_hurt * 4096
+    VARIABLE.sc += VARIABLE.ttl_s_power * 512
+    VARIABLE.sc += VARIABLE.no_hurt * 4096
 
     SCRIPT.RESET.rst1()
 
-    SCRIPT.VARIABLE.no_hurt += 1
-    SCRIPT.VARIABLE.main_char.rect.center = (292, 331)
-    SCRIPT.VARIABLE.pln_grp.add(SCRIPT.VARIABLE.main_char)
-    SCRIPT.VARIABLE.pln_grp.add(SCRIPT.VARIABLE.d_pt)
+    VARIABLE.no_hurt += 1
+    VARIABLE.main_char.rect.center = (292, 331)
+    VARIABLE.pln_grp.add(VARIABLE.main_char)
+    VARIABLE.pln_grp.add(VARIABLE.d_pt)
 
 
 def lv_ld() -> None:
-    if SCRIPT.VARIABLE.ctr <= 60:
-        SCRIPT.VARIABLE.ctr += 1
+    if VARIABLE.ctr <= 60:
+        VARIABLE.ctr += 1
     else:
-        if SCRIPT.VARIABLE.level == 6:
-            SCRIPT.VARIABLE.char = chs_shhm()
-            SCRIPT.VARIABLE.char.rect.center = (292, 60)
-            SCRIPT.VARIABLE.txt = ld_txt(SCRIPT.VARIABLE.stage)
-            SCRIPT.VARIABLE.txt_num = 0
-            SCRIPT.VARIABLE.talk = True
+        if VARIABLE.level == 6:
+            VARIABLE.char = chs_shhm()
+            VARIABLE.char.rect.center = (292, 60)
+            VARIABLE.txt = ld_txt(VARIABLE.stage)
+            VARIABLE.txt_num = 0
+            VARIABLE.talk = True
 
-            SCRIPT.VARIABLE.brc_grp.add(SCRIPT.VARIABLE.char)
+            VARIABLE.brc_grp.add(VARIABLE.char)
         else:
             for i in FUNC.Process.process_file(
-                         f"ASSET/STG_{SCRIPT.VARIABLE.stage}-{SCRIPT.VARIABLE.level}.stg",
+                         os.path.join(VARIABLE.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
                          'ascii',
                          0,
                          ld_stg
                      ):
                 i
 
-        SCRIPT.VARIABLE.sec_bg = SCRIPT.VARIABLE.pic[SCRIPT.VARIABLE.stage]
-        SCRIPT.VARIABLE.sec_bg.set_alpha(159)
-        SCRIPT.VARIABLE.ctr = 0
-        SCRIPT.VARIABLE.level_ld = True
+        VARIABLE.sec_bg = VARIABLE.pic[VARIABLE.stage]
+        VARIABLE.sec_bg.set_alpha(159)
+        VARIABLE.ctr = 0
+        VARIABLE.level_ld = True
 
 
 def lv_summ() -> None:
-    if (len(SCRIPT.VARIABLE.brc_grp) == 0 and
-        not SCRIPT.VARIABLE.talk):
-        if SCRIPT.VARIABLE.ctr <= 150:
-            SCRIPT.VARIABLE.ctr += 1
-            SCRIPT.VARIABLE.summ = True
+    if (len(VARIABLE.brc_grp) == 0 and
+        not VARIABLE.talk):
+        if VARIABLE.ctr <= 150:
+            VARIABLE.ctr += 1
+            VARIABLE.summ = True
         else:
-            if SCRIPT.VARIABLE.stage >= 2 and SCRIPT.VARIABLE.level == 6:
-                SCRIPT.VARIABLE.summ = False
-                SCRIPT.VARIABLE.sav = True
-                SCRIPT.VARIABLE.ctr = 0
+            if VARIABLE.stage >= 2 and VARIABLE.level == 6:
+                VARIABLE.summ = False
+                VARIABLE.sav = True
+                VARIABLE.ctr = 0
             else:
                 next_lv()
                 lv_lgc()
 
-                SCRIPT.VARIABLE.summ = False
-                SCRIPT.VARIABLE.ctr = 0
+                VARIABLE.summ = False
+                VARIABLE.ctr = 0
 
 
 def lv_proc() -> None:
-    if not SCRIPT.VARIABLE.level_ld:
+    if not VARIABLE.level_ld:
         lv_ld()
     else:
         lv_summ()
 
 
 def lv_lgc() -> None:
-    if SCRIPT.VARIABLE.level >= 6:
-        SCRIPT.VARIABLE.stage += 1
-        SCRIPT.VARIABLE.level = 1
+    if VARIABLE.level >= 6:
+        VARIABLE.stage += 1
+        VARIABLE.level = 1
     else:
-        SCRIPT.VARIABLE.level += 1
+        VARIABLE.level += 1
 
 
 def chs_shhm() -> Optional[Any]:
-    return SCRIPT.DICT.char_dict.get(SCRIPT.VARIABLE.stage)()
+    return SCRIPT.DICT.char_dict.get(VARIABLE.stage)()
 
 
 def shhm_lose() -> None:
-    SCRIPT.VARIABLE.txt_pt += 1
-    SCRIPT.VARIABLE.txt_num = 0
+    VARIABLE.txt_pt += 1
+    VARIABLE.txt_num = 0
 
-    SCRIPT.VARIABLE.talk = True
+    VARIABLE.talk = True
 
 
 def ld_stg(row, line) -> None:
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
-            c = SCRIPT.DICT.clr_dict[SCRIPT.VARIABLE.stage] if rand.random() >= 0.042 else SCRIPT.DICT.clr_dict[6]
+            c = SCRIPT.DICT.clr_dict[VARIABLE.stage] if rand.random() >= 0.042 else SCRIPT.DICT.clr_dict[6]
             x = 127 + i * 15
             y = 22 + row * 15
 
@@ -110,11 +111,11 @@ def ld_stg(row, line) -> None:
                 brc.hp = 4
             brc.rect.center = (x, y)
 
-            SCRIPT.VARIABLE.brc_grp.add(brc)
+            VARIABLE.brc_grp.add(brc)
 
 
 def ld_txt(stg) -> str:
-    file = f"ASSET/TALK_{stg}.json"
+    file = os.path.join(VARIABLE.asset_path, f"TALK_{stg}.json")
 
     with open(file, 'r', encoding="utf-8") as f:
         return json.load(f)

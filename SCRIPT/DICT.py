@@ -7,7 +7,7 @@ from SCRIPT.LOGIC.FRIEND import Kli
 from SCRIPT.LOGIC.FRIEND import Hro
 from SCRIPT.LOGIC.FRIEND import Nre
 
-import SCRIPT.VARIABLE
+import VARIABLE
 import SCRIPT.LOGIC
 
 
@@ -30,31 +30,31 @@ char_dict = {
 key_dict = {
     "down": {
         "game": {
-            pyg.K_RIGHT: lambda: setattr(SCRIPT.VARIABLE, "mv_right",
+            pyg.K_RIGHT: lambda: setattr(VARIABLE, "mv_right",
                                          True),
-            pyg.K_LEFT: lambda: setattr(SCRIPT.VARIABLE, "mv_left",
+            pyg.K_LEFT: lambda: setattr(VARIABLE, "mv_left",
                                         True),
-            pyg.K_LSHIFT: lambda: setattr(SCRIPT.VARIABLE, "is_slow",
+            pyg.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
                                           True),
             pyg.K_z: lambda : SCRIPT.LOGIC.BulletMgr.spwn_blt(),
             pyg.K_x: lambda : SCRIPT.LOGIC.BulletMgr.single_bomb(),
-            pyg.K_ESCAPE: lambda: setattr(SCRIPT.VARIABLE, "pau",
+            pyg.K_ESCAPE: lambda: setattr(VARIABLE, "pau",
                                           True)
         },
         "talk": {
-            pyg.K_z: lambda : setattr(SCRIPT.VARIABLE, "txt_num",
-                                      SCRIPT.VARIABLE.txt_num + 1),
-            pyg.K_x: lambda : setattr(SCRIPT.VARIABLE, "talk",
+            pyg.K_z: lambda : setattr(VARIABLE, "txt_num",
+                                      VARIABLE.txt_num + 1),
+            pyg.K_x: lambda : setattr(VARIABLE, "talk",
                                       False)
         },
         "pau": {
-            pyg.K_ESCAPE: lambda : setattr(SCRIPT.VARIABLE, "pau",
+            pyg.K_ESCAPE: lambda : setattr(VARIABLE, "pau",
                                            False),
-            pyg.K_q: lambda : setattr(SCRIPT.VARIABLE, "is_rst",
+            pyg.K_q: lambda : setattr(VARIABLE, "is_rst",
                                       True)
         },
         "start": {
-            pyg.K_z: lambda: (setattr(SCRIPT.VARIABLE, "run",
+            pyg.K_z: lambda: (setattr(VARIABLE, "run",
                                          True),
                               SCRIPT.LOGIC.StageMgr.next_lv(),
                               SCRIPT.LOGIC.StageMgr.lv_lgc()),
@@ -62,24 +62,24 @@ key_dict = {
         },
         "over": {
             pyg.K_RETURN: lambda: (SCRIPT.LOGIC.Key.sav_file(),
-                                   setattr(SCRIPT.VARIABLE, "is_rst",
+                                   setattr(VARIABLE, "is_rst",
                                    True)),
-            pyg.K_ESCAPE: lambda: setattr(SCRIPT.VARIABLE, "is_rst",
+            pyg.K_ESCAPE: lambda: setattr(VARIABLE, "is_rst",
                                           True),
-            pyg.K_BACKSPACE: lambda: setattr(SCRIPT.VARIABLE, "name",
-                                             SCRIPT.VARIABLE.name[:-1])
+            pyg.K_BACKSPACE: lambda: setattr(VARIABLE, "name",
+                                             VARIABLE.name[:-1])
         }
     },
     "up": {
         "game": {
-            pyg.K_RIGHT: lambda: setattr(SCRIPT.VARIABLE, "mv_right",
+            pyg.K_RIGHT: lambda: setattr(VARIABLE, "mv_right",
                                          False),
-            pyg.K_LEFT: lambda: setattr(SCRIPT.VARIABLE, "mv_left",
+            pyg.K_LEFT: lambda: setattr(VARIABLE, "mv_left",
                                         False),
-            pyg.K_LSHIFT: lambda: setattr(SCRIPT.VARIABLE, "is_slow",
+            pyg.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
                                           False),
             pyg.K_z: lambda: (SCRIPT.LOGIC.BulletMgr.spwn_blt(),
-                              setattr(SCRIPT.VARIABLE, "can_shoot",
+                              setattr(VARIABLE, "can_shoot",
                                       True))
         }
     }

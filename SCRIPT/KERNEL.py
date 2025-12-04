@@ -5,7 +5,7 @@ import pygame as pyg
 
 import SCRIPT.LOGIC
 import SCRIPT.DICT
-import SCRIPT.VARIABLE
+import VARIABLE
 import SCRIPT.RESET
 
 
@@ -23,43 +23,43 @@ class Game:
         th.gui = SCRIPT.LOGIC.GUI
 
     def update(th) -> None:
-        if (SCRIPT.VARIABLE.run and
-            not SCRIPT.VARIABLE.sav and
-            not SCRIPT.VARIABLE.pau):
-            if (not SCRIPT.VARIABLE.summ and
-                not SCRIPT.VARIABLE.talk and
-                SCRIPT.VARIABLE.level_ld):
-                if SCRIPT.VARIABLE.is_sdivide:
-                    SCRIPT.VARIABLE.main_char.bomb.free()
+        if (VARIABLE.run and
+            not VARIABLE.sav and
+            not VARIABLE.pau):
+            if (not VARIABLE.summ and
+                not VARIABLE.talk and
+                VARIABLE.level_ld):
+                if VARIABLE.is_sdivide:
+                    VARIABLE.main_char.bomb.free()
 
                 th.pln_mgr.turn_side()
                 th.pln_mgr.mv_pln()
                 th.pln_mgr.invinc()
             
-                SCRIPT.VARIABLE.blt_grp.update()
-                SCRIPT.VARIABLE.brg_grp.update()
-                SCRIPT.VARIABLE.item_grp.update()
-                SCRIPT.VARIABLE.ptcl_grp.update()
-                SCRIPT.VARIABLE.brc_grp.update()
+                VARIABLE.blt_grp.update()
+                VARIABLE.brg_grp.update()
+                VARIABLE.item_grp.update()
+                VARIABLE.ptcl_grp.update()
+                VARIABLE.brc_grp.update()
 
-                [spr.kill() for spr in SCRIPT.VARIABLE.blt_grp
-                 if not SCRIPT.VARIABLE.eff.collidepoint(spr.rect.center)]
-                [spr.kill() for spr in SCRIPT.VARIABLE.brg_grp
-                 if not SCRIPT.VARIABLE.eff.collidepoint(spr.rect.center)]
-                [spr.kill() for spr in SCRIPT.VARIABLE.item_grp
-                 if not SCRIPT.VARIABLE.eff.collidepoint(spr.rect.center)]
-                [spr.kill() for spr in SCRIPT.VARIABLE.ptcl_grp
-                 if not SCRIPT.VARIABLE.win.collidepoint(spr.rect.center)]
+                [spr.kill() for spr in VARIABLE.blt_grp
+                 if not VARIABLE.eff.collidepoint(spr.rect.center)]
+                [spr.kill() for spr in VARIABLE.brg_grp
+                 if not VARIABLE.eff.collidepoint(spr.rect.center)]
+                [spr.kill() for spr in VARIABLE.item_grp
+                 if not VARIABLE.eff.collidepoint(spr.rect.center)]
+                [spr.kill() for spr in VARIABLE.ptcl_grp
+                 if not VARIABLE.win.collidepoint(spr.rect.center)]
 
-                for brg in SCRIPT.VARIABLE.brg_grp:
-                    if (pyg.sprite.collide_mask(brg, SCRIPT.VARIABLE.d_pt)
+                for brg in VARIABLE.brg_grp:
+                    if (pyg.sprite.collide_mask(brg, VARIABLE.d_pt)
                         and brg.clr != (255, 255, 255)):
                             th.pln_mgr.coll_brg(brg)
-                coll2 = itertools.product(SCRIPT.VARIABLE.blt_grp, SCRIPT.VARIABLE.brc_grp)
+                coll2 = itertools.product(VARIABLE.blt_grp, VARIABLE.brc_grp)
                 for src, tar in coll2:
                     if src.rect.colliderect(tar.rect):
                         th.blt_mgr.blt_coll(src, tar)
-                coll3 = itertools.product(SCRIPT.VARIABLE.item_grp, SCRIPT.VARIABLE.pln_grp)
+                coll3 = itertools.product(VARIABLE.item_grp, VARIABLE.pln_grp)
                 for src, tar in coll3:
                     if src.rect.colliderect(tar.rect):
                         th.item_mgr.item_coll(src, tar)
@@ -72,60 +72,60 @@ class Game:
             if evt.type == pyg.QUIT:
                 sys.exit()
             elif evt.type == pyg.KEYUP:
-                if SCRIPT.VARIABLE.run:
+                if VARIABLE.run:
                     if evt.key in SCRIPT.DICT.key_dict["up"]["game"]:
                         SCRIPT.DICT.key_dict["up"]["game"][evt.key]()
             elif evt.type == pyg.KEYDOWN:
-                if not SCRIPT.VARIABLE.run:
+                if not VARIABLE.run:
                     if evt.key in SCRIPT.DICT.key_dict["down"]["start"]:
                         SCRIPT.DICT.key_dict["down"]["start"][evt.key]()
                 else:
-                    if SCRIPT.VARIABLE.sav:
+                    if VARIABLE.sav:
                         if evt.key in SCRIPT.DICT.key_dict["down"]["over"]:
                             SCRIPT.DICT.key_dict["down"]["over"][evt.key]()
                         else:
-                            SCRIPT.VARIABLE.name += evt.unicode
-                    elif SCRIPT.VARIABLE.pau:
+                            VARIABLE.name += evt.unicode
+                    elif VARIABLE.pau:
                         if evt.key in SCRIPT.DICT.key_dict["down"]["pau"]:
                             SCRIPT.DICT.key_dict["down"]["pau"][evt.key]()
-                    elif SCRIPT.VARIABLE.talk:
+                    elif VARIABLE.talk:
                         if evt.key in SCRIPT.DICT.key_dict["down"]["talk"]:
                             SCRIPT.DICT.key_dict["down"]["talk"][evt.key]()
-                    elif not SCRIPT.VARIABLE.summ and SCRIPT.VARIABLE.level_ld:
+                    elif not VARIABLE.summ and VARIABLE.level_ld:
                         if evt.key in SCRIPT.DICT.key_dict["down"]["game"]:
                             SCRIPT.DICT.key_dict["down"]["game"][evt.key]()
 
-        if SCRIPT.VARIABLE.is_rst:
+        if VARIABLE.is_rst:
             SCRIPT.RESET.rst1()
             SCRIPT.RESET.rst2()
-            SCRIPT.VARIABLE.is_rst = False
+            VARIABLE.is_rst = False
 
         th.scr.fill(SCRIPT.DICT.clr_dict[7])
-        th.scr.blit(SCRIPT.VARIABLE.sec_bg, (120, 15))
+        th.scr.blit(VARIABLE.sec_bg, (120, 15))
 
-        SCRIPT.VARIABLE.blt_grp.draw(th.scr)
-        if SCRIPT.VARIABLE.is_visitable:
-            SCRIPT.VARIABLE.pln_grp.draw(th.scr)
-        SCRIPT.VARIABLE.brc_grp.draw(th.scr)
-        SCRIPT.VARIABLE.item_grp.draw(th.scr)
-        SCRIPT.VARIABLE.ptcl_grp.draw(th.scr)
-        SCRIPT.VARIABLE.brg_grp.draw(th.scr)
+        VARIABLE.blt_grp.draw(th.scr)
+        if VARIABLE.is_visitable:
+            VARIABLE.pln_grp.draw(th.scr)
+        VARIABLE.brc_grp.draw(th.scr)
+        VARIABLE.item_grp.draw(th.scr)
+        VARIABLE.ptcl_grp.draw(th.scr)
+        VARIABLE.brg_grp.draw(th.scr)
 
-        if SCRIPT.VARIABLE.run:
-            if SCRIPT.VARIABLE.pau:
+        if VARIABLE.run:
+            if VARIABLE.pau:
                 th.gui.pau_menu(th.scr, th.fnt)
-            elif not SCRIPT.VARIABLE.level_ld:
+            elif not VARIABLE.level_ld:
                 th.gui.ld_menu(th.scr, th.fnt)
-            elif SCRIPT.VARIABLE.talk:
+            elif VARIABLE.talk:
                 th.gui.talk_menu(th.scr, th.fnt)
-            elif SCRIPT.VARIABLE.summ:
+            elif VARIABLE.summ:
                 th.gui.summ_menu(th.scr, th.fnt)
-            elif SCRIPT.VARIABLE.sav:
+            elif VARIABLE.sav:
                 th.gui.sav_menu(th.scr, th.fnt)
         else:
             th.gui.start_menu(th.scr, th.fnt)
 
-        th.scr.blit(SCRIPT.VARIABLE.bg, (0, 0))
+        th.scr.blit(VARIABLE.bg, (0, 0))
 
         th.gui.show_situ(th.scr, th.fnt, th.clk)
 

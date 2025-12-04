@@ -3,7 +3,7 @@ import math
 
 import FUNC
 import SCRIPT.DICT
-import SCRIPT.VARIABLE
+import VARIABLE
 
 from SCRIPT.LOGIC.FRIEND import Base
 from ..SPRITE import ITEM
@@ -11,13 +11,13 @@ from ..PROCESS import STAGE
 
 
 def spwn_blt() -> None:
-    if SCRIPT.VARIABLE.can_shoot:
-        p = 2 ** (SCRIPT.VARIABLE.s_power // 32)
-        q = 2 ** (SCRIPT.VARIABLE.s_power // 16)
+    if VARIABLE.can_shoot:
+        p = 2 ** (VARIABLE.s_power // 32)
+        q = 2 ** (VARIABLE.s_power // 16)
 
         for i in range(0, p):
             for j in range(-q, q + 1, q):
-                SCRIPT.VARIABLE.main_char.bomb.fire(
+                VARIABLE.main_char.bomb.fire(
                     0 + i * 10,
                     0 + i * 12,
                     j
@@ -25,18 +25,18 @@ def spwn_blt() -> None:
 
         rands = rand.randint(0, 45)
         for i in range(0 + rands, 360 + rands, 45):
-            spr = Base((2, 2, 0), SCRIPT.VARIABLE.main_char.clr, 1)
+            spr = Base((2, 2, 0), VARIABLE.main_char.clr, 1)
             spr.spd = rand.randint(6, 10)
-            spr.rect.center = SCRIPT.VARIABLE.main_char.rect.center
+            spr.rect.center = VARIABLE.main_char.rect.center
             spr.curr_ang = i
-            SCRIPT.VARIABLE.ptcl_grp.add(spr)
+            VARIABLE.ptcl_grp.add(spr)
 
 
 def single_bomb() -> None:
-    if (not SCRIPT.VARIABLE.is_sdivide and
-        SCRIPT.VARIABLE.s_power >= 16):
-        SCRIPT.VARIABLE.s_power -= 16
-        SCRIPT.VARIABLE.is_sdivide = True
+    if (not VARIABLE.is_sdivide and
+        VARIABLE.s_power >= 16):
+        VARIABLE.s_power -= 16
+        VARIABLE.is_sdivide = True
 
 
 def blt_coll(src, tar) -> None:
@@ -46,7 +46,7 @@ def blt_coll(src, tar) -> None:
             return
 
     tar.hp -= src.dmg
-    SCRIPT.VARIABLE.sc += 64
+    VARIABLE.sc += 64
 
     if tar.hp <= 0:
         tar.is_die = True
@@ -61,7 +61,7 @@ def blt_coll(src, tar) -> None:
             spr.spd = rand.randint(6, 10)
             spr.rect.center = tar_pos
             spr.curr_ang = i
-            SCRIPT.VARIABLE.ptcl_grp.add(spr)
+            VARIABLE.ptcl_grp.add(spr)
             
         ITEM.item_spwn(tar_pos)
         brc_death(tar)
@@ -83,14 +83,14 @@ def brc_death(brc) -> None:
         proc_dict[brc.shape](
             Base,
             brc,
-            SCRIPT.VARIABLE.blt_grp,
+            VARIABLE.blt_grp,
             16
         )
 
     difficulty = FUNC.Calculate.fibonacci(
         0,
         1,
-        SCRIPT.VARIABLE.stage + 1
+        VARIABLE.stage + 1
     ) / 100
     if rand.random() <= 0.25 + difficulty:
         brg_dict = {
@@ -103,29 +103,29 @@ def brc_death(brc) -> None:
         
 
 def circle_brg(brc) -> None:
-    char = SCRIPT.VARIABLE.main_char
+    char = VARIABLE.main_char
     spr = Base((9, 9, 0), brc.clr, brc.shape)
     spr.spd = 2
     spr.rect.center = brc.rect.center
     two_pt = FUNC.Calculate.delta_tuple((char.rect.centerx, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
     spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
-    SCRIPT.VARIABLE.brg_grp.add(spr)
+    VARIABLE.brg_grp.add(spr)
 
 
 def polygon_brg(brc) -> None:
-    char = SCRIPT.VARIABLE.main_char
+    char = VARIABLE.main_char
     for i in range(char.rect.centerx - 32, char.rect.centerx + 33, 64):
         spr = Base((9, 9, 0), brc.clr, brc.shape)
         spr.spd = 2.5
         spr.rect.center = brc.rect.center
         two_pt = FUNC.Calculate.delta_tuple((i, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
         spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
-        SCRIPT.VARIABLE.brg_grp.add(spr)
+        VARIABLE.brg_grp.add(spr)
 
 
 def line_brg(_) -> None:
     start_pos = (rand.randint(100, 480), 0, 0)
-    end_pos = (SCRIPT.VARIABLE.main_char.rect.centerx, SCRIPT.VARIABLE.main_char.rect.centery, 0)
+    end_pos = (VARIABLE.main_char.rect.centerx, VARIABLE.main_char.rect.centery, 0)
         
     dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
@@ -135,7 +135,7 @@ def line_brg(_) -> None:
     spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
     spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
     spr.update()
-    SCRIPT.VARIABLE.brg_grp.add(spr)
+    VARIABLE.brg_grp.add(spr)
 
 
 def circle_brc(spr, src, spr_grp, spd) -> None:

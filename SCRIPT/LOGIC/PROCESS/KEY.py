@@ -2,7 +2,7 @@ import os
 import json
 import datetime as dt
 
-import SCRIPT.VARIABLE
+import VARIABLE
 
 from ..SPRITE import ITEM
 
@@ -12,18 +12,18 @@ def sav_file() -> None:
     time = dt.datetime.now().strftime('%H-%M-%S')
 
     folder = f'{os.environ["USERPROFILE"]}/Saved Games/DX00'
-    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{SCRIPT.VARIABLE.name}-{date}-{time}.json'
+    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{VARIABLE.name}-{date}-{time}.json'
 
     if not os.path.exists(folder):
         os.makedirs(folder)
 
     dump = ["RuiShan Fuxing Log"]
     dump.append({
-                    'Nickname': SCRIPT.VARIABLE.name,
-                    'Score': SCRIPT.VARIABLE.sc,
-                    'The farthest place that you reached': f"{SCRIPT.VARIABLE.stage} - {SCRIPT.VARIABLE.level}",
+                    'Nickname': VARIABLE.name,
+                    'Score': VARIABLE.sc,
+                    'The farthest place that you reached': f"{VARIABLE.stage} - {VARIABLE.level}",
                     'Pick up s_power rate': ITEM.cal_s_power(),
-                    'Shape Flash': SCRIPT.VARIABLE.sflash,
+                    'Shape Flash': VARIABLE.sflash,
                     'Record date': dt.datetime.now().strftime('%Y-%m-%d')
                 })
         

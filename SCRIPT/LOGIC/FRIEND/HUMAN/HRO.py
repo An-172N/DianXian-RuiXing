@@ -1,10 +1,11 @@
 import random as rand
 import math
+import os
 
 import pygame as pyg
 
 import SCRIPT.DICT
-import SCRIPT.VARIABLE
+import VARIABLE
 import FUNC
 
 from ..BASE import Base
@@ -21,7 +22,7 @@ class Hro(pyg.sprite.Sprite):
 
         th.bomb = PolyX(th.clr)
 
-        th.orig_image = pyg.image.load('ASSET\IMG_HRO.png').convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_HRO.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0,
                                              12, 26))
         th.rect = th.image.get_rect()
@@ -97,7 +98,7 @@ class PolyX:
                 spr.spd = 4
                 spr.rect.center = (current_pos.x, current_pos.y)
                 spr.curr_ang = math.degrees(math.atan2(-delta_pos.x, -delta_pos.y)) + j + th.dl
-                SCRIPT.VARIABLE.brg_grp.add(spr)
+                VARIABLE.brg_grp.add(spr)
         
             th.bomb_cnt += 1
 
@@ -106,13 +107,13 @@ class PolyX:
 
         if th.ctr % 8 == 0 and th.bullet_cnt < 3:
             pos = rect.center
-            char_pos = SCRIPT.VARIABLE.main_char.rect.center
+            char_pos = VARIABLE.main_char.rect.center
             for i in range(-30, 31, 30):
                 spr = Base((9, 9, 0), th.clr, 0)
                 spr.spd = 4
                 spr.rect.center = pos
                 two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1], 0), (pos[0], pos[1], 0))
                 spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1])) + i
-                SCRIPT.VARIABLE.brg_grp.add(spr)
+                VARIABLE.brg_grp.add(spr)
 
             th.bullet_cnt += 1

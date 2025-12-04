@@ -1,10 +1,11 @@
 import random as rand
 import math
+import os
 
 import pygame as pyg
 
 import SCRIPT.DICT
-import SCRIPT.VARIABLE
+import VARIABLE
 
 from ..BASE import Base
 
@@ -20,7 +21,7 @@ class Ono(pyg.sprite.Sprite):
 
         th.bomb = AutFroDiffuse(th.clr)
 
-        th.orig_image = pyg.image.load('ASSET\IMG_ONO.png').convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_ONO.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0,
                                              12, 26))
         th.rect = th.image.get_rect()
@@ -91,7 +92,7 @@ class AutFroDiffuse:
                     spr.spd = 4
                     spr.rect.center = pos
                     spr.curr_ang = j
-                    SCRIPT.VARIABLE.brg_grp.add(spr)
+                    VARIABLE.brg_grp.add(spr)
 
             th.bomb_cnt += 1
 
@@ -103,6 +104,6 @@ class AutFroDiffuse:
                 spr.spd = 4
                 spr.rect.center = pos
                 spr.curr_ang = i
-                SCRIPT.VARIABLE.brg_grp.add(spr)
+                VARIABLE.brg_grp.add(spr)
 
             th.bullet_cnt += 1
