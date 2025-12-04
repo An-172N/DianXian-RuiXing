@@ -3,10 +3,11 @@ import random as rand
 import pygame as pyg
 
 import SCRIPT.VARIABLE
+
 from SCRIPT.LOGIC.FRIEND import Base
 
 
-def mv_pln():
+def mv_pln() -> None:
     if SCRIPT.VARIABLE.mv_right:
         SCRIPT.VARIABLE.main_char.rect.x += 1 if SCRIPT.VARIABLE.is_slow else 3
     if SCRIPT.VARIABLE.mv_left:
@@ -20,7 +21,7 @@ def mv_pln():
     SCRIPT.VARIABLE.d_pt.rect.center = SCRIPT.VARIABLE.main_char.rect.center
 
 
-def turn_side():
+def turn_side() -> None:
     turn_side_image = SCRIPT.VARIABLE.main_char.orig_image.subsurface(
         (12,
          0,
@@ -48,7 +49,7 @@ def turn_side():
         )
 
 
-def coll_brg(src):
+def coll_brg(src) -> None:
     if (not (SCRIPT.VARIABLE.coll or
              SCRIPT.VARIABLE.is_sdivide)):
         SCRIPT.VARIABLE.coll = True
@@ -57,7 +58,7 @@ def coll_brg(src):
     src.kill()
 
 
-def life_lgc():
+def life_lgc() -> None:
     rands = rand.randint(0, 30)
     for i in range(0 + rands, 360 + rands, 45):
         spr = Base((8, 8, 0), SCRIPT.VARIABLE.main_char.clr, 1)
@@ -74,7 +75,7 @@ def life_lgc():
         SCRIPT.VARIABLE.sav = True
 
 
-def invinc():
+def invinc() -> None:
     if (SCRIPT.VARIABLE.is_sdivide or
         SCRIPT.VARIABLE.coll):
         SCRIPT.VARIABLE.cd_ctr += 1
@@ -86,7 +87,7 @@ def invinc():
                 SCRIPT.VARIABLE.cd_ctr = 0
                 SCRIPT.VARIABLE.main_char.bomb.bomb_cnt = 0
                 SCRIPT.VARIABLE.main_char.bomb.ctr = 0
-                SCRIPT.VARIABLE.ttl_spt = 0
+                SCRIPT.VARIABLE.ttl_s_power = 0
 
             SCRIPT.VARIABLE.coll = False
         else:

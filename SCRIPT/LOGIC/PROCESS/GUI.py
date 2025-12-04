@@ -4,10 +4,11 @@ import pygame as pyg
 
 import SCRIPT.DRAW
 import SCRIPT.VARIABLE
+
 from ..SPRITE import ITEM
 
 
-def show_situ(scr, fnt, clk):
+def show_situ(scr, fnt, clk) -> None:
     curr_time = pyg.time.get_ticks()
     if curr_time - SCRIPT.VARIABLE.last_time >= 500:
         SCRIPT.VARIABLE.fps_txt = f"{clk.get_fps():.0f} FPS"
@@ -15,8 +16,8 @@ def show_situ(scr, fnt, clk):
         SCRIPT.VARIABLE.last_time = curr_time
 
     sc = f"分　{SCRIPT.VARIABLE.sc:9d}"
-    sh = (f"形　{SCRIPT.VARIABLE.spt:02d} , "
-          f"{SCRIPT.VARIABLE.ttl_spt:02d}")
+    sh = (f"形　{SCRIPT.VARIABLE.s_power:02d} , "
+          f"{SCRIPT.VARIABLE.ttl_s_power:02d}")
     fl = f"闪　{SCRIPT.VARIABLE.player:02d}"
     comb = f"连　{SCRIPT.VARIABLE.comb:02d}"
 
@@ -29,7 +30,7 @@ def show_situ(scr, fnt, clk):
          SCRIPT.VARIABLE.fps_txt)
 
 
-def pau_menu(scr, fnt):
+def pau_menu(scr, fnt) -> None:
     half_menu(scr,
               fnt,
               "休息ing",
@@ -37,7 +38,7 @@ def pau_menu(scr, fnt):
               "Q 不玩了")
 
 
-def ld_menu(scr, fnt):
+def ld_menu(scr, fnt) -> None:
     stg = (f"Stage {SCRIPT.VARIABLE.stage} - "
            f"{SCRIPT.VARIABLE.level} !!")
 
@@ -48,7 +49,7 @@ def ld_menu(scr, fnt):
               "START!!!!")
 
 
-def talk_menu(scr, fnt):
+def talk_menu(scr, fnt) -> None:
     txt = SCRIPT.VARIABLE.txt
         
     human = (txt[f"{SCRIPT.VARIABLE.txt_pt}"]
@@ -73,11 +74,11 @@ def talk_menu(scr, fnt):
               info2)
 
 
-def summ_menu(scr, fnt):
+def summ_menu(scr, fnt) -> None:
     stg = (f"Stage {SCRIPT.VARIABLE.stage} - "
            f"{SCRIPT.VARIABLE.level} Cleaer!")
-    pt = (f"得点 {SCRIPT.VARIABLE.ttl_spt} * 512 "
-          f"= {SCRIPT.VARIABLE.ttl_spt * 512}")
+    pt = (f"得点 {SCRIPT.VARIABLE.ttl_s_power} * 512 "
+          f"= {SCRIPT.VARIABLE.ttl_s_power * 512}")
     hurt = (f"无伤 {SCRIPT.VARIABLE.no_hurt} * 4096 "
             f"= {SCRIPT.VARIABLE.no_hurt * 4096}")
 
@@ -88,7 +89,7 @@ def summ_menu(scr, fnt):
               hurt)
 
 
-def start_menu(scr, fnt):
+def start_menu(scr, fnt) -> None:
     full_menu(scr,
               fnt,
               tit="锐行 ~ Thunder Out of the Mountain",
@@ -97,11 +98,11 @@ def start_menu(scr, fnt):
               oth="Copyright (c) 2025 An_172N")
 
 
-def sav_menu(scr, fnt):
+def sav_menu(scr, fnt) -> None:
     tm = f"今天是：{dt.datetime.now().strftime('%Y-%m-%d')}"
     sc = f"得到了 {SCRIPT.VARIABLE.sc} 分"
     stg = f"最远达到的地方是 {SCRIPT.VARIABLE.stage} - {SCRIPT.VARIABLE.level}"
-    spt = f"拾形点率为 {ITEM.cal_spt()}"
+    s_power = f"拾形点率为 {ITEM.cal_s_power()}"
     sflash = f"使用了 {SCRIPT.VARIABLE.sflash} 次形闪"
     name = f"由 {SCRIPT.VARIABLE.name} 助记"
 
@@ -111,7 +112,7 @@ def sav_menu(scr, fnt):
               txt1=tm,
               txt2=sc,
               txt3= stg,
-              txt4= spt,
+              txt4= s_power,
               txt5 = sflash,
               ctl1="Ent 记录",
               ctl2="ESC 不了",
@@ -121,7 +122,7 @@ def sav_menu(scr, fnt):
 def full_menu(sur, fnt, tit="",
               txt1="", txt2="", txt3="", txt4="", txt5="",
               ctl1="", ctl2="",
-              oth=""):
+              oth="") -> None:
     txt_type = [
         {"txt": tit, "pos": (128, 25)},
         {"txt": txt1, "pos": (128, 75)},
@@ -142,7 +143,7 @@ def full_menu(sur, fnt, tit="",
         sur.blit(txt, txt_info["pos"])
 
 
-def half_menu(sur, fnt, tit, txt1, txt2):
+def half_menu(sur, fnt, tit, txt1, txt2) -> None:
     txt_type = [
         {"txt": tit, "pos": (125, 268)},
         {"txt": txt1, "pos": (125, 293)},
@@ -157,7 +158,7 @@ def half_menu(sur, fnt, tit, txt1, txt2):
         sur.blit(txt, txt_info["pos"])
 
 
-def situ(sur, fnt, txt1, txt2, txt3, txt4, fps):
+def situ(sur, fnt, txt1, txt2, txt3, txt4, fps) -> None:
     txt_type = [
         {"txt": txt1, "pos": (8, 25)},
         {"txt": txt2, "pos": (8, 270)},

@@ -6,6 +6,7 @@ import pygame as pyg
 import SCRIPT.DICT
 import SCRIPT.VARIABLE
 import FUNC
+
 from ..BASE import Base
 
 
@@ -31,7 +32,7 @@ class Hro(pyg.sprite.Sprite):
         th.tar_y = 60
         th.ctr = 0
 
-    def update(th):
+    def update(th) -> None:
         th.ctr += 1
 
         if th.ctr % 120 == 0:
@@ -74,7 +75,7 @@ class PolyX:
         th.ctr = 0
         th.dl = 0
 
-    def free(th, dx1, dx2, dy1, dy2):
+    def free(th, dx1, dx2, dy1, dy2) -> None:
         th.ctr += 1
         th.dl -= 3
 
@@ -100,7 +101,7 @@ class PolyX:
         
             th.bomb_cnt += 1
 
-    def fire(th, rect):
+    def fire(th, rect) -> None:
         th.ctr += 1
 
         if th.ctr % 8 == 0 and th.bullet_cnt < 3:

@@ -1,15 +1,18 @@
 import random as rand
 import json
 
+from typing import Optional, Any
+
 import FUNC
 import SCRIPT.DICT
 import SCRIPT.VARIABLE
 import SCRIPT.RESET
+
 from SCRIPT.LOGIC.FRIEND import Base
 
 
-def next_lv():
-    SCRIPT.VARIABLE.sc += SCRIPT.VARIABLE.ttl_spt * 512
+def next_lv() -> None:
+    SCRIPT.VARIABLE.sc += SCRIPT.VARIABLE.ttl_s_power * 512
     SCRIPT.VARIABLE.sc += SCRIPT.VARIABLE.no_hurt * 4096
 
     SCRIPT.RESET.rst1()
@@ -20,7 +23,7 @@ def next_lv():
     SCRIPT.VARIABLE.pln_grp.add(SCRIPT.VARIABLE.d_pt)
 
 
-def lv_ld():
+def lv_ld() -> None:
     if SCRIPT.VARIABLE.ctr <= 60:
         SCRIPT.VARIABLE.ctr += 1
     else:
@@ -47,7 +50,7 @@ def lv_ld():
         SCRIPT.VARIABLE.level_ld = True
 
 
-def lv_summ():
+def lv_summ() -> None:
     if (len(SCRIPT.VARIABLE.brc_grp) == 0 and
         not SCRIPT.VARIABLE.talk):
         if SCRIPT.VARIABLE.ctr <= 150:
@@ -66,14 +69,14 @@ def lv_summ():
                 SCRIPT.VARIABLE.ctr = 0
 
 
-def lv_proc():
+def lv_proc() -> None:
     if not SCRIPT.VARIABLE.level_ld:
         lv_ld()
     else:
         lv_summ()
 
 
-def lv_lgc():
+def lv_lgc() -> None:
     if SCRIPT.VARIABLE.level >= 6:
         SCRIPT.VARIABLE.stage += 1
         SCRIPT.VARIABLE.level = 1
@@ -81,18 +84,18 @@ def lv_lgc():
         SCRIPT.VARIABLE.level += 1
 
 
-def chs_shhm():
+def chs_shhm() -> Optional[Any]:
     return SCRIPT.DICT.char_dict.get(SCRIPT.VARIABLE.stage)()
 
 
-def shhm_lose():
+def shhm_lose() -> None:
     SCRIPT.VARIABLE.txt_pt += 1
     SCRIPT.VARIABLE.txt_num = 0
 
     SCRIPT.VARIABLE.talk = True
 
 
-def ld_stg(row, line):
+def ld_stg(row, line) -> None:
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
@@ -110,7 +113,7 @@ def ld_stg(row, line):
             SCRIPT.VARIABLE.brc_grp.add(brc)
 
 
-def ld_txt(stg):
+def ld_txt(stg) -> str:
     file = f"ASSET/TALK_{stg}.json"
 
     with open(file, 'r', encoding="utf-8") as f:

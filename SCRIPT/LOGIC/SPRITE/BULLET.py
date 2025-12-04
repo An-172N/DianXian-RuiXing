@@ -4,15 +4,16 @@ import math
 import FUNC
 import SCRIPT.DICT
 import SCRIPT.VARIABLE
+
 from SCRIPT.LOGIC.FRIEND import Base
 from ..SPRITE import ITEM
 from ..PROCESS import STAGE
 
 
-def spwn_blt():
+def spwn_blt() -> None:
     if SCRIPT.VARIABLE.can_shoot:
-        p = 2 ** (SCRIPT.VARIABLE.spt // 32)
-        q = 2 ** (SCRIPT.VARIABLE.spt // 16)
+        p = 2 ** (SCRIPT.VARIABLE.s_power // 32)
+        q = 2 ** (SCRIPT.VARIABLE.s_power // 16)
 
         for i in range(0, p):
             for j in range(-q, q + 1, q):
@@ -31,14 +32,14 @@ def spwn_blt():
             SCRIPT.VARIABLE.ptcl_grp.add(spr)
 
 
-def single_bomb():
+def single_bomb() -> None:
     if (not SCRIPT.VARIABLE.is_sdivide and
-        SCRIPT.VARIABLE.spt >= 16):
-        SCRIPT.VARIABLE.spt -= 16
+        SCRIPT.VARIABLE.s_power >= 16):
+        SCRIPT.VARIABLE.s_power -= 16
         SCRIPT.VARIABLE.is_sdivide = True
 
 
-def blt_coll(src, tar):
+def blt_coll(src, tar) -> None:
     if src.type == "blt":
         if getattr(tar, 'is_die', False):
             src.kill()
@@ -71,7 +72,7 @@ def blt_coll(src, tar):
         src.kill()
 
 
-def brc_death(brc):
+def brc_death(brc) -> None:
     if brc.clr == SCRIPT.DICT.clr_dict[6]:
         proc_dict = {
             0: polygon_brc,
@@ -101,7 +102,7 @@ def brc_death(brc):
         brg_dict[brc.shape](brc)
         
 
-def circle_brg(brc):
+def circle_brg(brc) -> None:
     char = SCRIPT.VARIABLE.main_char
     spr = Base((9, 9, 0), brc.clr, brc.shape)
     spr.spd = 2
@@ -111,7 +112,7 @@ def circle_brg(brc):
     SCRIPT.VARIABLE.brg_grp.add(spr)
 
 
-def polygon_brg(brc):
+def polygon_brg(brc) -> None:
     char = SCRIPT.VARIABLE.main_char
     for i in range(char.rect.centerx - 32, char.rect.centerx + 33, 64):
         spr = Base((9, 9, 0), brc.clr, brc.shape)
@@ -122,7 +123,7 @@ def polygon_brg(brc):
         SCRIPT.VARIABLE.brg_grp.add(spr)
 
 
-def line_brg(_):
+def line_brg(_) -> None:
     start_pos = (rand.randint(100, 480), 0, 0)
     end_pos = (SCRIPT.VARIABLE.main_char.rect.centerx, SCRIPT.VARIABLE.main_char.rect.centery, 0)
         
@@ -137,7 +138,7 @@ def line_brg(_):
     SCRIPT.VARIABLE.brg_grp.add(spr)
 
 
-def circle_brc(spr, src, spr_grp, spd):
+def circle_brc(spr, src, spr_grp, spd) -> None:
     rands = rand.randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 15):
@@ -151,7 +152,7 @@ def circle_brc(spr, src, spr_grp, spd):
         spr_grp.add(curr_spr)
 
 
-def polygon_brc(spr, src, spr_grp, spd):
+def polygon_brc(spr, src, spr_grp, spd) -> None:
     blt_index = [
         {'ang': rand.choice([-30, -210]),
          'pos': src.rect.midleft,},
@@ -172,7 +173,7 @@ def polygon_brc(spr, src, spr_grp, spd):
         spr_grp.add(curr_spr)
 
 
-def line_brc(spr, src, spr_grp, _):
+def line_brc(spr, src, spr_grp, _) -> None:
     for _ in range(12):
         curr_spr = spr((2, rand.randint(30, 180), 0), (45, 194, 229), 1, "blt")
         if not hasattr(curr_spr, "dmg"):

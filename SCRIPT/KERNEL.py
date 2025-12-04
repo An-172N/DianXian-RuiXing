@@ -22,7 +22,7 @@ class Game:
         th.key_mgr = SCRIPT.LOGIC.Key
         th.gui = SCRIPT.LOGIC.GUI
 
-    def update(th):
+    def update(th) -> None:
         if (SCRIPT.VARIABLE.run and
             not SCRIPT.VARIABLE.sav and
             not SCRIPT.VARIABLE.pau):

@@ -1,7 +1,7 @@
 import SCRIPT.VARIABLE
 
 
-def rst1():
+def rst1() -> None:
     SCRIPT.VARIABLE.pau = False
     SCRIPT.VARIABLE.summ = False
     SCRIPT.VARIABLE.talk = False
@@ -20,12 +20,12 @@ def rst1():
     SCRIPT.VARIABLE.cd_ctr = 0
     SCRIPT.VARIABLE.main_char.bomb.bomb_cnt = 0
     SCRIPT.VARIABLE.main_char.bomb.ctr = 0
-    SCRIPT.VARIABLE.ttl_spt = 0
+    SCRIPT.VARIABLE.ttl_s_power = 0
 
     SCRIPT.VARIABLE.txt_pt = 0
     SCRIPT.VARIABLE.txt_num = 0
 
-def rst2():
+def rst2() -> None:
     SCRIPT.VARIABLE.stage = 1
     SCRIPT.VARIABLE.level = 0
     SCRIPT.VARIABLE.char = None
@@ -35,7 +35,7 @@ def rst2():
     SCRIPT.VARIABLE.sc = 0
     SCRIPT.VARIABLE.sflash = 0
 
-    SCRIPT.VARIABLE.spt = 0
+    SCRIPT.VARIABLE.s_power = 0
     SCRIPT.VARIABLE.can_shoot = False
 
     SCRIPT.VARIABLE.comb = 0

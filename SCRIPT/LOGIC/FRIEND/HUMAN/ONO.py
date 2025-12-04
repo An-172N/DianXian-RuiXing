@@ -5,6 +5,7 @@ import pygame as pyg
 
 import SCRIPT.DICT
 import SCRIPT.VARIABLE
+
 from ..BASE import Base
 
 
@@ -30,7 +31,7 @@ class Ono(pyg.sprite.Sprite):
         th.tar_y = 60
         th.ctr = 0
 
-    def update(th):
+    def update(th) -> None:
         th.ctr += 1
 
         if th.ctr % 120 == 0:
@@ -72,7 +73,7 @@ class AutFroDiffuse:
         th.ctr = 0
         th.dl = 0
 
-    def free(th, rect):
+    def free(th, rect) -> None:
         th.ctr += 1
 
         if (th.ctr % 1 == 0 and
@@ -94,7 +95,7 @@ class AutFroDiffuse:
 
             th.bomb_cnt += 1
 
-    def fire(th, rect):
+    def fire(th, rect) -> None:
         if th.bullet_cnt < 1:
             pos = rect.center
             for i in range(0, 360, 15):

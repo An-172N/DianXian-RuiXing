@@ -6,6 +6,7 @@ import pygame as pyg
 import SCRIPT.DICT
 import SCRIPT.VARIABLE
 import FUNC
+
 from ..BASE import Base
 
 
@@ -31,7 +32,7 @@ class Nre(pyg.sprite.Sprite):
         th.tar_y = 60
         th.ctr = 0
 
-    def update(th):
+    def update(th) -> None:
         th.ctr += 1
 
         if th.ctr % 120 == 0:
@@ -72,7 +73,7 @@ class StraightThunder:
         th.bomb_cnt = 0
         th.bullet_cnt = 0
 
-    def free(th):
+    def free(th) -> None:
         th.ctr += 1
 
         if th.ctr % 1 == 0 and th.bomb_cnt < 24:
@@ -91,7 +92,7 @@ class StraightThunder:
 
             th.bomb_cnt += 1
 
-    def fire(th):
+    def fire(th) -> None:
         if th.bullet_cnt < 1:
             char_pos = SCRIPT.VARIABLE.main_char.rect.center
 

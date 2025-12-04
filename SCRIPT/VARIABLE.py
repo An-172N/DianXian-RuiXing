@@ -29,7 +29,7 @@ fps_txt = last_time
 
 name = ''
 
-spt = 0
+s_power = 0
 can_shoot = False
 
 bw_ctr = 150
@@ -40,9 +40,9 @@ no_hurt = 0
 sc = 0
 cd_ctr = 0
 sflash = 0
-ttl_spt = 0
-stg_ttl_spt = 0
-ttl_spwn_spt = 0
+ttl_s_power = 0
+stg_ttl_s_power = 0
+ttl_spwn_s_power = 0
 mv_right = False
 mv_left = False
 is_slow = False

@@ -8,7 +8,7 @@ class ShapeDraw:
         self.border = border
         self.color = color
 
-    def polygon(self):
+    def polygon(self) -> pygame.Surface:
         surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
         side_length = min(self.width, self.height)
@@ -23,14 +23,14 @@ class ShapeDraw:
 
         return surface
 
-    def rect(self):
+    def rect(self) -> pygame.Surface:
         surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
         pygame.draw.rect(surface, self.color, surface.get_rect(), self.border)
 
         return surface
 
-    def circle(self):
+    def circle(self) -> pygame.Surface:
         surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
         center_x = self.width // 2

@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Iterator, Callable, Any
 
 
 def load_files(key_file_list: list, load_func: Callable[[str], Any]) -> dict:
@@ -10,7 +10,7 @@ def load_files(key_file_list: list, load_func: Callable[[str], Any]) -> dict:
     return file_dict
 
 
-def process_file(file: str, encoding: str, start_line: int, process_func: Callable[[int, str], Any]) -> Any:
+def process_file(file: str, encoding: str, start_line: int, process_func: Callable[[int, str], Any]) -> Iterator[Any]:
     with open(file, 'r', encoding=encoding) as f:
         for row, line in enumerate(f, start=start_line):
             line = line.rstrip('\n')

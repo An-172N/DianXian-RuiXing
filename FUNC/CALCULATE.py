@@ -15,7 +15,7 @@ def fibonacci(number_a: int, number_b: int, frequency: int) -> int:
     return number_b
 
 
-def divide(dividend: int|float, divisor: int|float, default: int|float) -> int|float:
+def divide(dividend: float, divisor: float, default: float) -> float:
     if divisor != 0:
         result = dividend / divisor
 

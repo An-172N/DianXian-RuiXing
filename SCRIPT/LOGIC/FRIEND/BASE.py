@@ -3,8 +3,8 @@ import math
 import pygame as pyg
 
 import FUNC
-import SCRIPT.VARIABLE
 import SCRIPT.DICT
+
 from SCRIPT.DRAW import ShapeDraw
 
 
@@ -34,7 +34,7 @@ class Base(pyg.sprite.Sprite):
         th.rect = th.image.get_rect()
         th.mask = pyg.mask.from_surface(th.image)
 
-    def get_shape(th, shape):
+    def get_shape(th, shape) -> None:
         shape_dict = {
             th.POLYGON: lambda: th.base_draw.polygon(),
             th.RECT: lambda: th.base_draw.rect(),
@@ -43,7 +43,7 @@ class Base(pyg.sprite.Sprite):
 
         return shape_dict[shape]()
     
-    def update(th):
+    def update(th) -> None:
         th.image = pyg.transform.rotate(th.orig_image, th.curr_ang)
         th.rect = th.image.get_rect(center=th.rect.center)
         th.mask = pyg.mask.from_surface(th.image)

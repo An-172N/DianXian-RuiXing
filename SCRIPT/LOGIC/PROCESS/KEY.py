@@ -3,10 +3,11 @@ import json
 import datetime as dt
 
 import SCRIPT.VARIABLE
+
 from ..SPRITE import ITEM
 
 
-def sav_file():
+def sav_file() -> None:
     date = dt.datetime.now().strftime('%Y-%m-%d')
     time = dt.datetime.now().strftime('%H-%M-%S')
 
@@ -21,7 +22,7 @@ def sav_file():
                     'Nickname': SCRIPT.VARIABLE.name,
                     'Score': SCRIPT.VARIABLE.sc,
                     'The farthest place that you reached': f"{SCRIPT.VARIABLE.stage} - {SCRIPT.VARIABLE.level}",
-                    'Pick up SPT rate': ITEM.cal_spt(),
+                    'Pick up s_power rate': ITEM.cal_s_power(),
                     'Shape Flash': SCRIPT.VARIABLE.sflash,
                     'Record date': dt.datetime.now().strftime('%Y-%m-%d')
                 })

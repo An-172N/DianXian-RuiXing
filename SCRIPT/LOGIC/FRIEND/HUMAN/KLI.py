@@ -2,6 +2,7 @@ import pygame as pyg
 
 import SCRIPT.DICT
 import SCRIPT.VARIABLE
+
 from ..BASE import Base
 from SCRIPT.DRAW import ShapeDraw
 
@@ -33,7 +34,7 @@ class RectRaining:
         th.bomb_cnt = 0
         th.ctr = 0
 
-    def free(th):
+    def free(th) -> None:
         th.ctr += 1
 
         if (th.ctr >= 30 and
@@ -49,7 +50,7 @@ class RectRaining:
 
             th.bomb_cnt += 1
 
-    def fire(th, dx, dy, ang):
+    def fire(th, dx, dy, ang) -> None:
         blt_type = [
             {'x': SCRIPT.VARIABLE.main_char.rect.left - dx,
              'y': SCRIPT.VARIABLE.main_char.rect.top + dy,
