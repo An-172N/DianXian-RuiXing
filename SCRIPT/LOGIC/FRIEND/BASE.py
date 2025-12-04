@@ -52,7 +52,7 @@ class Base(pyg.sprite.Sprite):
         th.y = getattr(th, 'y', th.rect.centery)
         rad = math.radians(th.curr_ang)
         th.x, th.y, _ = FUNC.Calculate.delta_tuple((th.x, th.y, 0), (math.sin(rad) * th.spd, math.cos(rad) * th.spd, 0))
-        th.rect.center = (int(th.x), int(th.y))
+        th.rect.center = (th.x, th.y)
 
         if th.shape == 1 and th.hei > 16:
             th.ctr += 1

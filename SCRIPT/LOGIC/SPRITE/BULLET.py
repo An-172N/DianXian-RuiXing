@@ -92,7 +92,7 @@ def brc_death(brc) -> None:
         1,
         SCRIPT.VARIABLE.stage + 1
     ) / 100
-    if rand.random() <= 0.5 + difficulty:
+    if rand.random() <= 0.25 + difficulty:
         brg_dict = {
             0: polygon_brg,
             1: line_brg,
@@ -116,7 +116,7 @@ def polygon_brg(brc) -> None:
     char = SCRIPT.VARIABLE.main_char
     for i in range(char.rect.centerx - 32, char.rect.centerx + 33, 64):
         spr = Base((9, 9, 0), brc.clr, brc.shape)
-        spr.spd = 3
+        spr.spd = 2.5
         spr.rect.center = brc.rect.center
         two_pt = FUNC.Calculate.delta_tuple((i, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
         spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))

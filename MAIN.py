@@ -9,7 +9,7 @@ import pygame
 pygame.display.init()
 pygame.font.init()
 
-pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain - Ver0.5.2')
+pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain - Ver0.5.1')
 pygame.display.set_icon(pygame.image.load('ASSET\IMG_ICON.png'))
 screen = pygame.display.set_mode(
     (480, 360),
