@@ -16,7 +16,7 @@ class Nre(pyg.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 96
+        th.hp = 256
         th.clr = SCRIPT.DICT.clr_dict[3]
         th.shape = 1
         th.curr_ang = 0

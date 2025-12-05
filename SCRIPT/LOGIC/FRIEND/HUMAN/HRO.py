@@ -16,7 +16,7 @@ class Hro(pyg.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 96
+        th.hp = 224
         th.clr = SCRIPT.DICT.clr_dict[2]
         th.shape = 0
         th.curr_ang = 0

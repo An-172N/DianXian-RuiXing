@@ -16,7 +16,7 @@ class Ono(pyg.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 80
+        th.hp = 192
         th.clr = SCRIPT.DICT.clr_dict[1]
         th.shape = 2
         th.curr_ang = 0
