@@ -27,7 +27,7 @@ def item_spwn_regular() -> None:
     if VARIABLE.item_spwn_ctr >= 45:
         spr = Base((9, 9, 2), SCRIPT.DICT.clr_dict[6], 1, 0)
         spr.spd = -2
-        spr.rect.center = (rand.randint(120, 265), 10)
+        spr.rect.center = (rand.randint(120, 465), 10)
         VARIABLE.item_grp.add(spr)
 
         VARIABLE.item_spwn_ctr = 0
