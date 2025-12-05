@@ -1,35 +1,38 @@
 import random as rand
+import itertools
 import math
 
 import FUNC
 import SCRIPT.DICT
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND import Base
-from ..SPRITE import ITEM
-from ..PROCESS import STAGE
+from SCRIPT.LOGIC.FRIEND.BASE import Base
+from SCRIPT.LOGIC.SPRITE import ITEM
+from SCRIPT.LOGIC.PROCESS import STAGE
 
 
 def spwn_blt() -> None:
-    if VARIABLE.can_shoot:
+    if (VARIABLE.can_shoot
+        and VARIABLE.shoot_cnt > 0):
         p = 2 ** (VARIABLE.s_power // 32)
         q = 2 ** (VARIABLE.s_power // 16)
 
-        for i in range(0, p):
-            for j in range(-q, q + 1, q):
-                VARIABLE.main_char.bomb.fire(
-                    0 + i * 10,
-                    0 + i * 12,
-                    j
-                )
+        for i, j in itertools.product(range(0, p), range(-q, q + 1, q)):
+            VARIABLE.main_char.bomb.fire(
+                0 + i * 10,
+                0 + i * 12,
+                j
+            )
 
         rands = rand.randint(0, 45)
-        for i in range(0 + rands, 360 + rands, 45):
+        for i in range(0 + rands, 360 + rands, 60):
             spr = Base((2, 2, 0), VARIABLE.main_char.clr, 1)
             spr.spd = rand.randint(6, 10)
             spr.rect.center = VARIABLE.main_char.rect.center
             spr.curr_ang = i
             VARIABLE.ptcl_grp.add(spr)
+
+        VARIABLE.shoot_cnt -= 1
 
 
 def single_bomb() -> None:
@@ -56,7 +59,7 @@ def blt_coll(src, tar) -> None:
             STAGE.shhm_lose()
 
         rands = rand.randint(0, 45)
-        for i in range(0 + rands, 360 + rands, 45):
+        for i in range(0 + rands, 360 + rands, 60):
             spr = Base((2, 2, 0), tar.clr, 1)
             spr.spd = rand.randint(6, 10)
             spr.rect.center = tar_pos
@@ -70,6 +73,24 @@ def blt_coll(src, tar) -> None:
 
     if src.type == "blt":
         src.kill()
+
+
+def item_coll(src) -> None:
+    VARIABLE.bw_ctr = 90
+    VARIABLE.ttl_s_power += 1
+    VARIABLE.stg_ttl_s_power += 1
+    if VARIABLE.shoot_cnt <= 7:
+        VARIABLE.shoot_cnt += 1
+
+    if src.type == 1:
+        if VARIABLE.s_power < 32:
+            VARIABLE.s_power += 1
+        VARIABLE.comb += 1
+    elif src.type == 2:
+        VARIABLE.player += 1
+        VARIABLE.comb += 1
+
+    src.kill()
 
 
 def brc_death(brc) -> None:
@@ -107,7 +128,11 @@ def circle_brg(brc) -> None:
     spr = Base((9, 9, 0), brc.clr, brc.shape)
     spr.spd = 2
     spr.rect.center = brc.rect.center
-    two_pt = FUNC.Calculate.delta_tuple((char.rect.centerx, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
+    x1 = char.rect.centerx
+    x2 = spr.rect.centerx
+    y1 = char.rect.centery
+    y2 = spr.rect.centery
+    two_pt = FUNC.Calculate.delta_tuple((x1, y1, 0), (x2, y2, 0))
     spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
     VARIABLE.brg_grp.add(spr)
 
@@ -118,21 +143,29 @@ def polygon_brg(brc) -> None:
         spr = Base((9, 9, 0), brc.clr, brc.shape)
         spr.spd = 2.5
         spr.rect.center = brc.rect.center
-        two_pt = FUNC.Calculate.delta_tuple((i, char.rect.centery, 0), (spr.rect.centerx, spr.rect.centery, 0))
+        x2 = spr.rect.centerx
+        y1 = char.rect.centery
+        y2 = spr.rect.centery
+        two_pt = FUNC.Calculate.delta_tuple((i, y1, 0), (x2, y2, 0))
         spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
         VARIABLE.brg_grp.add(spr)
 
 
 def line_brg(_) -> None:
+    char = VARIABLE.main_char
+    char_x = char.rect.centerx
+    char_y = char.rect.centery
     start_pos = (rand.randint(100, 480), 0, 0)
-    end_pos = (VARIABLE.main_char.rect.centerx, VARIABLE.main_char.rect.centery, 0)
-        
+    end_pos = (char_x, char_y, 0)
+
     dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
                 
     spr = Base((2, distance, 0), (255, 255, 255), 1)
     spr.spd = 0
-    spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
+    x = start_pos[0] + dpos[0] / 2
+    y = start_pos[1] + dpos[1] / 2
+    spr.rect.center = (x, y)
     spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
     spr.update()
     VARIABLE.brg_grp.add(spr)
@@ -153,13 +186,16 @@ def circle_brc(spr, src, spr_grp, spd) -> None:
 
 
 def polygon_brc(spr, src, spr_grp, spd) -> None:
+    midleft = src.rect.midleft
+    midright = src.rect.midright
+    midbottom = src.rect.midbottom
     blt_index = [
         {'ang': rand.choice([-30, -210]),
-         'pos': src.rect.midleft,},
+         'pos': midleft,},
         {'ang': rand.choice([30, 210]),
-         'pos': src.rect.midright},
+         'pos': midright},
         {'ang': rand.choice([90, 270]),
-         'pos': src.rect.midbottom}
+         'pos': midbottom}
     ]
 
     for blt_info in blt_index:
@@ -180,6 +216,7 @@ def line_brc(spr, src, spr_grp, _) -> None:
             curr_spr.dmg = 6
         curr_spr.spd = 0
         curr_spr.rect.center = src.rect.center
-        curr_spr.curr_ang = rand.randint(0, 360)
+        rands = rand.randint(0, 360)
+        curr_spr.curr_ang = rands
         curr_spr.update()
         spr_grp.add(curr_spr)

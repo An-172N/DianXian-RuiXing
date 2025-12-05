@@ -2,12 +2,12 @@ import sys
 
 import pygame as pyg
 
-from SCRIPT.LOGIC.FRIEND import Ono
-from SCRIPT.LOGIC.FRIEND import Kli
-from SCRIPT.LOGIC.FRIEND import Hro
-from SCRIPT.LOGIC.FRIEND import Nre
+from SCRIPT.LOGIC.FRIEND.HUMAN.ONO import Ono
+from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import Kli
+from SCRIPT.LOGIC.FRIEND.HUMAN.HRO import Hro
+from SCRIPT.LOGIC.FRIEND.HUMAN.NRE import Nre
 
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.LOGIC
 
 
@@ -36,7 +36,8 @@ key_dict = {
                                         True),
             pyg.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
                                           True),
-            pyg.K_z: lambda : SCRIPT.LOGIC.BulletMgr.spwn_blt(),
+            pyg.K_z: lambda : setattr(VARIABLE, "can_shoot",
+                                      False),
             pyg.K_x: lambda : SCRIPT.LOGIC.BulletMgr.single_bomb(),
             pyg.K_ESCAPE: lambda: setattr(VARIABLE, "pau",
                                           True)
@@ -78,9 +79,8 @@ key_dict = {
                                         False),
             pyg.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
                                           False),
-            pyg.K_z: lambda: (SCRIPT.LOGIC.BulletMgr.spwn_blt(),
-                              setattr(VARIABLE, "can_shoot",
-                                      True))
+            pyg.K_z: lambda: setattr(VARIABLE, "can_shoot",
+                                     True)
         }
     }
 }

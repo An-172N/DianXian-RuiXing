@@ -2,9 +2,9 @@ import random as rand
 
 import FUNC
 import SCRIPT.DICT
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND import Base
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
 def comb_ctr() -> None:
@@ -15,11 +15,22 @@ def comb_ctr() -> None:
             VARIABLE.sc += 2 ** VARIABLE.comb
 
         VARIABLE.comb = 0
-        VARIABLE.bw_ctr = 150
+        VARIABLE.bw_ctr = 90
     else:
         if VARIABLE.comb >= 16:
             VARIABLE.sc += 2 ** VARIABLE.comb
             VARIABLE.comb = 0
+
+
+def item_spwn_regular() -> None:
+    VARIABLE.item_spwn_ctr += 1
+    if VARIABLE.item_spwn_ctr >= 45:
+        spr = Base((9, 9, 2), SCRIPT.DICT.clr_dict[6], 1, 0)
+        spr.spd = -2
+        spr.rect.center = (rand.randint(120, 265), 10)
+        VARIABLE.item_grp.add(spr)
+
+        VARIABLE.item_spwn_ctr = 0
 
 
 def item_spwn(brc_pos) -> None:
@@ -35,21 +46,6 @@ def item_spwn(brc_pos) -> None:
         spr.rect.center = brc_pos
         VARIABLE.item_grp.add(spr)
         VARIABLE.ttl_spwn_s_power += 1
-
-
-def item_coll(src, _) -> None:
-    VARIABLE.comb += 1
-    VARIABLE.bw_ctr = 150
-    VARIABLE.ttl_s_power += 1
-    VARIABLE.stg_ttl_s_power += 1
-
-    if (src.type == 1 and
-        VARIABLE.s_power < 32):
-        VARIABLE.s_power += 1
-    elif src.type == 2:
-        VARIABLE.player += 1
-        
-    src.kill()
 
 
 def cal_s_power() -> str:

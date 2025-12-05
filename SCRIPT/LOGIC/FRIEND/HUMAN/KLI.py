@@ -3,9 +3,10 @@ import os
 import pygame as pyg
 
 import SCRIPT.DICT
-import VARIABLE
+import SCRIPT.RESET
+import SCRIPT.VARIABLE as VARIABLE
 
-from ..BASE import Base
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 from SCRIPT.DRAW import ShapeDraw
 
 
@@ -17,7 +18,7 @@ class Kli(pyg.sprite.Sprite):
 
         th.bomb = RectRaining()
 
-        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_KLI.png')).convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(SCRIPT.RESET.asset_path, 'IMG_KLI.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0, 12, 26))
         th.rect = th.image.get_rect()
 
@@ -53,12 +54,15 @@ class RectRaining:
             th.bomb_cnt += 1
 
     def fire(th, dx, dy, ang) -> None:
+        left = VARIABLE.main_char.rect.left
+        top = VARIABLE.main_char.rect.top
+        right = VARIABLE.main_char.rect.right
         blt_type = [
-            {'x': VARIABLE.main_char.rect.left - dx,
-             'y': VARIABLE.main_char.rect.top + dy,
+            {'x': left - dx,
+             'y': top + dy,
              'ang': ang},
-            {'x': VARIABLE.main_char.rect.right + dx,
-             'y': VARIABLE.main_char.rect.top + dy,
+            {'x': right + dx,
+             'y': top + dy,
              'ang': -ang}
         ]
 

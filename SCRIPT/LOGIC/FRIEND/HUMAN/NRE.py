@@ -5,24 +5,25 @@ import os
 import pygame as pyg
 
 import SCRIPT.DICT
-import VARIABLE
+import SCRIPT.RESET
+import SCRIPT.VARIABLE as VARIABLE
 import FUNC
 
-from ..BASE import Base
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
 class Nre(pyg.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 448
+        th.hp = 96
         th.clr = SCRIPT.DICT.clr_dict[3]
         th.shape = 1
         th.curr_ang = 0
 
         th.bomb = StraightThunder(th.clr)
 
-        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_NRE.png')).convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(SCRIPT.RESET.asset_path, 'IMG_NRE.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0,
                                              12, 26))
         th.rect = th.image.get_rect()
@@ -77,7 +78,7 @@ class StraightThunder:
     def free(th) -> None:
         th.ctr += 1
 
-        if th.ctr % 1 == 0 and th.bomb_cnt < 24:
+        if th.ctr % 1 == 0 and th.bomb_cnt < 16:
             start_pos = (rand.randint(80, 500), 0, 0)
             end_pos = (rand.randint(100, 490), 360, 0)
         
@@ -86,7 +87,9 @@ class StraightThunder:
                 
             spr = Base((2, distance, 0), (255, 255, 255), 1)
             spr.spd = 0
-            spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
+            x = start_pos[0] + dpos[0] / 2
+            y = start_pos[1] + dpos[1] / 2
+            spr.rect.center = (x, y)
             spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
             spr.update()
             VARIABLE.brg_grp.add(spr)
@@ -106,7 +109,9 @@ class StraightThunder:
 
                 spr = Base((2, distance, 0), (255, 255, 255), 1)
                 spr.spd = 0
-                spr.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
+                x = start_pos[0] + dpos[0] / 2
+                y = start_pos[1] + dpos[1] / 2
+                spr.rect.center = (x, y)
                 spr.curr_ang = 0
                 spr.update()
                 VARIABLE.brg_grp.add(spr)

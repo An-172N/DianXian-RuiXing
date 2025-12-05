@@ -1,5 +1,9 @@
-import VARIABLE
+import os
 
+import SCRIPT.VARIABLE as VARIABLE
+
+
+asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
 
 def rst1() -> None:
     VARIABLE.pau = False
@@ -21,6 +25,11 @@ def rst1() -> None:
     VARIABLE.main_char.bomb.bomb_cnt = 0
     VARIABLE.main_char.bomb.ctr = 0
     VARIABLE.ttl_s_power = 0
+
+    VARIABLE.shoot_cnt = 0
+    VARIABLE.can_shoot = True
+
+    VARIABLE.item_spwn_ctr = 0
 
     VARIABLE.txt_pt = 0
     VARIABLE.txt_num = 0

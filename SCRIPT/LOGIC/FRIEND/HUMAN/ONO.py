@@ -1,27 +1,29 @@
 import random as rand
+import itertools
 import math
 import os
 
 import pygame as pyg
 
 import SCRIPT.DICT
-import VARIABLE
+import SCRIPT.RESET
+import SCRIPT.VARIABLE as VARIABLE
 
-from ..BASE import Base
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
 class Ono(pyg.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 384
+        th.hp = 80
         th.clr = SCRIPT.DICT.clr_dict[1]
         th.shape = 2
         th.curr_ang = 0
 
         th.bomb = AutFroDiffuse(th.clr)
 
-        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_ONO.png')).convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(SCRIPT.RESET.asset_path, 'IMG_ONO.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0,
                                              12, 26))
         th.rect = th.image.get_rect()
@@ -81,18 +83,15 @@ class AutFroDiffuse:
             th.bomb_cnt < 12):
             th.dl += 6
 
-            for i in range(0 + th.dl, 360 + th.dl, 120):
-                for j in range(0 + th.dl, 360 + th.dl, 90):
-                    pos = (rect.centerx
-                           + 32 * math.cos(math.radians(i)),
-                           rect.centery
-                           + 32 * math.sin(math.radians(i)))
-
-                    spr = Base((9, 9, 0), th.clr, 2)
-                    spr.spd = 4
-                    spr.rect.center = pos
-                    spr.curr_ang = j
-                    VARIABLE.brg_grp.add(spr)
+            for i, j in itertools.product(range(0 + th.dl, 360 + th.dl, 120), range(0 + th.dl, 360 + th.dl, 90)):
+                x = rect.centerx + 32 * math.cos(math.radians(i))
+                y = rect.centery + 32 * math.sin(math.radians(i))
+                pos = (x, y)
+                spr = Base((9, 9, 0), th.clr, 2)
+                spr.spd = 4
+                spr.rect.center = pos
+                spr.curr_ang = j
+                VARIABLE.brg_grp.add(spr)
 
             th.bomb_cnt += 1
 

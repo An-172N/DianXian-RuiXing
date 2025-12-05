@@ -6,10 +6,10 @@ from typing import Optional, Any
 
 import FUNC
 import SCRIPT.DICT
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.RESET
 
-from SCRIPT.LOGIC.FRIEND import Base
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
 def next_lv() -> None:
@@ -38,7 +38,7 @@ def lv_ld() -> None:
             VARIABLE.brc_grp.add(VARIABLE.char)
         else:
             for i in FUNC.Process.process_file(
-                         os.path.join(VARIABLE.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
+                         os.path.join(SCRIPT.RESET.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
                          'ascii',
                          0,
                          ld_stg
@@ -54,7 +54,7 @@ def lv_ld() -> None:
 def lv_summ() -> None:
     if (len(VARIABLE.brc_grp) == 0 and
         not VARIABLE.talk):
-        if VARIABLE.ctr <= 150:
+        if VARIABLE.ctr <= 60:
             VARIABLE.ctr += 1
             VARIABLE.summ = True
         else:
@@ -100,7 +100,7 @@ def ld_stg(row, line) -> None:
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
-            c = SCRIPT.DICT.clr_dict[VARIABLE.stage] if rand.random() >= 0.042 else SCRIPT.DICT.clr_dict[6]
+            c = SCRIPT.DICT.clr_dict[VARIABLE.stage] if rand.random() >= 0.063 else SCRIPT.DICT.clr_dict[6]
             x = 127 + i * 15
             y = 22 + row * 15
 
@@ -115,7 +115,7 @@ def ld_stg(row, line) -> None:
 
 
 def ld_txt(stg) -> str:
-    file = os.path.join(VARIABLE.asset_path, f"TALK_{stg}.json")
+    file = os.path.join(SCRIPT.RESET.asset_path, f"TALK_{stg}.json")
 
     with open(file, 'r', encoding="utf-8") as f:
         return json.load(f)

@@ -5,24 +5,25 @@ import os
 import pygame as pyg
 
 import SCRIPT.DICT
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.RESET
 import FUNC
 
-from ..BASE import Base
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
 class Hro(pyg.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 448
+        th.hp = 96
         th.clr = SCRIPT.DICT.clr_dict[2]
         th.shape = 0
         th.curr_ang = 0
 
         th.bomb = PolyX(th.clr)
 
-        th.orig_image = pyg.image.load(os.path.join(VARIABLE.asset_path, 'IMG_HRO.png')).convert_alpha()
+        th.orig_image = pyg.image.load(os.path.join(SCRIPT.RESET.asset_path, 'IMG_HRO.png')).convert_alpha()
         th.image = th.orig_image.subsurface((0, 0,
                                              12, 26))
         th.rect = th.image.get_rect()
@@ -97,7 +98,8 @@ class PolyX:
                 spr = Base((9, 9, 0), th.clr, 0)
                 spr.spd = 4
                 spr.rect.center = (current_pos.x, current_pos.y)
-                spr.curr_ang = math.degrees(math.atan2(-delta_pos.x, -delta_pos.y)) + j + th.dl
+                atan = math.atan2(-delta_pos.x, -delta_pos.y)
+                spr.curr_ang = math.degrees(atan) + j + th.dl
                 VARIABLE.brg_grp.add(spr)
         
             th.bomb_cnt += 1
@@ -113,7 +115,8 @@ class PolyX:
                 spr.spd = 4
                 spr.rect.center = pos
                 two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1], 0), (pos[0], pos[1], 0))
-                spr.curr_ang = math.degrees(math.atan2(-two_pt[0], -two_pt[1])) + i
+                atan = math.atan2(-two_pt[0], -two_pt[1])
+                spr.curr_ang = math.degrees(atan) + i
                 VARIABLE.brg_grp.add(spr)
 
             th.bullet_cnt += 1

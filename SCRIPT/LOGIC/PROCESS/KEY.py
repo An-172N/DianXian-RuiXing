@@ -2,9 +2,9 @@ import os
 import json
 import datetime as dt
 
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
 
-from ..SPRITE import ITEM
+from SCRIPT.LOGIC.SPRITE import ITEM
 
 
 def sav_file() -> None:
@@ -22,7 +22,7 @@ def sav_file() -> None:
                     'Nickname': VARIABLE.name,
                     'Score': VARIABLE.sc,
                     'The farthest place that you reached': f"{VARIABLE.stage} - {VARIABLE.level}",
-                    'Pick up s_power rate': ITEM.cal_s_power(),
+                    'Pick up SPower rate': ITEM.cal_s_power(),
                     'Shape Flash': VARIABLE.sflash,
                     'Record date': dt.datetime.now().strftime('%Y-%m-%d')
                 })

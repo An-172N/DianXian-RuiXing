@@ -36,9 +36,9 @@ class Base(pyg.sprite.Sprite):
 
     def get_shape(th, shape) -> None:
         shape_dict = {
-            th.POLYGON: lambda: th.base_draw.polygon(),
-            th.RECT: lambda: th.base_draw.rect(),
-            th.CIRCLE: lambda: th.base_draw.circle(),
+            th.POLYGON: th.base_draw.polygon,
+            th.RECT: th.base_draw.rect,
+            th.CIRCLE: th.base_draw.circle,
         }
 
         return shape_dict[shape]()
@@ -57,11 +57,9 @@ class Base(pyg.sprite.Sprite):
         if th.shape == 1 and th.hei > 16:
             th.ctr += 1
 
-            if th.ctr >= 40:
-                th.clr = SCRIPT.DICT.clr_dict[3]
-                temp_surface = pyg.Surface(th.image.get_size(), pyg.SRCALPHA)
-                temp_surface.fill(th.clr)
-
-                th.image.blit(temp_surface, (0, 0), special_flags=pyg.BLEND_RGBA_MIN)
             if th.ctr >= 80:
                 th.kill()
+            elif th.ctr >= 40:
+                th.clr = SCRIPT.DICT.clr_dict[3]
+
+                th.image.fill(th.clr, special_flags=pyg.BLEND_RGBA_MULT)

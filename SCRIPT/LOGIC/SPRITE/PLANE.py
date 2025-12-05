@@ -2,9 +2,9 @@ import random as rand
 
 import pygame as pyg
 
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND import Base
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
 def mv_pln() -> None:
@@ -49,18 +49,18 @@ def turn_side() -> None:
         )
 
 
-def coll_brg(src) -> None:
+def coll_brg(brg) -> None:
     if (not (VARIABLE.coll or
              VARIABLE.is_sdivide)):
         VARIABLE.coll = True
         life_lgc()
 
-    src.kill()
+    brg.kill()
 
 
 def life_lgc() -> None:
     rands = rand.randint(0, 30)
-    for i in range(0 + rands, 360 + rands, 45):
+    for i in range(0 + rands, 360 + rands, 60):
         spr = Base((8, 8, 0), VARIABLE.main_char.clr, 1)
         spr.spd = rand.randint(8, 12)
         spr.rect.center = VARIABLE.main_char.rect.center

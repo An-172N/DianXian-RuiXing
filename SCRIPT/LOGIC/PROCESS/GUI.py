@@ -3,9 +3,9 @@ import datetime as dt
 import pygame as pyg
 
 import SCRIPT.DRAW
-import VARIABLE
+import SCRIPT.VARIABLE as VARIABLE
 
-from ..SPRITE import ITEM
+from SCRIPT.LOGIC.SPRITE import ITEM
 
 
 def show_situ(scr, fnt, clk) -> None:
@@ -19,7 +19,8 @@ def show_situ(scr, fnt, clk) -> None:
     sh = (f"形　{VARIABLE.s_power:02d} , "
           f"{VARIABLE.ttl_s_power:02d}")
     fl = f"闪　{VARIABLE.player:02d}"
-    comb = f"连　{VARIABLE.comb:02d}"
+    comb = (f"连　{VARIABLE.comb:02d} , "
+            f"{VARIABLE.shoot_cnt:02d}")
 
     situ(scr,
          fnt,
