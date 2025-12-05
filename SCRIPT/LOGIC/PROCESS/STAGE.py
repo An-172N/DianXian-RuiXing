@@ -54,7 +54,7 @@ def lv_ld() -> None:
 def lv_summ() -> None:
     if (len(VARIABLE.brc_grp) == 0 and
         not VARIABLE.talk):
-        if VARIABLE.ctr <= 60:
+        if VARIABLE.ctr <= 90:
             VARIABLE.ctr += 1
             VARIABLE.summ = True
         else:
