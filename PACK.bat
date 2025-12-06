@@ -6,10 +6,10 @@ nuitka ^
     --lto=yes ^
     --windows-console-mode=disable ^
     --enable-plugin=anti-bloat ^
-    --file-version="0.6" ^
-    --product-version="0.6" ^
+    --file-version="0.6.1" ^
+    --product-version="0.6.1" ^
     --product-name="RuiXing ~ Thunder Out of the Mountain" ^
-    --copyright="Copyright (c) An_172N" ^
+    --copyright="Copyright (c) 2025 An_172N" ^
     --windows-icon-from-ico=ASSET\IMG_ICON.png ^
     --include-data-dir=ASSET=ASSET ^
     --output-filename=DX00 ^
