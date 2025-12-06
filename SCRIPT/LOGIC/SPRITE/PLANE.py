@@ -7,26 +7,27 @@ import SCRIPT.VARIABLE as VARIABLE
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
-def mv_pln() -> None:
-    if VARIABLE.mv_right:
+def move_plane() -> None:
+    if VARIABLE.move_right:
         VARIABLE.main_char.rect.x += 1 if VARIABLE.is_slow else 3
-    if VARIABLE.mv_left:
+    if VARIABLE.move_left:
         VARIABLE.main_char.rect.x -= 1 if VARIABLE.is_slow else 3
 
-    if VARIABLE.main_char.rect.left < VARIABLE.win.left:
-        VARIABLE.main_char.rect.left = VARIABLE.win.left
-    elif VARIABLE.main_char.rect.right > VARIABLE.win.right:
-        VARIABLE.main_char.rect.right = VARIABLE.win.right
+    if VARIABLE.main_char.rect.left < VARIABLE.window.left:
+        VARIABLE.main_char.rect.left = VARIABLE.window.left
+    elif VARIABLE.main_char.rect.right > VARIABLE.window.right:
+        VARIABLE.main_char.rect.right = VARIABLE.window.right
 
     VARIABLE.d_pt.rect.center = VARIABLE.main_char.rect.center
 
 
 def turn_side() -> None:
-    turn_side_image = VARIABLE.main_char.orig_image.subsurface(
-        (12,
-         0,
-         12,
-         26
+    turn_side_image = VARIABLE.main_char.original_image.subsurface(
+        (
+            12,
+            0,
+            12,
+            26
         )
     )
     flipped_image = pyg.transform.flip(
@@ -35,63 +36,74 @@ def turn_side() -> None:
         False
     )
 
-    if VARIABLE.mv_right:
+    if VARIABLE.move_right:
         VARIABLE.main_char.image = flipped_image
-    elif VARIABLE.mv_left:
+    elif VARIABLE.move_left:
         VARIABLE.main_char.image = turn_side_image
     else:
-        VARIABLE.main_char.image = VARIABLE.main_char.orig_image.subsurface(
-            (0,
-             0,
-             12,
-             26
+        VARIABLE.main_char.image = VARIABLE.main_char.original_image.subsurface(
+            (
+                0,
+                0,
+                12,
+                26
             )
         )
 
 
-def coll_brg(brg) -> None:
-    if (not (VARIABLE.coll or
-             VARIABLE.is_sdivide)):
-        VARIABLE.coll = True
-        life_lgc()
+def collide_barrage(barrage) -> None:
+    if (
+        not (
+            VARIABLE.collide or
+            VARIABLE.is_s_divide
+        )
+    ):
+        VARIABLE.collide = True
+        life_logic()
 
-    brg.kill()
+    barrage.kill()
 
 
-def life_lgc() -> None:
+def life_logic() -> None:
     rands = rand.randint(0, 30)
     for i in range(0 + rands, 360 + rands, 60):
-        spr = Base((8, 8, 0), VARIABLE.main_char.clr, 1)
-        spr.spd = rand.randint(8, 12)
-        spr.rect.center = VARIABLE.main_char.rect.center
-        spr.curr_ang = i
-        VARIABLE.ptcl_grp.add(spr)
+        sprite = Base(
+            (8, 8, 0),
+            VARIABLE.main_char.color,
+            1
+        )
+        sprite.speed = rand.randint(8, 12)
+        sprite.rect.center = VARIABLE.main_char.rect.center
+        sprite.current_angle = i
+        VARIABLE.particle_group.add(sprite)
         
     VARIABLE.no_hurt = 0
     VARIABLE.player -= 1
-    VARIABLE.sflash += 1
+    VARIABLE.s_flash += 1
 
     if VARIABLE.player == 0:
-        VARIABLE.sav = True
+        VARIABLE.save = True
 
 
 def invinc() -> None:
-    if (VARIABLE.is_sdivide or
-        VARIABLE.coll):
-        VARIABLE.cd_ctr += 1
+    if (
+        VARIABLE.is_s_divide or
+        VARIABLE.collide
+    ):
+        VARIABLE.cooldown_time += 1
 
-        if VARIABLE.cd_ctr >= 180:
-            if VARIABLE.is_sdivide:
-                VARIABLE.is_sdivide = False
-                VARIABLE.coll = False
-                VARIABLE.cd_ctr = 0
+        if VARIABLE.cooldown_time >= 180:
+            if VARIABLE.is_s_divide:
+                VARIABLE.is_s_divide = False
+                VARIABLE.collide = False
+                VARIABLE.cooldown_time = 0
                 VARIABLE.main_char.bomb.bomb_cnt = 0
-                VARIABLE.main_char.bomb.ctr = 0
-                VARIABLE.ttl_s_power = 0
+                VARIABLE.main_char.bomb.timer = 0
+                VARIABLE.total_s_power = 0
 
-            VARIABLE.coll = False
+            VARIABLE.collide = False
         else:
-            VARIABLE.is_visitable = (VARIABLE.cd_ctr // 6) % 2
+            VARIABLE.is_visitable = (VARIABLE.cooldown_time // 6) % 2
     else:
-        VARIABLE.cd_ctr = 0
+        VARIABLE.cooldown_time = 0
         VARIABLE.is_visitable = True

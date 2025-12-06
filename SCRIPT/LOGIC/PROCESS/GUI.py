@@ -8,166 +8,193 @@ import SCRIPT.VARIABLE as VARIABLE
 from SCRIPT.LOGIC.SPRITE import ITEM
 
 
-def show_situ(scr, fnt, clk) -> None:
-    curr_time = pyg.time.get_ticks()
-    if curr_time - VARIABLE.last_time >= 500:
-        VARIABLE.fps_txt = f"{clk.get_fps():.0f} FPS"
+def show_situ(screen, font, clock) -> None:
+    current_time = pyg.time.get_ticks()
+    if current_time - VARIABLE.last_time >= 500:
+        VARIABLE.fps_text = f"{clock.get_fps():.0f} FPS"
 
-        VARIABLE.last_time = curr_time
+        VARIABLE.last_time = current_time
 
-    sc = f"分　{VARIABLE.sc:9d}"
-    sh = (f"形　{VARIABLE.s_power:02d} , "
-          f"{VARIABLE.ttl_s_power:02d}")
-    fl = f"闪　{VARIABLE.player:02d}"
-    comb = (f"连　{VARIABLE.comb:02d} , "
-            f"{VARIABLE.shoot_cnt:02d}")
+    score = f"分　{VARIABLE.score:9d}"
+    power = (
+        f"形　{VARIABLE.s_power:02d} , "
+        f"{VARIABLE.total_s_power:02d}"
+    )
+    flash = f"闪　{VARIABLE.player:02d}"
+    combo = (
+        f"连　{VARIABLE.combo:02d} , "
+        f"{VARIABLE.shoot_cnt:02d}"
+    )
 
-    situ(scr,
-         fnt,
-         sc,
-         sh,
-         fl,
-         comb,
-         VARIABLE.fps_txt)
-
-
-def pau_menu(scr, fnt) -> None:
-    half_menu(scr,
-              fnt,
-              "休息ing",
-              "ESC 休息好了",
-              "Q 不玩了")
+    situ(
+        screen, font,
+        score,
+        power,
+        flash,
+        combo,
+        VARIABLE.fps_text
+    )
 
 
-def ld_menu(scr, fnt) -> None:
-    stg = (f"Stage {VARIABLE.stage} - "
-           f"{VARIABLE.level} !!")
-
-    half_menu(scr,
-              fnt,
-              "这一关是————",
-              stg,
-              "START!!!!")
+def pause_menu(screen, font) -> None:
+    half_menu(
+        screen, font,
+        "休息ing",
+        "ESC 休息好了",
+        "Q 不玩了"
+    )
 
 
-def talk_menu(scr, fnt) -> None:
-    txt = VARIABLE.txt
+def load_menu(screen, font) -> None:
+    stage = (
+        f"Stage {VARIABLE.stage} - "
+        f"{VARIABLE.level} !!"
+    )
+
+    half_menu(
+        screen, font,
+        "这一关是————",
+        stage,
+        "START!!!!"
+    )
+
+
+def talk_menu(screen, font) -> None:
+    text = VARIABLE.text
         
-    human = (txt[f"{VARIABLE.txt_pt}"]
-             [f"{VARIABLE.txt_num}"]
-             ["human"])
-    info = (txt[f"{VARIABLE.txt_pt}"]
-            [f"{VARIABLE.txt_num}"]
-            ["info"])
-    info2 = (txt[f"{VARIABLE.txt_pt}"]
-            [f"{VARIABLE.txt_num}"]
-            ["info2"])
-    sw = (txt[f"{VARIABLE.txt_pt}"]
-          [f"{VARIABLE.txt_num}"]
-          ["sw"])
+    human = (
+        text[f"{VARIABLE.text_part}"]
+        [f"{VARIABLE.text_number}"]
+        ["human"]
+    )
+    info = (
+        text[f"{VARIABLE.text_part}"]
+        [f"{VARIABLE.text_number}"]
+        ["info"]
+    )
+    info2 = (
+        text[f"{VARIABLE.text_part}"]
+        [f"{VARIABLE.text_number}"]
+        ["info2"]
+    )
+    sw = (
+        text[f"{VARIABLE.text_part}"]
+        [f"{VARIABLE.text_number}"]
+        ["sw"]
+    )
         
     VARIABLE.talk = sw
 
-    half_menu(scr,
-              fnt,
-              human,
-              info,
-              info2)
+    half_menu(
+        screen, font,
+        human,
+        info,
+        info2
+    )
 
 
-def summ_menu(scr, fnt) -> None:
-    stg = (f"Stage {VARIABLE.stage} - "
-           f"{VARIABLE.level} Cleaer!")
-    pt = (f"得点 {VARIABLE.ttl_s_power} * 512 "
-          f"= {VARIABLE.ttl_s_power * 512}")
-    hurt = (f"无伤 {VARIABLE.no_hurt} * 4096 "
-            f"= {VARIABLE.no_hurt * 4096}")
+def summary_menu(screen, font) -> None:
+    stage = (
+        f"Stage {VARIABLE.stage} - "
+        f"{VARIABLE.level} Cleaer!"
+    )
+    point = (
+        f"得点 {VARIABLE.total_s_power} * 512 "
+        f"= {VARIABLE.total_s_power * 512}"
+    )
+    hurt = (
+        f"无伤 {VARIABLE.no_hurt} * 4096 "
+        f"= {VARIABLE.no_hurt * 4096}"
+    )
 
-    half_menu(scr,
-              fnt,
-              stg,
-              pt,
-              hurt)
-
-
-def start_menu(scr, fnt) -> None:
-    full_menu(scr,
-              fnt,
-              tit="锐行 ~ Thunder Out of the Mountain",
-              ctl1="Z 开始",
-              ctl2="Q 退出",
-              oth="Copyright (c) 2025 An_172N")
+    half_menu(
+        screen, font,
+        stage,
+        point,
+        hurt
+    )
 
 
-def sav_menu(scr, fnt) -> None:
+def start_menu(screen, font) -> None:
+    full_menu(
+        screen, font,
+        title="锐行 ~ Thunder Out of the Mountain",
+        key1="Z 开始", key2="Q 退出",
+        other="Copyright (c) 2025 An_172N"
+    )
+
+
+def save_menu(screen, font) -> None:
     tm = f"今天是：{dt.datetime.now().strftime('%Y-%m-%d')}"
-    sc = f"得到了 {VARIABLE.sc} 分"
-    stg = f"最远达到的地方是 {VARIABLE.stage} - {VARIABLE.level}"
+    score = f"得到了 {VARIABLE.score} 分"
+    stage = f"最远达到的地方是 {VARIABLE.stage} - {VARIABLE.level}"
     s_power = f"拾形点率为 {ITEM.cal_s_power()}"
-    sflash = f"使用了 {VARIABLE.sflash} 次形闪"
+    s_flash = f"使用了 {VARIABLE.s_flash} 次形闪"
     name = f"由 {VARIABLE.name} 助记"
 
-    full_menu(scr,
-              fnt,
-              tit=f"抚形日志",
-              txt1=tm,
-              txt2=sc,
-              txt3= stg,
-              txt4= s_power,
-              txt5 = sflash,
-              ctl1="Ent 记录",
-              ctl2="ESC 不了",
-              oth=name)
+    full_menu(
+        screen, font,
+        title=f"抚形日志",
+        text1=tm, text2=score, text3= stage, text4= s_power, text5 = s_flash,
+        key1="Ent 记录", key2="ESC 不了", other=name
+    )
 
 
-def full_menu(sur, fnt, tit="",
-              txt1="", txt2="", txt3="", txt4="", txt5="",
-              ctl1="", ctl2="",
-              oth="") -> None:
-    txt_type = [
-        {"txt": tit, "pos": (128, 25)},
-        {"txt": txt1, "pos": (128, 75)},
-        {"txt": txt2, "pos": (128, 100)},
-        {"txt": txt3, "pos": (128, 125)},
-        {"txt": txt4, "pos": (128, 150)},
-        {"txt": txt5, "pos": (128, 175)},
-        {"txt": ctl1, "pos": (390, 235)},
-        {"txt": ctl2, "pos": (390, 285)},
-        {"txt": oth, "pos": (128, 320)}
+def full_menu(
+    sur, font,
+    title="",
+    text1="", text2="", text3="", text4="", text5="",
+    key1="", key2="",
+    other=""
+) -> None:
+    text_type = [
+        {"text": title, "pos": (128, 25)},
+        {"text": text1, "pos": (128, 75)},
+        {"text": text2, "pos": (128, 100)},
+        {"text": text3, "pos": (128, 125)},
+        {"text": text4, "pos": (128, 150)},
+        {"text": text5, "pos": (128, 175)},
+        {"text": key1, "pos": (390, 235)},
+        {"text": key2, "pos": (390, 285)},
+        {"text": other, "pos": (128, 320)}
     ]
 
-    sur.blit(SCRIPT.DRAW.ShapeDraw(345, 330, 0, (0, 0, 0)).rect(),
-             (120, 15))
+    sur.blit(
+        SCRIPT.DRAW.ShapeDraw(345, 330, 0, (0, 0, 0)).rect(),
+        (120, 15)
+    )
     
-    for txt_info in txt_type:
-        txt = fnt.render(f"{txt_info['txt']}", False, (255, 255, 255))
-        sur.blit(txt, txt_info["pos"])
+    for text_info in text_type:
+        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+        sur.blit(text, text_info["pos"])
 
 
-def half_menu(sur, fnt, tit, txt1, txt2) -> None:
-    txt_type = [
-        {"txt": tit, "pos": (125, 268)},
-        {"txt": txt1, "pos": (125, 293)},
-        {"txt": txt2, "pos": (125, 318)}
+def half_menu(sur, font, title, text1, text2) -> None:
+    text_type = [
+        {"text": title, "pos": (125, 268)},
+        {"text": text1, "pos": (125, 293)},
+        {"text": text2, "pos": (125, 318)}
     ]
 
-    sur.blit(SCRIPT.DRAW.ShapeDraw(345, 85, 0, (0, 0, 0)).rect(),
-             (120, 260))
+    sur.blit(
+        SCRIPT.DRAW.ShapeDraw(345, 85, 0, (0, 0, 0)).rect(),
+        (120, 260)
+    )
     
-    for txt_info in txt_type:
-        txt = fnt.render(f"{txt_info['txt']}", False, (255, 255, 255))
-        sur.blit(txt, txt_info["pos"])
+    for text_info in text_type:
+        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+        sur.blit(text, text_info["pos"])
 
 
-def situ(sur, fnt, txt1, txt2, txt3, txt4, fps) -> None:
-    txt_type = [
-        {"txt": txt1, "pos": (8, 25)},
-        {"txt": txt2, "pos": (8, 270)},
-        {"txt": txt3, "pos": (8, 295)},
-        {"txt": txt4, "pos": (8, 320)},
-        {"txt": fps, "pos": (405, 343)}
+def situ(sur, font, text1, text2, text3, text4, fps) -> None:
+    text_type = [
+        {"text": text1, "pos": (8, 25)},
+        {"text": text2, "pos": (8, 270)},
+        {"text": text3, "pos": (8, 295)},
+        {"text": text4, "pos": (8, 320)},
+        {"text": fps, "pos": (405, 343)}
     ]
     
-    for txt_info in txt_type:
-        txt = fnt.render(f"{txt_info['txt']}", False, (255, 255, 255))
-        sur.blit(txt, txt_info["pos"])
+    for text_info in text_type:
+        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+        sur.blit(text, text_info["pos"])

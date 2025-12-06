@@ -1,52 +1,48 @@
-import os
-
 import SCRIPT.VARIABLE as VARIABLE
 
 
-asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
-
-def rst1() -> None:
-    VARIABLE.pau = False
-    VARIABLE.summ = False
+def reset1() -> None:
+    VARIABLE.pause = False
+    VARIABLE.summary = False
     VARIABLE.talk = False
-    VARIABLE.sav = False
-    VARIABLE.level_ld = False
+    VARIABLE.save = False
+    VARIABLE.level_load = False
 
-    VARIABLE.item_grp.empty(),
-    VARIABLE.brc_grp.empty(),
-    VARIABLE.pln_grp.empty(),
-    VARIABLE.blt_grp.empty(),
-    VARIABLE.ptcl_grp.empty(),
-    VARIABLE.brg_grp.empty()
+    VARIABLE.item_group.empty(),
+    VARIABLE.brick_group.empty(),
+    VARIABLE.plane_group.empty(),
+    VARIABLE.bullet_group.empty(),
+    VARIABLE.particle_group.empty(),
+    VARIABLE.barrage_group.empty()
 
-    VARIABLE.coll = False
-    VARIABLE.is_sdivide = False
-    VARIABLE.cd_ctr = 0
+    VARIABLE.collide = False
+    VARIABLE.is_s_divide = False
+    VARIABLE.cooldown_time = 0
     VARIABLE.main_char.bomb.bomb_cnt = 0
-    VARIABLE.main_char.bomb.ctr = 0
-    VARIABLE.ttl_s_power = 0
+    VARIABLE.main_char.bomb.timer = 0
+    VARIABLE.total_s_power = 0
 
     VARIABLE.shoot_cnt = 0
     VARIABLE.can_shoot = True
 
-    VARIABLE.item_spwn_ctr = 0
+    VARIABLE.item_spawn_timer = 0
 
-    VARIABLE.txt_pt = 0
-    VARIABLE.txt_num = 0
+    VARIABLE.text_part = 0
+    VARIABLE.text_number = 0
 
-def rst2() -> None:
+def reset2() -> None:
     VARIABLE.stage = 1
     VARIABLE.level = 0
     VARIABLE.char = None
 
     VARIABLE.no_hurt = 0
     VARIABLE.player = 4
-    VARIABLE.sc = 0
-    VARIABLE.sflash = 0
+    VARIABLE.score = 0
+    VARIABLE.s_flash = 0
 
     VARIABLE.s_power = 0
     VARIABLE.can_shoot = False
 
-    VARIABLE.comb = 0
+    VARIABLE.combo = 0
 
     VARIABLE.run = False

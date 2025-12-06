@@ -7,46 +7,83 @@ import SCRIPT.VARIABLE as VARIABLE
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
-def comb_ctr() -> None:
-    VARIABLE.bw_ctr -= 1
+def combo_counter() -> None:
+    VARIABLE.comboo_timer -= 1
 
-    if VARIABLE.bw_ctr <= 0:
-        if 0 < VARIABLE.comb <= 15:
-            VARIABLE.sc += 2 ** VARIABLE.comb
+    if VARIABLE.comboo_timer <= 0:
+        if 0 < VARIABLE.combo <= 15:
+            VARIABLE.score += 2 ** VARIABLE.combo
 
-        VARIABLE.comb = 0
-        VARIABLE.bw_ctr = 90
+        VARIABLE.combo = 0
+        VARIABLE.comboo_timer = 90
     else:
-        if VARIABLE.comb >= 16:
-            VARIABLE.sc += 2 ** VARIABLE.comb
-            VARIABLE.comb = 0
+        if VARIABLE.combo >= 16:
+            VARIABLE.score += 2 ** VARIABLE.combo
+            VARIABLE.combo = 0
 
 
-def item_spwn_regular() -> None:
-    VARIABLE.item_spwn_ctr += 1
-    if VARIABLE.item_spwn_ctr >= 45:
-        spr = Base((9, 9, 2), SCRIPT.DICT.clr_dict[6], 1, 0)
-        spr.spd = -2
-        spr.rect.center = (rand.randint(120, 465), 10)
-        VARIABLE.item_grp.add(spr)
+def item_spawn_regular() -> None:
+    VARIABLE.item_spawn_timer += 1
+    if VARIABLE.item_spawn_timer >= 45:
+        sprite = Base(
+            (9, 9, 2),
+            SCRIPT.DICT.color_dict[6],
+            1,
+            0
+        )
+        sprite.speed = -2
+        sprite.rect.center = (rand.randint(120, 465), 10)
+        VARIABLE.item_group.add(sprite)
 
-        VARIABLE.item_spwn_ctr = 0
+        VARIABLE.item_spawn_timer = 0
 
 
-def item_spwn(brc_pos) -> None:
+def item_collide(source) -> None:
+    VARIABLE.comboo_timer = 90
+    VARIABLE.total_s_power += 1
+    VARIABLE.stage_total_s_power += 1
+    if VARIABLE.shoot_cnt <= 7:
+        VARIABLE.shoot_cnt += 1
+
+    if source.type == 1:
+        if VARIABLE.s_power < 32:
+            VARIABLE.s_power += 1
+        VARIABLE.combo += 1
+    elif source.type == 2:
+        VARIABLE.player += 1
+        VARIABLE.combo += 1
+
+    source.kill()
+
+
+def item_spawn(brick_pos) -> None:
     if rand.random() <= 0.125:
-        spr = Base((9, 9, 2), SCRIPT.DICT.clr_dict[5], 1, 1)
-        spr.spd = -2
-        spr.rect.center = brc_pos
-        VARIABLE.item_grp.add(spr)
-        VARIABLE.ttl_spwn_s_power += 1
+        sprite = Base(
+            (9, 9, 2),
+            SCRIPT.DICT.color_dict[5],
+            1,
+            1
+        )
+        sprite.speed = -2
+        sprite.rect.center = brick_pos
+        VARIABLE.item_group.add(sprite)
+        VARIABLE.total_spawn_s_power += 1
     elif rand.random() <= 0.007:
-        spr = Base((9, 9, 2), SCRIPT.DICT.clr_dict[2], 1, 2)
-        spr.spd = -2
-        spr.rect.center = brc_pos
-        VARIABLE.item_grp.add(spr)
-        VARIABLE.ttl_spwn_s_power += 1
+        sprite = Base(
+            (9, 9, 2),
+            SCRIPT.DICT.color_dict[2],
+            1,
+            2
+        )
+        sprite.speed = -2
+        sprite.rect.center = brick_pos
+        VARIABLE.item_group.add(sprite)
+        VARIABLE.total_spawn_s_power += 1
 
 
 def cal_s_power() -> str:
-    return f"{FUNC.Calculate.divide(VARIABLE.stg_ttl_s_power, VARIABLE.ttl_spwn_s_power, 0) * 100:.2f} %"
+    return f"{FUNC.Calculate.divide(
+        VARIABLE.stage_total_s_power,
+        VARIABLE.total_spawn_s_power,
+        0
+    ) * 100:.2f} %"

@@ -5,7 +5,6 @@ import os
 import pygame as pyg
 
 import SCRIPT.DICT
-import SCRIPT.RESET
 import SCRIPT.VARIABLE as VARIABLE
 import FUNC
 
@@ -17,37 +16,41 @@ class Nre(pyg.sprite.Sprite):
         super().__init__()
 
         th.hp = 256
-        th.clr = SCRIPT.DICT.clr_dict[3]
+        th.color = SCRIPT.DICT.color_dict[3]
         th.shape = 1
-        th.curr_ang = 0
+        th.current_angle = 0
 
-        th.bomb = StraightThunder(th.clr)
+        th.bomb = StraightThunder(th.color)
 
-        th.orig_image = pyg.image.load(os.path.join(SCRIPT.RESET.asset_path, 'IMG_NRE.png')).convert_alpha()
-        th.image = th.orig_image.subsurface((0, 0,
-                                             12, 26))
+        th.original_image = pyg.image.load(os.path.join(SCRIPT.DICT.asset_path, 'IMG_NRE.png')).convert_alpha()
+        th.image = th.original_image.subsurface(
+            (
+                0, 0,
+                12, 26
+            )
+        )
         th.rect = th.image.get_rect()
 
         th.is_free = False
 
-        th.tar_x = 292
-        th.tar_y = 60
-        th.ctr = 0
+        th.target_x = 292
+        th.target_y = 60
+        th.timer = 0
 
     def update(th) -> None:
-        th.ctr += 1
+        th.timer += 1
 
-        if th.ctr % 120 == 0:
-            th.tar_x = rand.choice([150, 220, 292, 365, 435])
+        if th.timer % 120 == 0:
+            th.target_x = rand.choice([150, 220, 292, 365, 435])
 
             th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
-            th.bomb.ctr = 0
+            th.bomb.timer = 0
             th.is_free = not th.is_free
 
-        dir = pyg.math.Vector2(th.tar_x - th.rect.centerx, 0)
+        dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
         current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pyg.math.Vector2(th.tar_x, 60)
+        target_pos = pyg.math.Vector2(th.target_x, 60)
 
         delta_vec = target_pos - current_pos
         distance = delta_vec.length()
@@ -68,31 +71,35 @@ class Nre(pyg.sprite.Sprite):
 
 
 class StraightThunder:
-    def __init__(th, clr):
-        th.clr = clr
+    def __init__(th, color):
+        th.color = color
 
-        th.ctr = 0
+        th.timer = 0
         th.bomb_cnt = 0
         th.bullet_cnt = 0
 
     def free(th) -> None:
-        th.ctr += 1
+        th.timer += 1
 
-        if th.ctr % 1 == 0 and th.bomb_cnt < 16:
+        if th.timer % 1 == 0 and th.bomb_cnt < 12:
             start_pos = (rand.randint(80, 500), 0, 0)
             end_pos = (rand.randint(100, 490), 360, 0)
-        
+
             dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
-                
-            spr = Base((2, distance, 0), (255, 255, 255), 1)
-            spr.spd = 0
+
+            sprite = Base(
+                (2, distance, 0),
+                (255, 255, 255),
+                1
+            )
+            sprite.speed = 0
             x = start_pos[0] + dpos[0] / 2
             y = start_pos[1] + dpos[1] / 2
-            spr.rect.center = (x, y)
-            spr.curr_ang = math.degrees(math.atan2(-dpos[0], -dpos[1]))
-            spr.update()
-            VARIABLE.brg_grp.add(spr)
+            sprite.rect.center = (x, y)
+            sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
+            sprite.update()
+            VARIABLE.barrage_group.add(sprite)
 
             th.bomb_cnt += 1
 
@@ -107,13 +114,17 @@ class StraightThunder:
                 dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
 
-                spr = Base((2, distance, 0), (255, 255, 255), 1)
-                spr.spd = 0
+                sprite = Base(
+                    (2, distance, 0),
+                    (255, 255, 255),
+                    1
+                )
+                sprite.speed = 0
                 x = start_pos[0] + dpos[0] / 2
                 y = start_pos[1] + dpos[1] / 2
-                spr.rect.center = (x, y)
-                spr.curr_ang = 0
-                spr.update()
-                VARIABLE.brg_grp.add(spr)
+                sprite.rect.center = (x, y)
+                sprite.current_angle = 0
+                sprite.update()
+                VARIABLE.barrage_group.add(sprite)
 
             th.bullet_cnt += 1

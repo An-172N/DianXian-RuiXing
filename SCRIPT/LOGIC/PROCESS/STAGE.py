@@ -12,72 +12,74 @@ import SCRIPT.RESET
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
-def next_lv() -> None:
-    VARIABLE.sc += VARIABLE.ttl_s_power * 512
-    VARIABLE.sc += VARIABLE.no_hurt * 4096
+def next_level() -> None:
+    VARIABLE.score += VARIABLE.total_s_power * 512
+    VARIABLE.score += VARIABLE.no_hurt * 4096
 
-    SCRIPT.RESET.rst1()
+    SCRIPT.RESET.reset1()
 
     VARIABLE.no_hurt += 1
     VARIABLE.main_char.rect.center = (292, 331)
-    VARIABLE.pln_grp.add(VARIABLE.main_char)
-    VARIABLE.pln_grp.add(VARIABLE.d_pt)
+    VARIABLE.plane_group.add(VARIABLE.main_char)
+    VARIABLE.plane_group.add(VARIABLE.d_pt)
 
 
-def lv_ld() -> None:
-    if VARIABLE.ctr <= 60:
-        VARIABLE.ctr += 1
+def level_load() -> None:
+    if VARIABLE.timer <= 60:
+        VARIABLE.timer += 1
     else:
         if VARIABLE.level == 6:
             VARIABLE.char = chs_shhm()
             VARIABLE.char.rect.center = (292, 60)
-            VARIABLE.txt = ld_txt(VARIABLE.stage)
-            VARIABLE.txt_num = 0
+            VARIABLE.text = load_text(VARIABLE.stage)
+            VARIABLE.text_number = 0
             VARIABLE.talk = True
 
-            VARIABLE.brc_grp.add(VARIABLE.char)
+            VARIABLE.brick_group.add(VARIABLE.char)
         else:
             for i in FUNC.Process.process_file(
-                         os.path.join(SCRIPT.RESET.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
-                         'ascii',
-                         0,
-                         ld_stg
-                     ):
+                os.path.join(SCRIPT.DICT.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
+                'ascii',
+                0,
+                load_stage
+            ):
                 i
 
-        VARIABLE.sec_bg = VARIABLE.pic[VARIABLE.stage]
-        VARIABLE.sec_bg.set_alpha(159)
-        VARIABLE.ctr = 0
-        VARIABLE.level_ld = True
+        VARIABLE.second_background = VARIABLE.picture[VARIABLE.stage]
+        VARIABLE.second_background.set_alpha(159)
+        VARIABLE.timer = 0
+        VARIABLE.level_load = True
 
 
-def lv_summ() -> None:
-    if (len(VARIABLE.brc_grp) == 0 and
-        not VARIABLE.talk):
-        if VARIABLE.ctr <= 90:
-            VARIABLE.ctr += 1
-            VARIABLE.summ = True
+def level_summary() -> None:
+    if (
+        len(VARIABLE.brick_group) == 0
+        and not VARIABLE.talk
+    ):
+        if VARIABLE.timer <= 90:
+            VARIABLE.timer += 1
+            VARIABLE.summary = True
         else:
             if VARIABLE.stage >= 2 and VARIABLE.level == 6:
-                VARIABLE.summ = False
-                VARIABLE.sav = True
-                VARIABLE.ctr = 0
+                VARIABLE.summary = False
+                VARIABLE.save = True
+                VARIABLE.timer = 0
             else:
-                next_lv()
-                lv_lgc()
+                next_level()
+                level_logic()
 
-                VARIABLE.summ = False
-                VARIABLE.ctr = 0
+                VARIABLE.summary = False
+                VARIABLE.timer = 0
 
 
-def lv_proc() -> None:
-    if not VARIABLE.level_ld:
-        lv_ld()
+def level_process() -> None:
+    if not VARIABLE.level_load:
+        level_load()
     else:
-        lv_summ()
+        level_summary()
 
 
-def lv_lgc() -> None:
+def level_logic() -> None:
     if VARIABLE.level >= 6:
         VARIABLE.stage += 1
         VARIABLE.level = 1
@@ -90,32 +92,39 @@ def chs_shhm() -> Optional[Any]:
 
 
 def shhm_lose() -> None:
-    VARIABLE.txt_pt += 1
-    VARIABLE.txt_num = 0
+    VARIABLE.text_part += 1
+    VARIABLE.text_number = 0
 
     VARIABLE.talk = True
 
 
-def ld_stg(row, line) -> None:
+def load_stage(row, line) -> None:
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
-            c = SCRIPT.DICT.clr_dict[VARIABLE.stage] if rand.random() >= 0.063 else SCRIPT.DICT.clr_dict[6]
+            c = (
+                SCRIPT.DICT.color_dict[VARIABLE.stage]
+                if rand.random() >= 0.063 
+                else SCRIPT.DICT.color_dict[6]
+            )
             x = 127 + i * 15
             y = 22 + row * 15
 
-            brc = Base((15, 15, 2),
-                       c, shape)
+            brick = Base(
+                (15, 15, 2),
+                c,
+                shape
+            )
 
-            if not hasattr(brc, "hp"):
-                brc.hp = 4
-            brc.rect.center = (x, y)
+            if not hasattr(brick, "hp"):
+                brick.hp = 4
+            brick.rect.center = (x, y)
 
-            VARIABLE.brc_grp.add(brc)
+            VARIABLE.brick_group.add(brick)
 
 
-def ld_txt(stg) -> str:
-    file = os.path.join(SCRIPT.RESET.asset_path, f"TALK_{stg}.json")
+def load_text(stage) -> str:
+    file = os.path.join(SCRIPT.DICT.asset_path, f"TALK_{stage}.json")
 
     with open(file, 'r', encoding="utf-8") as f:
         return json.load(f)

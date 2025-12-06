@@ -7,7 +7,7 @@ import SCRIPT.VARIABLE as VARIABLE
 from SCRIPT.LOGIC.SPRITE import ITEM
 
 
-def sav_file() -> None:
+def save_file() -> None:
     date = dt.datetime.now().strftime('%Y-%m-%d')
     time = dt.datetime.now().strftime('%H-%M-%S')
 
@@ -18,14 +18,16 @@ def sav_file() -> None:
         os.makedirs(folder)
 
     dump = ["RuiShan Fuxing Log"]
-    dump.append({
-                    'Nickname': VARIABLE.name,
-                    'Score': VARIABLE.sc,
-                    'The farthest place that you reached': f"{VARIABLE.stage} - {VARIABLE.level}",
-                    'Pick up SPower rate': ITEM.cal_s_power(),
-                    'Shape Flash': VARIABLE.sflash,
-                    'Record date': dt.datetime.now().strftime('%Y-%m-%d')
-                })
+    dump.append(
+        {
+            'Nickname': VARIABLE.name,
+            'Score': VARIABLE.score,
+            'The farthest place that you reached': f"{VARIABLE.stage} - {VARIABLE.level}",
+            'Pick up SPower rate': ITEM.cal_s_power(),
+            'Shape Flash': VARIABLE.s_flash,
+            'Record date': dt.datetime.now().strftime('%Y-%m-%d')
+        }
+    )
         
     with open(file, 'w') as f:
         json.dump(dump, f, indent=4)

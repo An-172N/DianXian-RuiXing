@@ -6,7 +6,6 @@ import os
 import pygame as pyg
 
 import SCRIPT.DICT
-import SCRIPT.RESET
 import SCRIPT.VARIABLE as VARIABLE
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
@@ -17,37 +16,41 @@ class Ono(pyg.sprite.Sprite):
         super().__init__()
 
         th.hp = 192
-        th.clr = SCRIPT.DICT.clr_dict[1]
+        th.color = SCRIPT.DICT.color_dict[1]
         th.shape = 2
-        th.curr_ang = 0
+        th.current_angle = 0
 
-        th.bomb = AutFroDiffuse(th.clr)
+        th.bomb = AutFroDiffuse(th.color)
 
-        th.orig_image = pyg.image.load(os.path.join(SCRIPT.RESET.asset_path, 'IMG_ONO.png')).convert_alpha()
-        th.image = th.orig_image.subsurface((0, 0,
-                                             12, 26))
+        th.original_image = pyg.image.load(os.path.join(SCRIPT.DICT.asset_path, 'IMG_ONO.png')).convert_alpha()
+        th.image = th.original_image.subsurface(
+            (
+                0, 0,
+                12, 26
+            )
+        )
         th.rect = th.image.get_rect()
 
         th.is_free = False
 
-        th.tar_x = 292
-        th.tar_y = 60
-        th.ctr = 0
+        th.target_x = 292
+        th.target_y = 60
+        th.timer = 0
 
     def update(th) -> None:
-        th.ctr += 1
+        th.timer += 1
 
-        if th.ctr % 120 == 0:
-            th.tar_x = rand.choice([150, 220, 292, 365, 435])
+        if th.timer % 120 == 0:
+            th.target_x = rand.choice([150, 220, 292, 365, 435])
 
             th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
             th.bomb.dl = 0
             th.is_free = not th.is_free
 
-        dir = pyg.math.Vector2(th.tar_x - th.rect.centerx, 0)
+        dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
         current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pyg.math.Vector2(th.tar_x, 60)
+        target_pos = pyg.math.Vector2(th.target_x, 60)
 
         delta_vec = target_pos - current_pos
         distance = delta_vec.length()
@@ -68,30 +71,39 @@ class Ono(pyg.sprite.Sprite):
 
 
 class AutFroDiffuse:
-    def __init__(th, clr):
-        th.clr = clr
+    def __init__(th, color):
+        th.color = color
 
         th.bomb_cnt = 0
         th.bullet_cnt = 0
-        th.ctr = 0
+        th.timer = 0
         th.dl = 0
 
     def free(th, rect) -> None:
-        th.ctr += 1
+        th.timer += 1
 
-        if (th.ctr % 1 == 0 and
-            th.bomb_cnt < 12):
+        if (
+            th.timer % 1 == 0 and
+            th.bomb_cnt < 12
+        ):
             th.dl += 6
 
-            for i, j in itertools.product(range(0 + th.dl, 360 + th.dl, 120), range(0 + th.dl, 360 + th.dl, 90)):
+            for i, j in itertools.product(
+                range(0 + th.dl, 360 + th.dl, 180),
+                range(0 + th.dl, 360 + th.dl, 90)
+            ):
                 x = rect.centerx + 32 * math.cos(math.radians(i))
                 y = rect.centery + 32 * math.sin(math.radians(i))
                 pos = (x, y)
-                spr = Base((9, 9, 0), th.clr, 2)
-                spr.spd = 4
-                spr.rect.center = pos
-                spr.curr_ang = j
-                VARIABLE.brg_grp.add(spr)
+                sprite = Base(
+                    (9, 9, 0),
+                    th.color,
+                    2
+                )
+                sprite.speed = 3.5
+                sprite.rect.center = pos
+                sprite.current_angle = j
+                VARIABLE.barrage_group.add(sprite)
 
             th.bomb_cnt += 1
 
@@ -99,10 +111,14 @@ class AutFroDiffuse:
         if th.bullet_cnt < 1:
             pos = rect.center
             for i in range(0, 360, 15):
-                spr = Base((9, 9, 0), th.clr, 2)
-                spr.spd = 4
-                spr.rect.center = pos
-                spr.curr_ang = i
-                VARIABLE.brg_grp.add(spr)
+                sprite = Base(
+                    (9, 9, 0),
+                    th.color,
+                    2
+                )
+                sprite.speed = 4
+                sprite.rect.center = pos
+                sprite.current_angle = i
+                VARIABLE.barrage_group.add(sprite)
 
             th.bullet_cnt += 1

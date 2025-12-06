@@ -1,4 +1,5 @@
 import sys
+import os
 
 import pygame as pyg
 
@@ -11,7 +12,9 @@ import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.LOGIC
 
 
-clr_dict = {
+asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
+
+color_dict = {
     1: (255, 128, 0),
     2: (0, 255, 0),
     3: (128, 0, 128),
@@ -30,42 +33,42 @@ char_dict = {
 key_dict = {
     "down": {
         "game": {
-            pyg.K_RIGHT: lambda: setattr(VARIABLE, "mv_right",
+            pyg.K_RIGHT: lambda: setattr(VARIABLE, "move_right",
                                          True),
-            pyg.K_LEFT: lambda: setattr(VARIABLE, "mv_left",
+            pyg.K_LEFT: lambda: setattr(VARIABLE, "move_left",
                                         True),
             pyg.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
                                           True),
             pyg.K_z: lambda : setattr(VARIABLE, "can_shoot",
                                       False),
             pyg.K_x: lambda : SCRIPT.LOGIC.BulletMgr.single_bomb(),
-            pyg.K_ESCAPE: lambda: setattr(VARIABLE, "pau",
+            pyg.K_ESCAPE: lambda: setattr(VARIABLE, "pause",
                                           True)
         },
         "talk": {
-            pyg.K_z: lambda : setattr(VARIABLE, "txt_num",
-                                      VARIABLE.txt_num + 1),
+            pyg.K_z: lambda : setattr(VARIABLE, "text_number",
+                                      VARIABLE.text_number + 1),
             pyg.K_x: lambda : setattr(VARIABLE, "talk",
                                       False)
         },
-        "pau": {
-            pyg.K_ESCAPE: lambda : setattr(VARIABLE, "pau",
+        "pause": {
+            pyg.K_ESCAPE: lambda : setattr(VARIABLE, "pause",
                                            False),
-            pyg.K_q: lambda : setattr(VARIABLE, "is_rst",
+            pyg.K_q: lambda : setattr(VARIABLE, "is_reset",
                                       True)
         },
         "start": {
             pyg.K_z: lambda: (setattr(VARIABLE, "run",
                                          True),
-                              SCRIPT.LOGIC.StageMgr.next_lv(),
-                              SCRIPT.LOGIC.StageMgr.lv_lgc()),
+                              SCRIPT.LOGIC.StageMgr.next_level(),
+                              SCRIPT.LOGIC.StageMgr.level_logic()),
             pyg.K_q: lambda: sys.exit()
         },
         "over": {
-            pyg.K_RETURN: lambda: (SCRIPT.LOGIC.Key.sav_file(),
-                                   setattr(VARIABLE, "is_rst",
+            pyg.K_RETURN: lambda: (SCRIPT.LOGIC.Key.save_file(),
+                                   setattr(VARIABLE, "is_reset",
                                    True)),
-            pyg.K_ESCAPE: lambda: setattr(VARIABLE, "is_rst",
+            pyg.K_ESCAPE: lambda: setattr(VARIABLE, "is_reset",
                                           True),
             pyg.K_BACKSPACE: lambda: setattr(VARIABLE, "name",
                                              VARIABLE.name[:-1])
@@ -73,9 +76,9 @@ key_dict = {
     },
     "up": {
         "game": {
-            pyg.K_RIGHT: lambda: setattr(VARIABLE, "mv_right",
+            pyg.K_RIGHT: lambda: setattr(VARIABLE, "move_right",
                                          False),
-            pyg.K_LEFT: lambda: setattr(VARIABLE, "mv_left",
+            pyg.K_LEFT: lambda: setattr(VARIABLE, "move_left",
                                         False),
             pyg.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
                                           False),

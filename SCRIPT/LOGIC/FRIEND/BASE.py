@@ -14,23 +14,25 @@ class Base(pyg.sprite.Sprite):
     CIRCLE = 2
     LINE = 3
 
-    def __init__(th, val, clr, shape, type=0):
+    def __init__(th, value, color, shape, type=0):
         super().__init__()
-        th.wid = val[0]
-        th.hei = val[1]
-        th.bd = val[2]
-        th.clr = clr
+        th.width = value[0]
+        th.height = value[1]
+        th.border = value[2]
+        th.color = color
         th.type = type
         th.shape = shape
 
-        th.base_draw = ShapeDraw(th.wid, th.hei, th.bd, th.clr)
+        th.base_draw = ShapeDraw(th.width, th.height, th.border, th.color)
 
-        th.curr_ang = 0
-        th.spd = 0
-        th.ctr = 0
+        th.current_angle = 0
+        th.speed = 0
+        th.timer = 0
 
-        th.orig_image = th.get_shape(shape)
-        th.image = th.orig_image
+        th.is_rotated = False
+
+        th.original_image = th.get_shape(shape)
+        th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pyg.mask.from_surface(th.image)
 
@@ -44,22 +46,24 @@ class Base(pyg.sprite.Sprite):
         return shape_dict[shape]()
     
     def update(th) -> None:
-        th.image = pyg.transform.rotate(th.orig_image, th.curr_ang)
+        if not th.is_rotated:
+            th.image = pyg.transform.rotate(th.original_image, th.current_angle)
+            th.mask = pyg.mask.from_surface(th.image)
+            th.is_rotated = True
         th.rect = th.image.get_rect(center=th.rect.center)
-        th.mask = pyg.mask.from_surface(th.image)
 
         th.x = getattr(th, 'x', th.rect.centerx)
         th.y = getattr(th, 'y', th.rect.centery)
-        rad = math.radians(th.curr_ang)
-        th.x, th.y, _ = FUNC.Calculate.delta_tuple((th.x, th.y, 0), (math.sin(rad) * th.spd, math.cos(rad) * th.spd, 0))
+        rad = math.radians(th.current_angle)
+        th.x, th.y, _ = FUNC.Calculate.delta_tuple((th.x, th.y, 0), (math.sin(rad) * th.speed, math.cos(rad) * th.speed, 0))
         th.rect.center = (th.x, th.y)
 
-        if th.shape == 1 and th.hei > 16:
-            th.ctr += 1
+        if th.shape == 1 and th.height > 16:
+            th.timer += 1
 
-            if th.ctr >= 80:
+            if th.timer >= 80:
                 th.kill()
-            elif th.ctr >= 40:
-                th.clr = SCRIPT.DICT.clr_dict[3]
+            elif th.timer >= 40 and th.color != SCRIPT.DICT.color_dict[3]:
+                th.color = SCRIPT.DICT.color_dict[3]
 
-                th.image.fill(th.clr, special_flags=pyg.BLEND_RGBA_MULT)
+                th.image.fill(th.color, special_flags=pyg.BLEND_RGBA_MULT)
