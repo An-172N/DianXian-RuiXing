@@ -4,7 +4,7 @@ import os
 
 import pygame as pyg
 
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 import FUNC
 
@@ -16,13 +16,11 @@ class Hro(pyg.sprite.Sprite):
         super().__init__()
 
         th.hp = 224
-        th.color = SCRIPT.DICT.color_dict[2]
+        th.color = DICT.color_dict[2]
         th.shape = 0
         th.current_angle = 0
 
-        th.bomb = PolyX(th.color)
-
-        th.original_image = pyg.image.load(os.path.join(SCRIPT.DICT.asset_path, 'IMG_HRO.png')).convert_alpha()
+        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_HRO.png')).convert_alpha()
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -31,7 +29,10 @@ class Hro(pyg.sprite.Sprite):
         )
         th.rect = th.image.get_rect()
 
+        th.bomb = PolyX(th.color, th.rect)
+
         th.is_free = False
+        th.choice = None
 
         th.target_x = 292
         th.target_y = 60
@@ -43,10 +44,11 @@ class Hro(pyg.sprite.Sprite):
         if th.timer % 120 == 0:
             th.target_x = rand.choice([150, 220, 292, 365, 435])
 
-            th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
             th.bomb.dl = 0
             th.is_free = not th.is_free
+            th.is_choice = False
+            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
 
         dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
         current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
@@ -65,57 +67,72 @@ class Hro(pyg.sprite.Sprite):
             th.rect.center = new_pos
 
         if not th.is_free:
-            th.bomb.fire(th.rect)
+            th.bomb.fire()
         else:
-            th.bomb.free(140, 140, 140, 140)
-            th.bomb.free(-140, 140, -140, 140)
+            th.choice()
 
 
 class PolyX:
-    def __init__(th, color):
+    def __init__(th, color, rect):
         th.color = color
+        th.rect = rect
 
-        th.bomb_cnt = 0
         th.bullet_cnt = 0
         th.timer = 0
         th.dl = 0
 
-    def free(th, dx1, dx2, dy1, dy2) -> None:
+    def free(th) -> None:
         th.timer += 1
-        th.dl -= 3
+        th.dl -= 6
 
-        if th.timer % 1 == 0 and th.bomb_cnt < 48:
-            start_pos = pyg.math.Vector2(292 + dx1, 100 - dx2)
-            end_pos = pyg.math.Vector2(292 - dy1, 100 + dy2)
+        bullet_type = [
+            {
+                'dx1': 140,
+                'dy1': 140,
+                'dx2': 140,
+                'dy2': 140
+            },
+            {
+                'dx1': -140,
+                'dy1': -140,
+                'dx2': 140,
+                'dy2': 140
+            }
+        ]
 
-            delta_pos = end_pos - start_pos
-            distance = delta_pos.length()
+        if th.timer % 1 == 0 and th.bullet_cnt < 18:
+            for bullet_info in bullet_type:
+                start_pos = pyg.math.Vector2(292 + bullet_info['dx1'], 100 - bullet_info['dx2'])
+                end_pos = pyg.math.Vector2(292 - bullet_info['dy1'], 100 + bullet_info['dy2'])
 
-            if distance > 0:
-                delta_pos.normalize_ip()
+                delta_pos = end_pos - start_pos
+                distance = delta_pos.length()
 
-            current_step = th.bomb_cnt * 10
-            current_pos = start_pos + delta_pos * current_step
+                if distance > 0:
+                    delta_pos.normalize_ip()
+
+                current_step = th.bullet_cnt * 25
+                current_pos = start_pos + delta_pos * current_step
                 
-            for j in range(45, 136, 90):
-                sprite = Base(
-                    (9, 9, 0),
-                    th.color,
-                    0
-                )
-                sprite.speed = 4
-                sprite.rect.center = (current_pos.x, current_pos.y)
-                atan = math.atan2(-delta_pos.x, -delta_pos.y)
-                sprite.current_angle = math.degrees(atan) + j + th.dl
-                VARIABLE.barrage_group.add(sprite)
+                for j in range(45, 136, 90):
+                    sprite = Base(
+                        (9, 9, 0),
+                        th.color,
+                        0
+                    )
+                    sprite.speed = 4
+                    sprite.rect.center = (current_pos.x, current_pos.y)
+                    atan = math.atan2(-delta_pos.x, -delta_pos.y)
+                    sprite.current_angle = math.degrees(atan) + j + th.dl
+                    VARIABLE.barrage_group.add(sprite)
         
-            th.bomb_cnt += 1
+            th.bullet_cnt += 1
 
-    def fire(th, rect) -> None:
+    def fire(th) -> None:
         th.timer += 1
 
         if th.timer % 8 == 0 and th.bullet_cnt < 3:
-            pos = rect.center
+            pos = th.rect.center
             char_pos = VARIABLE.main_char.rect.center
             for i in range(-30, 31, 30):
                 sprite = Base(

@@ -1,7 +1,7 @@
 import random as rand
 
 import FUNC
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
@@ -27,7 +27,7 @@ def item_spawn_regular() -> None:
     if VARIABLE.item_spawn_timer >= 45:
         sprite = Base(
             (9, 9, 2),
-            SCRIPT.DICT.color_dict[6],
+            DICT.color_dict[6],
             1,
             0
         )
@@ -40,8 +40,6 @@ def item_spawn_regular() -> None:
 
 def item_collide(source) -> None:
     VARIABLE.comboo_timer = 90
-    VARIABLE.total_s_power += 1
-    VARIABLE.stage_total_s_power += 1
     if VARIABLE.shoot_cnt <= 7:
         VARIABLE.shoot_cnt += 1
 
@@ -49,9 +47,13 @@ def item_collide(source) -> None:
         if VARIABLE.s_power < 32:
             VARIABLE.s_power += 1
         VARIABLE.combo += 1
+        VARIABLE.total_s_power += 1
+        VARIABLE.stage_total_s_power += 1
     elif source.type == 2:
         VARIABLE.player += 1
         VARIABLE.combo += 1
+        VARIABLE.total_s_power += 1
+        VARIABLE.stage_total_s_power += 1
 
     source.kill()
 
@@ -60,7 +62,7 @@ def item_spawn(brick_pos) -> None:
     if rand.random() <= 0.125:
         sprite = Base(
             (9, 9, 2),
-            SCRIPT.DICT.color_dict[5],
+            DICT.color_dict[5],
             1,
             1
         )
@@ -71,7 +73,7 @@ def item_spawn(brick_pos) -> None:
     elif rand.random() <= 0.007:
         sprite = Base(
             (9, 9, 2),
-            SCRIPT.DICT.color_dict[2],
+            DICT.color_dict[2],
             1,
             2
         )

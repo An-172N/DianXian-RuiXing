@@ -3,7 +3,7 @@ import math
 import pygame as pyg
 
 import FUNC
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 
 from SCRIPT.DRAW import ShapeDraw
 
@@ -63,7 +63,7 @@ class Base(pyg.sprite.Sprite):
 
             if th.timer >= 80:
                 th.kill()
-            elif th.timer >= 40 and th.color != SCRIPT.DICT.color_dict[3]:
-                th.color = SCRIPT.DICT.color_dict[3]
+            elif th.timer >= 40 and th.color != DICT.color_dict[3]:
+                th.color = DICT.color_dict[3]
 
                 th.image.fill(th.color, special_flags=pyg.BLEND_RGBA_MULT)

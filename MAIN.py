@@ -15,5 +15,5 @@ screen = pygame.display.set_mode(
 )
 
 import SCRIPT
-game = SCRIPT.Game(screen)
-game.update()
+
+SCRIPT.Game(screen).update()

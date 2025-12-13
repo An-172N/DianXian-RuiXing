@@ -18,11 +18,12 @@ def save_file() -> None:
         os.makedirs(folder)
 
     dump = ["RuiShan Fuxing Log"]
+    stage = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
     dump.append(
         {
             'Nickname': VARIABLE.name,
             'Score': VARIABLE.score,
-            'The farthest place that you reached': f"{VARIABLE.stage} - {VARIABLE.level}",
+            'The farthest place that you reached': f"{stage} - {VARIABLE.level}",
             'Pick up SPower rate': ITEM.cal_s_power(),
             'Shape Flash': VARIABLE.s_flash,
             'Record date': dt.datetime.now().strftime('%Y-%m-%d')

@@ -1,20 +1,21 @@
 import random as rand
 
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
 def brick_death(brick) -> None:
-    if brick.color == SCRIPT.DICT.color_dict[6]:
+    if brick.color == DICT.color_dict[6]:
         process_dict = {
-            0: polygon_brick,
-            1: line_brick,
-            2: circle_brick
+            1: circle_brick,
+            2: polygon_brick,
+            3: line_brick,
+            4: point_brick
         }
 
-        process_dict[brick.shape](
+        process_dict[VARIABLE.stage](
             Base,
             brick,
             VARIABLE.bullet_group,
@@ -89,5 +90,22 @@ def line_brick(sprite, source, sprite_group, _) -> None:
         current_sprite.rect.center = source.rect.center
         rands = rand.randint(0, 360)
         current_sprite.current_angle = rands
+        current_sprite.update()
+        sprite_group.add(current_sprite)
+
+
+def point_brick(sprite, _, sprite_group, speed):
+    for _ in range(32):
+        current_sprite = sprite(
+            (2, 15, 0),
+            (45, 194, 229),
+            1, "bullet"
+        )
+        if not hasattr(current_sprite, "damage"):
+            current_sprite.damage = 4
+        current_sprite.rect.center = (rand.randint(120, 465), rand.randint(15, 345))
+        rands = rand.randint(0, 360)
+        current_sprite.current_angle = rands
+        current_sprite.speed = speed
         current_sprite.update()
         sprite_group.add(current_sprite)

@@ -45,8 +45,8 @@ def spawn_bullet() -> None:
 
 def single_bomb() -> None:
     if (
-        not VARIABLE.is_s_divide and
-        VARIABLE.s_power >= 16
+        not VARIABLE.is_s_divide
+        and VARIABLE.s_power >= 16
     ):
         VARIABLE.s_power -= 16
         VARIABLE.is_s_divide = True

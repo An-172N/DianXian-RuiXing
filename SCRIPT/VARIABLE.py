@@ -2,7 +2,7 @@ import os
 
 import pygame as pyg
 
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 import FUNC
 
 from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecPt
@@ -34,7 +34,7 @@ save = False
 level_load = False
 is_reset = False
 
-background = pyg.image.load(os.path.join(SCRIPT.DICT.asset_path, 'IMG_GAMEBG.png')).convert_alpha()
+background = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_GAMEBG.png')).convert_alpha()
 last_time = pyg.time.get_ticks()
 fps_text = last_time
 
@@ -62,7 +62,7 @@ is_slow = False
 is_visitable = True
 is_s_divide = False
 collide = True
-main_char = SCRIPT.DICT.char_dict.get(4)()
+main_char = DICT.char_dict.get(5)()
 d_pt = DecPt()
 
 text_number = 0
@@ -71,9 +71,10 @@ timer = 0
 stage = 1
 level = 0
 picture_list = [
-    (1, os.path.join(SCRIPT.DICT.asset_path, 'IMG_STAGE1BG.png')),
-    (2, os.path.join(SCRIPT.DICT.asset_path, 'IMG_STAGE2BG.png')),
-    (3, os.path.join(SCRIPT.DICT.asset_path, 'IMG_STAGE3BG.png'))
+    (1, os.path.join(DICT.asset_path, 'IMG_STAGE1BG.png')),
+    (2, os.path.join(DICT.asset_path, 'IMG_STAGE2BG.png')),
+    (3, os.path.join(DICT.asset_path, 'IMG_STAGE3BG.png')),
+    (4, os.path.join(DICT.asset_path, 'IMG_STAGE4BG.png')),
 ]
 picture = FUNC.Process.load_files(picture_list, lambda f: pyg.image.load(f).convert_alpha())
 second_background = picture[stage]

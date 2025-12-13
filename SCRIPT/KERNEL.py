@@ -4,26 +4,26 @@ import os
 
 import pygame as pyg
 
-import SCRIPT.LOGIC
-import SCRIPT.DICT
+import SCRIPT.LOGIC as LOGIC
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
-import SCRIPT.RESET
+import SCRIPT.RESET as RESET
 
 
 class Game:
     def __init__(th, screen):
-        pyg.display.set_icon(pyg.image.load(os.path.join(SCRIPT.DICT.asset_path, 'IMG_ICON.png')))
+        pyg.display.set_icon(pyg.image.load(os.path.join(DICT.asset_path, 'IMG_ICON.png')))
 
         th.screen = screen
         th.clock = pyg.time.Clock()
-        th.font = pyg.font.Font(os.path.join(SCRIPT.DICT.asset_path, 'FNT\FNT_GNUUNIFONT.otf'), 15)
+        th.font = pyg.font.Font(os.path.join(DICT.asset_path, 'FNT\FNT_GNUUNIFONT.otf'), 15)
 
-        th.plane_mgr = SCRIPT.LOGIC.PlaneMgr
-        th.stage_mgr = SCRIPT.LOGIC.StageMgr
-        th.bullet_mgr = SCRIPT.LOGIC.BulletMgr
-        th.item_mgr = SCRIPT.LOGIC.ItemMgr
-        th.key_mgr = SCRIPT.LOGIC.Key
-        th.gui = SCRIPT.LOGIC.GUI
+        th.plane_mgr = LOGIC.PlaneMgr
+        th.stage_mgr = LOGIC.StageMgr
+        th.bullet_mgr = LOGIC.BulletMgr
+        th.item_mgr = LOGIC.ItemMgr
+        th.key_mgr = LOGIC.Key
+        th.gui = LOGIC.GUI
 
         th.option()
 
@@ -131,43 +131,43 @@ class Game:
                 elif event.type == pyg.KEYUP:
                     if (
                         VARIABLE.run
-                        and event.key in SCRIPT.DICT.key_dict["up"]["game"]
+                        and event.key in DICT.key_dict["up"]["game"]
                     ):
-                        SCRIPT.DICT.key_dict["up"]["game"][event.key]()
+                        DICT.key_dict["up"]["game"][event.key]()
                 elif event.type == pyg.KEYDOWN:
                     if (
                         not VARIABLE.run
-                        and event.key in SCRIPT.DICT.key_dict["down"]["start"]
+                        and event.key in DICT.key_dict["down"]["start"]
                     ):
-                        SCRIPT.DICT.key_dict["down"]["start"][event.key]()
+                        DICT.key_dict["down"]["start"][event.key]()
                     elif VARIABLE.save:
-                        if event.key in SCRIPT.DICT.key_dict["down"]["over"]:
-                            SCRIPT.DICT.key_dict["down"]["over"][event.key]()
+                        if event.key in DICT.key_dict["down"]["over"]:
+                            DICT.key_dict["down"]["over"][event.key]()
                         else:
                             VARIABLE.name += event.unicode
                     elif (
                         VARIABLE.pause
-                        and event.key in SCRIPT.DICT.key_dict["down"]["pause"]
+                        and event.key in DICT.key_dict["down"]["pause"]
                     ):
-                        SCRIPT.DICT.key_dict["down"]["pause"][event.key]()
+                        DICT.key_dict["down"]["pause"][event.key]()
                     elif (
                         VARIABLE.talk
-                        and event.key in SCRIPT.DICT.key_dict["down"]["talk"]
+                        and event.key in DICT.key_dict["down"]["talk"]
                     ):
-                        SCRIPT.DICT.key_dict["down"]["talk"][event.key]()
+                        DICT.key_dict["down"]["talk"][event.key]()
                     elif (
                         not VARIABLE.summary
                         and VARIABLE.level_load
-                        and event.key in SCRIPT.DICT.key_dict["down"]["game"]
+                        and event.key in DICT.key_dict["down"]["game"]
                     ):
-                        SCRIPT.DICT.key_dict["down"]["game"][event.key]()
+                        DICT.key_dict["down"]["game"][event.key]()
 
             if VARIABLE.is_reset:
-                SCRIPT.RESET.reset1()
-                SCRIPT.RESET.reset2()
+                RESET.reset1()
+                RESET.reset2()
                 VARIABLE.is_reset = False
 
-            th.screen.fill(SCRIPT.DICT.color_dict[7])
+            th.screen.fill(DICT.color_dict[7])
             th.screen.blit(VARIABLE.second_background, (120, 15))
 
             VARIABLE.bullet_group.draw(th.screen)

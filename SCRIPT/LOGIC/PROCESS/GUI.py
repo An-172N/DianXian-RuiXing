@@ -12,7 +12,6 @@ def show_situ(screen, font, clock) -> None:
     current_time = pyg.time.get_ticks()
     if current_time - VARIABLE.last_time >= 500:
         VARIABLE.fps_text = f"{clock.get_fps():.0f} FPS"
-
         VARIABLE.last_time = current_time
 
     score = f"分　{VARIABLE.score:9d}"
@@ -46,8 +45,10 @@ def pause_menu(screen, font) -> None:
 
 
 def load_menu(screen, font) -> None:
+    stage_text = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
+
     stage = (
-        f"Stage {VARIABLE.stage} - "
+        f"Stage {stage_text} - "
         f"{VARIABLE.level} !!"
     )
 
@@ -94,8 +95,10 @@ def talk_menu(screen, font) -> None:
 
 
 def summary_menu(screen, font) -> None:
+    stage_text = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
+
     stage = (
-        f"Stage {VARIABLE.stage} - "
+        f"Stage {stage_text} - "
         f"{VARIABLE.level} Cleaer!"
     )
     point = (
@@ -125,9 +128,11 @@ def start_menu(screen, font) -> None:
 
 
 def save_menu(screen, font) -> None:
+    stage_text = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
+
     tm = f"今天是：{dt.datetime.now().strftime('%Y-%m-%d')}"
     score = f"得到了 {VARIABLE.score} 分"
-    stage = f"最远达到的地方是 {VARIABLE.stage} - {VARIABLE.level}"
+    stage = f"最远达到的地方是 {stage_text} - {VARIABLE.level}"
     s_power = f"拾形点率为 {ITEM.cal_s_power()}"
     s_flash = f"使用了 {VARIABLE.s_flash} 次形闪"
     name = f"由 {VARIABLE.name} 助记"

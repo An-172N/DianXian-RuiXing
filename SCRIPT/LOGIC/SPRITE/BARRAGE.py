@@ -55,6 +55,21 @@ def line_barrage(_) -> None:
     VARIABLE.barrage_group.add(sprite)
 
 
+def point_barrage(brick) -> None:
+    char = VARIABLE.main_char
+    for _ in range(3):
+        sprite = Base((9, 9, 0), brick.color, brick.shape)
+        sprite.speed = 3.5
+        sprite.rect.center = (rand.randint(120, 465), rand.randint(15, 250))
+        x1 = char.rect.centerx
+        x2 = sprite.rect.centerx
+        y1 = char.rect.centery
+        y2 = sprite.rect.centery
+        two_pt = FUNC.Calculate.delta_tuple((x1, y1, 0), (x2, y2, 0))
+        sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
+        VARIABLE.barrage_group.add(sprite)
+
+
 def spawn_barrage(brick) -> None:
     difficulty = FUNC.Calculate.fibonacci(
         0,
@@ -63,9 +78,10 @@ def spawn_barrage(brick) -> None:
     ) / 100
     if rand.random() <= 0.25 + difficulty:
         barrage_dict = {
-            0: polygon_barrage,
-            1: line_barrage,
-            2: circle_barrage
+            1: circle_barrage,
+            2: polygon_barrage,
+            3: line_barrage,
+            4: point_barrage
         }
         
-        barrage_dict[brick.shape](brick)
+        barrage_dict[VARIABLE.stage](brick)

@@ -5,7 +5,7 @@ import os
 
 import pygame as pyg
 
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
@@ -16,13 +16,13 @@ class Ono(pyg.sprite.Sprite):
         super().__init__()
 
         th.hp = 192
-        th.color = SCRIPT.DICT.color_dict[1]
+        th.color = DICT.color_dict[1]
         th.shape = 2
         th.current_angle = 0
 
         th.bomb = AutFroDiffuse(th.color)
 
-        th.original_image = pyg.image.load(os.path.join(SCRIPT.DICT.asset_path, 'IMG_ONO.png')).convert_alpha()
+        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_ONO.png')).convert_alpha()
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -32,6 +32,7 @@ class Ono(pyg.sprite.Sprite):
         th.rect = th.image.get_rect()
 
         th.is_free = False
+        th.choice = None
 
         th.target_x = 292
         th.target_y = 60
@@ -43,10 +44,10 @@ class Ono(pyg.sprite.Sprite):
         if th.timer % 120 == 0:
             th.target_x = rand.choice([150, 220, 292, 365, 435])
 
-            th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
             th.bomb.dl = 0
             th.is_free = not th.is_free
+            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
 
         dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
         current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
@@ -67,14 +68,13 @@ class Ono(pyg.sprite.Sprite):
         if not th.is_free:
             th.bomb.fire(th.rect)
         else:
-            th.bomb.free(th.rect)
+            th.choice(th.rect)
 
 
 class AutFroDiffuse:
     def __init__(th, color):
         th.color = color
 
-        th.bomb_cnt = 0
         th.bullet_cnt = 0
         th.timer = 0
         th.dl = 0
@@ -84,7 +84,7 @@ class AutFroDiffuse:
 
         if (
             th.timer % 1 == 0 and
-            th.bomb_cnt < 12
+            th.bullet_cnt < 12
         ):
             th.dl += 6
 
@@ -105,7 +105,7 @@ class AutFroDiffuse:
                 sprite.current_angle = j
                 VARIABLE.barrage_group.add(sprite)
 
-            th.bomb_cnt += 1
+            th.bullet_cnt += 1
 
     def fire(th, rect) -> None:
         if th.bullet_cnt < 1:

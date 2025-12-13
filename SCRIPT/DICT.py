@@ -7,6 +7,7 @@ from SCRIPT.LOGIC.FRIEND.HUMAN.ONO import Ono
 from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import Kli
 from SCRIPT.LOGIC.FRIEND.HUMAN.HRO import Hro
 from SCRIPT.LOGIC.FRIEND.HUMAN.NRE import Nre
+from SCRIPT.LOGIC.FRIEND.HUMAN.QDI import Qdi
 
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.LOGIC
@@ -18,6 +19,7 @@ color_dict = {
     1: (255, 128, 0),
     2: (0, 255, 0),
     3: (128, 0, 128),
+    4: (251, 234, 18),
     5: (45, 194, 229),
     6: (255, 255, 255),
     7: (0, 0, 0)
@@ -27,7 +29,8 @@ char_dict = {
     1: Ono,
     2: Hro,
     3: Nre,
-    4: Kli
+    4: Qdi,
+    5: Kli
 }
 
 key_dict = {

@@ -1,0 +1,103 @@
+import random as rand
+import math
+import os
+
+import pygame as pyg
+
+import SCRIPT.DICT as DICT
+import SCRIPT.VARIABLE as VARIABLE
+import FUNC
+
+from SCRIPT.LOGIC.FRIEND.BASE import Base
+
+
+class Qdi(pyg.sprite.Sprite):
+    def __init__(th):
+        super().__init__()
+
+        th.hp = 290
+        th.color = DICT.color_dict[4]
+        th.shape = 2
+        th.current_angle = 0
+
+        th.bomb = RandCircle(th.color)
+
+        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_QDI.png')).convert_alpha()
+        th.image = th.original_image.subsurface(
+            (
+                0, 0,
+                12, 26
+            )
+        )
+        th.rect = th.image.get_rect()
+
+        th.is_free = False
+        th.choice = None
+
+        th.target_x = 292
+        th.target_y = 60
+        th.timer = 0
+
+    def update(th) -> None:
+        th.timer += 1
+
+        if th.timer % 120 == 0:
+            th.target_x = rand.choice([150, 220, 292, 365, 435])
+            th.bomb.bullet_cnt = 0
+            th.is_free = not th.is_free
+            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
+
+        th.rect.center = (th.target_x, th.target_y)
+
+        if not th.is_free:
+            th.bomb.fire()
+        else:
+            th.choice()
+
+class RandCircle:
+    def __init__(th, color):
+        th.color = color
+
+        th.bullet_cnt = 0
+        th.timer = 0
+
+    def free(th) -> None:
+        th.timer += 1
+
+        if th.bullet_cnt < 1:
+            for _ in range(48):
+                x = rand.randint(120, 465)
+                y = rand.randint(15, 250)
+                pos = (x, y)
+                sprite = Base(
+                    (9, 9, 0),
+                    th.color,
+                    2
+                )
+                sprite.speed = 4
+                sprite.rect.center = pos
+                sprite.current_angle = rand.randint(0, 360)
+                VARIABLE.barrage_group.add(sprite)
+
+            th.bullet_cnt += 1
+
+    def fire(th) -> None:
+        th.timer += 1
+
+        if (
+            th.bullet_cnt < 6
+            and th.timer % 2 == 0
+        ):
+            char = VARIABLE.main_char
+            sprite = Base((9, 9, 0), th.color, 2)
+            sprite.speed = 3.5
+            sprite.rect.center = (rand.randint(120, 465), rand.randint(15, 255))
+            x1 = char.rect.centerx
+            x2 = sprite.rect.centerx
+            y1 = char.rect.centery
+            y2 = sprite.rect.centery
+            two_pt = FUNC.Calculate.delta_tuple((x1, y1, 0), (x2, y2, 0))
+            sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
+            VARIABLE.barrage_group.add(sprite)
+
+            th.bullet_cnt += 1

@@ -4,7 +4,7 @@ import os
 
 import pygame as pyg
 
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 import FUNC
 
@@ -16,13 +16,13 @@ class Nre(pyg.sprite.Sprite):
         super().__init__()
 
         th.hp = 256
-        th.color = SCRIPT.DICT.color_dict[3]
+        th.color = DICT.color_dict[3]
         th.shape = 1
         th.current_angle = 0
 
         th.bomb = StraightThunder(th.color)
 
-        th.original_image = pyg.image.load(os.path.join(SCRIPT.DICT.asset_path, 'IMG_NRE.png')).convert_alpha()
+        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_NRE.png')).convert_alpha()
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -32,6 +32,7 @@ class Nre(pyg.sprite.Sprite):
         th.rect = th.image.get_rect()
 
         th.is_free = False
+        th.choice = None
 
         th.target_x = 292
         th.target_y = 60
@@ -43,10 +44,10 @@ class Nre(pyg.sprite.Sprite):
         if th.timer % 120 == 0:
             th.target_x = rand.choice([150, 220, 292, 365, 435])
 
-            th.bomb.bomb_cnt = 0
             th.bomb.bullet_cnt = 0
             th.bomb.timer = 0
             th.is_free = not th.is_free
+            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
 
         dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
         current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
@@ -67,7 +68,7 @@ class Nre(pyg.sprite.Sprite):
         if not th.is_free:
             th.bomb.fire()
         else:
-            th.bomb.free()
+            th.choice()
 
 
 class StraightThunder:
@@ -75,13 +76,12 @@ class StraightThunder:
         th.color = color
 
         th.timer = 0
-        th.bomb_cnt = 0
         th.bullet_cnt = 0
 
     def free(th) -> None:
         th.timer += 1
 
-        if th.timer % 1 == 0 and th.bomb_cnt < 12:
+        if th.timer % 1 == 0 and th.bullet_cnt < 12:
             start_pos = (rand.randint(80, 500), 0, 0)
             end_pos = (rand.randint(100, 490), 360, 0)
 
@@ -101,7 +101,7 @@ class StraightThunder:
             sprite.update()
             VARIABLE.barrage_group.add(sprite)
 
-            th.bomb_cnt += 1
+            th.bullet_cnt += 1
 
     def fire(th) -> None:
         if th.bullet_cnt < 1:

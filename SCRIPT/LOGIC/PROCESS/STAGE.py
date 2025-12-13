@@ -5,9 +5,9 @@ import os
 from typing import Optional, Any
 
 import FUNC
-import SCRIPT.DICT
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
-import SCRIPT.RESET
+import SCRIPT.RESET as RESET
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
@@ -16,7 +16,7 @@ def next_level() -> None:
     VARIABLE.score += VARIABLE.total_s_power * 512
     VARIABLE.score += VARIABLE.no_hurt * 4096
 
-    SCRIPT.RESET.reset1()
+    RESET.reset1()
 
     VARIABLE.no_hurt += 1
     VARIABLE.main_char.rect.center = (292, 331)
@@ -38,7 +38,7 @@ def level_load() -> None:
             VARIABLE.brick_group.add(VARIABLE.char)
         else:
             for i in FUNC.Process.process_file(
-                os.path.join(SCRIPT.DICT.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
+                os.path.join(DICT.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
                 'ascii',
                 0,
                 load_stage
@@ -60,7 +60,7 @@ def level_summary() -> None:
             VARIABLE.timer += 1
             VARIABLE.summary = True
         else:
-            if VARIABLE.stage >= 2 and VARIABLE.level == 6:
+            if VARIABLE.stage >= 3 and VARIABLE.level == 6:
                 VARIABLE.summary = False
                 VARIABLE.save = True
                 VARIABLE.timer = 0
@@ -88,7 +88,7 @@ def level_logic() -> None:
 
 
 def chs_shhm() -> Optional[Any]:
-    return SCRIPT.DICT.char_dict.get(VARIABLE.stage)()
+    return DICT.char_dict.get(VARIABLE.stage)()
 
 
 def shhm_lose() -> None:
@@ -103,9 +103,9 @@ def load_stage(row, line) -> None:
         if line[i] != 'o':
             shape = int(line[i])
             c = (
-                SCRIPT.DICT.color_dict[VARIABLE.stage]
+                DICT.color_dict[VARIABLE.stage]
                 if rand.random() >= 0.063 
-                else SCRIPT.DICT.color_dict[6]
+                else DICT.color_dict[6]
             )
             x = 127 + i * 15
             y = 22 + row * 15
@@ -124,7 +124,7 @@ def load_stage(row, line) -> None:
 
 
 def load_text(stage) -> str:
-    file = os.path.join(SCRIPT.DICT.asset_path, f"TALK_{stage}.json")
+    file = os.path.join(DICT.asset_path, f"TALK_{stage}.json")
 
     with open(file, 'r', encoding="utf-8") as f:
         return json.load(f)
