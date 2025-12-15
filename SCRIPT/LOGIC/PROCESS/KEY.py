@@ -12,7 +12,7 @@ def save_file() -> None:
     time = dt.datetime.now().strftime('%H-%M-%S')
 
     folder = f'{os.environ["USERPROFILE"]}/Saved Games/DX00'
-    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{VARIABLE.name}-{date}-{time}.json'
+    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{VARIABLE.name}_{date}_{time}.json'
 
     if not os.path.exists(folder):
         os.makedirs(folder)

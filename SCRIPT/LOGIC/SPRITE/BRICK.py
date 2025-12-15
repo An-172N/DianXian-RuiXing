@@ -95,7 +95,7 @@ def line_brick(sprite, source, sprite_group, _) -> None:
 
 
 def point_brick(sprite, _, sprite_group, speed):
-    for _ in range(32):
+    for _ in range(24):
         current_sprite = sprite(
             (2, 15, 0),
             (45, 194, 229),
