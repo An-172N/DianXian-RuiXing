@@ -6,7 +6,7 @@ import pygame
 
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
-import FUNC
+import SCRIPT.FUNC as FUNC
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 

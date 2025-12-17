@@ -1,7 +1,7 @@
 import random
 import math
 
-import FUNC
+import SCRIPT.FUNC as FUNC
 import SCRIPT.VARIABLE as VARIABLE
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base

@@ -2,7 +2,7 @@ import math
 
 import pygame
 
-import FUNC
+import SCRIPT.FUNC as FUNC
 import SCRIPT.DICT as DICT
 
 from SCRIPT.DRAW import ShapeDraw

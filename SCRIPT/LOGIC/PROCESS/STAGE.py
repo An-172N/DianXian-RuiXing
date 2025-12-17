@@ -4,7 +4,7 @@ import os
 
 from typing import Optional, Any
 
-import FUNC
+import SCRIPT.FUNC as FUNC
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.RESET as RESET

@@ -3,7 +3,7 @@ import os
 import pygame
 
 import SCRIPT.DICT as DICT
-import FUNC
+import SCRIPT.FUNC as FUNC
 
 from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecPt
 
