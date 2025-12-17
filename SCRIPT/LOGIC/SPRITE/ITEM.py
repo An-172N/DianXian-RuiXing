@@ -84,8 +84,4 @@ def item_spawn(brick_pos) -> None:
 
 
 def cal_s_power() -> str:
-    return f"{FUNC.Calculate.divide(
-        VARIABLE.stage_total_s_power,
-        VARIABLE.total_spawn_s_power,
-        0
-    ) * 100:.2f} %"
+    return f"{FUNC.Calculate.divide(VARIABLE.stage_total_s_power, VARIABLE.total_spawn_s_power, 0) * 100:.2f} %"

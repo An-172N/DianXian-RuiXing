@@ -96,7 +96,7 @@ class RandCircle:
             x2 = sprite.rect.centerx
             y1 = char.rect.centery
             y2 = sprite.rect.centery
-            two_pt = FUNC.Calculate.delta_tuple((x1, y1, 0), (x2, y2, 0))
+            two_pt = FUNC.Calculate.delta_tuple((x1, y1), (x2, y2))
             sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
             VARIABLE.barrage_group.add(sprite)
 

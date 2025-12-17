@@ -1,24 +1,21 @@
-def delta_tuple(first_tuple: tuple, second_tuple: tuple) -> tuple:
-    dx = first_tuple[0] - second_tuple[0]
-    dy = first_tuple[1] - second_tuple[1]
-    dz = first_tuple[2] - second_tuple[2]
+def delta_tuple(tuple1: tuple, tuple2: tuple) -> tuple:
+    return tuple(
+        i - j
+        for i, j in zip(tuple1, tuple2)
+    )
 
-    return dx, dy, dz
 
-
-def fibonacci(number_a: int, number_b: int, frequency: int) -> int:
+def fibonacci(a: int, b: int, frequency: int) -> int:
     for _ in range(2, frequency):
-        next_number = number_a + number_b
-        number_a = number_b
-        number_b = next_number
+        a, b = b, a + b
 
-    return number_b
+    return b
 
 
 def divide(dividend: float, divisor: float, default: float) -> float:
-    if divisor != 0:
-        result = dividend / divisor
-
-        return result
-    else:
-        return default
+    return (
+        dividend / divisor
+        if divisor != 0 
+        else 
+        default
+    )

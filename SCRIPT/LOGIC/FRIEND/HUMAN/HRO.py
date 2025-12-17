@@ -142,7 +142,7 @@ class PolyX:
                 )
                 sprite.speed = 4
                 sprite.rect.center = pos
-                two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1], 0), (pos[0], pos[1], 0))
+                two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1]), (pos[0], pos[1]))
                 atan = math.atan2(-two_pt[0], -two_pt[1])
                 sprite.current_angle = math.degrees(atan) + i
                 VARIABLE.barrage_group.add(sprite)

@@ -16,7 +16,7 @@ def circle_barrage(brick) -> None:
     x2 = sprite.rect.centerx
     y1 = char.rect.centery
     y2 = sprite.rect.centery
-    two_pt = FUNC.Calculate.delta_tuple((x1, y1, 0), (x2, y2, 0))
+    two_pt = FUNC.Calculate.delta_tuple((x1, y1), (x2, y2))
     sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
     VARIABLE.barrage_group.add(sprite)
 
@@ -30,7 +30,7 @@ def polygon_barrage(brick) -> None:
         x2 = sprite.rect.centerx
         y1 = char.rect.centery
         y2 = sprite.rect.centery
-        two_pt = FUNC.Calculate.delta_tuple((i, y1, 0), (x2, y2, 0))
+        two_pt = FUNC.Calculate.delta_tuple((i, y1), (x2, y2))
         sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
         VARIABLE.barrage_group.add(sprite)
 
@@ -39,8 +39,8 @@ def line_barrage(_) -> None:
     char = VARIABLE.main_char
     char_x = char.rect.centerx
     char_y = char.rect.centery
-    start_pos = (rand.randint(100, 480), 0, 0)
-    end_pos = (char_x, char_y, 0)
+    start_pos = (rand.randint(100, 480), 0)
+    end_pos = (char_x, char_y)
 
     dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
@@ -65,7 +65,7 @@ def point_barrage(brick) -> None:
         x2 = sprite.rect.centerx
         y1 = char.rect.centery
         y2 = sprite.rect.centery
-        two_pt = FUNC.Calculate.delta_tuple((x1, y1, 0), (x2, y2, 0))
+        two_pt = FUNC.Calculate.delta_tuple((x1, y1), (x2, y2))
         sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
         VARIABLE.barrage_group.add(sprite)
 

@@ -82,8 +82,8 @@ class StraightThunder:
         th.timer += 1
 
         if th.timer % 1 == 0 and th.bullet_cnt < 12:
-            start_pos = (rand.randint(80, 500), 0, 0)
-            end_pos = (rand.randint(100, 490), 360, 0)
+            start_pos = (rand.randint(80, 500), 0)
+            end_pos = (rand.randint(100, 490), 360)
 
             dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
@@ -108,8 +108,8 @@ class StraightThunder:
             char_pos = VARIABLE.main_char.rect.center
 
             for i in range(char_pos[0] - 30, char_pos[0] + 31, 20):
-                end_pos = (i, 360, 0)
-                start_pos = (i, 0, 0)
+                end_pos = (i, 360)
+                start_pos = (i, 0)
 
                 dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])

@@ -55,15 +55,15 @@ class Base(pyg.sprite.Sprite):
         th.x = getattr(th, 'x', th.rect.centerx)
         th.y = getattr(th, 'y', th.rect.centery)
         rad = math.radians(th.current_angle)
-        th.x, th.y, _ = FUNC.Calculate.delta_tuple((th.x, th.y, 0), (math.sin(rad) * th.speed, math.cos(rad) * th.speed, 0))
+        th.x, th.y = FUNC.Calculate.delta_tuple((th.x, th.y), (math.sin(rad) * th.speed, math.cos(rad) * th.speed))
         th.rect.center = (th.x, th.y)
 
         if th.shape == 1 and th.height > 16:
             th.timer += 1
 
-            if th.timer >= 80:
+            if th.timer >= 90:
                 th.kill()
-            elif th.timer >= 40 and th.color != DICT.color_dict[3]:
+            elif th.timer >= 45 and th.color != DICT.color_dict[3]:
                 th.color = DICT.color_dict[3]
 
                 th.image.fill(th.color, special_flags=pyg.BLEND_RGBA_MULT)
