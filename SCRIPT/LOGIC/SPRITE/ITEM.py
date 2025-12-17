@@ -1,6 +1,5 @@
-import random as rand
+import random
 
-import FUNC
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
@@ -32,7 +31,7 @@ def item_spawn_regular() -> None:
             0
         )
         sprite.speed = -2
-        sprite.rect.center = (rand.randint(120, 465), 10)
+        sprite.rect.center = (random.randint(120, 465), 10)
         VARIABLE.item_group.add(sprite)
 
         VARIABLE.item_spawn_timer = 0
@@ -59,7 +58,7 @@ def item_collide(source) -> None:
 
 
 def item_spawn(brick_pos) -> None:
-    if rand.random() <= 0.125:
+    if random.random() <= 0.125:
         sprite = Base(
             (9, 9, 2),
             DICT.color_dict[5],
@@ -70,7 +69,7 @@ def item_spawn(brick_pos) -> None:
         sprite.rect.center = brick_pos
         VARIABLE.item_group.add(sprite)
         VARIABLE.total_spawn_s_power += 1
-    elif rand.random() <= 0.007:
+    elif random.random() <= 0.007:
         sprite = Base(
             (9, 9, 2),
             DICT.color_dict[2],
@@ -81,7 +80,3 @@ def item_spawn(brick_pos) -> None:
         sprite.rect.center = brick_pos
         VARIABLE.item_group.add(sprite)
         VARIABLE.total_spawn_s_power += 1
-
-
-def cal_s_power() -> str:
-    return f"{FUNC.Calculate.divide(VARIABLE.stage_total_s_power, VARIABLE.total_spawn_s_power, 0) * 100:.2f} %"

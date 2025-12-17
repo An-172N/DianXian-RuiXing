@@ -2,7 +2,7 @@ import argparse
 import sys
 import os
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.LOGIC as LOGIC
 import SCRIPT.DICT as DICT
@@ -12,11 +12,11 @@ import SCRIPT.RESET as RESET
 
 class Game:
     def __init__(th, screen):
-        pyg.display.set_icon(pyg.image.load(os.path.join(DICT.asset_path, 'IMG_ICON.png')))
+        pygame.display.set_icon(pygame.image.load(os.path.join(DICT.asset_path, 'IMG_ICON.png')))
 
         th.screen = screen
-        th.clock = pyg.time.Clock()
-        th.font = pyg.font.Font(os.path.join(DICT.asset_path, 'FNT\FNT_GNUUNIFONT.otf'), 15)
+        th.clock = pygame.time.Clock()
+        th.font = pygame.font.Font(os.path.join(DICT.asset_path, 'FNT\FNT_GNUUNIFONT.otf'), 15)
 
         th.plane_mgr = LOGIC.PlaneMgr
         th.stage_mgr = LOGIC.StageMgr
@@ -95,16 +95,16 @@ class Game:
                     th.remove_sprite(VARIABLE.item_group, VARIABLE.effective)
                     th.remove_sprite(VARIABLE.particle_group, VARIABLE.window)
 
-                    collide1 = pyg.sprite.spritecollide(
+                    collide1 = pygame.sprite.spritecollide(
                         VARIABLE.d_pt,
                         VARIABLE.barrage_group,
                         False,
-                        pyg.sprite.collide_mask
+                        pygame.sprite.collide_mask
                     )
                     for barrage in collide1:
                         if barrage.color != (255, 255, 255):
                             th.plane_mgr.collide_barrage(barrage)
-                    collide2 = pyg.sprite.groupcollide(
+                    collide2 = pygame.sprite.groupcollide(
                         VARIABLE.bullet_group,
                         VARIABLE.brick_group,
                         False,
@@ -113,7 +113,7 @@ class Game:
                     for bullet, hit_bricks in collide2.items():
                         for brick in hit_bricks:
                             th.bullet_mgr.bullet_collide(bullet, brick)
-                    collide3 = pyg.sprite.spritecollide(
+                    collide3 = pygame.sprite.spritecollide(
                         VARIABLE.main_char,
                         VARIABLE.item_group,
                         False
@@ -125,16 +125,16 @@ class Game:
 
                 th.stage_mgr.level_process()
 
-            for event in pyg.event.get():
-                if event.type == pyg.QUIT:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     sys.exit()
-                elif event.type == pyg.KEYUP:
+                elif event.type == pygame.KEYUP:
                     if (
                         VARIABLE.run
                         and event.key in DICT.key_dict["up"]["game"]
                     ):
                         DICT.key_dict["up"]["game"][event.key]()
-                elif event.type == pyg.KEYDOWN:
+                elif event.type == pygame.KEYDOWN:
                     if (
                         not VARIABLE.run
                         and event.key in DICT.key_dict["down"]["start"]
@@ -195,6 +195,6 @@ class Game:
 
             th.gui.show_situ(th.screen, th.font, th.clock)
 
-            pyg.display.flip()
+            pygame.display.flip()
 
             th.clock.tick(60)

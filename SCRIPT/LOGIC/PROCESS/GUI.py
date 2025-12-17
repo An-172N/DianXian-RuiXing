@@ -1,15 +1,13 @@
-import datetime as dt
+import datetime
 
-import pygame as pyg
+import pygame
 
-import SCRIPT.DRAW
+import SCRIPT.DRAW as DRAW
 import SCRIPT.VARIABLE as VARIABLE
-
-from SCRIPT.LOGIC.SPRITE import ITEM
 
 
 def show_situ(screen, font, clock) -> None:
-    current_time = pyg.time.get_ticks()
+    current_time = pygame.time.get_ticks()
     if current_time - VARIABLE.last_time >= 500:
         VARIABLE.fps_text = f"{clock.get_fps():.0f} FPS"
         VARIABLE.last_time = current_time
@@ -130,10 +128,10 @@ def start_menu(screen, font) -> None:
 def save_menu(screen, font) -> None:
     stage_text = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
 
-    tm = f"今天是：{dt.datetime.now().strftime('%Y-%m-%d')}"
+    tm = f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}"
     score = f"得到了 {VARIABLE.score} 分"
     stage = f"最远达到的地方是 {stage_text} - {VARIABLE.level}"
-    s_power = f"拾形点率为 {ITEM.cal_s_power()}"
+    s_power = f"拾形点率为 {VARIABLE.cal_s_power()}"
     s_flash = f"使用了 {VARIABLE.s_flash} 次形闪"
     name = f"由 {VARIABLE.name} 助记"
 
@@ -165,7 +163,7 @@ def full_menu(
     ]
 
     sur.blit(
-        SCRIPT.DRAW.ShapeDraw(345, 330, 0, (0, 0, 0)).rect(),
+        DRAW.ShapeDraw(345, 330, 0, (0, 0, 0)).rect(),
         (120, 15)
     )
     
@@ -182,7 +180,7 @@ def half_menu(sur, font, title, text1, text2) -> None:
     ]
 
     sur.blit(
-        SCRIPT.DRAW.ShapeDraw(345, 85, 0, (0, 0, 0)).rect(),
+        DRAW.ShapeDraw(345, 85, 0, (0, 0, 0)).rect(),
         (120, 260)
     )
     

@@ -1,8 +1,8 @@
-import random as rand
+import random
 import math
 import os
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
@@ -11,7 +11,7 @@ import FUNC
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
-class Hro(pyg.sprite.Sprite):
+class Hro(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
@@ -20,7 +20,7 @@ class Hro(pyg.sprite.Sprite):
         th.shape = 0
         th.current_angle = 0
 
-        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_HRO.png')).convert_alpha()
+        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_HRO.png')).convert_alpha()
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -42,17 +42,17 @@ class Hro(pyg.sprite.Sprite):
         th.timer += 1
 
         if th.timer % 120 == 0:
-            th.target_x = rand.choice([150, 220, 292, 365, 435])
+            th.target_x = random.choice([150, 220, 292, 365, 435])
 
             th.bomb.bullet_cnt = 0
             th.bomb.dl = 0
             th.is_free = not th.is_free
             th.is_choice = False
-            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
+            th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
-        dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
-        current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pyg.math.Vector2(th.target_x, 60)
+        dir = pygame.math.Vector2(th.target_x - th.rect.centerx, 0)
+        current_pos = pygame.math.Vector2(th.rect.centerx, th.rect.centery)
+        target_pos = pygame.math.Vector2(th.target_x, 60)
 
         delta_vec = target_pos - current_pos
         distance = delta_vec.length()
@@ -102,8 +102,8 @@ class PolyX:
 
         if th.timer % 1 == 0 and th.bullet_cnt < 18:
             for bullet_info in bullet_type:
-                start_pos = pyg.math.Vector2(292 + bullet_info['dx1'], 100 - bullet_info['dx2'])
-                end_pos = pyg.math.Vector2(292 - bullet_info['dy1'], 100 + bullet_info['dy2'])
+                start_pos = pygame.math.Vector2(292 + bullet_info['dx1'], 100 - bullet_info['dx2'])
+                end_pos = pygame.math.Vector2(292 - bullet_info['dy1'], 100 + bullet_info['dy2'])
 
                 delta_pos = end_pos - start_pos
                 distance = delta_pos.length()
@@ -111,7 +111,7 @@ class PolyX:
                 if distance > 0:
                     delta_pos.normalize_ip()
 
-                current_step = th.bullet_cnt * 25
+                current_step = th.bullet_cnt * 24
                 current_pos = start_pos + delta_pos * current_step
                 
                 for j in range(45, 136, 90):

@@ -1,8 +1,8 @@
-import random as rand
+import random
 import math
 import os
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
@@ -11,7 +11,7 @@ import FUNC
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
-class Nre(pyg.sprite.Sprite):
+class Nre(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
@@ -22,7 +22,7 @@ class Nre(pyg.sprite.Sprite):
 
         th.bomb = StraightThunder(th.color)
 
-        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_NRE.png')).convert_alpha()
+        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_NRE.png')).convert_alpha()
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -42,16 +42,16 @@ class Nre(pyg.sprite.Sprite):
         th.timer += 1
 
         if th.timer % 120 == 0:
-            th.target_x = rand.choice([150, 220, 292, 365, 435])
+            th.target_x = random.choice([150, 220, 292, 365, 435])
 
             th.bomb.bullet_cnt = 0
             th.bomb.timer = 0
             th.is_free = not th.is_free
-            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
+            th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
-        dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
-        current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pyg.math.Vector2(th.target_x, 60)
+        dir = pygame.math.Vector2(th.target_x - th.rect.centerx, 0)
+        current_pos = pygame.math.Vector2(th.rect.centerx, th.rect.centery)
+        target_pos = pygame.math.Vector2(th.target_x, 60)
 
         delta_vec = target_pos - current_pos
         distance = delta_vec.length()
@@ -82,8 +82,8 @@ class StraightThunder:
         th.timer += 1
 
         if th.timer % 1 == 0 and th.bullet_cnt < 12:
-            start_pos = (rand.randint(80, 500), 0)
-            end_pos = (rand.randint(100, 490), 360)
+            start_pos = (random.randint(80, 500), 0)
+            end_pos = (random.randint(100, 490), 360)
 
             dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])

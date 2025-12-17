@@ -1,6 +1,6 @@
 import os
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.DICT as DICT
 import FUNC
@@ -8,24 +8,24 @@ import FUNC
 from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecPt
 
 
-window = pyg.Rect(
+window = pygame.Rect(
     (
         120, 15,
         345, 330
     )
 )
-effective = pyg.Rect(
+effective = pygame.Rect(
     (
         105, 0,
         375, 360
     )
 )
-plane_group = pyg.sprite.Group()
-bullet_group = pyg.sprite.Group()
-brick_group = pyg.sprite.Group()
-item_group = pyg.sprite.Group()
-barrage_group = pyg.sprite.Group()
-particle_group = pyg.sprite.Group()
+plane_group = pygame.sprite.Group()
+bullet_group = pygame.sprite.Group()
+brick_group = pygame.sprite.Group()
+item_group = pygame.sprite.Group()
+barrage_group = pygame.sprite.Group()
+particle_group = pygame.sprite.Group()
 run = False
 pause = False
 summary = False
@@ -34,8 +34,8 @@ save = False
 level_load = False
 is_reset = False
 
-background = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_GAMEBG.png')).convert_alpha()
-last_time = pyg.time.get_ticks()
+background = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_GAMEBG.png')).convert_alpha()
+last_time = pygame.time.get_ticks()
 fps_text = last_time
 
 name = ''
@@ -76,8 +76,12 @@ picture_list = [
     (3, os.path.join(DICT.asset_path, 'IMG_STAGE3BG.png')),
     (4, os.path.join(DICT.asset_path, 'IMG_STAGE4BG.png')),
 ]
-picture = FUNC.Process.load_files(picture_list, lambda f: pyg.image.load(f).convert_alpha())
+picture = FUNC.Process.load_files(picture_list, lambda f: pygame.image.load(f).convert_alpha())
 second_background = picture[stage]
 second_background.set_alpha(159)
 char = None
 text = None
+
+
+def cal_s_power() -> str:
+    return f"{FUNC.Calculate.divide(stage_total_s_power, total_spawn_s_power, 0) * 100:.2f} %"

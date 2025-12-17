@@ -1,4 +1,4 @@
-import random as rand
+import random
 import math
 
 import FUNC
@@ -39,7 +39,7 @@ def line_barrage(_) -> None:
     char = VARIABLE.main_char
     char_x = char.rect.centerx
     char_y = char.rect.centery
-    start_pos = (rand.randint(100, 480), 0)
+    start_pos = (random.randint(100, 480), 0)
     end_pos = (char_x, char_y)
 
     dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
@@ -60,7 +60,7 @@ def point_barrage(brick) -> None:
     for _ in range(3):
         sprite = Base((9, 9, 0), brick.color, brick.shape)
         sprite.speed = 3.5
-        sprite.rect.center = (rand.randint(120, 465), rand.randint(15, 250))
+        sprite.rect.center = (random.randint(120, 465), random.randint(15, 250))
         x1 = char.rect.centerx
         x2 = sprite.rect.centerx
         y1 = char.rect.centery
@@ -76,7 +76,7 @@ def spawn_barrage(brick) -> None:
         1,
         VARIABLE.stage + 1
     ) / 100
-    if rand.random() <= 0.25 + difficulty:
+    if random.random() <= 0.25 + difficulty:
         barrage_dict = {
             1: circle_barrage,
             2: polygon_barrage,

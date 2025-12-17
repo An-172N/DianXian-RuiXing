@@ -1,9 +1,9 @@
-import random as rand
+import random
 import itertools
 import math
 import os
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
@@ -11,7 +11,7 @@ import SCRIPT.VARIABLE as VARIABLE
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
-class Ono(pyg.sprite.Sprite):
+class Ono(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
@@ -22,7 +22,7 @@ class Ono(pyg.sprite.Sprite):
 
         th.bomb = AutFroDiffuse(th.color)
 
-        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_ONO.png')).convert_alpha()
+        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_ONO.png')).convert_alpha()
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -42,16 +42,16 @@ class Ono(pyg.sprite.Sprite):
         th.timer += 1
 
         if th.timer % 120 == 0:
-            th.target_x = rand.choice([150, 220, 292, 365, 435])
+            th.target_x = random.choice([150, 220, 292, 365, 435])
 
             th.bomb.bullet_cnt = 0
             th.bomb.dl = 0
             th.is_free = not th.is_free
-            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
+            th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
-        dir = pyg.math.Vector2(th.target_x - th.rect.centerx, 0)
-        current_pos = pyg.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pyg.math.Vector2(th.target_x, 60)
+        dir = pygame.math.Vector2(th.target_x - th.rect.centerx, 0)
+        current_pos = pygame.math.Vector2(th.rect.centerx, th.rect.centery)
+        target_pos = pygame.math.Vector2(th.target_x, 60)
 
         delta_vec = target_pos - current_pos
         distance = delta_vec.length()

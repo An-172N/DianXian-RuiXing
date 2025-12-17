@@ -1,6 +1,6 @@
 import math
 
-import pygame as pyg
+import pygame
 
 import FUNC
 import SCRIPT.DICT as DICT
@@ -8,7 +8,7 @@ import SCRIPT.DICT as DICT
 from SCRIPT.DRAW import ShapeDraw
 
 
-class Base(pyg.sprite.Sprite):
+class Base(pygame.sprite.Sprite):
     POLYGON = 0
     RECT = 1
     CIRCLE = 2
@@ -34,7 +34,7 @@ class Base(pyg.sprite.Sprite):
         th.original_image = th.get_shape(shape)
         th.image = th.original_image
         th.rect = th.image.get_rect()
-        th.mask = pyg.mask.from_surface(th.image)
+        th.mask = pygame.mask.from_surface(th.image)
 
     def get_shape(th, shape) -> None:
         shape_dict = {
@@ -47,8 +47,8 @@ class Base(pyg.sprite.Sprite):
     
     def update(th) -> None:
         if not th.is_rotated:
-            th.image = pyg.transform.rotate(th.original_image, th.current_angle)
-            th.mask = pyg.mask.from_surface(th.image)
+            th.image = pygame.transform.rotate(th.original_image, th.current_angle)
+            th.mask = pygame.mask.from_surface(th.image)
             th.is_rotated = True
         th.rect = th.image.get_rect(center=th.rect.center)
 
@@ -66,4 +66,4 @@ class Base(pyg.sprite.Sprite):
             elif th.timer >= 45 and th.color != DICT.color_dict[3]:
                 th.color = DICT.color_dict[3]
 
-                th.image.fill(th.color, special_flags=pyg.BLEND_RGBA_MULT)
+                th.image.fill(th.color, special_flags=pygame.BLEND_RGBA_MULT)

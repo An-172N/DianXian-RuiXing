@@ -1,15 +1,13 @@
 import os
 import json
-import datetime as dt
+import datetime
 
 import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.SPRITE import ITEM
-
 
 def save_file() -> None:
-    date = dt.datetime.now().strftime('%Y-%m-%d')
-    time = dt.datetime.now().strftime('%H-%M-%S')
+    date = datetime.datetime.now().strftime('%Y-%m-%d')
+    time = datetime.datetime.now().strftime('%H-%M-%S')
 
     folder = f'{os.environ["USERPROFILE"]}/Saved Games/DX00'
     file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{VARIABLE.name}_{date}_{time}.json'
@@ -24,9 +22,9 @@ def save_file() -> None:
             'Nickname': VARIABLE.name,
             'Score': VARIABLE.score,
             'The farthest place that you reached': f"{stage} - {VARIABLE.level}",
-            'Pick up SPower rate': ITEM.cal_s_power(),
+            'Pick up SPower rate': VARIABLE.cal_s_power(),
             'Shape Flash': VARIABLE.s_flash,
-            'Record date': dt.datetime.now().strftime('%Y-%m-%d')
+            'Record date': datetime.datetime.now().strftime('%Y-%m-%d')
         }
     )
         

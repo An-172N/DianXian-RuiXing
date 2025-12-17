@@ -1,6 +1,6 @@
 import os
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
@@ -9,7 +9,7 @@ from SCRIPT.LOGIC.FRIEND.BASE import Base
 from SCRIPT.DRAW import ShapeDraw
 
 
-class Kli(pyg.sprite.Sprite):
+class Kli(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
@@ -17,18 +17,18 @@ class Kli(pyg.sprite.Sprite):
 
         th.bomb = RectRaining()
 
-        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_KLI.png')).convert_alpha()
+        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_KLI.png')).convert_alpha()
         th.image = th.original_image.subsurface((0, 0, 12, 26))
         th.rect = th.image.get_rect()
 
 
-class DecPt(pyg.sprite.Sprite):
+class DecPt(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
         th.original_image = ShapeDraw(2, 2, 0, (127, 127, 127)).rect()
         th.image = th.original_image
         th.rect = th.image.get_rect()
-        th.mask = pyg.mask.from_surface(th.image)
+        th.mask = pygame.mask.from_surface(th.image)
 
 
 class RectRaining:

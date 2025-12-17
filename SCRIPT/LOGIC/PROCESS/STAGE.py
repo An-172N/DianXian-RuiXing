@@ -1,4 +1,4 @@
-import random as rand
+import random
 import json
 import os
 
@@ -104,7 +104,7 @@ def load_stage(row, line) -> None:
             shape = int(line[i])
             c = (
                 DICT.color_dict[VARIABLE.stage]
-                if rand.random() >= 0.063 
+                if random.random() >= 0.063 
                 else DICT.color_dict[6]
             )
             x = 127 + i * 15

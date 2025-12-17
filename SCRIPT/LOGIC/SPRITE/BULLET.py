@@ -1,4 +1,4 @@
-import random as rand
+import random
 import itertools
 
 import SCRIPT.VARIABLE as VARIABLE
@@ -28,14 +28,14 @@ def spawn_bullet() -> None:
                 j
             )
 
-        rands = rand.randint(0, 45)
+        rands = random.randint(0, 45)
         for i in range(0 + rands, 360 + rands, 60):
             sprite = Base(
                 (2, 2, 0),
                 VARIABLE.main_char.color,
                 1
             )
-            sprite.speed = rand.randint(6, 10)
+            sprite.speed = random.randint(6, 10)
             sprite.rect.center = VARIABLE.main_char.rect.center
             sprite.current_angle = i
             VARIABLE.particle_group.add(sprite)
@@ -68,14 +68,14 @@ def bullet_collide(source, target) -> None:
         if hasattr(target, "bomb"):
             STAGE.shhm_lose()
 
-        rands = rand.randint(0, 45)
+        rands = random.randint(0, 45)
         for i in range(0 + rands, 360 + rands, 60):
             sprite = Base(
                 (2, 2, 0),
                 target.color,
                 1
             )
-            sprite.speed = rand.randint(6, 10)
+            sprite.speed = random.randint(6, 10)
             sprite.rect.center = target_pos
             sprite.current_angle = i
             VARIABLE.particle_group.add(sprite)

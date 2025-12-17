@@ -1,8 +1,8 @@
-import random as rand
+import random
 import math
 import os
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
@@ -11,7 +11,7 @@ import FUNC
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 
-class Qdi(pyg.sprite.Sprite):
+class Qdi(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
@@ -22,7 +22,7 @@ class Qdi(pyg.sprite.Sprite):
 
         th.bomb = RandCircle(th.color)
 
-        th.original_image = pyg.image.load(os.path.join(DICT.asset_path, 'IMG_QDI.png')).convert_alpha()
+        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_QDI.png')).convert_alpha()
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -42,10 +42,10 @@ class Qdi(pyg.sprite.Sprite):
         th.timer += 1
 
         if th.timer % 120 == 0:
-            th.target_x = rand.choice([150, 220, 292, 365, 435])
+            th.target_x = random.choice([150, 220, 292, 365, 435])
             th.bomb.bullet_cnt = 0
             th.is_free = not th.is_free
-            th.choice = rand.choice([th.bomb.fire, th.bomb.free])
+            th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
         th.rect.center = (th.target_x, th.target_y)
 
@@ -66,8 +66,8 @@ class RandCircle:
 
         if th.bullet_cnt < 1:
             for _ in range(48):
-                x = rand.randint(120, 465)
-                y = rand.randint(15, 250)
+                x = random.randint(120, 465)
+                y = random.randint(15, 250)
                 pos = (x, y)
                 sprite = Base(
                     (9, 9, 0),
@@ -76,7 +76,7 @@ class RandCircle:
                 )
                 sprite.speed = 4
                 sprite.rect.center = pos
-                sprite.current_angle = rand.randint(0, 360)
+                sprite.current_angle = random.randint(0, 360)
                 VARIABLE.barrage_group.add(sprite)
 
             th.bullet_cnt += 1
@@ -91,7 +91,7 @@ class RandCircle:
             char = VARIABLE.main_char
             sprite = Base((9, 9, 0), th.color, 2)
             sprite.speed = 3.5
-            sprite.rect.center = (rand.randint(120, 465), rand.randint(15, 255))
+            sprite.rect.center = (random.randint(120, 465), random.randint(15, 255))
             x1 = char.rect.centerx
             x2 = sprite.rect.centerx
             y1 = char.rect.centery

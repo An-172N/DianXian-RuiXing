@@ -1,6 +1,6 @@
-import random as rand
+import random
 
-import pygame as pyg
+import pygame
 
 import SCRIPT.VARIABLE as VARIABLE
 
@@ -30,7 +30,7 @@ def turn_side() -> None:
             26
         )
     )
-    flipped_image = pyg.transform.flip(
+    flipped_image = pygame.transform.flip(
         turn_side_image,
         True,
         False
@@ -65,14 +65,14 @@ def collide_barrage(barrage) -> None:
 
 
 def life_logic() -> None:
-    rands = rand.randint(0, 30)
+    rands = random.randint(0, 30)
     for i in range(0 + rands, 360 + rands, 60):
         sprite = Base(
             (8, 8, 0),
             VARIABLE.main_char.color,
             1
         )
-        sprite.speed = rand.randint(8, 12)
+        sprite.speed = random.randint(8, 12)
         sprite.rect.center = VARIABLE.main_char.rect.center
         sprite.current_angle = i
         VARIABLE.particle_group.add(sprite)

@@ -1,4 +1,4 @@
-import random as rand
+import random
 
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
@@ -24,7 +24,7 @@ def brick_death(brick) -> None:
 
 
 def circle_brick(sprite, source, sprite_group, speed) -> None:
-    rands = rand.randint(0, 45)
+    rands = random.randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 15):
         current_sprite = sprite(
@@ -48,15 +48,15 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
     midbottom = source.rect.midbottom
     bullet_index = [
         {
-            'angle': rand.choice([-30, -210]),
+            'angle': random.choice([-30, -210]),
             'pos': midleft
         },
         {
-            'angle': rand.choice([30, 210]),
+            'angle': random.choice([30, 210]),
             'pos': midright
         },
         {
-            'angle': rand.choice([90, 270]),
+            'angle': random.choice([90, 270]),
             'pos': midbottom
         }
     ]
@@ -80,7 +80,7 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
 def line_brick(sprite, source, sprite_group, _) -> None:
     for _ in range(12):
         current_sprite = sprite(
-            (2, rand.randint(30, 180), 0),
+            (2, random.randint(30, 180), 0),
             (45, 194, 229),
             1, "bullet"
         )
@@ -88,7 +88,7 @@ def line_brick(sprite, source, sprite_group, _) -> None:
             current_sprite.damage = 6
         current_sprite.speed = 0
         current_sprite.rect.center = source.rect.center
-        rands = rand.randint(0, 360)
+        rands = random.randint(0, 360)
         current_sprite.current_angle = rands
         current_sprite.update()
         sprite_group.add(current_sprite)
@@ -103,8 +103,8 @@ def point_brick(sprite, _, sprite_group, speed):
         )
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 4
-        current_sprite.rect.center = (rand.randint(120, 465), rand.randint(15, 345))
-        rands = rand.randint(0, 360)
+        current_sprite.rect.center = (random.randint(120, 465), random.randint(15, 345))
+        rands = random.randint(0, 360)
         current_sprite.current_angle = rands
         current_sprite.speed = speed
         current_sprite.update()
