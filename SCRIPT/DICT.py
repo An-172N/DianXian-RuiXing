@@ -8,6 +8,7 @@ from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import Kli
 from SCRIPT.LOGIC.FRIEND.HUMAN.HRO import Hro
 from SCRIPT.LOGIC.FRIEND.HUMAN.NRE import Nre
 from SCRIPT.LOGIC.FRIEND.HUMAN.QDI import Qdi
+from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecisionPoint
 
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.LOGIC as LOGIC
@@ -30,63 +31,57 @@ char_dict = {
     2: Hro,
     3: Nre,
     4: Qdi,
-    5: Kli
+    5: Kli,
+    6: DecisionPoint
 }
 
-key_dict = {
-    "down": {
-        "game": {
-            pygame.K_RIGHT: lambda: setattr(VARIABLE, "move_right",
-                                         True),
-            pygame.K_LEFT: lambda: setattr(VARIABLE, "move_left",
-                                        True),
-            pygame.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
-                                          True),
-            pygame.K_z: lambda : setattr(VARIABLE, "can_shoot",
-                                      False),
-            pygame.K_x: lambda : LOGIC.BulletMgr.single_bomb(),
-            pygame.K_ESCAPE: lambda: setattr(VARIABLE, "pause",
-                                          True)
-        },
-        "talk": {
-            pygame.K_z: lambda : setattr(VARIABLE, "text_number",
-                                      VARIABLE.text_number + 1),
-            pygame.K_x: lambda : setattr(VARIABLE, "talk",
-                                      False)
-        },
-        "pause": {
-            pygame.K_ESCAPE: lambda : setattr(VARIABLE, "pause",
-                                           False),
-            pygame.K_q: lambda : setattr(VARIABLE, "is_reset",
-                                      True)
-        },
-        "start": {
-            pygame.K_z: lambda: (setattr(VARIABLE, "run",
-                                         True),
-                              LOGIC.StageMgr.next_level(),
-                              LOGIC.StageMgr.level_logic()),
-            pygame.K_q: lambda: sys.exit()
-        },
-        "over": {
-            pygame.K_RETURN: lambda: (LOGIC.Key.save_file(),
-                                   setattr(VARIABLE, "is_reset",
-                                   True)),
-            pygame.K_ESCAPE: lambda: setattr(VARIABLE, "is_reset",
-                                          True),
-            pygame.K_BACKSPACE: lambda: setattr(VARIABLE, "name",
-                                             VARIABLE.name[:-1])
-        }
-    },
-    "up": {
-        "game": {
-            pygame.K_RIGHT: lambda: setattr(VARIABLE, "move_right",
-                                         False),
-            pygame.K_LEFT: lambda: setattr(VARIABLE, "move_left",
-                                        False),
-            pygame.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow",
-                                          False),
-            pygame.K_z: lambda: setattr(VARIABLE, "can_shoot",
-                                     True)
-        }
-    }
+keydown_game_dict = {
+    pygame.K_RIGHT: lambda: setattr(VARIABLE, "move_right", True),
+    pygame.K_LEFT: lambda: setattr(VARIABLE, "move_left", True),
+    pygame.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow", True),
+    pygame.K_z: lambda : setattr(VARIABLE, "can_shoot", False),
+    pygame.K_x: lambda : LOGIC.BulletMgr.single_bomb(),
+    pygame.K_ESCAPE: lambda: setattr(VARIABLE, "pause", True)
+}
+
+keydown_talk_dict = {
+    pygame.K_z: lambda : setattr(VARIABLE, "text_number", VARIABLE.text_number + 1),
+    pygame.K_x: lambda : setattr(VARIABLE, "talk", False)
+}
+
+keydown_pause_dict = {
+    pygame.K_ESCAPE: lambda : setattr(VARIABLE, "pause", False),
+    pygame.K_q: lambda : (
+        VARIABLE.reset1(),
+        VARIABLE.reset2()
+    )
+}
+
+keydown_start_dict = {
+    pygame.K_z: lambda: (
+        setattr(VARIABLE, "run", True),
+        LOGIC.StageMgr.next_level(),
+        LOGIC.StageMgr.level_logic()
+    ),
+    pygame.K_q: lambda: sys.exit()
+}
+
+keydown_over_dict = {
+    pygame.K_RETURN: lambda: (
+        LOGIC.Key.save_file(),
+        VARIABLE.reset1(),
+        VARIABLE.reset2()
+    ),
+    pygame.K_ESCAPE: lambda: (
+        VARIABLE.reset1(),
+        VARIABLE.reset2()
+    ),
+    pygame.K_BACKSPACE: lambda: setattr(VARIABLE, "name", VARIABLE.name[:-1])
+}
+
+keyup_game_dict = {
+    pygame.K_RIGHT: lambda: setattr(VARIABLE, "move_right", False),
+    pygame.K_LEFT: lambda: setattr(VARIABLE, "move_left", False),
+    pygame.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow", False),
+    pygame.K_z: lambda: setattr(VARIABLE, "can_shoot", True)
 }

@@ -3,6 +3,7 @@ import random
 import pygame
 
 import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.DICT as DICT
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
@@ -18,7 +19,7 @@ def move_plane() -> None:
     elif VARIABLE.main_char.rect.right > VARIABLE.window.right:
         VARIABLE.main_char.rect.right = VARIABLE.window.right
 
-    VARIABLE.d_pt.rect.center = VARIABLE.main_char.rect.center
+    VARIABLE.decision_point.rect.center = VARIABLE.main_char.rect.center
 
 
 def turn_side() -> None:
@@ -53,7 +54,8 @@ def turn_side() -> None:
 
 def collide_barrage(barrage) -> None:
     if (
-        not (
+        barrage.color != DICT.color_dict[6]
+        and not (
             VARIABLE.collide or
             VARIABLE.is_s_divide
         )
@@ -61,7 +63,7 @@ def collide_barrage(barrage) -> None:
         VARIABLE.collide = True
         life_logic()
 
-    barrage.kill()
+        barrage.kill()
 
 
 def life_logic() -> None:

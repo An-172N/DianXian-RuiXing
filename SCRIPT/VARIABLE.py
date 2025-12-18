@@ -5,8 +5,6 @@ import pygame
 import SCRIPT.DICT as DICT
 import SCRIPT.FUNC as FUNC
 
-from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecPt
-
 
 window = pygame.Rect(
     (
@@ -20,21 +18,36 @@ effective = pygame.Rect(
         375, 360
     )
 )
+
 plane_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 brick_group = pygame.sprite.Group()
 item_group = pygame.sprite.Group()
 barrage_group = pygame.sprite.Group()
 particle_group = pygame.sprite.Group()
+
+picture_list = [
+    (1, os.path.join(DICT.asset_path, 'IMG_STAGE1BG.png')),
+    (2, os.path.join(DICT.asset_path, 'IMG_STAGE2BG.png')),
+    (3, os.path.join(DICT.asset_path, 'IMG_STAGE3BG.png')),
+    (4, os.path.join(DICT.asset_path, 'IMG_STAGE4BG.png')),
+    (5, os.path.join(DICT.asset_path, 'IMG_GAMEBG.png'))
+]
+char_image_list = [
+    ("Kli", os.path.join(DICT.asset_path, 'IMG_KLI.png')),
+    ("Ono", os.path.join(DICT.asset_path, 'IMG_ONO.png')),
+    ("Hro", os.path.join(DICT.asset_path, 'IMG_HRO.png')),
+    ("Nre", os.path.join(DICT.asset_path, 'IMG_NRE.png')),
+    ("Qdi", os.path.join(DICT.asset_path, 'IMG_QDI.png'))
+]
+
 run = False
 pause = False
 summary = False
 talk = False
 save = False
 level_load = False
-is_reset = False
 
-background = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_GAMEBG.png')).convert_alpha()
 last_time = pygame.time.get_ticks()
 fps_text = last_time
 
@@ -42,6 +55,7 @@ name = ''
 
 s_power = 0
 shoot_cnt = 0
+
 can_shoot = True
 
 item_spawn_timer = 0
@@ -56,31 +70,88 @@ s_flash = 0
 total_s_power = 0
 stage_total_s_power = 0
 total_spawn_s_power = 0
+
 move_right = False
 move_left = False
 is_slow = False
 is_visitable = True
 is_s_divide = False
 collide = True
-main_char = DICT.char_dict.get(5)()
-d_pt = DecPt()
 
 text_number = 0
 text_part = 0
 timer = 0
 stage = 1
 level = 0
-picture_list = [
-    (1, os.path.join(DICT.asset_path, 'IMG_STAGE1BG.png')),
-    (2, os.path.join(DICT.asset_path, 'IMG_STAGE2BG.png')),
-    (3, os.path.join(DICT.asset_path, 'IMG_STAGE3BG.png')),
-    (4, os.path.join(DICT.asset_path, 'IMG_STAGE4BG.png')),
-]
+
 picture = FUNC.Process.load_files(picture_list, lambda f: pygame.image.load(f).convert_alpha())
+char_image = FUNC.Process.load_files(char_image_list, lambda f: pygame.image.load(f).convert_alpha())
+background = picture[5]
 second_background = picture[stage]
-second_background.set_alpha(159)
+
 char = None
 text = None
+
+main_char = DICT.char_dict.get(5)()
+decision_point = DICT.char_dict.get(6)()
+
+
+def reset1() -> None:
+    global pause, summary, talk, save, level_load
+    global collide, is_s_divide, cooldown_time, total_s_power
+    global shoot_cnt, can_shoot
+    global item_spawn_timer
+    global text_number, text_part
+    
+    pause = False
+    summary = False
+    talk = False
+    save = False
+    level_load = False
+
+    item_group.empty(),
+    brick_group.empty(),
+    plane_group.empty(),
+    bullet_group.empty(),
+    particle_group.empty(),
+    barrage_group.empty()
+
+    collide = False
+    is_s_divide = False
+    cooldown_time = 0
+    main_char.bomb.bomb_cnt = 0
+    main_char.bomb.timer = 0
+    total_s_power = 0
+
+    shoot_cnt = 0
+    can_shoot = True
+
+    item_spawn_timer = 0
+
+    text_part = 0
+    text_number = 0
+
+def reset2() -> None:
+    global stage, level, char
+    global no_hurt, player, score, s_flash
+    global s_power, can_shoot, combo
+    global run
+
+    stage = 1
+    level = 0
+    char = None
+
+    no_hurt = 0
+    player = 4
+    score = 0
+    s_flash = 0
+
+    s_power = 0
+    can_shoot = False
+
+    combo = 0
+
+    run = False
 
 
 def cal_s_power() -> str:

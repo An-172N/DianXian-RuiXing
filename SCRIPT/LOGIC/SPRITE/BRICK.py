@@ -29,7 +29,7 @@ def circle_brick(sprite, source, sprite_group, speed) -> None:
     for i in range(0 + rands, 360 + rands, 15):
         current_sprite = sprite(
             (2, 15, 0),
-            (45, 194, 229),
+            DICT.color_dict[5],
             1,
             "bullet"
         )
@@ -64,7 +64,7 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
     for bullet_info in bullet_index:
         current_sprite = sprite(
             (2, 15, 0),
-            (45, 194, 229),
+            DICT.color_dict[5],
             1,
             "bullet-cross"
         )
@@ -81,7 +81,7 @@ def line_brick(sprite, source, sprite_group, _) -> None:
     for _ in range(12):
         current_sprite = sprite(
             (2, random.randint(30, 180), 0),
-            (45, 194, 229),
+            DICT.color_dict[5],
             1, "bullet"
         )
         if not hasattr(current_sprite, "damage"):
@@ -98,7 +98,7 @@ def point_brick(sprite, _, sprite_group, speed):
     for _ in range(24):
         current_sprite = sprite(
             (2, 15, 0),
-            (45, 194, 229),
+            DICT.color_dict[5],
             1, "bullet"
         )
         if not hasattr(current_sprite, "damage"):

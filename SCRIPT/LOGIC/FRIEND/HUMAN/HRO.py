@@ -1,6 +1,5 @@
 import random
 import math
-import os
 
 import pygame
 
@@ -20,7 +19,7 @@ class Hro(pygame.sprite.Sprite):
         th.shape = 0
         th.current_angle = 0
 
-        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_HRO.png')).convert_alpha()
+        th.original_image = VARIABLE.char_image["Hro"]
         th.image = th.original_image.subsurface(
             (
                 0, 0,

@@ -7,7 +7,6 @@ from typing import Optional, Any
 import SCRIPT.FUNC as FUNC
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
-import SCRIPT.RESET as RESET
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
 
@@ -16,12 +15,12 @@ def next_level() -> None:
     VARIABLE.score += VARIABLE.total_s_power * 512
     VARIABLE.score += VARIABLE.no_hurt * 4096
 
-    RESET.reset1()
+    VARIABLE.reset1()
 
     VARIABLE.no_hurt += 1
     VARIABLE.main_char.rect.center = (292, 331)
     VARIABLE.plane_group.add(VARIABLE.main_char)
-    VARIABLE.plane_group.add(VARIABLE.d_pt)
+    VARIABLE.plane_group.add(VARIABLE.decision_point)
 
 
 def level_load() -> None:
@@ -104,7 +103,7 @@ def load_stage(row, line) -> None:
             shape = int(line[i])
             c = (
                 DICT.color_dict[VARIABLE.stage]
-                if random.random() >= 0.063 
+                if random.random() >= 0.042
                 else DICT.color_dict[6]
             )
             x = 127 + i * 15

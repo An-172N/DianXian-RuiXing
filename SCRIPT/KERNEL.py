@@ -7,7 +7,6 @@ import pygame
 import SCRIPT.LOGIC as LOGIC
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
-import SCRIPT.RESET as RESET
 
 
 class Game:
@@ -57,11 +56,9 @@ class Game:
 
     @staticmethod
     def remove_sprite(sprite_group, effective_range) -> None:
-        [
-            sprite.kill()
-            for sprite in sprite_group
-            if not effective_range.collidepoint(sprite.rect.center)
-        ]
+        for sprite in sprite_group:
+            if not effective_range.collidepoint(sprite.rect.center):
+                sprite.kill()
 
     def update(th) -> None:
         while True:
@@ -96,14 +93,13 @@ class Game:
                     th.remove_sprite(VARIABLE.particle_group, VARIABLE.window)
 
                     collide1 = pygame.sprite.spritecollide(
-                        VARIABLE.d_pt,
+                        VARIABLE.decision_point,
                         VARIABLE.barrage_group,
                         False,
                         pygame.sprite.collide_mask
                     )
                     for barrage in collide1:
-                        if barrage.color != (255, 255, 255):
-                            th.plane_mgr.collide_barrage(barrage)
+                        th.plane_mgr.collide_barrage(barrage)
                     collide2 = pygame.sprite.groupcollide(
                         VARIABLE.bullet_group,
                         VARIABLE.brick_group,
@@ -131,41 +127,36 @@ class Game:
                 elif event.type == pygame.KEYUP:
                     if (
                         VARIABLE.run
-                        and event.key in DICT.key_dict["up"]["game"]
+                        and event.key in DICT.keyup_game_dict
                     ):
-                        DICT.key_dict["up"]["game"][event.key]()
+                        DICT.keyup_game_dict[event.key]()
                 elif event.type == pygame.KEYDOWN:
                     if (
                         not VARIABLE.run
-                        and event.key in DICT.key_dict["down"]["start"]
+                        and event.key in DICT.keydown_start_dict
                     ):
-                        DICT.key_dict["down"]["start"][event.key]()
+                        DICT.keydown_start_dict[event.key]()
                     elif VARIABLE.save:
-                        if event.key in DICT.key_dict["down"]["over"]:
-                            DICT.key_dict["down"]["over"][event.key]()
+                        if event.key in DICT.keydown_over_dict:
+                            DICT.keydown_over_dict[event.key]()
                         else:
                             VARIABLE.name += event.unicode
                     elif (
                         VARIABLE.pause
-                        and event.key in DICT.key_dict["down"]["pause"]
+                        and event.key in DICT.keydown_pause_dict
                     ):
-                        DICT.key_dict["down"]["pause"][event.key]()
+                        DICT.keydown_pause_dict[event.key]()
                     elif (
                         VARIABLE.talk
-                        and event.key in DICT.key_dict["down"]["talk"]
+                        and event.key in DICT.keydown_talk_dict
                     ):
-                        DICT.key_dict["down"]["talk"][event.key]()
+                        DICT.keydown_talk_dict[event.key]()
                     elif (
                         not VARIABLE.summary
                         and VARIABLE.level_load
-                        and event.key in DICT.key_dict["down"]["game"]
+                        and event.key in DICT.keydown_game_dict
                     ):
-                        DICT.key_dict["down"]["game"][event.key]()
-
-            if VARIABLE.is_reset:
-                RESET.reset1()
-                RESET.reset2()
-                VARIABLE.is_reset = False
+                        DICT.keydown_game_dict[event.key]()
 
             th.screen.fill(DICT.color_dict[7])
             th.screen.blit(VARIABLE.second_background, (120, 15))

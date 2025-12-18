@@ -49,11 +49,12 @@ class Base(pygame.sprite.Sprite):
         if not th.is_rotated:
             th.image = pygame.transform.rotate(th.original_image, th.current_angle)
             th.mask = pygame.mask.from_surface(th.image)
-            th.is_rotated = True
-        th.rect = th.image.get_rect(center=th.rect.center)
+            th.rect = th.image.get_rect(center=th.rect.center)
 
-        th.x = getattr(th, 'x', th.rect.centerx)
-        th.y = getattr(th, 'y', th.rect.centery)
+            th.x = getattr(th, 'x', th.rect.centerx)
+            th.y = getattr(th, 'y', th.rect.centery)
+            th.is_rotated = True
+        
         rad = math.radians(th.current_angle)
         th.x, th.y = FUNC.Calculate.delta_tuple((th.x, th.y), (math.sin(rad) * th.speed, math.cos(rad) * th.speed))
         th.rect.center = (th.x, th.y)

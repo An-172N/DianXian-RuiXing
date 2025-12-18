@@ -1,5 +1,3 @@
-import os
-
 import pygame
 
 import SCRIPT.DICT as DICT
@@ -15,14 +13,14 @@ class Kli(pygame.sprite.Sprite):
 
         th.color = DICT.color_dict[5]
 
-        th.bomb = RectRaining()
+        th.bomb = RectRaining(th.color)
 
-        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_KLI.png')).convert_alpha()
+        th.original_image = VARIABLE.char_image["Kli"]
         th.image = th.original_image.subsurface((0, 0, 12, 26))
         th.rect = th.image.get_rect()
 
 
-class DecPt(pygame.sprite.Sprite):
+class DecisionPoint(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
         th.original_image = ShapeDraw(2, 2, 0, (127, 127, 127)).rect()
@@ -32,7 +30,9 @@ class DecPt(pygame.sprite.Sprite):
 
 
 class RectRaining:
-    def __init__(th):
+    def __init__(th, color):
+        th.color = color
+
         th.bomb_cnt = 0
         th.timer = 0
 
@@ -47,7 +47,7 @@ class RectRaining:
             for i in range(120, 466, 15):
                 sprite = Base(
                     (15, 15, 0),
-                    (45, 194, 229),
+                    th.color,
                     1,
                     "bullet"
                 )
@@ -79,7 +79,7 @@ class RectRaining:
         for bullet_info in bullet_type:
             sprite = Base(
                 (2, 15, 0),
-                (45, 194, 229),
+                th.color,
                 1,
                 "bullet"
             )

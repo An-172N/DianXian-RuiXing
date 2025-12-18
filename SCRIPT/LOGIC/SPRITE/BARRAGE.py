@@ -2,6 +2,7 @@ import random
 import math
 
 import SCRIPT.FUNC as FUNC
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
 from SCRIPT.LOGIC.FRIEND.BASE import Base
@@ -45,7 +46,7 @@ def line_barrage(_) -> None:
     dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
                 
-    sprite = Base((2, distance, 0), (255, 255, 255), 1)
+    sprite = Base((2, distance, 0), DICT.color_dict[6], 1)
     sprite.speed = 0
     x = start_pos[0] + dpos[0] / 2
     y = start_pos[1] + dpos[1] / 2

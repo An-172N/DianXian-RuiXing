@@ -1,7 +1,6 @@
 import random
 import itertools
 import math
-import os
 
 import pygame
 
@@ -22,7 +21,7 @@ class Ono(pygame.sprite.Sprite):
 
         th.bomb = AutFroDiffuse(th.color)
 
-        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_ONO.png')).convert_alpha()
+        th.original_image = VARIABLE.char_image["Ono"]
         th.image = th.original_image.subsurface(
             (
                 0, 0,

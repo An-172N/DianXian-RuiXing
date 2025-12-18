@@ -1,6 +1,5 @@
 import random
 import math
-import os
 
 import pygame
 
@@ -20,9 +19,9 @@ class Nre(pygame.sprite.Sprite):
         th.shape = 1
         th.current_angle = 0
 
-        th.bomb = StraightThunder(th.color)
+        th.bomb = StraightThunder()
 
-        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_NRE.png')).convert_alpha()
+        th.original_image = VARIABLE.char_image["Nre"]
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -72,9 +71,7 @@ class Nre(pygame.sprite.Sprite):
 
 
 class StraightThunder:
-    def __init__(th, color):
-        th.color = color
-
+    def __init__(th):
         th.timer = 0
         th.bullet_cnt = 0
 
@@ -90,7 +87,7 @@ class StraightThunder:
 
             sprite = Base(
                 (2, distance, 0),
-                (255, 255, 255),
+                DICT.color_dict[6],
                 1
             )
             sprite.speed = 0
@@ -116,7 +113,7 @@ class StraightThunder:
 
                 sprite = Base(
                     (2, distance, 0),
-                    (255, 255, 255),
+                    DICT.color_dict[6],
                     1
                 )
                 sprite.speed = 0

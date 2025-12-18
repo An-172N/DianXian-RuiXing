@@ -3,6 +3,7 @@ import datetime
 import pygame
 
 import SCRIPT.DRAW as DRAW
+import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
 
@@ -163,12 +164,12 @@ def full_menu(
     ]
 
     sur.blit(
-        DRAW.ShapeDraw(345, 330, 0, (0, 0, 0)).rect(),
+        DRAW.ShapeDraw(345, 330, 0, DICT.color_dict[7]).rect(),
         (120, 15)
     )
     
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
         sur.blit(text, text_info["pos"])
 
 
@@ -180,12 +181,12 @@ def half_menu(sur, font, title, text1, text2) -> None:
     ]
 
     sur.blit(
-        DRAW.ShapeDraw(345, 85, 0, (0, 0, 0)).rect(),
+        DRAW.ShapeDraw(345, 85, 0, DICT.color_dict[7]).rect(),
         (120, 260)
     )
     
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
         sur.blit(text, text_info["pos"])
 
 
@@ -199,5 +200,5 @@ def situ(sur, font, text1, text2, text3, text4, fps) -> None:
     ]
     
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
         sur.blit(text, text_info["pos"])

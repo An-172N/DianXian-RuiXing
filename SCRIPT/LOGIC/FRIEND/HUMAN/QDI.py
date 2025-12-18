@@ -1,6 +1,5 @@
 import random
 import math
-import os
 
 import pygame
 
@@ -22,7 +21,7 @@ class Qdi(pygame.sprite.Sprite):
 
         th.bomb = RandCircle(th.color)
 
-        th.original_image = pygame.image.load(os.path.join(DICT.asset_path, 'IMG_QDI.png')).convert_alpha()
+        th.original_image = VARIABLE.char_image["Qdi"]
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -89,7 +88,11 @@ class RandCircle:
             and th.timer % 2 == 0
         ):
             char = VARIABLE.main_char
-            sprite = Base((9, 9, 0), th.color, 2)
+            sprite = Base(
+                (9, 9, 0),
+                th.color,
+                2
+            )
             sprite.speed = 3.5
             sprite.rect.center = (random.randint(120, 465), random.randint(15, 255))
             x1 = char.rect.centerx
