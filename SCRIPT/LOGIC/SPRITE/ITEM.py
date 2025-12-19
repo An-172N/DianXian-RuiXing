@@ -3,18 +3,16 @@ import random
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-
 
 def combo_counter() -> None:
-    VARIABLE.comboo_timer -= 1
+    VARIABLE.combo_timer -= 1
 
-    if VARIABLE.comboo_timer <= 0:
+    if VARIABLE.combo_timer <= 0:
         if 0 < VARIABLE.combo <= 15:
             VARIABLE.score += 2 ** VARIABLE.combo
 
         VARIABLE.combo = 0
-        VARIABLE.comboo_timer = 90
+        VARIABLE.combo_timer = 120
     else:
         if VARIABLE.combo >= 16:
             VARIABLE.score += 2 ** VARIABLE.combo
@@ -24,7 +22,7 @@ def combo_counter() -> None:
 def item_spawn_regular() -> None:
     VARIABLE.item_spawn_timer += 1
     if VARIABLE.item_spawn_timer >= 45:
-        sprite = Base(
+        sprite = DICT.char_dict[7](
             (9, 9, 2),
             DICT.color_dict[6],
             1,
@@ -38,7 +36,7 @@ def item_spawn_regular() -> None:
 
 
 def item_collide(source) -> None:
-    VARIABLE.comboo_timer = 90
+    VARIABLE.combo_timer = 120
     if VARIABLE.shoot_cnt <= 5:
         VARIABLE.shoot_cnt += 1
 
@@ -59,7 +57,7 @@ def item_collide(source) -> None:
 
 def item_spawn(brick_pos) -> None:
     if random.random() <= 0.125:
-        sprite = Base(
+        sprite = DICT.char_dict[7](
             (9, 9, 2),
             DICT.color_dict[5],
             1,
@@ -70,7 +68,7 @@ def item_spawn(brick_pos) -> None:
         VARIABLE.item_group.add(sprite)
         VARIABLE.total_spawn_s_power += 1
     elif random.random() <= 0.007:
-        sprite = Base(
+        sprite = DICT.char_dict[7](
             (9, 9, 2),
             DICT.color_dict[2],
             1,

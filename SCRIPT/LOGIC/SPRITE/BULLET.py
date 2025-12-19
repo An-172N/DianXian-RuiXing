@@ -4,10 +4,9 @@ import itertools
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.LOGIC.SPRITE.BRICK as BRICK
 import SCRIPT.LOGIC.SPRITE.BARRAGE as BARRAGE
-
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-from SCRIPT.LOGIC.SPRITE import ITEM
-from SCRIPT.LOGIC.PROCESS import STAGE
+import SCRIPT.LOGIC.SPRITE.PARTICLE as PARTICLE
+import SCRIPT.LOGIC.SPRITE.ITEM as ITEM
+import SCRIPT.LOGIC.PROCESS.STAGE as STAGE
 
 
 def spawn_bullet() -> None:
@@ -28,17 +27,13 @@ def spawn_bullet() -> None:
                 j
             )
 
-        rands = random.randint(0, 45)
-        for i in range(0 + rands, 360 + rands, 60):
-            sprite = Base(
-                (2, 2, 0),
-                VARIABLE.main_char.color,
-                1
-            )
-            sprite.speed = random.randint(6, 10)
-            sprite.rect.center = VARIABLE.main_char.rect.center
-            sprite.current_angle = i
-            VARIABLE.particle_group.add(sprite)
+        PARTICLE.spawn_particles(
+            2,
+            2,
+            VARIABLE.main_char.color,
+            VARIABLE.main_char.rect.center,
+            random.randint(6, 10)
+        )
 
         VARIABLE.shoot_cnt -= 1
 
@@ -46,9 +41,9 @@ def spawn_bullet() -> None:
 def single_bomb() -> None:
     if (
         not VARIABLE.is_s_divide
-        and VARIABLE.s_power >= 16
+        and VARIABLE.s_power >= 12
     ):
-        VARIABLE.s_power -= 16
+        VARIABLE.s_power -= 12
         VARIABLE.is_s_divide = True
 
 
@@ -68,17 +63,13 @@ def bullet_collide(source, target) -> None:
         if hasattr(target, "bomb"):
             STAGE.shhm_lose()
 
-        rands = random.randint(0, 45)
-        for i in range(0 + rands, 360 + rands, 60):
-            sprite = Base(
-                (2, 2, 0),
-                target.color,
-                1
-            )
-            sprite.speed = random.randint(6, 10)
-            sprite.rect.center = target_pos
-            sprite.current_angle = i
-            VARIABLE.particle_group.add(sprite)
+        PARTICLE.spawn_particles(
+            2,
+            2,
+            target.color,
+            target_pos,
+            random.randint(6, 10)
+        )
             
         ITEM.item_spawn(target_pos)
         BRICK.brick_death(target)

@@ -56,7 +56,10 @@ class Base(pygame.sprite.Sprite):
             th.is_rotated = True
         
         rad = math.radians(th.current_angle)
-        th.x, th.y = FUNC.Calculate.delta_tuple((th.x, th.y), (math.sin(rad) * th.speed, math.cos(rad) * th.speed))
+        th.x, th.y = FUNC.Calculate.delta_tuple(
+            (th.x, th.y),
+            (math.sin(rad) * th.speed, math.cos(rad) * th.speed)
+        )
         th.rect.center = (th.x, th.y)
 
         if th.shape == 1 and th.height > 16:

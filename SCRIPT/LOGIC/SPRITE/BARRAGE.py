@@ -5,12 +5,14 @@ import SCRIPT.FUNC as FUNC
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-
 
 def circle_barrage(brick) -> None:
     char = VARIABLE.main_char
-    sprite = Base((9, 9, 0), brick.color, brick.shape)
+    sprite = DICT.char_dict[7](
+        (9, 9, 0),
+        brick.color,
+        brick.shape
+    )
     sprite.speed = 2
     sprite.rect.center = brick.rect.center
     x1 = char.rect.centerx
@@ -25,8 +27,12 @@ def circle_barrage(brick) -> None:
 def polygon_barrage(brick) -> None:
     char = VARIABLE.main_char
     for i in range(char.rect.centerx - 32, char.rect.centerx + 33, 64):
-        sprite = Base((9, 9, 0), brick.color, brick.shape)
-        sprite.speed = 2.5
+        sprite = DICT.char_dict[7](
+            (9, 9, 0),
+            brick.color,
+            brick.shape
+        )
+        sprite.speed = 2.25
         sprite.rect.center = brick.rect.center
         x2 = sprite.rect.centerx
         y1 = char.rect.centery
@@ -46,7 +52,11 @@ def line_barrage(_) -> None:
     dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
                 
-    sprite = Base((2, distance, 0), DICT.color_dict[6], 1)
+    sprite = DICT.char_dict[7](
+        (2, distance, 0),
+        DICT.color_dict[6],
+        1
+    )
     sprite.speed = 0
     x = start_pos[0] + dpos[0] / 2
     y = start_pos[1] + dpos[1] / 2
@@ -59,8 +69,12 @@ def line_barrage(_) -> None:
 def point_barrage(brick) -> None:
     char = VARIABLE.main_char
     for _ in range(3):
-        sprite = Base((9, 9, 0), brick.color, brick.shape)
-        sprite.speed = 3.5
+        sprite = DICT.char_dict[7](
+            (9, 9, 0),
+            brick.color,
+            brick.shape
+        )
+        sprite.speed = 3
         sprite.rect.center = (random.randint(120, 465), random.randint(15, 250))
         x1 = char.rect.centerx
         x2 = sprite.rect.centerx

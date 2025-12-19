@@ -7,8 +7,6 @@ import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.FUNC as FUNC
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-
 
 class Hro(pygame.sprite.Sprite):
     def __init__(th):
@@ -114,7 +112,7 @@ class PolyX:
                 current_pos = start_pos + delta_pos * current_step
                 
                 for j in range(45, 136, 90):
-                    sprite = Base(
+                    sprite = DICT.char_dict[7](
                         (9, 9, 0),
                         th.color,
                         0
@@ -134,7 +132,7 @@ class PolyX:
             pos = th.rect.center
             char_pos = VARIABLE.main_char.rect.center
             for i in range(-30, 31, 30):
-                sprite = Base(
+                sprite = DICT.char_dict[7](
                     (9, 9, 0),
                     th.color,
                     0

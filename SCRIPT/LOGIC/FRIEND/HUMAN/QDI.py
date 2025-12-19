@@ -7,8 +7,6 @@ import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.FUNC as FUNC
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-
 
 class Qdi(pygame.sprite.Sprite):
     def __init__(th):
@@ -68,7 +66,7 @@ class RandCircle:
                 x = random.randint(120, 465)
                 y = random.randint(15, 250)
                 pos = (x, y)
-                sprite = Base(
+                sprite = DICT.char_dict[7](
                     (9, 9, 0),
                     th.color,
                     2
@@ -88,7 +86,7 @@ class RandCircle:
             and th.timer % 2 == 0
         ):
             char = VARIABLE.main_char
-            sprite = Base(
+            sprite = DICT.char_dict[7](
                 (9, 9, 0),
                 th.color,
                 2

@@ -4,8 +4,7 @@ import pygame
 
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.DICT as DICT
-
-from SCRIPT.LOGIC.FRIEND.BASE import Base
+import SCRIPT.LOGIC.SPRITE.PARTICLE as PARTICLE
 
 
 def move_plane() -> None:
@@ -67,17 +66,13 @@ def collide_barrage(barrage) -> None:
 
 
 def life_logic() -> None:
-    rands = random.randint(0, 30)
-    for i in range(0 + rands, 360 + rands, 60):
-        sprite = Base(
-            (8, 8, 0),
-            VARIABLE.main_char.color,
-            1
-        )
-        sprite.speed = random.randint(8, 12)
-        sprite.rect.center = VARIABLE.main_char.rect.center
-        sprite.current_angle = i
-        VARIABLE.particle_group.add(sprite)
+    PARTICLE.spawn_particles(
+        8,
+        9,
+        VARIABLE.main_char.color,
+        VARIABLE.main_char.rect.center,
+        random.randint(12, 16)
+    )
         
     VARIABLE.no_hurt = 0
     VARIABLE.player -= 1

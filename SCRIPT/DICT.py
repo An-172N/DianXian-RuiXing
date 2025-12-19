@@ -9,6 +9,7 @@ from SCRIPT.LOGIC.FRIEND.HUMAN.HRO import Hro
 from SCRIPT.LOGIC.FRIEND.HUMAN.NRE import Nre
 from SCRIPT.LOGIC.FRIEND.HUMAN.QDI import Qdi
 from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecisionPoint
+from SCRIPT.LOGIC.FRIEND.BASE import Base
 
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.LOGIC as LOGIC
@@ -32,7 +33,8 @@ char_dict = {
     3: Nre,
     4: Qdi,
     5: Kli,
-    6: DecisionPoint
+    6: DecisionPoint,
+    7: Base
 }
 
 keydown_game_dict = {

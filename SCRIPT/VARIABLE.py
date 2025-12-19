@@ -59,7 +59,7 @@ shoot_cnt = 0
 can_shoot = True
 
 item_spawn_timer = 0
-comboo_timer = 90
+combo_timer = 120
 combo = 0
 
 player = 4

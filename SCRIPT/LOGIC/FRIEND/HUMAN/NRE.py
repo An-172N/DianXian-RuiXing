@@ -7,8 +7,6 @@ import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.FUNC as FUNC
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-
 
 class Nre(pygame.sprite.Sprite):
     def __init__(th):
@@ -85,7 +83,7 @@ class StraightThunder:
             dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
 
-            sprite = Base(
+            sprite = DICT.char_dict[7](
                 (2, distance, 0),
                 DICT.color_dict[6],
                 1
@@ -111,7 +109,7 @@ class StraightThunder:
                 dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
 
-                sprite = Base(
+                sprite = DICT.char_dict[7](
                     (2, distance, 0),
                     DICT.color_dict[6],
                     1

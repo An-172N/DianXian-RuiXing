@@ -15,7 +15,7 @@ def save_file() -> None:
     if not os.path.exists(folder):
         os.makedirs(folder)
 
-    dump = ["RuiShan Fuxing Log"]
+    dump = ["RuiShan FuXing Log"]
     stage = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
     dump.append(
         {

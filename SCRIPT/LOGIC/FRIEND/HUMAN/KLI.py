@@ -3,7 +3,6 @@ import pygame
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
 from SCRIPT.DRAW import ShapeDraw
 
 
@@ -45,7 +44,7 @@ class RectRaining:
             th.bomb_cnt < 6
         ):
             for i in range(120, 466, 15):
-                sprite = Base(
+                sprite = DICT.char_dict[7](
                     (15, 15, 0),
                     th.color,
                     1,
@@ -77,7 +76,7 @@ class RectRaining:
         ]
 
         for bullet_info in bullet_type:
-            sprite = Base(
+            sprite = DICT.char_dict[7](
                 (2, 15, 0),
                 th.color,
                 1,

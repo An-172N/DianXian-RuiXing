@@ -8,8 +8,6 @@ import SCRIPT.FUNC as FUNC
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-
 
 def next_level() -> None:
     VARIABLE.score += VARIABLE.total_s_power * 512
@@ -31,7 +29,6 @@ def level_load() -> None:
             VARIABLE.char = chs_shhm()
             VARIABLE.char.rect.center = (292, 60)
             VARIABLE.text = load_text(VARIABLE.stage)
-            VARIABLE.text_number = 0
             VARIABLE.talk = True
 
             VARIABLE.brick_group.add(VARIABLE.char)
@@ -55,7 +52,7 @@ def level_summary() -> None:
         len(VARIABLE.brick_group) == 0
         and not VARIABLE.talk
     ):
-        if VARIABLE.timer <= 90:
+        if VARIABLE.timer <= 120:
             VARIABLE.timer += 1
             VARIABLE.summary = True
         else:
@@ -109,7 +106,7 @@ def load_stage(row, line) -> None:
             x = 127 + i * 15
             y = 22 + row * 15
 
-            brick = Base(
+            brick = DICT.char_dict[7](
                 (15, 15, 2),
                 c,
                 shape

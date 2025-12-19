@@ -7,8 +7,6 @@ import pygame
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.LOGIC.FRIEND.BASE import Base
-
 
 class Ono(pygame.sprite.Sprite):
     def __init__(th):
@@ -94,7 +92,7 @@ class AutFroDiffuse:
                 x = rect.centerx + 32 * math.cos(math.radians(i))
                 y = rect.centery + 32 * math.sin(math.radians(i))
                 pos = (x, y)
-                sprite = Base(
+                sprite = DICT.char_dict[7](
                     (9, 9, 0),
                     th.color,
                     2
@@ -110,7 +108,7 @@ class AutFroDiffuse:
         if th.bullet_cnt < 1:
             pos = rect.center
             for i in range(0, 360, 15):
-                sprite = Base(
+                sprite = DICT.char_dict[7](
                     (9, 9, 0),
                     th.color,
                     2
