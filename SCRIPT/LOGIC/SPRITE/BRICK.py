@@ -4,7 +4,7 @@ import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
 
-def brick_death(brick) -> None:
+def brick_blast(brick) -> None:
     if brick.color == DICT.color_dict[6]:
         process_dict = {
             1: circle_brick,
@@ -19,6 +19,10 @@ def brick_death(brick) -> None:
             VARIABLE.bullet_group,
             16
         )
+
+
+def brick_death(target):
+    target.is_die = True
 
 
 def circle_brick(sprite, source, sprite_group, speed) -> None:

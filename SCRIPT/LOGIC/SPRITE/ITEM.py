@@ -55,7 +55,8 @@ def item_collide(source) -> None:
     source.kill()
 
 
-def item_spawn(brick_pos) -> None:
+def item_spawn(brick) -> None:
+    brick_pos = brick.rect.center
     if random.random() <= 0.125:
         sprite = DICT.char_dict[7](
             (9, 9, 2),

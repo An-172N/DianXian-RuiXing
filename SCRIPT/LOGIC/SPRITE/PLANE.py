@@ -1,10 +1,6 @@
-import random
-
 import pygame
 
 import SCRIPT.VARIABLE as VARIABLE
-import SCRIPT.DICT as DICT
-import SCRIPT.LOGIC.SPRITE.PARTICLE as PARTICLE
 
 
 def move_plane() -> None:
@@ -51,29 +47,11 @@ def turn_side() -> None:
         )
 
 
-def collide_barrage(barrage) -> None:
-    if (
-        barrage.color != DICT.color_dict[6]
-        and not (
-            VARIABLE.collide or
-            VARIABLE.is_s_divide
-        )
-    ):
-        VARIABLE.collide = True
-        life_logic()
-
-        barrage.kill()
+def collide_barrage() -> None:
+    VARIABLE.collide = True
 
 
 def life_logic() -> None:
-    PARTICLE.spawn_particles(
-        8,
-        9,
-        VARIABLE.main_char.color,
-        VARIABLE.main_char.rect.center,
-        random.randint(12, 16)
-    )
-        
     VARIABLE.no_hurt = 0
     VARIABLE.player -= 1
     VARIABLE.s_flash += 1
