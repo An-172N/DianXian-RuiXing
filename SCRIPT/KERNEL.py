@@ -1,5 +1,4 @@
 import argparse
-import random
 import sys
 import os
 
@@ -11,11 +10,11 @@ import SCRIPT.VARIABLE as VARIABLE
 
 
 class Game:
-    def __init__(th, screen):
+    def __init__(th, screen, clock):
         pygame.display.set_icon(pygame.image.load(os.path.join(DICT.asset_path, 'IMG_ICON.png')))
 
         th.screen = screen
-        th.clock = pygame.time.Clock()
+        th.clock = clock
         th.font = pygame.font.Font(os.path.join(DICT.asset_path, 'FNT\FNT_GNUUNIFONT.otf'), 15)
 
         th.plane_mgr = LOGIC.PlaneMgr
@@ -30,7 +29,8 @@ class Game:
 
         th.option()
 
-    def option(th) -> None:
+    @staticmethod
+    def option() -> None:
         parser = argparse.ArgumentParser()
         parser.add_argument(
             '--stage',
@@ -93,7 +93,7 @@ class Game:
                             2,
                             VARIABLE.main_char.color,
                             VARIABLE.main_char.rect.center,
-                            random.randint(6, 10)
+                            (6, 12)
                         )
             
                     VARIABLE.bullet_group.update()
@@ -127,7 +127,7 @@ class Game:
                                 9,
                                 VARIABLE.main_char.color,
                                 VARIABLE.main_char.rect.center,
-                                random.randint(12, 16)
+                                (12, 16)
                             )
                             th.plane_mgr.life_logic()
 
@@ -154,7 +154,7 @@ class Game:
                                     2,
                                     brick.color,
                                     brick.rect.center,
-                                    random.randint(6, 10)
+                                    (6, 12)
                                 )
                                 if hasattr(brick, "bomb"):
                                     th.stage_mgr.shhm_lose()

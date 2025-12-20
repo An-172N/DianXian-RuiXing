@@ -13,7 +13,8 @@ screen = pygame.display.set_mode(
     pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN|pygame.SCALED,
     vsync=1
 )
+clock = pygame.time.Clock()
 
 import SCRIPT
 
-SCRIPT.Game(screen).update()
+SCRIPT.Game(screen, clock).update()

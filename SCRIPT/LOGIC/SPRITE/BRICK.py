@@ -82,7 +82,7 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
 def line_brick(sprite, source, sprite_group, _) -> None:
     for _ in range(12):
         current_sprite = sprite(
-            (2, random.randint(64, 192), 0),
+            (2, random.randint(64, 256), 0),
             DICT.color_dict[5],
             1, "bullet"
         )

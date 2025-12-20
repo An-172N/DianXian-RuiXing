@@ -12,7 +12,7 @@ def spawn_particles(width, height, color, pos, speed):
             color,
             1
         )
-        sprite.speed = speed
+        sprite.speed = random.randint(speed[0], speed[1])
         sprite.rect.center = pos
         sprite.current_angle = i
         VARIABLE.particle_group.add(sprite)
