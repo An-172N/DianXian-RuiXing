@@ -40,7 +40,7 @@ class Qdi(pygame.sprite.Sprite):
 
         if th.timer % 120 == 0:
             th.target_x = random.choice([150, 220, 292, 365, 435])
-            th.bomb.bullet_cnt = 0
+            th.bomb.bullet_counter = 0
             th.is_free = not th.is_free
             th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
@@ -55,13 +55,13 @@ class RandCircle:
     def __init__(th, color):
         th.color = color
 
-        th.bullet_cnt = 0
+        th.bullet_counter = 0
         th.timer = 0
 
     def free(th) -> None:
         th.timer += 1
 
-        if th.bullet_cnt < 1:
+        if th.bullet_counter < 1:
             for _ in range(48):
                 x = random.randint(120, 465)
                 y = random.randint(15, 250)
@@ -76,13 +76,13 @@ class RandCircle:
                 sprite.current_angle = random.randint(0, 360)
                 VARIABLE.barrage_group.add(sprite)
 
-            th.bullet_cnt += 1
+            th.bullet_counter += 1
 
     def fire(th) -> None:
         th.timer += 1
 
         if (
-            th.bullet_cnt < 6
+            th.bullet_counter < 6
             and th.timer % 2 == 0
         ):
             char = VARIABLE.main_char
@@ -101,4 +101,4 @@ class RandCircle:
             sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
             VARIABLE.barrage_group.add(sprite)
 
-            th.bullet_cnt += 1
+            th.bullet_counter += 1

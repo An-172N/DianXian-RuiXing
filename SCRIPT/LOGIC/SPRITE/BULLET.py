@@ -17,7 +17,7 @@ def spawn_bullet() -> None:
             j
         )
 
-    VARIABLE.shoot_cnt -= 1
+    VARIABLE.shoot_counter -= 1
 
 
 def single_bomb() -> None:

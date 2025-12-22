@@ -41,26 +41,12 @@ class Nre(pygame.sprite.Sprite):
         if th.timer % 120 == 0:
             th.target_x = random.choice([150, 220, 292, 365, 435])
 
-            th.bomb.bullet_cnt = 0
+            th.bomb.bullet_counter = 0
             th.bomb.timer = 0
             th.is_free = not th.is_free
             th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
-        dir = pygame.math.Vector2(th.target_x - th.rect.centerx, 0)
-        current_pos = pygame.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pygame.math.Vector2(th.target_x, 60)
-
-        delta_vec = target_pos - current_pos
-        distance = delta_vec.length()
-
-        if distance < 4:
-            th.rect.center = target_pos
-        else:
-            if distance > 0:
-                dir.normalize_ip()
-
-            new_pos = current_pos + dir * 4
-            th.rect.center = new_pos
+        DICT.char_dict[7].vector(th)
 
         if not th.is_free:
             th.bomb.fire()
@@ -71,12 +57,12 @@ class Nre(pygame.sprite.Sprite):
 class StraightThunder:
     def __init__(th):
         th.timer = 0
-        th.bullet_cnt = 0
+        th.bullet_counter = 0
 
     def free(th) -> None:
         th.timer += 1
 
-        if th.timer % 1 == 0 and th.bullet_cnt < 12:
+        if th.timer % 1 == 0 and th.bullet_counter < 12:
             start_pos = (random.randint(80, 500), 0)
             end_pos = (random.randint(100, 490), 360)
 
@@ -89,17 +75,15 @@ class StraightThunder:
                 1
             )
             sprite.speed = 0
-            x = start_pos[0] + dpos[0] / 2
-            y = start_pos[1] + dpos[1] / 2
-            sprite.rect.center = (x, y)
+            sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
             sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
             sprite.update()
             VARIABLE.barrage_group.add(sprite)
 
-            th.bullet_cnt += 1
+            th.bullet_counter += 1
 
     def fire(th) -> None:
-        if th.bullet_cnt < 1:
+        if th.bullet_counter < 1:
             char_pos = VARIABLE.main_char.rect.center
 
             for i in range(char_pos[0] - 30, char_pos[0] + 31, 20):
@@ -115,11 +99,9 @@ class StraightThunder:
                     1
                 )
                 sprite.speed = 0
-                x = start_pos[0] + dpos[0] / 2
-                y = start_pos[1] + dpos[1] / 2
-                sprite.rect.center = (x, y)
+                sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
                 sprite.current_angle = 0
                 sprite.update()
                 VARIABLE.barrage_group.add(sprite)
 
-            th.bullet_cnt += 1
+            th.bullet_counter += 1

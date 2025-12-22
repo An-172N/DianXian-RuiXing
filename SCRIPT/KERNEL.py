@@ -85,7 +85,7 @@ class Game:
                     th.item_mgr.item_spawn_regular()
                     if (
                         VARIABLE.can_shoot
-                        and VARIABLE.shoot_cnt > 0
+                        and VARIABLE.shoot_counter > 0
                     ):
                         th.bullet_mgr.spawn_bullet()
                         th.particle_mgr.spawn_particles(

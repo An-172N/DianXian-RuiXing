@@ -37,8 +37,8 @@ def item_spawn_regular() -> None:
 
 def item_collide(source) -> None:
     VARIABLE.combo_timer = 120
-    if VARIABLE.shoot_cnt <= 5:
-        VARIABLE.shoot_cnt += 1
+    if VARIABLE.shoot_counter <= 5:
+        VARIABLE.shoot_counter += 1
 
     if source.type == 1:
         if VARIABLE.s_power < 32:

@@ -72,7 +72,7 @@ def invinc() -> None:
                 VARIABLE.is_s_divide = False
                 VARIABLE.collide = False
                 VARIABLE.cooldown_time = 0
-                VARIABLE.main_char.bomb.bomb_cnt = 0
+                VARIABLE.main_char.bomb.bomb_counter = 0
                 VARIABLE.main_char.bomb.timer = 0
                 VARIABLE.total_s_power = 0
 

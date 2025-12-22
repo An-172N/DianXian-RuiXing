@@ -21,7 +21,7 @@ def show_situ(screen, font, clock) -> None:
     flash = f"闪　{VARIABLE.player:02d}"
     combo = (
         f"连　{VARIABLE.combo:02d} , "
-        f"{VARIABLE.shoot_cnt:02d}"
+        f"{VARIABLE.shoot_counter:02d}"
     )
 
     situ(

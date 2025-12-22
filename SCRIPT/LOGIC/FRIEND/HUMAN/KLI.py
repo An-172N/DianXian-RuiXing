@@ -32,7 +32,7 @@ class RectRaining:
     def __init__(th, color):
         th.color = color
 
-        th.bomb_cnt = 0
+        th.bomb_counter = 0
         th.timer = 0
 
     def free(th) -> None:
@@ -41,7 +41,7 @@ class RectRaining:
         if (
             th.timer >= 30 and
             th.timer % 1 == 0 and
-            th.bomb_cnt < 6
+            th.bomb_counter < 6
         ):
             for i in range(120, 466, 15):
                 sprite = DICT.char_dict[7](
@@ -56,7 +56,7 @@ class RectRaining:
                 sprite.rect.center = (i, 0)
                 VARIABLE.bullet_group.add(sprite)
 
-            th.bomb_cnt += 1
+            th.bomb_counter += 1
 
     def fire(th, dx, dy, angle) -> None:
         left = VARIABLE.main_char.rect.left

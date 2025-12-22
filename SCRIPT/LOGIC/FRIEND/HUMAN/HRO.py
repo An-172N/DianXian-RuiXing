@@ -41,27 +41,13 @@ class Hro(pygame.sprite.Sprite):
         if th.timer % 120 == 0:
             th.target_x = random.choice([150, 220, 292, 365, 435])
 
-            th.bomb.bullet_cnt = 0
+            th.bomb.bullet_counter = 0
             th.bomb.dl = 0
             th.is_free = not th.is_free
             th.is_choice = False
             th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
-        dir = pygame.math.Vector2(th.target_x - th.rect.centerx, 0)
-        current_pos = pygame.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pygame.math.Vector2(th.target_x, 60)
-
-        delta_vec = target_pos - current_pos
-        distance = delta_vec.length()
-
-        if distance < 4:
-            th.rect.center = target_pos
-        else:
-            if distance > 0:
-                dir.normalize_ip()
-
-            new_pos = current_pos + dir * 4
-            th.rect.center = new_pos
+        DICT.char_dict[7].vector(th)
 
         if not th.is_free:
             th.bomb.fire()
@@ -74,7 +60,7 @@ class PolyX:
         th.color = color
         th.rect = rect
 
-        th.bullet_cnt = 0
+        th.bullet_counter = 0
         th.timer = 0
         th.dl = 0
 
@@ -97,7 +83,7 @@ class PolyX:
             }
         ]
 
-        if th.timer % 1 == 0 and th.bullet_cnt < 18:
+        if th.timer % 1 == 0 and th.bullet_counter < 18:
             for bullet_info in bullet_type:
                 start_pos = pygame.math.Vector2(292 + bullet_info['dx1'], 100 - bullet_info['dx2'])
                 end_pos = pygame.math.Vector2(292 - bullet_info['dy1'], 100 + bullet_info['dy2'])
@@ -108,7 +94,7 @@ class PolyX:
                 if distance > 0:
                     delta_pos.normalize_ip()
 
-                current_step = th.bullet_cnt * 24
+                current_step = th.bullet_counter * 24
                 current_pos = start_pos + delta_pos * current_step
                 
                 for j in range(45, 136, 90):
@@ -123,12 +109,12 @@ class PolyX:
                     sprite.current_angle = math.degrees(atan) + j + th.dl
                     VARIABLE.barrage_group.add(sprite)
         
-            th.bullet_cnt += 1
+            th.bullet_counter += 1
 
     def fire(th) -> None:
         th.timer += 1
 
-        if th.timer % 8 == 0 and th.bullet_cnt < 3:
+        if th.timer % 8 == 0 and th.bullet_counter < 3:
             pos = th.rect.center
             char_pos = VARIABLE.main_char.rect.center
             for i in range(-30, 31, 30):
@@ -144,4 +130,4 @@ class PolyX:
                 sprite.current_angle = math.degrees(atan) + i
                 VARIABLE.barrage_group.add(sprite)
 
-            th.bullet_cnt += 1
+            th.bullet_counter += 1

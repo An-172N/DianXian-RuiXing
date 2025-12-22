@@ -6,8 +6,8 @@ nuitka ^
     --lto=yes ^
     --windows-console-mode=disable ^
     --enable-plugin=anti-bloat ^
-    --file-version="0.8" ^
-    --product-version="0.8" ^
+    --file-version="1.0" ^
+    --product-version="1.0" ^
     --product-name="RuiXing ~ Thunder Out of the Mountain" ^
     --copyright="Copyright (c) 2025 An_172N" ^
     --windows-icon-from-ico=ASSET\IMG_ICON.png ^

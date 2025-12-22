@@ -41,26 +41,12 @@ class Ono(pygame.sprite.Sprite):
         if th.timer % 120 == 0:
             th.target_x = random.choice([150, 220, 292, 365, 435])
 
-            th.bomb.bullet_cnt = 0
+            th.bomb.bullet_counter = 0
             th.bomb.dl = 0
             th.is_free = not th.is_free
             th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
-        dir = pygame.math.Vector2(th.target_x - th.rect.centerx, 0)
-        current_pos = pygame.math.Vector2(th.rect.centerx, th.rect.centery)
-        target_pos = pygame.math.Vector2(th.target_x, 60)
-
-        delta_vec = target_pos - current_pos
-        distance = delta_vec.length()
-
-        if distance < 4:
-            th.rect.center = target_pos
-        else:
-            if distance > 0:
-                dir.normalize_ip()
-
-            new_pos = current_pos + dir * 4
-            th.rect.center = new_pos
+        DICT.char_dict[7].vector(th)
 
         if not th.is_free:
             th.bomb.fire(th.rect)
@@ -72,7 +58,7 @@ class AutFroDiffuse:
     def __init__(th, color):
         th.color = color
 
-        th.bullet_cnt = 0
+        th.bullet_counter = 0
         th.timer = 0
         th.dl = 0
 
@@ -81,7 +67,7 @@ class AutFroDiffuse:
 
         if (
             th.timer % 1 == 0 and
-            th.bullet_cnt < 12
+            th.bullet_counter < 12
         ):
             th.dl += 6
 
@@ -102,10 +88,10 @@ class AutFroDiffuse:
                 sprite.current_angle = j
                 VARIABLE.barrage_group.add(sprite)
 
-            th.bullet_cnt += 1
+            th.bullet_counter += 1
 
     def fire(th, rect) -> None:
-        if th.bullet_cnt < 1:
+        if th.bullet_counter < 1:
             pos = rect.center
             for i in range(0, 360, 15):
                 sprite = DICT.char_dict[7](
@@ -118,4 +104,4 @@ class AutFroDiffuse:
                 sprite.current_angle = i
                 VARIABLE.barrage_group.add(sprite)
 
-            th.bullet_cnt += 1
+            th.bullet_counter += 1
