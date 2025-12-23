@@ -143,7 +143,7 @@ class Game:
                             th.bullet_mgr.bullet_collide(bullet, brick)
                             if brick.hp <= 0:
                                 if (
-                                    bullet.type == "bullet"
+                                    bullet.type in ("bullet", "line")
                                     and getattr(brick, 'is_die', False)
                                 ):
                                     bullet.kill()

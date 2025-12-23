@@ -72,7 +72,8 @@ class StraightThunder:
             sprite = DICT.char_dict[7](
                 (2, distance, 0),
                 DICT.color_dict[6],
-                1
+                1,
+                "line"
             )
             sprite.speed = 0
             sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
@@ -96,7 +97,8 @@ class StraightThunder:
                 sprite = DICT.char_dict[7](
                     (2, distance, 0),
                     DICT.color_dict[6],
-                    1
+                    1,
+                    "line"
                 )
                 sprite.speed = 0
                 sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)

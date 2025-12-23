@@ -80,7 +80,7 @@ class Base(pygame.sprite.Sprite):
         )
         th.rect.center = (th.x, th.y)
 
-        if th.shape == 1 and th.height > 16:
+        if th.type is "line":
             th.timer += 1
 
             if th.timer >= 90:

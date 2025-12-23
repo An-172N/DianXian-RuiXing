@@ -145,52 +145,56 @@ def save_menu(screen, font) -> None:
 
 
 def full_menu(
-    sur, font,
+    surface, font,
     title="",
     text1="", text2="", text3="", text4="", text5="",
     key1="", key2="",
     other=""
 ) -> None:
     text_type = [
-        {"text": title, "pos": (128, 25)},
-        {"text": text1, "pos": (128, 75)},
-        {"text": text2, "pos": (128, 100)},
-        {"text": text3, "pos": (128, 125)},
-        {"text": text4, "pos": (128, 150)},
-        {"text": text5, "pos": (128, 175)},
-        {"text": key1, "pos": (390, 235)},
-        {"text": key2, "pos": (390, 285)},
-        {"text": other, "pos": (128, 320)}
+        {"text": title, "pos": (8, 10)},
+        {"text": text1, "pos": (8, 60)},
+        {"text": text2, "pos": (8, 85)},
+        {"text": text3, "pos": (8, 110)},
+        {"text": text4, "pos": (8, 135)},
+        {"text": text5, "pos": (8, 160)},
+        {"text": key1, "pos": (270, 220)},
+        {"text": key2, "pos": (270, 270)},
+        {"text": other, "pos": (8, 305)}
     ]
 
-    sur.blit(
-        DRAW.ShapeDraw(345, 330, 0, DICT.color_dict[7]).rect(),
+    menu_surface = DRAW.ShapeDraw(345, 330, 0, DICT.color_dict[7]).rect()
+
+    for text_info in text_type:
+        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
+        menu_surface.blit(text, text_info["pos"])
+
+    surface.blit(
+        menu_surface,
         (120, 15)
     )
-    
-    for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
-        sur.blit(text, text_info["pos"])
 
 
-def half_menu(sur, font, title, text1, text2) -> None:
+def half_menu(surface, font, title, text1, text2) -> None:
     text_type = [
-        {"text": title, "pos": (125, 268)},
-        {"text": text1, "pos": (125, 293)},
-        {"text": text2, "pos": (125, 318)}
+        {"text": title, "pos": (8, 8)},
+        {"text": text1, "pos": (8, 33)},
+        {"text": text2, "pos": (8, 58)}
     ]
 
-    sur.blit(
-        DRAW.ShapeDraw(345, 85, 0, DICT.color_dict[7]).rect(),
-        (120, 260)
-    )
-    
+    menu_surface = DRAW.ShapeDraw(345, 85, 0, DICT.color_dict[7]).rect()
+
     for text_info in text_type:
         text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
-        sur.blit(text, text_info["pos"])
+        menu_surface.blit(text, text_info["pos"])
+
+    surface.blit(
+        menu_surface,
+        (120, 260)
+    )
 
 
-def situ(sur, font, text1, text2, text3, text4, fps) -> None:
+def situ(surface, font, text1, text2, text3, text4, fps) -> None:
     text_type = [
         {"text": text1, "pos": (8, 25)},
         {"text": text2, "pos": (8, 270)},
@@ -201,4 +205,4 @@ def situ(sur, font, text1, text2, text3, text4, fps) -> None:
     
     for text_info in text_type:
         text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
-        sur.blit(text, text_info["pos"])
+        surface.blit(text, text_info["pos"])

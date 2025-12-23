@@ -84,7 +84,8 @@ def line_brick(sprite, source, sprite_group, _) -> None:
         current_sprite = sprite(
             (2, random.randint(64, 256), 0),
             DICT.color_dict[5],
-            1, "bullet"
+            1,
+            "line"
         )
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 6
