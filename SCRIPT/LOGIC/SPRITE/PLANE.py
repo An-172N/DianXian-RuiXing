@@ -5,9 +5,9 @@ import SCRIPT.VARIABLE as VARIABLE
 
 def move_plane() -> None:
     if VARIABLE.move_right:
-        VARIABLE.main_char.rect.x += 1 if VARIABLE.is_slow else 3
+        VARIABLE.main_char.rect.x += 1.5 if VARIABLE.is_slow else 3.5
     if VARIABLE.move_left:
-        VARIABLE.main_char.rect.x -= 1 if VARIABLE.is_slow else 3
+        VARIABLE.main_char.rect.x -= 1.5 if VARIABLE.is_slow else 3.5
 
     if VARIABLE.main_char.rect.left < VARIABLE.window.left:
         VARIABLE.main_char.rect.left = VARIABLE.window.left
@@ -20,10 +20,8 @@ def move_plane() -> None:
 def turn_side() -> None:
     turn_side_image = VARIABLE.main_char.original_image.subsurface(
         (
-            12,
-            0,
-            12,
-            26
+            12, 0,
+            12, 26
         )
     )
     flipped_image = pygame.transform.flip(
