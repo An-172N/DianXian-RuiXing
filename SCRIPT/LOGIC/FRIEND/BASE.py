@@ -15,7 +15,7 @@ class Base(pygame.sprite.Sprite):
     LINE = 3
 
     @staticmethod
-    def vector(sprite) -> None:
+    def vector(sprite, speed) -> None:
         dir = pygame.math.Vector2(sprite.target_x - sprite.rect.centerx, 0)
         current_pos = pygame.math.Vector2(sprite.rect.centerx, sprite.rect.centery)
         target_pos = pygame.math.Vector2(sprite.target_x, 60)
@@ -23,13 +23,13 @@ class Base(pygame.sprite.Sprite):
         delta_vec = target_pos - current_pos
         distance = delta_vec.length()
 
-        if distance < 4:
+        if distance < speed:
             sprite.rect.center = target_pos
         else:
             if distance > 0:
                 dir.normalize_ip()
 
-            new_pos = current_pos + dir * 4
+            new_pos = current_pos + dir * speed
             sprite.rect.center = new_pos
 
     def __init__(th, value, color, shape, type=0):

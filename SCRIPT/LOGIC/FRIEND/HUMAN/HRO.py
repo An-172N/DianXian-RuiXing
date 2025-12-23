@@ -47,7 +47,7 @@ class Hro(pygame.sprite.Sprite):
             th.is_choice = False
             th.choice = random.choice([th.bomb.fire, th.bomb.free])
 
-        DICT.char_dict[7].vector(th)
+        DICT.char_dict[7].vector(th, 4.5)
 
         if not th.is_free:
             th.bomb.fire()
