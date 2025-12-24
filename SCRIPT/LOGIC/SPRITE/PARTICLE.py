@@ -10,7 +10,8 @@ def spawn_particles(width, height, color, pos, speed):
         sprite = DICT.char_dict[7](
             (width, height, 0),
             color,
-            1
+            1,
+            "particle"
         )
         sprite.speed = random.randint(speed[0], speed[1])
         sprite.rect.center = pos

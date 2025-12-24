@@ -79,9 +79,9 @@ class AutFroDiffuse:
                 y = rect.centery + 32 * math.sin(math.radians(i))
                 pos = (x, y)
                 sprite = DICT.char_dict[7](
-                    (9, 9, 0),
-                    th.color,
-                    2
+                    color=th.color,
+                    shape=2,
+                    type="barrage"
                 )
                 sprite.speed = 3.5
                 sprite.rect.center = pos
@@ -95,9 +95,9 @@ class AutFroDiffuse:
             pos = rect.center
             for i in range(0, 360, 15):
                 sprite = DICT.char_dict[7](
-                    (9, 9, 0),
-                    th.color,
-                    2
+                    color=th.color,
+                    shape=2,
+                    type="barrage"
                 )
                 sprite.speed = 4
                 sprite.rect.center = pos

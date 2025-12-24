@@ -4,15 +4,13 @@ import pygame
 
 import SCRIPT.FUNC as FUNC
 import SCRIPT.DICT as DICT
-
-from SCRIPT.DRAW import ShapeDraw
+import SCRIPT.VARIABLE as VARIABLE
 
 
 class Base(pygame.sprite.Sprite):
     POLYGON = 0
     RECT = 1
     CIRCLE = 2
-    LINE = 3
 
     @staticmethod
     def vector(sprite, speed) -> None:
@@ -32,7 +30,7 @@ class Base(pygame.sprite.Sprite):
             new_pos = current_pos + dir * speed
             sprite.rect.center = new_pos
 
-    def __init__(th, value, color, shape, type=0):
+    def __init__(th, value=(0, 0, 0), color=(0, 0, 0), shape=0, type="barrage"):
         super().__init__()
         th.width = value[0]
         th.height = value[1]
@@ -40,8 +38,6 @@ class Base(pygame.sprite.Sprite):
         th.color = color
         th.type = type
         th.shape = shape
-
-        th.base_draw = ShapeDraw(th.width, th.height, th.border, th.color)
 
         th.current_angle = 0
         th.speed = 0
@@ -56,12 +52,44 @@ class Base(pygame.sprite.Sprite):
 
     def get_shape(th, shape) -> None:
         shape_dict = {
-            th.POLYGON: th.base_draw.polygon,
-            th.RECT: th.base_draw.rect,
-            th.CIRCLE: th.base_draw.circle,
+            th.POLYGON: th.polygon,
+            th.RECT: th.rectangle,
+            th.CIRCLE: th.circle,
         }
 
         return shape_dict[shape]()
+    
+    def polygon(self) -> pygame.Surface:
+        if self.type is "brick":
+            return VARIABLE.sprite_image[f"P_BR_{self.color}"]
+        else:
+            return VARIABLE.sprite_image[f"P_BA_{self.color}"]
+
+    def rectangle(self) -> pygame.Surface:
+        type_dict = {
+            "brick": lambda: VARIABLE.sprite_image[f"R_BR_{self.color}"],
+            "barrage": lambda:VARIABLE.sprite_image[f"R_BA_{self.color}"],
+            "bomb": lambda: VARIABLE.sprite_image[f"KLI_BOMB"],
+            "bullet": lambda: VARIABLE.sprite_image[f"KLI_BULLET"],
+            "bullet-cross": lambda: VARIABLE.sprite_image[f"KLI_BULLET"],
+            "power": lambda: VARIABLE.sprite_image[f"R_IT_{self.color}"],
+            "flash": lambda: VARIABLE.sprite_image[f"R_IT_{self.color}"],
+            "fire": lambda: VARIABLE.sprite_image[f"R_IT_{self.color}"],
+            "dec": lambda: VARIABLE.sprite_image[f"DEC"]
+        }
+
+        if self.type in type_dict:
+            return type_dict[self.type]()
+        else:
+            surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            pygame.draw.rect(surface, self.color, surface.get_rect(), self.border)
+            return surface
+
+    def circle(self) -> pygame.Surface:
+        if self.type is "brick":
+            return VARIABLE.sprite_image[f"C_BR_{self.color}"]
+        else:
+            return VARIABLE.sprite_image[f"C_BA_{self.color}"]
     
     def update(th) -> None:
         if not th.is_rotated:

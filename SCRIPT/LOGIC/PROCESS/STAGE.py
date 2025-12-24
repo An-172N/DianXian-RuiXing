@@ -34,7 +34,7 @@ def level_load() -> None:
             VARIABLE.brick_group.add(VARIABLE.char)
         else:
             for i in FUNC.Process.process_file(
-                os.path.join(DICT.asset_path, f"STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
+                os.path.join(DICT.asset_path, f"STAGE\STG_{VARIABLE.stage}-{VARIABLE.level}.stg"),
                 'ascii',
                 0,
                 load_stage
@@ -107,10 +107,9 @@ def load_stage(row, line) -> None:
             y = 22 + row * 15
 
             brick = DICT.char_dict[7](
-                (15, 15, 2),
-                c,
-                shape,
-                "brick"
+                color=c,
+                shape=shape,
+                type="brick"
             )
 
             if not hasattr(brick, "hp"):
@@ -121,7 +120,7 @@ def load_stage(row, line) -> None:
 
 
 def load_text(stage) -> str:
-    file = os.path.join(DICT.asset_path, f"TALK_{stage}.json")
+    file = os.path.join(DICT.asset_path, f"JSON\TALK_{stage}.json")
 
     with open(file, 'r', encoding="utf-8") as f:
         return json.load(f)

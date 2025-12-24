@@ -99,9 +99,9 @@ class PolyX:
                 
                 for j in range(45, 136, 90):
                     sprite = DICT.char_dict[7](
-                        (9, 9, 0),
-                        th.color,
-                        0
+                        color=th.color,
+                        shape=0,
+                        type="barrage"
                     )
                     sprite.speed = 4
                     sprite.rect.center = (current_pos.x, current_pos.y)
@@ -119,9 +119,9 @@ class PolyX:
             char_pos = VARIABLE.main_char.rect.center
             for i in range(-30, 31, 30):
                 sprite = DICT.char_dict[7](
-                    (9, 9, 0),
-                    th.color,
-                    0
+                    color=th.color,
+                    shape=0,
+                    type="barrage"
                 )
                 sprite.speed = 4
                 sprite.rect.center = pos

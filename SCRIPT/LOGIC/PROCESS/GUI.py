@@ -2,7 +2,6 @@ import datetime
 
 import pygame
 
-import SCRIPT.DRAW as DRAW
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
@@ -163,7 +162,8 @@ def full_menu(
         {"text": other, "pos": (8, 305)}
     ]
 
-    menu_surface = DRAW.ShapeDraw(345, 330, 0, DICT.color_dict[7]).rect()
+    menu_surface = VARIABLE.picture["MENU_BG"]
+    menu_surface.fill((0, 0, 0))
 
     for text_info in text_type:
         text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
@@ -182,7 +182,13 @@ def half_menu(surface, font, title, text1, text2) -> None:
         {"text": text2, "pos": (8, 58)}
     ]
 
-    menu_surface = DRAW.ShapeDraw(345, 85, 0, DICT.color_dict[7]).rect()
+    menu_surface = VARIABLE.picture["MENU_BG"].subsurface(
+        (
+            0, 0,
+            345, 85
+        )
+    )
+    menu_surface.fill((0, 0, 0))
 
     for text_info in text_type:
         text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])

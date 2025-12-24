@@ -27,18 +27,39 @@ barrage_group = pygame.sprite.Group()
 particle_group = pygame.sprite.Group()
 
 picture_list = [
-    (1, os.path.join(DICT.asset_path, 'IMG_STAGE1BG.png')),
-    (2, os.path.join(DICT.asset_path, 'IMG_STAGE2BG.png')),
-    (3, os.path.join(DICT.asset_path, 'IMG_STAGE3BG.png')),
-    (4, os.path.join(DICT.asset_path, 'IMG_STAGE4BG.png')),
-    (5, os.path.join(DICT.asset_path, 'IMG_GAMEBG.png'))
+    (1, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE1BG.png')),
+    (2, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE2BG.png')),
+    (3, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE3BG.png')),
+    (4, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE4BG.png')),
+    ("GAME_BG", os.path.join(DICT.asset_path, 'IMAGE\IMG_GAMEBG.png')),
+    ("MENU_BG", os.path.join(DICT.asset_path, 'IMAGE\IMG_MENU.png'))
 ]
 char_image_list = [
-    ("Kli", os.path.join(DICT.asset_path, 'IMG_KLI.png')),
-    ("Ono", os.path.join(DICT.asset_path, 'IMG_ONO.png')),
-    ("Hro", os.path.join(DICT.asset_path, 'IMG_HRO.png')),
-    ("Nre", os.path.join(DICT.asset_path, 'IMG_NRE.png')),
-    ("Qdi", os.path.join(DICT.asset_path, 'IMG_QDI.png'))
+    ("Kli", os.path.join(DICT.asset_path, 'IMAGE\IMG_KLI.png')),
+    ("Ono", os.path.join(DICT.asset_path, 'IMAGE\IMG_ONO.png')),
+    ("Hro", os.path.join(DICT.asset_path, 'IMAGE\IMG_HRO.png')),
+    ("Nre", os.path.join(DICT.asset_path, 'IMAGE\IMG_NRE.png')),
+    ("Qdi", os.path.join(DICT.asset_path, 'IMAGE\IMG_QDI.png'))
+]
+sprite_image_list = [
+    (f"C_BA_{DICT.color_dict[1]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBARRAGEORANGE.png')),
+    (f"C_BA_{DICT.color_dict[4]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBARRAGEYELLOW.png')),
+    (f"C_BA_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBARRAGEWHITE.png')),
+    (f"P_BA_{DICT.color_dict[2]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBARRAGEGREEN.png')),
+    (f"P_BA_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBARRAGEWHITE.png')),
+    (f"C_BR_{DICT.color_dict[1]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBRICKORANGE.png')),
+    (f"C_BR_{DICT.color_dict[4]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBRICKYELLOW.png')),
+    (f"C_BR_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBRICKWHITE.png')),
+    (f"P_BR_{DICT.color_dict[2]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBRICKGREEN.png')),
+    (f"P_BR_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBRICKWHITE.png')),
+    (f"R_BR_{DICT.color_dict[3]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_RECTANGLEBRICKPURPLE.png')),
+    (f"R_BR_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_RECTANGLEBRICKWHITE.png')),
+    (f"R_IT_{DICT.color_dict[2]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_ITEMGREEN.png')),
+    (f"R_IT_{DICT.color_dict[5]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_ITEMBLUE.png')),
+    (f"R_IT_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_ITEMWHITE.png')),
+    ("KLI_BULLET", os.path.join(DICT.asset_path, f'IMAGE\IMG_KLIBULLET.png')),
+    ("KLI_BOMB", os.path.join(DICT.asset_path, f'IMAGE\IMG_KLIBOMB.png')),
+    ("DEC", os.path.join(DICT.asset_path, f'IMAGE\IMG_DECISIONPOINT.png')),
 ]
 
 run = False
@@ -86,7 +107,8 @@ level = 0
 
 picture = FUNC.Process.load_files(picture_list, lambda f: pygame.image.load(f).convert_alpha())
 char_image = FUNC.Process.load_files(char_image_list, lambda f: pygame.image.load(f).convert_alpha())
-background = picture[5]
+sprite_image = FUNC.Process.load_files(sprite_image_list, lambda f: pygame.image.load(f).convert_alpha())
+background = picture["GAME_BG"]
 second_background = picture[stage]
 
 char = None

@@ -9,10 +9,9 @@ import SCRIPT.VARIABLE as VARIABLE
 def circle_barrage(brick) -> None:
     char_pos = VARIABLE.main_char.rect.center
     sprite = DICT.char_dict[7](
-        (9, 9, 0),
-        brick.color,
-        brick.shape,
-        "barrage"
+        color=brick.color,
+        shape=brick.shape,
+        type="barrage"
     )
     sprite.speed = 2
     sprite.rect.center = brick.rect.center
@@ -27,10 +26,9 @@ def polygon_barrage(brick) -> None:
     char_pos = VARIABLE.main_char.rect.center
     for i in range(char_pos[0] - 32, char_pos[0] + 33, 64):
         sprite = DICT.char_dict[7](
-            (9, 9, 0),
-            brick.color,
-            brick.shape,
-            "barrage"
+            color=brick.color,
+            shape=brick.shape,
+            type="barrage"
         )
         sprite.speed = 2.25
         sprite.rect.center = brick.rect.center
@@ -66,10 +64,9 @@ def point_barrage(brick) -> None:
     char_pos = VARIABLE.main_char.rect.center
     for _ in range(3):
         sprite = DICT.char_dict[7](
-            (9, 9, 0),
-            brick.color,
-            brick.shape,
-            "barrage"
+            color=brick.color,
+            shape=brick.shape,
+            type="barrage"
         )
         sprite.speed = 3
         sprite.rect.center = (random.randint(120, 465), random.randint(15, 250))

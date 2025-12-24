@@ -23,10 +23,9 @@ def item_spawn_regular() -> None:
     VARIABLE.item_spawn_timer += 1
     if VARIABLE.item_spawn_timer >= 45:
         sprite = DICT.char_dict[7](
-            (9, 9, 2),
-            DICT.color_dict[6],
-            1,
-            0
+            color=DICT.color_dict[6],
+            shape=1,
+            type="fire"
         )
         sprite.speed = -2
         sprite.rect.center = (random.randint(120, 465), 10)
@@ -40,13 +39,13 @@ def item_collide(source) -> None:
     if VARIABLE.shoot_counter <= 5:
         VARIABLE.shoot_counter += 1
 
-    if source.type == 1:
+    if source.type is "power":
         if VARIABLE.s_power < 32:
             VARIABLE.s_power += 1
         VARIABLE.combo += 1
         VARIABLE.total_s_power += 1
         VARIABLE.stage_total_s_power += 1
-    elif source.type == 2:
+    elif source.type is "flash":
         VARIABLE.player += 1
         VARIABLE.combo += 1
         VARIABLE.total_s_power += 1
@@ -62,7 +61,7 @@ def item_spawn(brick) -> None:
             (9, 9, 2),
             DICT.color_dict[5],
             1,
-            1
+            "power"
         )
         sprite.speed = -2
         sprite.rect.center = brick_pos
@@ -73,7 +72,7 @@ def item_spawn(brick) -> None:
             (9, 9, 2),
             DICT.color_dict[2],
             1,
-            2
+            "flash"
         )
         sprite.speed = -2
         sprite.rect.center = brick_pos

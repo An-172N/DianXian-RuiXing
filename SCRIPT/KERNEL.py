@@ -11,11 +11,11 @@ import SCRIPT.VARIABLE as VARIABLE
 
 class Game:
     def __init__(th, screen, clock):
-        pygame.display.set_icon(pygame.image.load(os.path.join(DICT.asset_path, 'IMG_ICON.png')))
+        pygame.display.set_icon(pygame.image.load(os.path.join(DICT.asset_path, 'IMAGE\IMG_ICON.png')))
 
         th.screen = screen
         th.clock = clock
-        th.font = pygame.font.Font(os.path.join(DICT.asset_path, 'FNT\FNT_GNUUNIFONT.otf'), 15)
+        th.font = pygame.font.Font(os.path.join(DICT.asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
 
         th.plane_mgr = LOGIC.PlaneMgr
         th.stage_mgr = LOGIC.StageMgr
@@ -143,7 +143,7 @@ class Game:
                             th.bullet_mgr.bullet_collide(bullet, brick)
                             if brick.hp <= 0:
                                 if (
-                                    bullet.type in ("bullet", "line")
+                                    bullet.type in ("bullet", "line", "bomb")
                                     and getattr(brick, 'is_die', False)
                                 ):
                                     bullet.kill()

@@ -67,9 +67,9 @@ class RandCircle:
                 y = random.randint(15, 250)
                 pos = (x, y)
                 sprite = DICT.char_dict[7](
-                    (9, 9, 0),
-                    th.color,
-                    2
+                    color=th.color,
+                    shape=2,
+                    type="barrage"
                 )
                 sprite.speed = 4
                 sprite.rect.center = pos
@@ -87,9 +87,9 @@ class RandCircle:
         ):
             char = VARIABLE.main_char
             sprite = DICT.char_dict[7](
-                (9, 9, 0),
-                th.color,
-                2
+                color=th.color,
+                shape=2,
+                type="barrage"
             )
             sprite.speed = 3.5
             sprite.rect.center = (random.randint(120, 465), random.randint(15, 255))

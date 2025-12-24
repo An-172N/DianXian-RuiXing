@@ -3,9 +3,6 @@ import pygame
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
-from SCRIPT.DRAW import ShapeDraw
-
-
 class Kli(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
@@ -22,7 +19,10 @@ class Kli(pygame.sprite.Sprite):
 class DecisionPoint(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
-        th.original_image = ShapeDraw(2, 2, 0, (127, 127, 127)).rect()
+        th.original_image = DICT.char_dict[7](
+            shape=1,
+            type="dec"
+        ).image
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)
@@ -45,10 +45,8 @@ class RectRaining:
         ):
             for i in range(120, 466, 15):
                 sprite = DICT.char_dict[7](
-                    (15, 15, 0),
-                    th.color,
-                    1,
-                    "bullet"
+                    shape=1,
+                    type="bomb"
                 )
                 if not hasattr(sprite, "damage"):
                     sprite.damage = 6
@@ -77,10 +75,8 @@ class RectRaining:
 
         for bullet_info in bullet_type:
             sprite = DICT.char_dict[7](
-                (2, 15, 0),
-                th.color,
-                1,
-                "bullet"
+                shape=1,
+                type="bullet"
             )
             if not hasattr(sprite, "damage"):
                 sprite.damage = 4
