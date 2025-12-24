@@ -109,7 +109,8 @@ def load_stage(row, line) -> None:
             brick = DICT.char_dict[7](
                 (15, 15, 2),
                 c,
-                shape
+                shape,
+                "brick"
             )
 
             if not hasattr(brick, "hp"):

@@ -11,13 +11,13 @@ class ShapeDraw:
     def polygon(self) -> pygame.Surface:
         surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
-        side_length = min(self.width, self.height)
-        height_polygon = (3 ** 0.5) / 2 * side_length
-        center_x = self.width // 2
-        center_y = self.height // 2
-        point1 = (center_x, center_y - height_polygon / 2)
-        point2 = (center_x - side_length / 2, center_y + height_polygon / 2)
-        point3 = (center_x + side_length / 2, center_y + height_polygon / 2)
+        side = min(self.width, self.height)
+        triangle_height = (3 ** 0.5) / 2 * side
+        cx = self.width / 2
+        cy = self.height / 2
+        point1 = (cx, cy - triangle_height / 2)
+        point2 = (cx - side / 2, cy + triangle_height / 2)
+        point3 = (cx + side / 2, cy + triangle_height / 2)
 
         pygame.draw.polygon(surface, self.color, [point1, point2, point3], self.border)
 
@@ -33,10 +33,10 @@ class ShapeDraw:
     def circle(self) -> pygame.Surface:
         surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
-        center_x = self.width // 2
-        center_y = self.height // 2
-        radius = min(self.width, self.height) // 2
+        cx = self.width / 2
+        cy = self.height / 2
+        radius = min(self.width, self.height) / 2
 
-        pygame.draw.circle(surface, self.color, (center_x, center_y), radius, self.border)
+        pygame.draw.circle(surface, self.color, (cx, cy), radius, self.border)
 
         return surface
