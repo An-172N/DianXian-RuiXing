@@ -11,7 +11,7 @@ def spawn_bullet() -> None:
         range(0, p),
         range(-q, q + 1, q)
     ):
-        VARIABLE.main_char.bomb.fire(
+        VARIABLE.main_char.fire(
             0 + i * 10,
             0 + i * 12,
             j

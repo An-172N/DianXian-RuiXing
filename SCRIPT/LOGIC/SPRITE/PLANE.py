@@ -56,6 +56,7 @@ def life_logic() -> None:
 
     if VARIABLE.player == 0:
         VARIABLE.save = True
+        VARIABLE.is_blited = False
 
 
 def invinc() -> None:
@@ -63,20 +64,20 @@ def invinc() -> None:
         VARIABLE.is_s_divide or
         VARIABLE.collide
     ):
-        VARIABLE.cooldown_time += 1
+        VARIABLE.cooldown_timer += 1
 
-        if VARIABLE.cooldown_time >= 180:
+        if VARIABLE.cooldown_timer >= 180:
             if VARIABLE.is_s_divide:
                 VARIABLE.is_s_divide = False
                 VARIABLE.collide = False
-                VARIABLE.cooldown_time = 0
-                VARIABLE.main_char.bomb.bomb_counter = 0
-                VARIABLE.main_char.bomb.timer = 0
+                VARIABLE.cooldown_timer = 0
+                VARIABLE.main_char.bullet_counter = 0
+                VARIABLE.main_char.bullet_timer = 0
                 VARIABLE.total_s_power = 0
 
             VARIABLE.collide = False
         else:
-            VARIABLE.is_visitable = (VARIABLE.cooldown_time // 6) % 2
+            VARIABLE.is_visitable = (VARIABLE.cooldown_timer // 6) % 2
     else:
-        VARIABLE.cooldown_time = 0
+        VARIABLE.cooldown_timer = 0
         VARIABLE.is_visitable = True

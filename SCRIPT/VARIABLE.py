@@ -68,6 +68,7 @@ summary = False
 talk = False
 save = False
 level_load = False
+is_blited = False
 
 last_time = pygame.time.get_ticks()
 fps_text = last_time
@@ -86,7 +87,7 @@ combo = 0
 player = 4
 no_hurt = 0
 score = 0
-cooldown_time = 0
+cooldown_timer = 0
 s_flash = 0
 total_s_power = 0
 stage_total_s_power = 0
@@ -120,7 +121,7 @@ decision_point = DICT.char_dict.get(6)()
 
 def reset1() -> None:
     global pause, summary, talk, save, level_load
-    global collide, is_s_divide, cooldown_time, total_s_power
+    global collide, is_s_divide, cooldown_timer, total_s_power
     global shoot_counter, can_shoot
     global item_spawn_timer
     global text_number, text_part
@@ -140,9 +141,9 @@ def reset1() -> None:
 
     collide = False
     is_s_divide = False
-    cooldown_time = 0
-    main_char.bomb.bomb_counter = 0
-    main_char.bomb.timer = 0
+    cooldown_timer = 0
+    main_char.bullet_counter = 0
+    main_char.bullet_timer = 0
     total_s_power = 0
 
     shoot_counter = 0

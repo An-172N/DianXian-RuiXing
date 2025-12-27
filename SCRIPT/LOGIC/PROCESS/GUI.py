@@ -163,11 +163,14 @@ def full_menu(
     ]
 
     menu_surface = VARIABLE.picture["MENU_BG"]
-    menu_surface.fill((0, 0, 0))
+    if not VARIABLE.is_blited:
+        menu_surface.fill((0, 0, 0))
 
-    for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
-        menu_surface.blit(text, text_info["pos"])
+        for text_info in text_type:
+            text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
+            menu_surface.blit(text, text_info["pos"])
+
+        VARIABLE.is_blited = True
 
     surface.blit(
         menu_surface,
@@ -188,11 +191,14 @@ def half_menu(surface, font, title, text1, text2) -> None:
             345, 85
         )
     )
-    menu_surface.fill((0, 0, 0))
+    if not VARIABLE.is_blited:
+        menu_surface.fill((0, 0, 0))
 
-    for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
-        menu_surface.blit(text, text_info["pos"])
+        for text_info in text_type:
+            text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
+            menu_surface.blit(text, text_info["pos"])
+
+        VARIABLE.is_blited = True
 
     surface.blit(
         menu_surface,

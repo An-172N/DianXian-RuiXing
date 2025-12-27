@@ -17,8 +17,6 @@ class Qdi(pygame.sprite.Sprite):
         th.shape = 2
         th.current_angle = 0
 
-        th.bomb = RandCircle(th.color)
-
         th.original_image = VARIABLE.char_image["Qdi"]
         th.image = th.original_image.subsurface(
             (
@@ -34,32 +32,11 @@ class Qdi(pygame.sprite.Sprite):
         th.target_x = 292
         th.target_y = 60
         th.timer = 0
-
-    def update(th) -> None:
-        th.timer += 1
-
-        if th.timer % 120 == 0:
-            th.target_x = random.choice([150, 220, 292, 365, 435])
-            th.bomb.bullet_counter = 0
-            th.is_free = not th.is_free
-            th.choice = random.choice([th.bomb.fire, th.bomb.free])
-
-        th.rect.center = (th.target_x, th.target_y)
-
-        if not th.is_free:
-            th.bomb.fire()
-        else:
-            th.choice()
-
-class RandCircle:
-    def __init__(th, color):
-        th.color = color
-
         th.bullet_counter = 0
-        th.timer = 0
+        th.bullet_timer = 0
 
     def free(th) -> None:
-        th.timer += 1
+        th.bullet_timer += 1
 
         if th.bullet_counter < 1:
             for _ in range(48):
@@ -79,11 +56,11 @@ class RandCircle:
             th.bullet_counter += 1
 
     def fire(th) -> None:
-        th.timer += 1
+        th.bullet_timer += 1
 
         if (
             th.bullet_counter < 6
-            and th.timer % 2 == 0
+            and th.bullet_timer % 2 == 0
         ):
             char = VARIABLE.main_char
             sprite = DICT.char_dict[7](
@@ -102,3 +79,19 @@ class RandCircle:
             VARIABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
+
+    def update(th) -> None:
+        th.timer += 1
+
+        if th.timer % 120 == 0:
+            th.target_x = random.choice([150, 220, 292, 365, 435])
+            th.bullet_counter = 0
+            th.is_free = not th.is_free
+            th.choice = random.choice([th.fire, th.free])
+
+        th.rect.center = (th.target_x, th.target_y)
+
+        if not th.is_free:
+            th.fire()
+        else:
+            th.choice()

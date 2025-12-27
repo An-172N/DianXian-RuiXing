@@ -9,7 +9,7 @@ from SCRIPT.LOGIC.FRIEND.HUMAN.HRO import Hro
 from SCRIPT.LOGIC.FRIEND.HUMAN.NRE import Nre
 from SCRIPT.LOGIC.FRIEND.HUMAN.QDI import Qdi
 from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecisionPoint
-from SCRIPT.LOGIC.FRIEND.BASE import Base
+from SCRIPT.LOGIC.FRIEND.SPRITE.BASE import Base
 
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.LOGIC as LOGIC
@@ -43,11 +43,17 @@ keydown_game_dict = {
     pygame.K_LSHIFT: lambda: setattr(VARIABLE, "is_slow", True),
     pygame.K_z: lambda : setattr(VARIABLE, "can_shoot", False),
     pygame.K_x: lambda : LOGIC.BulletMgr.single_bomb(),
-    pygame.K_ESCAPE: lambda: setattr(VARIABLE, "pause", True)
+    pygame.K_ESCAPE: lambda: (
+        setattr(VARIABLE, "pause", True),
+        setattr(VARIABLE, "is_blited", False)
+    )
 }
 
 keydown_talk_dict = {
-    pygame.K_z: lambda : setattr(VARIABLE, "text_number", VARIABLE.text_number + 1),
+    pygame.K_z: lambda : (
+        setattr(VARIABLE, "text_number", VARIABLE.text_number + 1),
+        setattr(VARIABLE, "is_blited", False)
+    ),
     pygame.K_x: lambda : setattr(VARIABLE, "talk", False)
 }
 
@@ -55,13 +61,15 @@ keydown_pause_dict = {
     pygame.K_ESCAPE: lambda : setattr(VARIABLE, "pause", False),
     pygame.K_q: lambda : (
         VARIABLE.reset1(),
-        VARIABLE.reset2()
+        VARIABLE.reset2(),
+        setattr(VARIABLE, "is_blited", False)
     )
 }
 
 keydown_start_dict = {
     pygame.K_z: lambda: (
         setattr(VARIABLE, "run", True),
+        setattr(VARIABLE, "is_blited", False),
         LOGIC.StageMgr.next_level(),
         LOGIC.StageMgr.level_logic()
     ),
@@ -72,13 +80,18 @@ keydown_over_dict = {
     pygame.K_RETURN: lambda: (
         LOGIC.Key.save_file(),
         VARIABLE.reset1(),
-        VARIABLE.reset2()
+        VARIABLE.reset2(),
+        setattr(VARIABLE, "is_blited", False)
     ),
     pygame.K_ESCAPE: lambda: (
         VARIABLE.reset1(),
-        VARIABLE.reset2()
+        VARIABLE.reset2(),
+        setattr(VARIABLE, "is_blited", False)
     ),
-    pygame.K_BACKSPACE: lambda: setattr(VARIABLE, "name", VARIABLE.name[:-1])
+    pygame.K_BACKSPACE: lambda: (
+        setattr(VARIABLE, "name", VARIABLE.name[:-1]),
+        setattr(VARIABLE, "is_blited", False)
+    )
 }
 
 keyup_game_dict = {

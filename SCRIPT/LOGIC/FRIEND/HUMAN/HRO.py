@@ -26,47 +26,19 @@ class Hro(pygame.sprite.Sprite):
         )
         th.rect = th.image.get_rect()
 
-        th.bomb = PolyX(th.color, th.rect)
-
         th.is_free = False
         th.choice = None
 
         th.target_x = 292
         th.target_y = 60
         th.timer = 0
-
-    def update(th) -> None:
-        th.timer += 1
-
-        if th.timer % 120 == 0:
-            th.target_x = random.choice([150, 220, 292, 365, 435])
-
-            th.bomb.bullet_counter = 0
-            th.bomb.dl = 0
-            th.is_free = not th.is_free
-            th.is_choice = False
-            th.choice = random.choice([th.bomb.fire, th.bomb.free])
-
-        DICT.char_dict[7].vector(th, 4.5)
-
-        if not th.is_free:
-            th.bomb.fire()
-        else:
-            th.choice()
-
-
-class PolyX:
-    def __init__(th, color, rect):
-        th.color = color
-        th.rect = rect
-
         th.bullet_counter = 0
-        th.timer = 0
-        th.dl = 0
+        th.bullet_timer = 0
+        th.bullet_delay = 0
 
     def free(th) -> None:
-        th.timer += 1
-        th.dl -= 6
+        th.bullet_timer += 1
+        th.bullet_delay -= 6
 
         bullet_type = [
             {
@@ -83,7 +55,10 @@ class PolyX:
             }
         ]
 
-        if th.timer % 1 == 0 and th.bullet_counter < 18:
+        if (
+            th.bullet_timer % 1 == 0
+            and th.bullet_counter < 18
+        ):
             for bullet_info in bullet_type:
                 start_pos = pygame.math.Vector2(292 + bullet_info['dx1'], 100 - bullet_info['dx2'])
                 end_pos = pygame.math.Vector2(292 - bullet_info['dy1'], 100 + bullet_info['dy2'])
@@ -106,15 +81,18 @@ class PolyX:
                     sprite.speed = 4
                     sprite.rect.center = (current_pos.x, current_pos.y)
                     atan = math.atan2(-delta_pos.x, -delta_pos.y)
-                    sprite.current_angle = math.degrees(atan) + j + th.dl
+                    sprite.current_angle = math.degrees(atan) + j + th.bullet_delay
                     VARIABLE.barrage_group.add(sprite)
         
             th.bullet_counter += 1
 
     def fire(th) -> None:
-        th.timer += 1
+        th.bullet_timer += 1
 
-        if th.timer % 8 == 0 and th.bullet_counter < 3:
+        if (
+            th.bullet_timer % 8 == 0
+            and th.bullet_counter < 3
+        ):
             pos = th.rect.center
             char_pos = VARIABLE.main_char.rect.center
             for i in range(-30, 31, 30):
@@ -131,3 +109,22 @@ class PolyX:
                 VARIABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
+
+    def update(th) -> None:
+        th.timer += 1
+
+        if th.timer % 120 == 0:
+            th.target_x = random.choice([150, 220, 292, 365, 435])
+
+            th.bullet_counter = 0
+            th.bullet_delay = 0
+            th.is_free = not th.is_free
+            th.is_choice = False
+            th.choice = random.choice([th.fire, th.free])
+
+        DICT.char_dict[7].vector(th, 4.5)
+
+        if not th.is_free:
+            th.fire()
+        else:
+            th.choice()

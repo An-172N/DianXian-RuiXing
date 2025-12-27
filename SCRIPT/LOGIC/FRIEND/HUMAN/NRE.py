@@ -17,8 +17,6 @@ class Nre(pygame.sprite.Sprite):
         th.shape = 1
         th.current_angle = 0
 
-        th.bomb = StraightThunder()
-
         th.original_image = VARIABLE.char_image["Nre"]
         th.image = th.original_image.subsurface(
             (
@@ -34,35 +32,16 @@ class Nre(pygame.sprite.Sprite):
         th.target_x = 292
         th.target_y = 60
         th.timer = 0
-
-    def update(th) -> None:
-        th.timer += 1
-
-        if th.timer % 120 == 0:
-            th.target_x = random.choice([150, 220, 292, 365, 435])
-
-            th.bomb.bullet_counter = 0
-            th.bomb.timer = 0
-            th.is_free = not th.is_free
-            th.choice = random.choice([th.bomb.fire, th.bomb.free])
-
-        DICT.char_dict[7].vector(th, 5.5)
-
-        if not th.is_free:
-            th.bomb.fire()
-        else:
-            th.choice()
-
-
-class StraightThunder:
-    def __init__(th):
-        th.timer = 0
+        th.bullet_timer = 0
         th.bullet_counter = 0
 
     def free(th) -> None:
-        th.timer += 1
+        th.bullet_timer += 1
 
-        if th.timer % 1 == 0 and th.bullet_counter < 12:
+        if (
+            th.bullet_timer % 1 == 0
+            and th.bullet_counter < 12
+        ):
             start_pos = (random.randint(80, 500), 0)
             end_pos = (random.randint(100, 490), 360)
 
@@ -107,3 +86,21 @@ class StraightThunder:
                 VARIABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
+
+    def update(th) -> None:
+        th.timer += 1
+
+        if th.timer % 120 == 0:
+            th.target_x = random.choice([150, 220, 292, 365, 435])
+
+            th.bullet_counter = 0
+            th.bullet_timer = 0
+            th.is_free = not th.is_free
+            th.choice = random.choice([th.fire, th.free])
+
+        DICT.char_dict[7].vector(th, 5.5)
+
+        if not th.is_free:
+            th.fire()
+        else:
+            th.choice()

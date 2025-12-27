@@ -17,8 +17,6 @@ class Ono(pygame.sprite.Sprite):
         th.shape = 2
         th.current_angle = 0
 
-        th.bomb = AutFroDiffuse(th.color)
-
         th.original_image = VARIABLE.char_image["Ono"]
         th.image = th.original_image.subsurface(
             (
@@ -34,49 +32,25 @@ class Ono(pygame.sprite.Sprite):
         th.target_x = 292
         th.target_y = 60
         th.timer = 0
-
-    def update(th) -> None:
-        th.timer += 1
-
-        if th.timer % 120 == 0:
-            th.target_x = random.choice([150, 220, 292, 365, 435])
-
-            th.bomb.bullet_counter = 0
-            th.bomb.dl = 0
-            th.is_free = not th.is_free
-            th.choice = random.choice([th.bomb.fire, th.bomb.free])
-
-        DICT.char_dict[7].vector(th, 4)
-
-        if not th.is_free:
-            th.bomb.fire(th.rect)
-        else:
-            th.choice(th.rect)
-
-
-class AutFroDiffuse:
-    def __init__(th, color):
-        th.color = color
-
         th.bullet_counter = 0
-        th.timer = 0
-        th.dl = 0
+        th.bullet_timer = 0
+        th.bullet_delay = 0
 
-    def free(th, rect) -> None:
-        th.timer += 1
+    def free(th) -> None:
+        th.bullet_timer += 1
 
         if (
-            th.timer % 1 == 0 and
+            th.bullet_timer % 1 == 0 and
             th.bullet_counter < 12
         ):
-            th.dl += 6
+            th.bullet_delay += 6
 
             for i, j in itertools.product(
-                range(0 + th.dl, 360 + th.dl, 180),
-                range(0 + th.dl, 360 + th.dl, 90)
+                range(0 + th.bullet_delay, 360 + th.bullet_delay, 180),
+                range(0 + th.bullet_delay, 360 + th.bullet_delay, 90)
             ):
-                x = rect.centerx + 32 * math.cos(math.radians(i))
-                y = rect.centery + 32 * math.sin(math.radians(i))
+                x = th.rect.centerx + 32 * math.cos(math.radians(i))
+                y = th.rect.centery + 32 * math.sin(math.radians(i))
                 pos = (x, y)
                 sprite = DICT.char_dict[7](
                     color=th.color,
@@ -90,9 +64,9 @@ class AutFroDiffuse:
 
             th.bullet_counter += 1
 
-    def fire(th, rect) -> None:
+    def fire(th) -> None:
         if th.bullet_counter < 1:
-            pos = rect.center
+            pos = th.rect.center
             for i in range(0, 360, 15):
                 sprite = DICT.char_dict[7](
                     color=th.color,
@@ -105,3 +79,21 @@ class AutFroDiffuse:
                 VARIABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
+
+    def update(th) -> None:
+        th.timer += 1
+
+        if th.timer % 120 == 0:
+            th.target_x = random.choice([150, 220, 292, 365, 435])
+
+            th.bullet_counter = 0
+            th.bullet_delay = 0
+            th.is_free = not th.is_free
+            th.choice = random.choice([th.fire, th.free])
+
+        DICT.char_dict[7].vector(th, 4)
+
+        if not th.is_free:
+            th.fire()
+        else:
+            th.choice()

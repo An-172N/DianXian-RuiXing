@@ -30,6 +30,7 @@ def level_load() -> None:
             VARIABLE.char.rect.center = (292, 60)
             VARIABLE.text = load_text(VARIABLE.stage)
             VARIABLE.talk = True
+            VARIABLE.is_blited = False
 
             VARIABLE.brick_group.add(VARIABLE.char)
         else:
@@ -55,10 +56,12 @@ def level_summary() -> None:
         if VARIABLE.timer <= 120:
             VARIABLE.timer += 1
             VARIABLE.summary = True
+            VARIABLE.is_blited = False
         else:
             if VARIABLE.stage >= 3 and VARIABLE.level == 6:
                 VARIABLE.summary = False
                 VARIABLE.save = True
+                VARIABLE.is_blited = False
                 VARIABLE.timer = 0
             else:
                 next_level()
@@ -71,6 +74,7 @@ def level_summary() -> None:
 def level_process() -> None:
     if not VARIABLE.level_load:
         level_load()
+        VARIABLE.is_blited = False
     else:
         level_summary()
 
@@ -92,6 +96,7 @@ def shhm_lose() -> None:
     VARIABLE.text_number = 0
 
     VARIABLE.talk = True
+    VARIABLE.is_blited = False
 
 
 def load_stage(row, line) -> None:
