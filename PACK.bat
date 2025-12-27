@@ -10,7 +10,7 @@ nuitka ^
     --product-version="1.0" ^
     --product-name="RuiXing ~ Thunder Out of the Mountain" ^
     --copyright="Copyright (c) 2025 An_172N" ^
-    --windows-icon-from-ico=ASSET\IMG_ICON.png ^
+    --windows-icon-from-ico=ASSET\IMAGE\IMG_ICON.png ^
     --include-data-dir=ASSET=ASSET ^
     --output-filename=DX00 ^
     --nofollow-import-to=tkinter,unittest,test,pdb,doctest,setuptools,pip,email,http,urllib,xml,sqlite3,multiprocessing,html,distutils,cgi,cgitb,wsgiref,smtplib,poplib,imaplib,idlelib,pydoc,gettext,locale,threading,ordered_set,venv,ensurepip,ftplib,wave,audioop ^
