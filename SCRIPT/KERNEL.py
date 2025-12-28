@@ -166,7 +166,7 @@ def update() -> None:
                             brick_mgr.brick_blast(brick)
                             barrage_mgr.spawn_barrage(brick)
                             brick.kill()
-                        if bullet.type == "bullet":
+                        if bullet.type in ("bullet", "bomb"):
                             bullet.kill()
                 collide3 = pygame.sprite.spritecollide(
                     VARIABLE.main_char,
