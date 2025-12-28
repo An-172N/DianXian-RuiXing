@@ -3,6 +3,7 @@ import pygame
 import SCRIPT.DICT as DICT
 import SCRIPT.VARIABLE as VARIABLE
 
+
 class Kli(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
