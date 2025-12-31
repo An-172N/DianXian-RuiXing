@@ -177,7 +177,6 @@ def update() -> None:
                     item_mgr.item_collide(item)
 
             item_mgr.combo_counter()
-
             stage_mgr.level_process()
 
         for event in pygame.event.get():
@@ -213,11 +212,9 @@ def update() -> None:
             gui.save_menu(screen, font)
 
         screen.blit(VARIABLE.background, (0, 0))
-
         gui.show_situ(screen, font, clock)
 
         pygame.display.flip()
-
         clock.tick(60)
 
 

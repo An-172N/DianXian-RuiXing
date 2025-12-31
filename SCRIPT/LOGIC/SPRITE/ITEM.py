@@ -58,10 +58,9 @@ def item_spawn(brick) -> None:
     brick_pos = brick.rect.center
     if random.random() <= 0.125:
         sprite = DICT.char_dict[7](
-            (9, 9, 2),
-            DICT.color_dict[5],
-            1,
-            "power"
+            color=DICT.color_dict[5],
+            shape=1,
+            type="power"
         )
         sprite.speed = -2
         sprite.rect.center = brick_pos
@@ -69,10 +68,9 @@ def item_spawn(brick) -> None:
         VARIABLE.total_spawn_s_power += 1
     elif random.random() <= 0.007:
         sprite = DICT.char_dict[7](
-            (9, 9, 2),
-            DICT.color_dict[2],
-            1,
-            "flash"
+            color=DICT.color_dict[2],
+            shape=1,
+            type="flash"
         )
         sprite.speed = -2
         sprite.rect.center = brick_pos
