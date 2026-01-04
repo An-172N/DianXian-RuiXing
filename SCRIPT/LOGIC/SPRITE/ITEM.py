@@ -1,6 +1,6 @@
 import random
 
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
 
@@ -22,14 +22,14 @@ def combo_counter() -> None:
 def item_spawn_regular() -> None:
     VARIABLE.item_spawn_timer += 1
     if VARIABLE.item_spawn_timer >= 45:
-        sprite = DICT.char_dict[7](
-            color=DICT.color_dict[6],
+        sprite = TABLE.char_dict[7](
+            color=TABLE.color_dict[6],
             shape=1,
             type="fire"
         )
         sprite.speed = -2
         sprite.rect.center = (random.randint(120, 465), 10)
-        VARIABLE.item_group.add(sprite)
+        TABLE.item_group.add(sprite)
 
         VARIABLE.item_spawn_timer = 0
 
@@ -57,22 +57,22 @@ def item_collide(source) -> None:
 def item_spawn(brick) -> None:
     brick_pos = brick.rect.center
     if random.random() <= 0.125:
-        sprite = DICT.char_dict[7](
-            color=DICT.color_dict[5],
+        sprite = TABLE.char_dict[7](
+            color=TABLE.color_dict[5],
             shape=1,
             type="power"
         )
         sprite.speed = -2
         sprite.rect.center = brick_pos
-        VARIABLE.item_group.add(sprite)
+        TABLE.item_group.add(sprite)
         VARIABLE.total_spawn_s_power += 1
     elif random.random() <= 0.007:
-        sprite = DICT.char_dict[7](
-            color=DICT.color_dict[2],
+        sprite = TABLE.char_dict[7](
+            color=TABLE.color_dict[2],
             shape=1,
             type="flash"
         )
         sprite.speed = -2
         sprite.rect.center = brick_pos
-        VARIABLE.item_group.add(sprite)
+        TABLE.item_group.add(sprite)
         VARIABLE.total_spawn_s_power += 1

@@ -2,14 +2,14 @@ import datetime
 
 import pygame
 
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
 
 def show_situ(screen, font, clock) -> None:
     current_time = pygame.time.get_ticks()
     if current_time - VARIABLE.last_time >= 500:
-        VARIABLE.fps_text = f"{clock.get_fps():.0f} FPS"
+        VARIABLE.fps_text = f"{clock.get_fps():.1f} FPS"
         VARIABLE.last_time = current_time
 
     score = f"分　{VARIABLE.score:9d}"
@@ -163,14 +163,14 @@ def full_menu(
     ]
 
     menu_surface = VARIABLE.picture["MENU_BG"]
-    if not VARIABLE.is_blited:
+    if not VARIABLE.is_blit:
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
+            text = font.render(f"{text_info['text']}", False, TABLE.color_dict[6])
             menu_surface.blit(text, text_info["pos"])
 
-        VARIABLE.is_blited = True
+        VARIABLE.is_blit = True
 
     surface.blit(
         menu_surface,
@@ -191,14 +191,14 @@ def half_menu(surface, font, title, text1, text2) -> None:
             345, 85
         )
     )
-    if not VARIABLE.is_blited:
+    if not VARIABLE.is_blit:
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
+            text = font.render(f"{text_info['text']}", False, TABLE.color_dict[6])
             menu_surface.blit(text, text_info["pos"])
 
-        VARIABLE.is_blited = True
+        VARIABLE.is_blit = True
 
     surface.blit(
         menu_surface,
@@ -212,9 +212,42 @@ def situ(surface, font, text1, text2, text3, text4, fps) -> None:
         {"text": text2, "pos": (8, 270)},
         {"text": text3, "pos": (8, 295)},
         {"text": text4, "pos": (8, 320)},
-        {"text": fps, "pos": (405, 343)}
+        {"text": fps, "pos": (395, 343)}
     ]
     
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, DICT.color_dict[6])
+        text = font.render(f"{text_info['text']}", False, TABLE.color_dict[6])
         surface.blit(text, text_info["pos"])
+
+
+def menu_display(screen, font) -> None:
+    if not VARIABLE.run:
+        start_menu(screen, font)
+    elif VARIABLE.pause:
+        pause_menu(screen, font)
+    elif not VARIABLE.level_load:
+        load_menu(screen, font)
+    elif VARIABLE.talk:
+        talk_menu(screen, font)
+    elif VARIABLE.summary:
+        summary_menu(screen, font)
+    elif VARIABLE.save:
+        save_menu(screen, font)
+
+
+def window_display(screen) -> None:
+    screen.fill(TABLE.color_dict[7])
+    screen.blit(VARIABLE.second_background, (120, 15))
+
+    TABLE.bullet_group.draw(screen)
+    if VARIABLE.is_visitable:
+        TABLE.plane_group.draw(screen)
+    TABLE.brick_group.draw(screen)
+    TABLE.item_group.draw(screen)
+    TABLE.particle_group.draw(screen)
+    TABLE.barrage_group.draw(screen)
+
+
+def font_display(screen, font, clock) -> None:
+    screen.blit(VARIABLE.background, (0, 0))
+    show_situ(screen, font, clock)

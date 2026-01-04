@@ -8,9 +8,8 @@ def load_files(files: list, func: Callable[[str], Any]) -> dict:
     }
 
 
-def process_file(file: str, encoding: str, start: int, func: Callable[[int, str], Any]) -> Iterator[Callable[[int, str], Any]]:
-    with open(file, 'r', encoding=encoding) as f:
-        yield from (
-            func(row, line.rstrip('\n'))
-            for row, line in enumerate(f, start=start)
-        )
+def process_file(string: str, start: int, func: Callable[[int, str], Any]) -> Iterator[Any]:
+    yield from (
+        func(row, line)
+        for row, line in enumerate(string.splitlines(), start=start)
+    )

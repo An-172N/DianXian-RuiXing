@@ -3,7 +3,7 @@ import math
 
 import pygame
 
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.FUNC as FUNC
 
@@ -13,7 +13,7 @@ class Nre(pygame.sprite.Sprite):
         super().__init__()
 
         th.hp = 256
-        th.color = DICT.color_dict[3]
+        th.color = TABLE.color_dict[3]
         th.shape = 1
         th.current_angle = 0
 
@@ -48,9 +48,9 @@ class Nre(pygame.sprite.Sprite):
             dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
 
-            sprite = DICT.char_dict[7](
+            sprite = TABLE.char_dict[7](
                 (2, distance, 0),
-                DICT.color_dict[6],
+                TABLE.color_dict[6],
                 1,
                 "line"
             )
@@ -58,7 +58,7 @@ class Nre(pygame.sprite.Sprite):
             sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
             sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
             sprite.update()
-            VARIABLE.barrage_group.add(sprite)
+            TABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -73,9 +73,9 @@ class Nre(pygame.sprite.Sprite):
                 dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
 
-                sprite = DICT.char_dict[7](
+                sprite = TABLE.char_dict[7](
                     (2, distance, 0),
-                    DICT.color_dict[6],
+                    TABLE.color_dict[6],
                     1,
                     "line"
                 )
@@ -83,7 +83,7 @@ class Nre(pygame.sprite.Sprite):
                 sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
                 sprite.current_angle = 0
                 sprite.update()
-                VARIABLE.barrage_group.add(sprite)
+                TABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -98,7 +98,7 @@ class Nre(pygame.sprite.Sprite):
             th.is_free = not th.is_free
             th.choice = random.choice([th.fire, th.free])
 
-        DICT.char_dict[7].vector(th, 5.5)
+        TABLE.char_dict[7].vector(th, 5.5)
 
         if not th.is_free:
             th.fire()

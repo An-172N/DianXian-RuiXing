@@ -1,6 +1,6 @@
 import pygame
 
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
 
@@ -8,7 +8,7 @@ class Kli(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.color = DICT.color_dict[5]
+        th.color = TABLE.color_dict[5]
 
         th.original_image = VARIABLE.char_image["Kli"]
         th.image = th.original_image.subsurface((0, 0, 12, 26))
@@ -26,7 +26,7 @@ class Kli(pygame.sprite.Sprite):
             th.bullet_counter < 6
         ):
             for i in range(120, 466, 15):
-                sprite = DICT.char_dict[7](
+                sprite = TABLE.char_dict[7](
                     shape=1,
                     type="bomb"
                 )
@@ -34,7 +34,7 @@ class Kli(pygame.sprite.Sprite):
                     sprite.damage = 6
                 sprite.speed = -24
                 sprite.rect.center = (i, 0)
-                VARIABLE.bullet_group.add(sprite)
+                TABLE.bullet_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -56,7 +56,7 @@ class Kli(pygame.sprite.Sprite):
         ]
 
         for bullet_info in bullet_type:
-            sprite = DICT.char_dict[7](
+            sprite = TABLE.char_dict[7](
                 shape=1,
                 type="bullet"
             )
@@ -65,13 +65,13 @@ class Kli(pygame.sprite.Sprite):
             sprite.speed = 16
             sprite.rect.center = (bullet_info['x'], bullet_info['y'])
             sprite.current_angle = bullet_info['angle']
-            VARIABLE.bullet_group.add(sprite)
+            TABLE.bullet_group.add(sprite)
 
 
 class DecisionPoint(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
-        th.original_image = DICT.char_dict[7](
+        th.original_image = TABLE.char_dict[7](
             shape=1,
             type="dec"
         ).image

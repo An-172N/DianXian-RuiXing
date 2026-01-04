@@ -3,7 +3,7 @@ import math
 
 import pygame
 
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 import SCRIPT.FUNC as FUNC
 
@@ -13,7 +13,7 @@ class Hro(pygame.sprite.Sprite):
         super().__init__()
 
         th.hp = 224
-        th.color = DICT.color_dict[2]
+        th.color = TABLE.color_dict[2]
         th.shape = 0
         th.current_angle = 0
 
@@ -73,7 +73,7 @@ class Hro(pygame.sprite.Sprite):
                 current_pos = start_pos + delta_pos * current_step
                 
                 for j in range(45, 136, 90):
-                    sprite = DICT.char_dict[7](
+                    sprite = TABLE.char_dict[7](
                         color=th.color,
                         shape=0,
                         type="barrage"
@@ -82,7 +82,7 @@ class Hro(pygame.sprite.Sprite):
                     sprite.rect.center = (current_pos.x, current_pos.y)
                     atan = math.atan2(-delta_pos.x, -delta_pos.y)
                     sprite.current_angle = math.degrees(atan) + j + th.bullet_delay
-                    VARIABLE.barrage_group.add(sprite)
+                    TABLE.barrage_group.add(sprite)
         
             th.bullet_counter += 1
 
@@ -96,7 +96,7 @@ class Hro(pygame.sprite.Sprite):
             pos = th.rect.center
             char_pos = VARIABLE.main_char.rect.center
             for i in range(-30, 31, 30):
-                sprite = DICT.char_dict[7](
+                sprite = TABLE.char_dict[7](
                     color=th.color,
                     shape=0,
                     type="barrage"
@@ -106,7 +106,7 @@ class Hro(pygame.sprite.Sprite):
                 two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1]), (pos[0], pos[1]))
                 atan = math.atan2(-two_pt[0], -two_pt[1])
                 sprite.current_angle = math.degrees(atan) + i
-                VARIABLE.barrage_group.add(sprite)
+                TABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -122,7 +122,7 @@ class Hro(pygame.sprite.Sprite):
             th.is_choice = False
             th.choice = random.choice([th.fire, th.free])
 
-        DICT.char_dict[7].vector(th, 4.5)
+        TABLE.char_dict[7].vector(th, 4.5)
 
         if not th.is_free:
             th.fire()

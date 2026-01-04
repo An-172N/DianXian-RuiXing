@@ -1,7 +1,7 @@
 import random
 
 import SCRIPT.VARIABLE as VARIABLE
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 
 
 def spawn_particles(width, height, pos, speed, color1, color2=None):
@@ -11,7 +11,7 @@ def spawn_particles(width, height, pos, speed, color1, color2=None):
             color = color1
         else:
             color = random.choice([color1, color2])
-        sprite = DICT.char_dict[7](
+        sprite = TABLE.char_dict[7](
             (width, height, 0),
             color,
             1,
@@ -20,4 +20,4 @@ def spawn_particles(width, height, pos, speed, color1, color2=None):
         sprite.speed = random.randint(speed[0], speed[1])
         sprite.rect.center = pos
         sprite.current_angle = i
-        VARIABLE.particle_group.add(sprite)
+        TABLE.particle_group.add(sprite)

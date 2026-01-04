@@ -3,7 +3,7 @@ import math
 import pygame
 
 import SCRIPT.FUNC as FUNC
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
 
@@ -57,7 +57,7 @@ class Base(pygame.sprite.Sprite):
             th.CIRCLE: th.circle,
         }
 
-        return shape_dict[shape]()
+        return shape_dict.get(shape)()
     
     def polygon(self) -> pygame.Surface:
         type_dict = {
@@ -65,8 +65,7 @@ class Base(pygame.sprite.Sprite):
             "barrage": lambda: VARIABLE.sprite_image[f"P_BA_{self.color}"]
         }
         
-        if self.type in type_dict:
-            return type_dict[self.type]()
+        return type_dict.get(self.type)()
 
     def rectangle(self) -> pygame.Surface:
         type_dict = {
@@ -81,12 +80,13 @@ class Base(pygame.sprite.Sprite):
             "dec": lambda: VARIABLE.sprite_image[f"DEC"]
         }
 
-        if self.type in type_dict:
-            return type_dict[self.type]()
-        else:
+        def not_in_type_dict():
             surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             pygame.draw.rect(surface, self.color, surface.get_rect(), self.border)
             return surface
+        
+        return type_dict.get(self.type, not_in_type_dict)()
+            
 
     def circle(self) -> pygame.Surface:
         type_dict = {
@@ -94,8 +94,7 @@ class Base(pygame.sprite.Sprite):
             "barrage": lambda: VARIABLE.sprite_image[f"C_BA_{self.color}"]
         }
 
-        if self.type in type_dict:
-            return type_dict[self.type]()
+        return type_dict.get(self.type)()
     
     def update(th) -> None:
         if not th.is_rotated:
@@ -119,7 +118,7 @@ class Base(pygame.sprite.Sprite):
 
             if th.timer >= 90:
                 th.kill()
-            elif th.timer >= 45 and th.color != DICT.color_dict[3]:
-                th.color = DICT.color_dict[3]
+            elif th.timer >= 45 and th.color != TABLE.color_dict[3]:
+                th.color = TABLE.color_dict[3]
 
                 th.image.fill(th.color, special_flags=pygame.BLEND_RGBA_MULT)

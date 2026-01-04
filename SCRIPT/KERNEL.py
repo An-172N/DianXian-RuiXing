@@ -1,5 +1,4 @@
 import argparse
-import sys
 import os
 
 import pygame
@@ -13,22 +12,12 @@ screen = pygame.display.set_mode(
 )
 
 import SCRIPT.LOGIC as LOGIC
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
-font = pygame.font.Font(os.path.join(DICT.asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
+font = pygame.font.Font(os.path.join(TABLE.asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
 
-pygame.display.set_icon(pygame.image.load(os.path.join(DICT.asset_path, 'IMAGE\IMG_ICON.png')))
-
-plane_mgr = LOGIC.PlaneMgr
-stage_mgr = LOGIC.StageMgr
-bullet_mgr = LOGIC.BulletMgr
-item_mgr = LOGIC.ItemMgr
-brick_mgr = LOGIC.BrickMgr
-barrage_mgr = LOGIC.BarrageMgr
-particle_mgr = LOGIC.ParticleMgr
-key_mgr = LOGIC.Key
-gui = LOGIC.GUI
+pygame.display.set_icon(pygame.image.load(os.path.join(TABLE.asset_path, 'IMAGE\IMG_ICON.png')))
 
 
 def option() -> None:
@@ -66,6 +55,91 @@ def remove_sprite(sprite_group, effective_range) -> None:
             sprite.kill()
 
 
+def item_collide() -> None:
+    if (
+        VARIABLE.can_shoot
+        and VARIABLE.shoot_counter > 0
+    ):
+        LOGIC.BulletMgr.spawn_bullet()
+        LOGIC.ParticleMgr.spawn_particles(
+            2,
+            2,
+            VARIABLE.main_char.rect.center,
+            (4, 8),
+            VARIABLE.main_char.color
+        )
+
+    collide3 = pygame.sprite.spritecollide(
+         VARIABLE.main_char, TABLE.item_group,
+        False
+    )
+    for item in collide3:
+        LOGIC.ItemMgr.item_collide(item)
+
+
+def barrage_collide() -> None:
+    collide1 = pygame.sprite.spritecollide(
+        VARIABLE.decision_point,
+        TABLE.barrage_group,
+        False,
+        pygame.sprite.collide_mask
+    )
+    for barrage in collide1:
+        if (
+            barrage.color != TABLE.color_dict[6]
+            and not (
+                VARIABLE.collide or
+                VARIABLE.is_s_divide
+            )
+        ):
+            LOGIC.PlaneMgr.collide_barrage()
+            LOGIC.ParticleMgr.spawn_particles(
+                8,
+                9,
+                VARIABLE.main_char.rect.center,
+                (10, 16),
+                VARIABLE.main_char.color,
+                TABLE.color_dict[6]
+            )
+            LOGIC.PlaneMgr.life_logic()
+
+            barrage.kill()
+
+
+def bullet_collide() -> None:
+    collide2 = pygame.sprite.groupcollide(
+        TABLE.bullet_group,
+        TABLE.brick_group,
+        False,
+        False
+    )
+    for bullet, hit_bricks in collide2.items():
+        for brick in hit_bricks:
+            LOGIC.BulletMgr.bullet_collide(bullet, brick)
+            if brick.hp <= 0:
+                if (
+                    bullet.type in ("bullet", "line", "bomb")
+                    and getattr(brick, 'is_die', False)
+                ):
+                    bullet.kill()
+                    break
+                LOGIC.BrickMgr.brick_death(brick)
+                LOGIC.ParticleMgr.spawn_particles(
+                    2, 2,
+                    brick.rect.center,
+                    (4, 8),
+                    brick.color, TABLE.color_dict[6]
+                )
+                if hasattr(brick, "free"):
+                    LOGIC.StageMgr.shhm_lose()
+                LOGIC.ItemMgr.item_spawn(brick)
+                LOGIC.BrickMgr.brick_blast(brick)
+                LOGIC.BarrageMgr.spawn_barrage(brick)
+                brick.kill()
+            if bullet.type in ("bullet", "bomb"):
+                bullet.kill()
+
+
 def update() -> None:
     while True:
         if (
@@ -81,138 +155,35 @@ def update() -> None:
                 if VARIABLE.is_s_divide:
                     VARIABLE.main_char.free()
 
-                plane_mgr.turn_side()
-                plane_mgr.move_plane()
-                plane_mgr.invinc()
-                item_mgr.item_spawn_regular()
-                if (
-                    VARIABLE.can_shoot
-                    and VARIABLE.shoot_counter > 0
-                ):
-                    bullet_mgr.spawn_bullet()
-                    particle_mgr.spawn_particles(
-                        2,
-                        2,
-                        VARIABLE.main_char.rect.center,
-                        (4, 8),
-                        VARIABLE.main_char.color
-                    )
+                LOGIC.PlaneMgr.turn_side()
+                LOGIC.PlaneMgr.move_plane()
+                LOGIC.PlaneMgr.invinc()
+
+                LOGIC.ItemMgr.item_spawn_regular()
             
-                VARIABLE.bullet_group.update()
-                VARIABLE.barrage_group.update()
-                VARIABLE.item_group.update()
-                VARIABLE.particle_group.update()
-                VARIABLE.brick_group.update()
+                TABLE.bullet_group.update()
+                TABLE.barrage_group.update()
+                TABLE.item_group.update()
+                TABLE.particle_group.update()
+                TABLE.brick_group.update()
 
-                remove_sprite(VARIABLE.bullet_group, VARIABLE.effective)
-                remove_sprite(VARIABLE.barrage_group, VARIABLE.effective)
-                remove_sprite(VARIABLE.item_group, VARIABLE.effective)
-                remove_sprite(VARIABLE.particle_group, VARIABLE.window)
+                remove_sprite(TABLE.bullet_group, VARIABLE.effective)
+                remove_sprite(TABLE.barrage_group, VARIABLE.effective)
+                remove_sprite(TABLE.item_group, VARIABLE.effective)
+                remove_sprite(TABLE.particle_group, VARIABLE.window)
 
-                collide1 = pygame.sprite.spritecollide(
-                    VARIABLE.decision_point,
-                    VARIABLE.barrage_group,
-                    False,
-                    pygame.sprite.collide_mask
-                )
-                for barrage in collide1:
-                    if (
-                        barrage.color != DICT.color_dict[6]
-                        and not (
-                            VARIABLE.collide or
-                            VARIABLE.is_s_divide
-                        )
-                    ):
-                        plane_mgr.collide_barrage()
-                        particle_mgr.spawn_particles(
-                            8,
-                            9,
-                            VARIABLE.main_char.rect.center,
-                            (10, 16),
-                            VARIABLE.main_char.color,
-                            DICT.color_dict[6]
-                        )
-                        plane_mgr.life_logic()
+                barrage_collide()
+                bullet_collide()
+                item_collide()
 
-                        barrage.kill()
-                collide2 = pygame.sprite.groupcollide(
-                    VARIABLE.bullet_group,
-                    VARIABLE.brick_group,
-                    False,
-                    False
-                )
-                for bullet, hit_bricks in collide2.items():
-                    for brick in hit_bricks:
-                        bullet_mgr.bullet_collide(bullet, brick)
-                        if brick.hp <= 0:
-                            if (
-                                bullet.type in ("bullet", "line", "bomb")
-                                and getattr(brick, 'is_die', False)
-                            ):
-                                bullet.kill()
-                                break
-                            brick_mgr.brick_death(brick)
-                            particle_mgr.spawn_particles(
-                                2,
-                                2,
-                                brick.rect.center,
-                                (4, 8),
-                                brick.color,
-                                DICT.color_dict[6]
-                            )
-                            if hasattr(brick, "free"):
-                                stage_mgr.shhm_lose()
-                            item_mgr.item_spawn(brick)
-                            brick_mgr.brick_blast(brick)
-                            barrage_mgr.spawn_barrage(brick)
-                            brick.kill()
-                        if bullet.type in ("bullet", "bomb"):
-                            bullet.kill()
-                collide3 = pygame.sprite.spritecollide(
-                    VARIABLE.main_char,
-                    VARIABLE.item_group,
-                    False
-                )
-                for item in collide3:
-                    item_mgr.item_collide(item)
+            LOGIC.ItemMgr.combo_counter()
+            LOGIC.StageMgr.level_process()
 
-            item_mgr.combo_counter()
-            stage_mgr.level_process()
+        LOGIC.Key.key_event()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif event.type == pygame.KEYUP:
-                key_mgr.keyup(event)
-            elif event.type == pygame.KEYDOWN:
-                key_mgr.keydown(event)
-
-        screen.fill(DICT.color_dict[7])
-        screen.blit(VARIABLE.second_background, (120, 15))
-
-        VARIABLE.bullet_group.draw(screen)
-        if VARIABLE.is_visitable:
-            VARIABLE.plane_group.draw(screen)
-        VARIABLE.brick_group.draw(screen)
-        VARIABLE.item_group.draw(screen)
-        VARIABLE.particle_group.draw(screen)
-        VARIABLE.barrage_group.draw(screen)
-
-        if not VARIABLE.run:
-            gui.start_menu(screen, font)
-        elif VARIABLE.pause:
-            gui.pause_menu(screen, font)
-        elif not VARIABLE.level_load:
-            gui.load_menu(screen, font)
-        elif VARIABLE.talk:
-            gui.talk_menu(screen, font)
-        elif VARIABLE.summary:
-            gui.summary_menu(screen, font)
-        elif VARIABLE.save:
-            gui.save_menu(screen, font)
-
-        screen.blit(VARIABLE.background, (0, 0))
-        gui.show_situ(screen, font, clock)
+        LOGIC.GUI.window_display(screen)
+        LOGIC.GUI.menu_display(screen, font)
+        LOGIC.GUI.font_display(screen, font, clock)
 
         pygame.display.flip()
         clock.tick(60)

@@ -1,66 +1,11 @@
-import os
-
 import pygame
 
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.FUNC as FUNC
 
 
-window = pygame.Rect(
-    (
-        120, 15,
-        345, 330
-    )
-)
-effective = pygame.Rect(
-    (
-        105, 0,
-        375, 360
-    )
-)
-
-plane_group = pygame.sprite.Group()
-bullet_group = pygame.sprite.Group()
-brick_group = pygame.sprite.Group()
-item_group = pygame.sprite.Group()
-barrage_group = pygame.sprite.Group()
-particle_group = pygame.sprite.Group()
-
-picture_list = [
-    (1, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE1BG.png')),
-    (2, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE2BG.png')),
-    (3, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE3BG.png')),
-    (4, os.path.join(DICT.asset_path, 'IMAGE\IMG_STAGE4BG.png')),
-    ("GAME_BG", os.path.join(DICT.asset_path, 'IMAGE\IMG_GAMEBG.png')),
-    ("MENU_BG", os.path.join(DICT.asset_path, 'IMAGE\IMG_MENU.png'))
-]
-char_image_list = [
-    ("Kli", os.path.join(DICT.asset_path, 'IMAGE\IMG_KLI.png')),
-    ("Ono", os.path.join(DICT.asset_path, 'IMAGE\IMG_ONO.png')),
-    ("Hro", os.path.join(DICT.asset_path, 'IMAGE\IMG_HRO.png')),
-    ("Nre", os.path.join(DICT.asset_path, 'IMAGE\IMG_NRE.png')),
-    ("Qdi", os.path.join(DICT.asset_path, 'IMAGE\IMG_QDI.png'))
-]
-sprite_image_list = [
-    (f"C_BA_{DICT.color_dict[1]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBARRAGEORANGE.png')),
-    (f"C_BA_{DICT.color_dict[4]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBARRAGEYELLOW.png')),
-    (f"C_BA_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBARRAGEWHITE.png')),
-    (f"P_BA_{DICT.color_dict[2]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBARRAGEGREEN.png')),
-    (f"P_BA_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBARRAGEWHITE.png')),
-    (f"C_BR_{DICT.color_dict[1]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBRICKORANGE.png')),
-    (f"C_BR_{DICT.color_dict[4]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBRICKYELLOW.png')),
-    (f"C_BR_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_CIRCLEBRICKWHITE.png')),
-    (f"P_BR_{DICT.color_dict[2]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBRICKGREEN.png')),
-    (f"P_BR_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_POLYGONBRICKWHITE.png')),
-    (f"R_BR_{DICT.color_dict[3]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_RECTANGLEBRICKPURPLE.png')),
-    (f"R_BR_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_RECTANGLEBRICKWHITE.png')),
-    (f"R_IT_{DICT.color_dict[2]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_ITEMGREEN.png')),
-    (f"R_IT_{DICT.color_dict[5]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_ITEMBLUE.png')),
-    (f"R_IT_{DICT.color_dict[6]}", os.path.join(DICT.asset_path, f'IMAGE\IMG_ITEMWHITE.png')),
-    ("KLI_BULLET", os.path.join(DICT.asset_path, f'IMAGE\IMG_KLIBULLET.png')),
-    ("KLI_BOMB", os.path.join(DICT.asset_path, f'IMAGE\IMG_KLIBOMB.png')),
-    ("DEC", os.path.join(DICT.asset_path, f'IMAGE\IMG_DECISIONPOINT.png')),
-]
+window = pygame.Rect((120, 15, 345, 330))
+effective = pygame.Rect((105, 0, 375, 360))
 
 run = False
 pause = False
@@ -68,7 +13,7 @@ summary = False
 talk = False
 save = False
 level_load = False
-is_blited = False
+is_blit = False
 
 last_time = pygame.time.get_ticks()
 fps_text = last_time
@@ -102,21 +47,22 @@ collide = True
 
 text_number = 0
 text_part = 0
-timer = 0
+wait_level_load_timer = 0
 stage = 1
 level = 0
 
-picture = FUNC.Process.load_files(picture_list, lambda f: pygame.image.load(f).convert_alpha())
-char_image = FUNC.Process.load_files(char_image_list, lambda f: pygame.image.load(f).convert_alpha())
-sprite_image = FUNC.Process.load_files(sprite_image_list, lambda f: pygame.image.load(f).convert_alpha())
+picture = FUNC.Process.load_files(TABLE.picture_list, lambda f: pygame.image.load(f).convert_alpha())
+char_image = FUNC.Process.load_files(TABLE.char_image_list, lambda f: pygame.image.load(f).convert_alpha())
+sprite_image = FUNC.Process.load_files(TABLE.sprite_image_list, lambda f: pygame.image.load(f).convert_alpha())
+
 background = picture["GAME_BG"]
 second_background = picture[stage]
 
 char = None
 text = None
 
-main_char = DICT.char_dict.get(5)()
-decision_point = DICT.char_dict.get(6)()
+main_char = TABLE.char_dict.get(5)()
+decision_point = TABLE.char_dict.get(6)()
 
 
 def reset1() -> None:
@@ -125,6 +71,7 @@ def reset1() -> None:
     global shoot_counter, can_shoot
     global item_spawn_timer
     global text_number, text_part
+    global main_char
     
     pause = False
     summary = False
@@ -132,18 +79,17 @@ def reset1() -> None:
     save = False
     level_load = False
 
-    item_group.empty(),
-    brick_group.empty(),
-    plane_group.empty(),
-    bullet_group.empty(),
-    particle_group.empty(),
-    barrage_group.empty()
+    TABLE.item_group.empty(),
+    TABLE.brick_group.empty(),
+    TABLE.plane_group.empty(),
+    TABLE.bullet_group.empty(),
+    TABLE.particle_group.empty(),
+    TABLE.barrage_group.empty()
 
     collide = False
     is_s_divide = False
     cooldown_timer = 0
-    main_char.bullet_counter = 0
-    main_char.bullet_timer = 0
+    main_char = TABLE.char_dict.get(5)()
     total_s_power = 0
 
     shoot_counter = 0

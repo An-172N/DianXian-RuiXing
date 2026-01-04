@@ -5,11 +5,11 @@ def delta_tuple(tuple1: tuple, tuple2: tuple) -> tuple:
     )
 
 
-def fibonacci(a: int, b: int, frequency: int) -> int:
-    for _ in range(2, frequency):
+def fibonacci(a: float, b: float, n: int) -> float:
+    for _ in range(2, n):
         a, b = b, a + b
 
-    return b
+    return a, b
 
 
 def divide(dividend: float, divisor: float, default: float) -> float:

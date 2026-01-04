@@ -4,7 +4,7 @@ import math
 
 import pygame
 
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
 
@@ -13,7 +13,7 @@ class Ono(pygame.sprite.Sprite):
         super().__init__()
 
         th.hp = 192
-        th.color = DICT.color_dict[1]
+        th.color = TABLE.color_dict[1]
         th.shape = 2
         th.current_angle = 0
 
@@ -52,7 +52,7 @@ class Ono(pygame.sprite.Sprite):
                 x = th.rect.centerx + 32 * math.cos(math.radians(i))
                 y = th.rect.centery + 32 * math.sin(math.radians(i))
                 pos = (x, y)
-                sprite = DICT.char_dict[7](
+                sprite = TABLE.char_dict[7](
                     color=th.color,
                     shape=2,
                     type="barrage"
@@ -60,7 +60,7 @@ class Ono(pygame.sprite.Sprite):
                 sprite.speed = 3.5
                 sprite.rect.center = pos
                 sprite.current_angle = j
-                VARIABLE.barrage_group.add(sprite)
+                TABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -68,7 +68,7 @@ class Ono(pygame.sprite.Sprite):
         if th.bullet_counter < 1:
             pos = th.rect.center
             for i in range(0, 360, 15):
-                sprite = DICT.char_dict[7](
+                sprite = TABLE.char_dict[7](
                     color=th.color,
                     shape=2,
                     type="barrage"
@@ -76,7 +76,7 @@ class Ono(pygame.sprite.Sprite):
                 sprite.speed = 4
                 sprite.rect.center = pos
                 sprite.current_angle = i
-                VARIABLE.barrage_group.add(sprite)
+                TABLE.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -91,7 +91,7 @@ class Ono(pygame.sprite.Sprite):
             th.is_free = not th.is_free
             th.choice = random.choice([th.fire, th.free])
 
-        DICT.char_dict[7].vector(th, 4)
+        TABLE.char_dict[7].vector(th, 4)
 
         if not th.is_free:
             th.fire()

@@ -1,8 +1,11 @@
 import os
+import sys
 import json
 import datetime
 
-import SCRIPT.DICT as DICT
+import pygame
+
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
 
@@ -33,39 +36,49 @@ def save_file() -> None:
         json.dump(dump, f, indent=4)
 
 
+def key_event() -> None:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+        elif event.type == pygame.KEYUP:
+            keyup(event)
+        elif event.type == pygame.KEYDOWN:
+            keydown(event)
+
+
 def keyup(event) -> None:
     if (
         VARIABLE.run
-        and event.key in DICT.keyup_game_dict
+        and event.key in TABLE.keyup_game_dict
     ):
-        DICT.keyup_game_dict[event.key]()
+        TABLE.keyup_game_dict[event.key]()
 
 
 def keydown(event) -> None:
     if (
         not VARIABLE.run
-        and event.key in DICT.keydown_start_dict
+        and event.key in TABLE.keydown_start_dict
     ):
-        DICT.keydown_start_dict[event.key]()
+        TABLE.keydown_start_dict[event.key]()
     elif VARIABLE.save:
-        if event.key in DICT.keydown_over_dict:
-            DICT.keydown_over_dict[event.key]()
+        if event.key in TABLE.keydown_over_dict:
+            TABLE.keydown_over_dict[event.key]()
         else:
             VARIABLE.name += event.unicode
-            VARIABLE.is_blited = False
+            VARIABLE.is_blit = False
     elif (
         VARIABLE.pause
-        and event.key in DICT.keydown_pause_dict
+        and event.key in TABLE.keydown_pause_dict
     ):
-        DICT.keydown_pause_dict[event.key]()
+        TABLE.keydown_pause_dict[event.key]()
     elif (
         VARIABLE.talk
-        and event.key in DICT.keydown_talk_dict
+        and event.key in TABLE.keydown_talk_dict
     ):
-        DICT.keydown_talk_dict[event.key]()
+        TABLE.keydown_talk_dict[event.key]()
     elif (
         not VARIABLE.summary
         and VARIABLE.level_load
-        and event.key in DICT.keydown_game_dict
+        and event.key in TABLE.keydown_game_dict
     ):
-        DICT.keydown_game_dict[event.key]()
+        TABLE.keydown_game_dict[event.key]()

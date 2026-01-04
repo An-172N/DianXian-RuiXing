@@ -56,7 +56,7 @@ def life_logic() -> None:
 
     if VARIABLE.player == 0:
         VARIABLE.save = True
-        VARIABLE.is_blited = False
+        VARIABLE.is_blit = False
 
 
 def invinc() -> None:

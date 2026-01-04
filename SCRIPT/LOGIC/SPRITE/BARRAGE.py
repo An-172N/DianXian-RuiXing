@@ -2,13 +2,13 @@ import random
 import math
 
 import SCRIPT.FUNC as FUNC
-import SCRIPT.DICT as DICT
+import SCRIPT.TABLE as TABLE
 import SCRIPT.VARIABLE as VARIABLE
 
 
 def circle_barrage(brick) -> None:
     char_pos = VARIABLE.main_char.rect.center
-    sprite = DICT.char_dict[7](
+    sprite = TABLE.char_dict[7](
         color=brick.color,
         shape=brick.shape,
         type="barrage"
@@ -19,13 +19,13 @@ def circle_barrage(brick) -> None:
     two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
     sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
     sprite.update()
-    VARIABLE.barrage_group.add(sprite)
+    TABLE.barrage_group.add(sprite)
 
 
 def polygon_barrage(brick) -> None:
     char_pos = VARIABLE.main_char.rect.center
     for i in range(char_pos[0] - 32, char_pos[0] + 33, 64):
-        sprite = DICT.char_dict[7](
+        sprite = TABLE.char_dict[7](
             color=brick.color,
             shape=brick.shape,
             type="barrage"
@@ -36,7 +36,7 @@ def polygon_barrage(brick) -> None:
         two_pt = FUNC.Calculate.delta_tuple((i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
         sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
         sprite.update()
-        VARIABLE.barrage_group.add(sprite)
+        TABLE.barrage_group.add(sprite)
 
 
 def line_barrage(_) -> None:
@@ -47,9 +47,9 @@ def line_barrage(_) -> None:
     dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
                 
-    sprite = DICT.char_dict[7](
+    sprite = TABLE.char_dict[7](
         (2, distance, 0),
-        DICT.color_dict[6],
+        TABLE.color_dict[6],
         1,
         "line"
     )
@@ -57,13 +57,13 @@ def line_barrage(_) -> None:
     sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
     sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
     sprite.update()
-    VARIABLE.barrage_group.add(sprite)
+    TABLE.barrage_group.add(sprite)
 
 
 def point_barrage(brick) -> None:
     char_pos = VARIABLE.main_char.rect.center
     for _ in range(3):
-        sprite = DICT.char_dict[7](
+        sprite = TABLE.char_dict[7](
             color=brick.color,
             shape=brick.shape,
             type="barrage"
@@ -74,16 +74,11 @@ def point_barrage(brick) -> None:
         two_point = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
         sprite.current_angle = math.degrees(math.atan2(-two_point[0], -two_point[1]))
         sprite.update()
-        VARIABLE.barrage_group.add(sprite)
+        TABLE.barrage_group.add(sprite)
 
 
 def spawn_barrage(brick) -> None:
-    difficulty = FUNC.Calculate.fibonacci(
-        0,
-        1,
-        VARIABLE.stage + 1
-    ) / 100
-    if random.random() <= 0.25 + difficulty:
+    if random.random() <= 0.25 + TABLE.fibonacci_list[VARIABLE.stage - 1]:
         barrage_dict = {
             1: circle_barrage,
             2: polygon_barrage,
