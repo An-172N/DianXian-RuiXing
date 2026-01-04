@@ -3,8 +3,7 @@ import math
 import pygame
 
 import SCRIPT.FUNC as FUNC
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
 
 class Base(pygame.sprite.Sprite):
@@ -61,23 +60,23 @@ class Base(pygame.sprite.Sprite):
     
     def polygon(self) -> pygame.Surface:
         type_dict = {
-            "brick": lambda: VARIABLE.sprite_image[f"P_BR_{self.color}"],
-            "barrage": lambda: VARIABLE.sprite_image[f"P_BA_{self.color}"]
+            "brick": lambda: GLOBAL.sprite_image[f"P_BR_{self.color}"],
+            "barrage": lambda: GLOBAL.sprite_image[f"P_BA_{self.color}"]
         }
         
         return type_dict.get(self.type)()
 
     def rectangle(self) -> pygame.Surface:
         type_dict = {
-            "brick": lambda: VARIABLE.sprite_image[f"R_BR_{self.color}"],
-            "barrage": lambda:VARIABLE.sprite_image[f"R_BA_{self.color}"],
-            "bomb": lambda: VARIABLE.sprite_image[f"KLI_BOMB"],
-            "bullet": lambda: VARIABLE.sprite_image[f"KLI_BULLET"],
-            "bullet-cross": lambda: VARIABLE.sprite_image[f"KLI_BULLET"],
-            "power": lambda: VARIABLE.sprite_image[f"R_IT_{self.color}"],
-            "flash": lambda: VARIABLE.sprite_image[f"R_IT_{self.color}"],
-            "fire": lambda: VARIABLE.sprite_image[f"R_IT_{self.color}"],
-            "dec": lambda: VARIABLE.sprite_image[f"DEC"]
+            "brick": lambda: GLOBAL.sprite_image[f"R_BR_{self.color}"],
+            "barrage": lambda:GLOBAL.sprite_image[f"R_BA_{self.color}"],
+            "bomb": lambda: GLOBAL.sprite_image[f"KLI_BOMB"],
+            "bullet": lambda: GLOBAL.sprite_image[f"KLI_BULLET"],
+            "bullet-cross": lambda: GLOBAL.sprite_image[f"KLI_BULLET"],
+            "power": lambda: GLOBAL.sprite_image[f"R_IT_{self.color}"],
+            "flash": lambda: GLOBAL.sprite_image[f"R_IT_{self.color}"],
+            "fire": lambda: GLOBAL.sprite_image[f"R_IT_{self.color}"],
+            "dec": lambda: GLOBAL.sprite_image[f"DEC"]
         }
 
         def not_in_type_dict():
@@ -90,8 +89,8 @@ class Base(pygame.sprite.Sprite):
 
     def circle(self) -> pygame.Surface:
         type_dict = {
-            "brick": lambda: VARIABLE.sprite_image[f"C_BR_{self.color}"],
-            "barrage": lambda: VARIABLE.sprite_image[f"C_BA_{self.color}"]
+            "brick": lambda: GLOBAL.sprite_image[f"C_BR_{self.color}"],
+            "barrage": lambda: GLOBAL.sprite_image[f"C_BA_{self.color}"]
         }
 
         return type_dict.get(self.type)()
@@ -118,7 +117,7 @@ class Base(pygame.sprite.Sprite):
 
             if th.timer >= 90:
                 th.kill()
-            elif th.timer >= 45 and th.color != TABLE.color_dict[3]:
-                th.color = TABLE.color_dict[3]
+            elif th.timer >= 45 and th.color != GLOBAL.color_dict[3]:
+                th.color = GLOBAL.color_dict[3]
 
                 th.image.fill(th.color, special_flags=pygame.BLEND_RGBA_MULT)

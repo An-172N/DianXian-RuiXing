@@ -1,16 +1,15 @@
 import pygame
 
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
 
 class Kli(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.color = TABLE.color_dict[5]
+        th.color = GLOBAL.color_dict[5]
 
-        th.original_image = VARIABLE.char_image["Kli"]
+        th.original_image = GLOBAL.char_image["Kli"]
         th.image = th.original_image.subsurface((0, 0, 12, 26))
         th.rect = th.image.get_rect()
 
@@ -26,7 +25,7 @@ class Kli(pygame.sprite.Sprite):
             th.bullet_counter < 6
         ):
             for i in range(120, 466, 15):
-                sprite = TABLE.char_dict[7](
+                sprite = GLOBAL.char_dict[7](
                     shape=1,
                     type="bomb"
                 )
@@ -34,14 +33,14 @@ class Kli(pygame.sprite.Sprite):
                     sprite.damage = 6
                 sprite.speed = -24
                 sprite.rect.center = (i, 0)
-                TABLE.bullet_group.add(sprite)
+                GLOBAL.bullet_group.add(sprite)
 
             th.bullet_counter += 1
 
     def fire(th, dx, dy, angle) -> None:
-        left = VARIABLE.main_char.rect.left
-        top = VARIABLE.main_char.rect.top
-        right = VARIABLE.main_char.rect.right
+        left = GLOBAL.main_char.rect.left
+        top = GLOBAL.main_char.rect.top
+        right = GLOBAL.main_char.rect.right
         bullet_type = [
             {
                 'x': left - dx,
@@ -56,7 +55,7 @@ class Kli(pygame.sprite.Sprite):
         ]
 
         for bullet_info in bullet_type:
-            sprite = TABLE.char_dict[7](
+            sprite = GLOBAL.char_dict[7](
                 shape=1,
                 type="bullet"
             )
@@ -65,13 +64,13 @@ class Kli(pygame.sprite.Sprite):
             sprite.speed = 16
             sprite.rect.center = (bullet_info['x'], bullet_info['y'])
             sprite.current_angle = bullet_info['angle']
-            TABLE.bullet_group.add(sprite)
+            GLOBAL.bullet_group.add(sprite)
 
 
 class DecisionPoint(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
-        th.original_image = TABLE.char_dict[7](
+        th.original_image = GLOBAL.char_dict[7](
             shape=1,
             type="dec"
         ).image

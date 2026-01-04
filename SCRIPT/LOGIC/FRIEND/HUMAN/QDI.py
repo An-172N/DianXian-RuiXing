@@ -3,8 +3,7 @@ import math
 
 import pygame
 
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 import SCRIPT.FUNC as FUNC
 
 
@@ -13,11 +12,11 @@ class Qdi(pygame.sprite.Sprite):
         super().__init__()
 
         th.hp = 290
-        th.color = TABLE.color_dict[4]
+        th.color = GLOBAL.color_dict[4]
         th.shape = 2
         th.current_angle = 0
 
-        th.original_image = VARIABLE.char_image["Qdi"]
+        th.original_image = GLOBAL.char_image["Qdi"]
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -43,7 +42,7 @@ class Qdi(pygame.sprite.Sprite):
                 x = random.randint(120, 465)
                 y = random.randint(15, 250)
                 pos = (x, y)
-                sprite = TABLE.char_dict[7](
+                sprite = GLOBAL.char_dict[7](
                     color=th.color,
                     shape=2,
                     type="barrage"
@@ -51,7 +50,7 @@ class Qdi(pygame.sprite.Sprite):
                 sprite.speed = 4
                 sprite.rect.center = pos
                 sprite.current_angle = random.randint(0, 360)
-                TABLE.barrage_group.add(sprite)
+                GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -62,8 +61,8 @@ class Qdi(pygame.sprite.Sprite):
             th.bullet_counter < 6
             and th.bullet_timer % 2 == 0
         ):
-            char = VARIABLE.main_char
-            sprite = TABLE.char_dict[7](
+            char = GLOBAL.main_char
+            sprite = GLOBAL.char_dict[7](
                 color=th.color,
                 shape=2,
                 type="barrage"
@@ -76,7 +75,7 @@ class Qdi(pygame.sprite.Sprite):
             y2 = sprite.rect.centery
             two_pt = FUNC.Calculate.delta_tuple((x1, y1), (x2, y2))
             sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
-            TABLE.barrage_group.add(sprite)
+            GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 

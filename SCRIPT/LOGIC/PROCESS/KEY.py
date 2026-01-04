@@ -5,8 +5,7 @@ import datetime
 
 import pygame
 
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
 
 def save_file() -> None:
@@ -14,20 +13,20 @@ def save_file() -> None:
     time = datetime.datetime.now().strftime('%H-%M-%S')
 
     folder = f'{os.environ["USERPROFILE"]}/Saved Games/DX00'
-    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{VARIABLE.name}_{date}_{time}.json'
+    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{GLOBAL.name}_{date}_{time}.json'
 
     if not os.path.exists(folder):
         os.makedirs(folder)
 
     dump = ["RuiShan FuXing Log"]
-    stage = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
+    stage = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
     dump.append(
         {
-            'Nickname': VARIABLE.name,
-            'Score': VARIABLE.score,
-            'The farthest place that you reached': f"{stage} - {VARIABLE.level}",
-            'Pick up SPower rate': VARIABLE.cal_s_power(),
-            'Shape Flash': VARIABLE.s_flash,
+            'Nickname': GLOBAL.name,
+            'Score': GLOBAL.score,
+            'The farthest place that you reached': f"{stage} - {GLOBAL.level}",
+            'Pick up SPower rate': GLOBAL.cal_s_power(),
+            'Shape Flash': GLOBAL.s_flash,
             'Record date': datetime.datetime.now().strftime('%Y-%m-%d')
         }
     )
@@ -48,37 +47,37 @@ def key_event() -> None:
 
 def keyup(event) -> None:
     if (
-        VARIABLE.run
-        and event.key in TABLE.keyup_game_dict
+        GLOBAL.run
+        and event.key in GLOBAL.keyup_game_dict
     ):
-        TABLE.keyup_game_dict[event.key]()
+        GLOBAL.keyup_game_dict[event.key]()
 
 
 def keydown(event) -> None:
     if (
-        not VARIABLE.run
-        and event.key in TABLE.keydown_start_dict
+        not GLOBAL.run
+        and event.key in GLOBAL.keydown_start_dict
     ):
-        TABLE.keydown_start_dict[event.key]()
-    elif VARIABLE.save:
-        if event.key in TABLE.keydown_over_dict:
-            TABLE.keydown_over_dict[event.key]()
+        GLOBAL.keydown_start_dict[event.key]()
+    elif GLOBAL.save:
+        if event.key in GLOBAL.keydown_over_dict:
+            GLOBAL.keydown_over_dict[event.key]()
         else:
-            VARIABLE.name += event.unicode
-            VARIABLE.is_blit = False
+            GLOBAL.name += event.unicode
+            GLOBAL.is_blit = False
     elif (
-        VARIABLE.pause
-        and event.key in TABLE.keydown_pause_dict
+        GLOBAL.pause
+        and event.key in GLOBAL.keydown_pause_dict
     ):
-        TABLE.keydown_pause_dict[event.key]()
+        GLOBAL.keydown_pause_dict[event.key]()
     elif (
-        VARIABLE.talk
-        and event.key in TABLE.keydown_talk_dict
+        GLOBAL.talk
+        and event.key in GLOBAL.keydown_talk_dict
     ):
-        TABLE.keydown_talk_dict[event.key]()
+        GLOBAL.keydown_talk_dict[event.key]()
     elif (
-        not VARIABLE.summary
-        and VARIABLE.level_load
-        and event.key in TABLE.keydown_game_dict
+        not GLOBAL.summary
+        and GLOBAL.level_load
+        and event.key in GLOBAL.keydown_game_dict
     ):
-        TABLE.keydown_game_dict[event.key]()
+        GLOBAL.keydown_game_dict[event.key]()

@@ -3,8 +3,7 @@ import math
 
 import pygame
 
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 import SCRIPT.FUNC as FUNC
 
 
@@ -13,11 +12,11 @@ class Nre(pygame.sprite.Sprite):
         super().__init__()
 
         th.hp = 256
-        th.color = TABLE.color_dict[3]
+        th.color = GLOBAL.color_dict[3]
         th.shape = 1
         th.current_angle = 0
 
-        th.original_image = VARIABLE.char_image["Nre"]
+        th.original_image = GLOBAL.char_image["Nre"]
         th.image = th.original_image.subsurface(
             (
                 0, 0,
@@ -48,9 +47,9 @@ class Nre(pygame.sprite.Sprite):
             dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
 
-            sprite = TABLE.char_dict[7](
+            sprite = GLOBAL.char_dict[7](
                 (2, distance, 0),
-                TABLE.color_dict[6],
+                GLOBAL.color_dict[6],
                 1,
                 "line"
             )
@@ -58,13 +57,13 @@ class Nre(pygame.sprite.Sprite):
             sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
             sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
             sprite.update()
-            TABLE.barrage_group.add(sprite)
+            GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
     def fire(th) -> None:
         if th.bullet_counter < 1:
-            char_pos = VARIABLE.main_char.rect.center
+            char_pos = GLOBAL.main_char.rect.center
 
             for i in range(char_pos[0] - 30, char_pos[0] + 31, 20):
                 end_pos = (i, 360)
@@ -73,9 +72,9 @@ class Nre(pygame.sprite.Sprite):
                 dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
 
-                sprite = TABLE.char_dict[7](
+                sprite = GLOBAL.char_dict[7](
                     (2, distance, 0),
-                    TABLE.color_dict[6],
+                    GLOBAL.color_dict[6],
                     1,
                     "line"
                 )
@@ -83,7 +82,7 @@ class Nre(pygame.sprite.Sprite):
                 sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
                 sprite.current_angle = 0
                 sprite.update()
-                TABLE.barrage_group.add(sprite)
+                GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
@@ -98,7 +97,7 @@ class Nre(pygame.sprite.Sprite):
             th.is_free = not th.is_free
             th.choice = random.choice([th.fire, th.free])
 
-        TABLE.char_dict[7].vector(th, 5.5)
+        GLOBAL.char_dict[7].vector(th, 5.5)
 
         if not th.is_free:
             th.fire()

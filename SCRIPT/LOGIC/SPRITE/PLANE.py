@@ -1,24 +1,24 @@
 import pygame
 
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
 
 def move_plane() -> None:
-    if VARIABLE.move_right:
-        VARIABLE.main_char.rect.x += 1.5 if VARIABLE.is_slow else 3.5
-    if VARIABLE.move_left:
-        VARIABLE.main_char.rect.x -= 1.5 if VARIABLE.is_slow else 3.5
+    if GLOBAL.move_right:
+        GLOBAL.main_char.rect.x += 1.5 if GLOBAL.is_slow else 3.5
+    if GLOBAL.move_left:
+        GLOBAL.main_char.rect.x -= 1.5 if GLOBAL.is_slow else 3.5
 
-    if VARIABLE.main_char.rect.left < VARIABLE.window.left:
-        VARIABLE.main_char.rect.left = VARIABLE.window.left
-    elif VARIABLE.main_char.rect.right > VARIABLE.window.right:
-        VARIABLE.main_char.rect.right = VARIABLE.window.right
+    if GLOBAL.main_char.rect.left < GLOBAL.window.left:
+        GLOBAL.main_char.rect.left = GLOBAL.window.left
+    elif GLOBAL.main_char.rect.right > GLOBAL.window.right:
+        GLOBAL.main_char.rect.right = GLOBAL.window.right
 
-    VARIABLE.decision_point.rect.center = VARIABLE.main_char.rect.center
+    GLOBAL.decision_point.rect.center = GLOBAL.main_char.rect.center
 
 
 def turn_side() -> None:
-    turn_side_image = VARIABLE.main_char.original_image.subsurface(
+    turn_side_image = GLOBAL.main_char.original_image.subsurface(
         (
             12, 0,
             12, 26
@@ -30,54 +30,52 @@ def turn_side() -> None:
         False
     )
 
-    if VARIABLE.move_right:
-        VARIABLE.main_char.image = flipped_image
-    elif VARIABLE.move_left:
-        VARIABLE.main_char.image = turn_side_image
+    if GLOBAL.move_right:
+        GLOBAL.main_char.image = flipped_image
+    elif GLOBAL.move_left:
+        GLOBAL.main_char.image = turn_side_image
     else:
-        VARIABLE.main_char.image = VARIABLE.main_char.original_image.subsurface(
+        GLOBAL.main_char.image = GLOBAL.main_char.original_image.subsurface(
             (
-                0,
-                0,
-                12,
-                26
+                0, 0,
+                12, 26
             )
         )
 
 
 def collide_barrage() -> None:
-    VARIABLE.collide = True
+    GLOBAL.collide = True
 
 
 def life_logic() -> None:
-    VARIABLE.no_hurt = 0
-    VARIABLE.player -= 1
-    VARIABLE.s_flash += 1
+    GLOBAL.no_hurt = 0
+    GLOBAL.player -= 1
+    GLOBAL.s_flash += 1
 
-    if VARIABLE.player == 0:
-        VARIABLE.save = True
-        VARIABLE.is_blit = False
+    if GLOBAL.player == 0:
+        GLOBAL.save = True
+        GLOBAL.is_blit = False
 
 
 def invinc() -> None:
     if (
-        VARIABLE.is_s_divide or
-        VARIABLE.collide
+        GLOBAL.is_s_divide or
+        GLOBAL.collide
     ):
-        VARIABLE.cooldown_timer += 1
+        GLOBAL.cooldown_timer += 1
 
-        if VARIABLE.cooldown_timer >= 180:
-            if VARIABLE.is_s_divide:
-                VARIABLE.is_s_divide = False
-                VARIABLE.collide = False
-                VARIABLE.cooldown_timer = 0
-                VARIABLE.main_char.bullet_counter = 0
-                VARIABLE.main_char.bullet_timer = 0
-                VARIABLE.total_s_power = 0
+        if GLOBAL.cooldown_timer >= 180:
+            if GLOBAL.is_s_divide:
+                GLOBAL.is_s_divide = False
+                GLOBAL.collide = False
+                GLOBAL.cooldown_timer = 0
+                GLOBAL.main_char.bullet_counter = 0
+                GLOBAL.main_char.bullet_timer = 0
+                GLOBAL.total_s_power = 0
 
-            VARIABLE.collide = False
+            GLOBAL.collide = False
         else:
-            VARIABLE.is_visitable = (VARIABLE.cooldown_timer // 6) % 2
+            GLOBAL.is_visitable = (GLOBAL.cooldown_timer // 6) % 2
     else:
-        VARIABLE.cooldown_timer = 0
-        VARIABLE.is_visitable = True
+        GLOBAL.cooldown_timer = 0
+        GLOBAL.is_visitable = True

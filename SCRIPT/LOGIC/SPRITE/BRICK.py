@@ -1,11 +1,10 @@
 import random
 
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
 
 def brick_blast(brick) -> None:
-    if brick.color == TABLE.color_dict[6]:
+    if brick.color == GLOBAL.color_dict[6]:
         process_dict = {
             1: circle_brick,
             2: polygon_brick,
@@ -13,10 +12,10 @@ def brick_blast(brick) -> None:
             4: point_brick
         }
 
-        process_dict[VARIABLE.stage](
-            TABLE.char_dict[7],
+        process_dict[GLOBAL.stage](
+            GLOBAL.char_dict[7],
             brick,
-            TABLE.bullet_group,
+            GLOBAL.bullet_group,
             16
         )
 
@@ -30,7 +29,7 @@ def circle_brick(sprite, source, sprite_group, speed) -> None:
 
     for i in range(0 + rands, 360 + rands, 15):
         current_sprite = sprite(
-            color=TABLE.color_dict[5],
+            color=GLOBAL.color_dict[5],
             shape=1,
             type="bullet"
         )
@@ -64,7 +63,7 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
 
     for bullet_info in bullet_index:
         current_sprite = sprite(
-            color=TABLE.color_dict[5],
+            color=GLOBAL.color_dict[5],
             shape=1,
             type="bullet-cross"
         )
@@ -81,7 +80,7 @@ def line_brick(sprite, source, sprite_group, _) -> None:
     for _ in range(12):
         current_sprite = sprite(
             (2, random.randint(64, 256), 0),
-            TABLE.color_dict[5],
+            GLOBAL.color_dict[5],
             1,
             "line"
         )
@@ -98,7 +97,7 @@ def line_brick(sprite, source, sprite_group, _) -> None:
 def point_brick(sprite, _, sprite_group, speed):
     for _ in range(24):
         current_sprite = sprite(
-            color=TABLE.color_dict[5],
+            color=GLOBAL.color_dict[5],
             shape=1,
             type="bullet"
         )

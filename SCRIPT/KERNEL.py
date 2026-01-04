@@ -12,12 +12,11 @@ screen = pygame.display.set_mode(
 )
 
 import SCRIPT.LOGIC as LOGIC
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
-font = pygame.font.Font(os.path.join(TABLE.asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
+font = pygame.font.Font(os.path.join(GLOBAL.asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
 
-pygame.display.set_icon(pygame.image.load(os.path.join(TABLE.asset_path, 'IMAGE\IMG_ICON.png')))
+pygame.display.set_icon(pygame.image.load(os.path.join(GLOBAL.asset_path, 'IMAGE\IMG_ICON.png')))
 
 
 def option() -> None:
@@ -43,10 +42,10 @@ def option() -> None:
         default=0
     )
     args = parser.parse_args()
-    VARIABLE.stage = args.stage
-    VARIABLE.level = args.level
-    VARIABLE.player = args.player
-    VARIABLE.s_power = args.s_power
+    GLOBAL.stage = args.stage
+    GLOBAL.level = args.level
+    GLOBAL.player = args.player
+    GLOBAL.s_power = args.s_power
 
 
 def remove_sprite(sprite_group, effective_range) -> None:
@@ -57,20 +56,20 @@ def remove_sprite(sprite_group, effective_range) -> None:
 
 def item_collide() -> None:
     if (
-        VARIABLE.can_shoot
-        and VARIABLE.shoot_counter > 0
+        GLOBAL.can_shoot
+        and GLOBAL.shoot_counter > 0
     ):
         LOGIC.BulletMgr.spawn_bullet()
         LOGIC.ParticleMgr.spawn_particles(
             2,
             2,
-            VARIABLE.main_char.rect.center,
+            GLOBAL.main_char.rect.center,
             (4, 8),
-            VARIABLE.main_char.color
+            GLOBAL.main_char.color
         )
 
     collide3 = pygame.sprite.spritecollide(
-         VARIABLE.main_char, TABLE.item_group,
+         GLOBAL.main_char, GLOBAL.item_group,
         False
     )
     for item in collide3:
@@ -79,27 +78,27 @@ def item_collide() -> None:
 
 def barrage_collide() -> None:
     collide1 = pygame.sprite.spritecollide(
-        VARIABLE.decision_point,
-        TABLE.barrage_group,
+        GLOBAL.decision_point,
+        GLOBAL.barrage_group,
         False,
         pygame.sprite.collide_mask
     )
     for barrage in collide1:
         if (
-            barrage.color != TABLE.color_dict[6]
+            barrage.color != GLOBAL.color_dict[6]
             and not (
-                VARIABLE.collide or
-                VARIABLE.is_s_divide
+                GLOBAL.collide or
+                GLOBAL.is_s_divide
             )
         ):
             LOGIC.PlaneMgr.collide_barrage()
             LOGIC.ParticleMgr.spawn_particles(
                 8,
                 9,
-                VARIABLE.main_char.rect.center,
+                GLOBAL.main_char.rect.center,
                 (10, 16),
-                VARIABLE.main_char.color,
-                TABLE.color_dict[6]
+                GLOBAL.main_char.color,
+                GLOBAL.color_dict[6]
             )
             LOGIC.PlaneMgr.life_logic()
 
@@ -108,8 +107,8 @@ def barrage_collide() -> None:
 
 def bullet_collide() -> None:
     collide2 = pygame.sprite.groupcollide(
-        TABLE.bullet_group,
-        TABLE.brick_group,
+        GLOBAL.bullet_group,
+        GLOBAL.brick_group,
         False,
         False
     )
@@ -128,7 +127,7 @@ def bullet_collide() -> None:
                     2, 2,
                     brick.rect.center,
                     (4, 8),
-                    brick.color, TABLE.color_dict[6]
+                    brick.color, GLOBAL.color_dict[6]
                 )
                 if hasattr(brick, "free"):
                     LOGIC.StageMgr.shhm_lose()
@@ -143,17 +142,17 @@ def bullet_collide() -> None:
 def update() -> None:
     while True:
         if (
-            VARIABLE.run and
-            not VARIABLE.save and
-            not VARIABLE.pause
+            GLOBAL.run and
+            not GLOBAL.save and
+            not GLOBAL.pause
         ):
             if (
-                not VARIABLE.summary and
-                not VARIABLE.talk and
-                VARIABLE.level_load
+                not GLOBAL.summary and
+                not GLOBAL.talk and
+                GLOBAL.level_load
             ):
-                if VARIABLE.is_s_divide:
-                    VARIABLE.main_char.free()
+                if GLOBAL.is_s_divide:
+                    GLOBAL.main_char.free()
 
                 LOGIC.PlaneMgr.turn_side()
                 LOGIC.PlaneMgr.move_plane()
@@ -161,16 +160,16 @@ def update() -> None:
 
                 LOGIC.ItemMgr.item_spawn_regular()
             
-                TABLE.bullet_group.update()
-                TABLE.barrage_group.update()
-                TABLE.item_group.update()
-                TABLE.particle_group.update()
-                TABLE.brick_group.update()
+                GLOBAL.bullet_group.update()
+                GLOBAL.barrage_group.update()
+                GLOBAL.item_group.update()
+                GLOBAL.particle_group.update()
+                GLOBAL.brick_group.update()
 
-                remove_sprite(TABLE.bullet_group, VARIABLE.effective)
-                remove_sprite(TABLE.barrage_group, VARIABLE.effective)
-                remove_sprite(TABLE.item_group, VARIABLE.effective)
-                remove_sprite(TABLE.particle_group, VARIABLE.window)
+                remove_sprite(GLOBAL.bullet_group, GLOBAL.effective)
+                remove_sprite(GLOBAL.barrage_group, GLOBAL.effective)
+                remove_sprite(GLOBAL.item_group, GLOBAL.effective)
+                remove_sprite(GLOBAL.particle_group, GLOBAL.window)
 
                 barrage_collide()
                 bullet_collide()

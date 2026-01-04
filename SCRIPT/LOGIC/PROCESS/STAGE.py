@@ -5,100 +5,108 @@ import os
 from typing import Optional, Any
 
 import SCRIPT.FUNC as FUNC
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
 
 def next_level() -> None:
-    VARIABLE.score += VARIABLE.total_s_power * 512
-    VARIABLE.score += VARIABLE.no_hurt * 4096
+    GLOBAL.score += GLOBAL.total_s_power * 512
+    GLOBAL.score += GLOBAL.no_hurt * 4096
 
-    VARIABLE.reset1()
+    GLOBAL.reset1()
+    GLOBAL.group_empty()
 
-    VARIABLE.no_hurt += 1
-    VARIABLE.main_char.rect.center = (292, 331)
-    TABLE.plane_group.add(VARIABLE.main_char)
-    TABLE.plane_group.add(VARIABLE.decision_point)
+    GLOBAL.no_hurt += 1
+    GLOBAL.main_char.rect.center = (292, 331)
+    GLOBAL.plane_group.add(GLOBAL.main_char)
+    GLOBAL.plane_group.add(GLOBAL.decision_point)
+
+
+def summary_closer() -> None:
+    if GLOBAL.stage >= 3 and GLOBAL.level == 6:
+        GLOBAL.summary = False
+        GLOBAL.save = True
+        GLOBAL.is_blit = False
+        GLOBAL.wait_level_load_timer = 0
+    else:
+        next_level()
+        level_logic()
+
+        GLOBAL.summary = False
+        GLOBAL.wait_level_load_timer = 0
+
+
+def sprite_loader() -> None:
+    if GLOBAL.level == 6:
+        GLOBAL.char = chs_shhm()
+        GLOBAL.char.rect.center = (292, 60)
+        GLOBAL.text = load_text(GLOBAL.stage)
+        GLOBAL.talk = True
+        GLOBAL.is_blit = False
+
+        GLOBAL.brick_group.add(GLOBAL.char)
+    else:
+        level_file = os.path.join(GLOBAL.asset_path, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg")
+        with open(level_file, 'r', encoding="ascii") as f:
+            string = f.read()
+            for i in FUNC.Process.process_file(
+                string,
+                0,
+                load_stage
+            ):
+                i
 
 
 def level_load() -> None:
-    if VARIABLE.wait_level_load_timer <= 60:
-        VARIABLE.wait_level_load_timer += 1
+    if GLOBAL.wait_level_load_timer <= 60:
+        GLOBAL.wait_level_load_timer += 1
     else:
-        if VARIABLE.level == 6:
-            VARIABLE.char = chs_shhm()
-            VARIABLE.char.rect.center = (292, 60)
-            VARIABLE.text = load_text(VARIABLE.stage)
-            VARIABLE.talk = True
-            VARIABLE.is_blit = False
+        sprite_loader()
 
-            TABLE.brick_group.add(VARIABLE.char)
-        else:
-            level_file = os.path.join(TABLE.asset_path, f"STAGE\STG_{VARIABLE.stage}-{VARIABLE.level}.stg")
-            with open(level_file, 'r', encoding="ascii") as f:
-                string = f.read()
-                for i in FUNC.Process.process_file(
-                    string,
-                    0,
-                    load_stage
-                ):
-                    i
-
-        VARIABLE.second_background = VARIABLE.picture[VARIABLE.stage]
-        VARIABLE.second_background.set_alpha(159)
-        VARIABLE.wait_level_load_timer = 0
-        VARIABLE.level_load = True
+        GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
+        GLOBAL.second_background.set_alpha(159)
+        GLOBAL.wait_level_load_timer = 0
+        GLOBAL.level_load = True
 
 
 def level_summary() -> None:
     if (
-        len(TABLE.brick_group) == 0
-        and not VARIABLE.talk
+        len(GLOBAL.brick_group) == 0
+        and not GLOBAL.talk
     ):
-        if VARIABLE.wait_level_load_timer <= 120:
-            VARIABLE.wait_level_load_timer += 1
-            VARIABLE.summary = True
-            VARIABLE.is_blit = False
+        if GLOBAL.wait_level_load_timer <= 120:
+            GLOBAL.wait_level_load_timer += 1
+            GLOBAL.summary = True
+            GLOBAL.is_blit = False
         else:
-            if VARIABLE.stage >= 3 and VARIABLE.level == 6:
-                VARIABLE.summary = False
-                VARIABLE.save = True
-                VARIABLE.is_blit = False
-                VARIABLE.wait_level_load_timer = 0
-            else:
-                next_level()
-                level_logic()
-
-                VARIABLE.summary = False
-                VARIABLE.wait_level_load_timer = 0
+            summary_closer()
 
 
 def level_process() -> None:
-    if not VARIABLE.level_load:
+    if not GLOBAL.level_load:
         level_load()
-        VARIABLE.is_blit = False
+        GLOBAL.is_blit = False
     else:
         level_summary()
 
 
 def level_logic() -> None:
-    if VARIABLE.level >= 6:
-        VARIABLE.stage += 1
-        VARIABLE.level = 1
+    if GLOBAL.level >= 6:
+        GLOBAL.stage += 1
+        GLOBAL.level = 1
     else:
-        VARIABLE.level += 1
+        GLOBAL.level += 1
 
 
 def chs_shhm() -> Optional[Any]:
-    return TABLE.char_dict.get(VARIABLE.stage)()
+    return GLOBAL.char_dict.get(GLOBAL.stage)()
 
 
 def shhm_lose() -> None:
-    VARIABLE.text_part += 1
-    VARIABLE.text_number = 0
+    GLOBAL.text_part += 1
+    GLOBAL.text_number = 0
 
-    VARIABLE.talk = True
-    VARIABLE.is_blit = False
+    GLOBAL.talk = True
+    GLOBAL.is_blit = False
 
 
 def load_stage(row, line) -> None:
@@ -106,14 +114,12 @@ def load_stage(row, line) -> None:
         if line[i] != 'o':
             shape = int(line[i])
             c = (
-                TABLE.color_dict[VARIABLE.stage]
+                GLOBAL.color_dict[GLOBAL.stage]
                 if random.random() >= 0.042
-                else TABLE.color_dict[6]
+                else GLOBAL.color_dict[6]
             )
-            x = 127 + i * 15
-            y = 22 + row * 15
 
-            brick = TABLE.char_dict[7](
+            brick = GLOBAL.char_dict[7](
                 color=c,
                 shape=shape,
                 type="brick"
@@ -121,13 +127,13 @@ def load_stage(row, line) -> None:
 
             if not hasattr(brick, "hp"):
                 brick.hp = 4
-            brick.rect.center = (x, y)
+            brick.rect.center = (127 + i * 15, 22 + row * 15)
 
-            TABLE.brick_group.add(brick)
+            GLOBAL.brick_group.add(brick)
 
 
 def load_text(stage) -> str:
-    file = os.path.join(TABLE.asset_path, f"JSON\TALK_{stage}.json")
+    file = os.path.join(GLOBAL.asset_path, f"JSON\TALK_{stage}.json")
 
     with open(file, 'r', encoding="utf-8") as f:
         return json.load(f)

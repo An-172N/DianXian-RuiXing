@@ -2,25 +2,24 @@ import datetime
 
 import pygame
 
-import SCRIPT.TABLE as TABLE
-import SCRIPT.VARIABLE as VARIABLE
+import SCRIPT.GLOBAL as GLOBAL
 
 
 def show_situ(screen, font, clock) -> None:
     current_time = pygame.time.get_ticks()
-    if current_time - VARIABLE.last_time >= 500:
-        VARIABLE.fps_text = f"{clock.get_fps():.1f} FPS"
-        VARIABLE.last_time = current_time
+    if current_time - GLOBAL.last_time >= 500:
+        GLOBAL.fps_text = f"{clock.get_fps():.1f} FPS"
+        GLOBAL.last_time = current_time
 
-    score = f"分　{VARIABLE.score:9d}"
+    score = f"分　{GLOBAL.score:9d}"
     power = (
-        f"形　{VARIABLE.s_power:02d} , "
-        f"{VARIABLE.total_s_power:02d}"
+        f"形　{GLOBAL.s_power:02d} , "
+        f"{GLOBAL.total_s_power:02d}"
     )
-    flash = f"闪　{VARIABLE.player:02d}"
+    flash = f"闪　{GLOBAL.player:02d}"
     combo = (
-        f"连　{VARIABLE.combo:02d} , "
-        f"{VARIABLE.shoot_counter:02d}"
+        f"连　{GLOBAL.combo:02d} , "
+        f"{GLOBAL.shoot_counter:02d}"
     )
 
     situ(
@@ -29,7 +28,7 @@ def show_situ(screen, font, clock) -> None:
         power,
         flash,
         combo,
-        VARIABLE.fps_text
+        GLOBAL.fps_text
     )
 
 
@@ -43,11 +42,11 @@ def pause_menu(screen, font) -> None:
 
 
 def load_menu(screen, font) -> None:
-    stage_text = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
+    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
     stage = (
         f"Stage {stage_text} - "
-        f"{VARIABLE.level} !!"
+        f"{GLOBAL.level} !!"
     )
 
     half_menu(
@@ -59,30 +58,30 @@ def load_menu(screen, font) -> None:
 
 
 def talk_menu(screen, font) -> None:
-    text = VARIABLE.text
+    text = GLOBAL.text
         
     human = (
-        text[f"{VARIABLE.text_part}"]
-        [f"{VARIABLE.text_number}"]
+        text[f"{GLOBAL.text_part}"]
+        [f"{GLOBAL.text_number}"]
         ["human"]
     )
     info = (
-        text[f"{VARIABLE.text_part}"]
-        [f"{VARIABLE.text_number}"]
+        text[f"{GLOBAL.text_part}"]
+        [f"{GLOBAL.text_number}"]
         ["info"]
     )
     info2 = (
-        text[f"{VARIABLE.text_part}"]
-        [f"{VARIABLE.text_number}"]
+        text[f"{GLOBAL.text_part}"]
+        [f"{GLOBAL.text_number}"]
         ["info2"]
     )
     sw = (
-        text[f"{VARIABLE.text_part}"]
-        [f"{VARIABLE.text_number}"]
+        text[f"{GLOBAL.text_part}"]
+        [f"{GLOBAL.text_number}"]
         ["sw"]
     )
         
-    VARIABLE.talk = sw
+    GLOBAL.talk = sw
 
     half_menu(
         screen, font,
@@ -93,19 +92,19 @@ def talk_menu(screen, font) -> None:
 
 
 def summary_menu(screen, font) -> None:
-    stage_text = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
+    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
     stage = (
         f"Stage {stage_text} - "
-        f"{VARIABLE.level} Cleaer!"
+        f"{GLOBAL.level} Cleaer!"
     )
     point = (
-        f"得点 {VARIABLE.total_s_power} * 512 "
-        f"= {VARIABLE.total_s_power * 512}"
+        f"得点 {GLOBAL.total_s_power} * 512 "
+        f"= {GLOBAL.total_s_power * 512}"
     )
     hurt = (
-        f"无伤 {VARIABLE.no_hurt} * 4096 "
-        f"= {VARIABLE.no_hurt * 4096}"
+        f"无伤 {GLOBAL.no_hurt} * 4096 "
+        f"= {GLOBAL.no_hurt * 4096}"
     )
 
     half_menu(
@@ -126,14 +125,14 @@ def start_menu(screen, font) -> None:
 
 
 def save_menu(screen, font) -> None:
-    stage_text = VARIABLE.stage if VARIABLE.stage <= 3 else f'Extra'
+    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
     tm = f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}"
-    score = f"得到了 {VARIABLE.score} 分"
-    stage = f"最远达到的地方是 {stage_text} - {VARIABLE.level}"
-    s_power = f"拾形点率为 {VARIABLE.cal_s_power()}"
-    s_flash = f"使用了 {VARIABLE.s_flash} 次形闪"
-    name = f"由 {VARIABLE.name} 助记"
+    score = f"得到了 {GLOBAL.score} 分"
+    stage = f"最远达到的地方是 {stage_text} - {GLOBAL.level}"
+    s_power = f"拾形点率为 {GLOBAL.cal_s_power()}"
+    s_flash = f"使用了 {GLOBAL.s_flash} 次形闪"
+    name = f"由 {GLOBAL.name} 助记"
 
     full_menu(
         screen, font,
@@ -162,15 +161,15 @@ def full_menu(
         {"text": other, "pos": (8, 305)}
     ]
 
-    menu_surface = VARIABLE.picture["MENU_BG"]
-    if not VARIABLE.is_blit:
+    menu_surface = GLOBAL.picture["MENU_BG"]
+    if not GLOBAL.is_blit:
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, TABLE.color_dict[6])
+            text = font.render(f"{text_info['text']}", False, GLOBAL.color_dict[6])
             menu_surface.blit(text, text_info["pos"])
 
-        VARIABLE.is_blit = True
+        GLOBAL.is_blit = True
 
     surface.blit(
         menu_surface,
@@ -185,20 +184,20 @@ def half_menu(surface, font, title, text1, text2) -> None:
         {"text": text2, "pos": (8, 58)}
     ]
 
-    menu_surface = VARIABLE.picture["MENU_BG"].subsurface(
+    menu_surface = GLOBAL.picture["MENU_BG"].subsurface(
         (
             0, 0,
             345, 85
         )
     )
-    if not VARIABLE.is_blit:
+    if not GLOBAL.is_blit:
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, TABLE.color_dict[6])
+            text = font.render(f"{text_info['text']}", False, GLOBAL.color_dict[6])
             menu_surface.blit(text, text_info["pos"])
 
-        VARIABLE.is_blit = True
+        GLOBAL.is_blit = True
 
     surface.blit(
         menu_surface,
@@ -216,38 +215,38 @@ def situ(surface, font, text1, text2, text3, text4, fps) -> None:
     ]
     
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, TABLE.color_dict[6])
+        text = font.render(f"{text_info['text']}", False, GLOBAL.color_dict[6])
         surface.blit(text, text_info["pos"])
 
 
 def menu_display(screen, font) -> None:
-    if not VARIABLE.run:
+    if not GLOBAL.run:
         start_menu(screen, font)
-    elif VARIABLE.pause:
+    elif GLOBAL.pause:
         pause_menu(screen, font)
-    elif not VARIABLE.level_load:
+    elif not GLOBAL.level_load:
         load_menu(screen, font)
-    elif VARIABLE.talk:
+    elif GLOBAL.talk:
         talk_menu(screen, font)
-    elif VARIABLE.summary:
+    elif GLOBAL.summary:
         summary_menu(screen, font)
-    elif VARIABLE.save:
+    elif GLOBAL.save:
         save_menu(screen, font)
 
 
 def window_display(screen) -> None:
-    screen.fill(TABLE.color_dict[7])
-    screen.blit(VARIABLE.second_background, (120, 15))
+    screen.fill(GLOBAL.color_dict[7])
+    screen.blit(GLOBAL.second_background, (120, 15))
 
-    TABLE.bullet_group.draw(screen)
-    if VARIABLE.is_visitable:
-        TABLE.plane_group.draw(screen)
-    TABLE.brick_group.draw(screen)
-    TABLE.item_group.draw(screen)
-    TABLE.particle_group.draw(screen)
-    TABLE.barrage_group.draw(screen)
+    GLOBAL.bullet_group.draw(screen)
+    if GLOBAL.is_visitable:
+        GLOBAL.plane_group.draw(screen)
+    GLOBAL.brick_group.draw(screen)
+    GLOBAL.item_group.draw(screen)
+    GLOBAL.particle_group.draw(screen)
+    GLOBAL.barrage_group.draw(screen)
 
 
 def font_display(screen, font, clock) -> None:
-    screen.blit(VARIABLE.background, (0, 0))
+    screen.blit(GLOBAL.background, (0, 0))
     show_situ(screen, font, clock)
