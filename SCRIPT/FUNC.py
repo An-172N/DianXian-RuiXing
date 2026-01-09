@@ -20,16 +20,13 @@ def delta(minuend: tuple, subtrahend: tuple) -> tuple:
     return tuple(i - j for i, j in zip(minuend, subtrahend))
 
 
-def fibonacci(former: float, latter: float, frequency: int) -> tuple:
+def fibonacci(former: float, latter: float, frequency: int) -> float:
     """
-    计算广义斐波那契数列的第frequency和第frequency + 1项
+    计算广义斐波那契数列的第frequency项
     former和latter可以是浮点数
     """
 
-    for _ in range(frequency):
-        former, latter = latter, former + latter
-
-    return former, latter
+    return former if frequency <= 0 else fibonacci(latter, former + latter, frequency - 1)
 
 
 def divide(dividend: float, divisor: float, default: float) -> float:

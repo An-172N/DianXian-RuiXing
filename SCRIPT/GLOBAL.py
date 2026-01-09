@@ -10,12 +10,11 @@ import pygame
 import SCRIPT.LOGIC as LOGIC
 import SCRIPT.FUNC as FUNC
 
-
+clock = pygame.time.Clock()
 asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
 current_module = sys.modules[__name__]
 font = pygame.font.Font(os.path.join(asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
 icon = pygame.display.set_icon(pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_ICON.png')))
-clock = pygame.time.Clock()
 screen = pygame.display.set_mode((480, 360), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN|pygame.SCALED, vsync=1)
 
 
@@ -109,10 +108,9 @@ keyup_game_dict = {
 
 
 fibonacci_list = [
-    FUNC.fibonacci(0, 1, i)[0] / 100
-    for i in range(4)
+    FUNC.fibonacci(0, 1, i) / 100
+    for i in range(2, 6)
 ]
-
 
 picture_list = [
     (1, os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')),

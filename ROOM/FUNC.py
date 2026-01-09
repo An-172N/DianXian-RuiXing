@@ -1,13 +1,14 @@
-from typing import Callable, Any
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
 
 
-def preload(stack: list, func: Callable[[str], Any], *args: Any) -> dict:
+def preload(stack: list, func: object) -> dict:
     """
-    预加载多个文件，func为加载函数
+    预加载多个文件，func函数会接收文件名并加载文件
     stack列表存有若干个由项名和文件名组成一对的集合
     """
 
-    return {key: func(file, *args) for key, file in stack}
+    return {key: func(file) for key, file in stack}
 
 
 def delta(minuend: tuple, subtrahend: tuple) -> tuple:
@@ -19,16 +20,13 @@ def delta(minuend: tuple, subtrahend: tuple) -> tuple:
     return tuple(i - j for i, j in zip(minuend, subtrahend))
 
 
-def fibonacci(former: float, latter: float, frequency: int) -> tuple:
+def fibonacci(former: float, latter: float, frequency: int) -> float:
     """
-    计算广义斐波那契数列的第frequency和第frequency + 1项
+    计算广义斐波那契数列的第frequency项
     former和latter可以是浮点数
     """
 
-    for _ in range(frequency):
-        former, latter = latter, former + latter
-
-    return former, latter
+    return former if frequency <= 0 else fibonacci(latter, former + latter, frequency - 1)
 
 
 def divide(dividend: float, divisor: float, default: float) -> float:
@@ -51,10 +49,8 @@ def digital(count: int, cycle: int, duty: float) -> bool:
 
 def clamp(value: float, minimum: float, maximum: float) -> float:
     """
-    限制value在maximum和minimum之间
+    限制value在minimum和maximum之间
     如果minimum大于maximum会把这两个参数反转
     """
 
-    minimum, maximum = min(minimum, maximum), max(minimum, maximum)
-
-    return max(min(value, maximum), minimum)
+    return max(min(value, max(minimum, maximum)), min(minimum, maximum))

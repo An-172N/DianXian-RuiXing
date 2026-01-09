@@ -3,6 +3,7 @@
 
 
 import os
+import re
 import sys
 import json
 import datetime
@@ -17,7 +18,7 @@ def save_file() -> None:
     time = datetime.datetime.now().strftime('%H-%M-%S')
 
     folder = f'{os.environ["USERPROFILE"]}/Saved Games/DX00'
-    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{GLOBAL.name}_{date}_{time}.json'
+    file = f'{os.environ["USERPROFILE"]}/Saved Games/DX00/{illegal_char(GLOBAL.name)}_{date}_{time}.json'
 
     if not os.path.exists(folder):
         os.makedirs(folder)
@@ -37,6 +38,12 @@ def save_file() -> None:
         
     with open(file, 'w') as f:
         json.dump(dump, f, indent=4)
+
+
+def illegal_char(name):
+    char = r'[!<>:"/\\|?*]'
+
+    return re.sub(char, '_', name)
 
 
 def key_event() -> None:
