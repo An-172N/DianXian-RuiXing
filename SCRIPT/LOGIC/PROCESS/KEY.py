@@ -1,3 +1,7 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import os
 import sys
 import json
@@ -46,18 +50,12 @@ def key_event() -> None:
 
 
 def keyup(event) -> None:
-    if (
-        GLOBAL.run
-        and event.key in GLOBAL.keyup_game_dict
-    ):
+    if GLOBAL.run and event.key in GLOBAL.keyup_game_dict:
         GLOBAL.keyup_game_dict[event.key]()
 
 
 def keydown(event) -> None:
-    if (
-        not GLOBAL.run
-        and event.key in GLOBAL.keydown_start_dict
-    ):
+    if not GLOBAL.run and event.key in GLOBAL.keydown_start_dict:
         GLOBAL.keydown_start_dict[event.key]()
     elif GLOBAL.save:
         if event.key in GLOBAL.keydown_over_dict:
@@ -65,19 +63,9 @@ def keydown(event) -> None:
         else:
             GLOBAL.name += event.unicode
             GLOBAL.is_blit = False
-    elif (
-        GLOBAL.pause
-        and event.key in GLOBAL.keydown_pause_dict
-    ):
+    elif GLOBAL.pause and event.key in GLOBAL.keydown_pause_dict:
         GLOBAL.keydown_pause_dict[event.key]()
-    elif (
-        GLOBAL.talk
-        and event.key in GLOBAL.keydown_talk_dict
-    ):
+    elif GLOBAL.talk and event.key in GLOBAL.keydown_talk_dict:
         GLOBAL.keydown_talk_dict[event.key]()
-    elif (
-        not GLOBAL.summary
-        and GLOBAL.level_load
-        and event.key in GLOBAL.keydown_game_dict
-    ):
+    elif not GLOBAL.summary and GLOBAL.level_load and event.key in GLOBAL.keydown_game_dict:
         GLOBAL.keydown_game_dict[event.key]()

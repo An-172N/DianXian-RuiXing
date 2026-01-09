@@ -1,15 +1,11 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import os
 import sys
 
 import pygame
-
-from SCRIPT.LOGIC.FRIEND.HUMAN.ONO import Ono
-from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import Kli
-from SCRIPT.LOGIC.FRIEND.HUMAN.HRO import Hro
-from SCRIPT.LOGIC.FRIEND.HUMAN.NRE import Nre
-from SCRIPT.LOGIC.FRIEND.HUMAN.QDI import Qdi
-from SCRIPT.LOGIC.FRIEND.HUMAN.KLI import DecisionPoint
-from SCRIPT.LOGIC.FRIEND.SPRITE.BASE import Base
 
 import SCRIPT.LOGIC as LOGIC
 import SCRIPT.FUNC as FUNC
@@ -17,6 +13,10 @@ import SCRIPT.FUNC as FUNC
 
 asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
 current_module = sys.modules[__name__]
+font = pygame.font.Font(os.path.join(asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
+icon = pygame.display.set_icon(pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_ICON.png')))
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((480, 360), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN|pygame.SCALED, vsync=1)
 
 
 color_dict = {
@@ -24,20 +24,18 @@ color_dict = {
     2: (0, 255, 0),
     3: (128, 0, 128),
     4: (251, 234, 18),
-    5: (45, 194, 229),
-    6: (255, 255, 255),
-    7: (0, 0, 0)
+    5: (45, 194, 229)
 }
 
 
 char_dict = {
-    1: Ono,
-    2: Hro,
-    3: Nre,
-    4: Qdi,
-    5: Kli,
-    6: DecisionPoint,
-    7: Base
+    1: LOGIC.Ono.Ono,
+    2: LOGIC.Hro.Hro,
+    3: LOGIC.Nre.Nre,
+    4: LOGIC.Qdi.Qdi,
+    5: LOGIC.Kli.Kli,
+    6: LOGIC.DecisionPoint.DecisionPoint,
+    7: LOGIC.Base.Base
 }
 
 
@@ -55,7 +53,7 @@ keydown_game_dict = {
 
 keydown_talk_dict = {
     pygame.K_z: lambda : (
-        setattr(current_module, "text_number", current_module.text_number + 1),
+        setattr(current_module, "text_number", text_number + 1),
         setattr(current_module, "is_blit", False)
     ),
     pygame.K_x: lambda : setattr(current_module, "talk", False)
@@ -96,7 +94,7 @@ keydown_over_dict = {
         setattr(current_module, "is_blit", False)
     ),
     pygame.K_BACKSPACE: lambda: (
-        setattr(current_module, "name", current_module.name[:-1]),
+        setattr(current_module, "name", name[:-1]),
         setattr(current_module, "is_blit", False)
     )
 }
@@ -111,8 +109,8 @@ keyup_game_dict = {
 
 
 fibonacci_list = [
-    FUNC.Calculate.fibonacci(0, 1, i)[1] / 100
-    for i in range(1, 5)
+    FUNC.fibonacci(0, 1, i)[0] / 100
+    for i in range(4)
 ]
 
 
@@ -136,19 +134,19 @@ char_image_list = [
 sprite_image_list = [
     (f"C_BA_{color_dict[1]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEORANGE.png')),
     (f"C_BA_{color_dict[4]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEYELLOW.png')),
-    (f"C_BA_{color_dict[6]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEWHITE.png')),
+    (f"C_BA_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEWHITE.png')),
     (f"P_BA_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBARRAGEGREEN.png')),
-    (f"P_BA_{color_dict[6]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBARRAGEWHITE.png')),
+    (f"P_BA_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBARRAGEWHITE.png')),
     (f"C_BR_{color_dict[1]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKORANGE.png')),
     (f"C_BR_{color_dict[4]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKYELLOW.png')),
-    (f"C_BR_{color_dict[6]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKWHITE.png')),
+    (f"C_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKWHITE.png')),
     (f"P_BR_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBRICKGREEN.png')),
-    (f"P_BR_{color_dict[6]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBRICKWHITE.png')),
+    (f"P_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBRICKWHITE.png')),
     (f"R_BR_{color_dict[3]}", os.path.join(asset_path, f'IMAGE\IMG_RECTANGLEBRICKPURPLE.png')),
-    (f"R_BR_{color_dict[6]}", os.path.join(asset_path, f'IMAGE\IMG_RECTANGLEBRICKWHITE.png')),
+    (f"R_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_RECTANGLEBRICKWHITE.png')),
     (f"R_IT_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_ITEMGREEN.png')),
     (f"R_IT_{color_dict[5]}", os.path.join(asset_path, f'IMAGE\IMG_ITEMBLUE.png')),
-    (f"R_IT_{color_dict[6]}", os.path.join(asset_path, f'IMAGE\IMG_ITEMWHITE.png')),
+    (f"R_IT_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_ITEMWHITE.png')),
     ("KLI_BULLET", os.path.join(asset_path, f'IMAGE\IMG_KLIBULLET.png')),
     ("KLI_BOMB", os.path.join(asset_path, f'IMAGE\IMG_KLIBOMB.png')),
     ("DEC", os.path.join(asset_path, f'IMAGE\IMG_DECISIONPOINT.png')),
@@ -212,9 +210,9 @@ stage = 1
 level = 0
 
 
-picture = FUNC.Process.load_files(picture_list, lambda f: pygame.image.load(f).convert_alpha())
-char_image = FUNC.Process.load_files(char_image_list, lambda f: pygame.image.load(f).convert_alpha())
-sprite_image = FUNC.Process.load_files(sprite_image_list, lambda f: pygame.image.load(f).convert_alpha())
+picture = FUNC.preload(picture_list, lambda f: pygame.image.load(f).convert_alpha())
+char_image = FUNC.preload(char_image_list, lambda f: pygame.image.load(f).convert_alpha())
+sprite_image = FUNC.preload(sprite_image_list, lambda f: pygame.image.load(f).convert_alpha())
 
 
 background = picture["GAME_BG"]
@@ -235,6 +233,9 @@ brick_group = pygame.sprite.Group()
 item_group = pygame.sprite.Group()
 barrage_group = pygame.sprite.Group()
 particle_group = pygame.sprite.Group()
+
+def load_image(file):
+    pygame.image.load(file).convert_alpha()
 
 
 def group_empty() -> None:
@@ -298,4 +299,4 @@ def reset2() -> None:
 
 
 def cal_s_power() -> str:
-    return f"{FUNC.Calculate.divide(stage_total_s_power, total_spawn_s_power, 0) * 100:.2f} %"
+    return f"{FUNC.divide(stage_total_s_power, total_spawn_s_power, 0) * 100:.2f} %"

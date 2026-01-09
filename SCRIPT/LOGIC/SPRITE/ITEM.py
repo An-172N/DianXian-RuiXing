@@ -1,6 +1,11 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import random
 
 import SCRIPT.GLOBAL as GLOBAL
+import SCRIPT.FUNC as FUNC
 
 
 def combo_counter() -> None:
@@ -21,11 +26,7 @@ def combo_counter() -> None:
 def item_spawn_regular() -> None:
     GLOBAL.item_spawn_timer += 1
     if GLOBAL.item_spawn_timer >= 45:
-        sprite = GLOBAL.char_dict[7](
-            color=GLOBAL.color_dict[6],
-            shape=1,
-            type="fire"
-        )
+        sprite = GLOBAL.char_dict[7](color=(255, 255, 255), shape=1, type="fire")
         sprite.speed = -2
         sprite.rect.center = (random.randint(120, 465), 10)
         GLOBAL.item_group.add(sprite)
@@ -35,16 +36,14 @@ def item_spawn_regular() -> None:
 
 def item_collide(source) -> None:
     GLOBAL.combo_timer = 120
-    if GLOBAL.shoot_counter <= 5:
-        GLOBAL.shoot_counter += 1
+    GLOBAL.shoot_counter = int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
-    if source.type is "power":
-        if GLOBAL.s_power < 32:
-            GLOBAL.s_power += 1
+    if source.type == "power":
+        GLOBAL.s_power = int(FUNC.clamp(GLOBAL.s_power + 1, 0, 32))
         GLOBAL.combo += 1
         GLOBAL.total_s_power += 1
         GLOBAL.stage_total_s_power += 1
-    elif source.type is "flash":
+    elif source.type == "flash":
         GLOBAL.player += 1
         GLOBAL.combo += 1
         GLOBAL.total_s_power += 1
@@ -56,21 +55,13 @@ def item_collide(source) -> None:
 def item_spawn(brick) -> None:
     brick_pos = brick.rect.center
     if random.random() <= 0.125:
-        sprite = GLOBAL.char_dict[7](
-            color=GLOBAL.color_dict[5],
-            shape=1,
-            type="power"
-        )
+        sprite = GLOBAL.char_dict[7](color=GLOBAL.color_dict[5], shape=1, type="power")
         sprite.speed = -2
         sprite.rect.center = brick_pos
         GLOBAL.item_group.add(sprite)
         GLOBAL.total_spawn_s_power += 1
     elif random.random() <= 0.007:
-        sprite = GLOBAL.char_dict[7](
-            color=GLOBAL.color_dict[2],
-            shape=1,
-            type="flash"
-        )
+        sprite = GLOBAL.char_dict[7](color=GLOBAL.color_dict[2], shape=1, type="flash")
         sprite.speed = -2
         sprite.rect.center = brick_pos
         GLOBAL.item_group.add(sprite)

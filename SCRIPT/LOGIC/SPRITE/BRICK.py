@@ -1,10 +1,14 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import random
 
 import SCRIPT.GLOBAL as GLOBAL
 
 
 def brick_blast(brick) -> None:
-    if brick.color == GLOBAL.color_dict[6]:
+    if brick.color == (255, 255, 255):
         process_dict = {
             1: circle_brick,
             2: polygon_brick,
@@ -12,12 +16,7 @@ def brick_blast(brick) -> None:
             4: point_brick
         }
 
-        process_dict[GLOBAL.stage](
-            GLOBAL.char_dict[7],
-            brick,
-            GLOBAL.bullet_group,
-            16
-        )
+        process_dict[GLOBAL.stage](GLOBAL.char_dict[7], brick, GLOBAL.bullet_group, 16)
 
 
 def brick_death(target):
@@ -28,11 +27,7 @@ def circle_brick(sprite, source, sprite_group, speed) -> None:
     rands = random.randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 15):
-        current_sprite = sprite(
-            color=GLOBAL.color_dict[5],
-            shape=1,
-            type="bullet"
-        )
+        current_sprite = sprite(color=GLOBAL.color_dict[5], shape=1, type="bullet")
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 4
         current_sprite.speed = speed
@@ -62,11 +57,7 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
     ]
 
     for bullet_info in bullet_index:
-        current_sprite = sprite(
-            color=GLOBAL.color_dict[5],
-            shape=1,
-            type="bullet-cross"
-        )
+        current_sprite = sprite(color=GLOBAL.color_dict[5], shape=1, type="bullet-cross")
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 4
         current_sprite.speed = speed
@@ -78,12 +69,7 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
 
 def line_brick(sprite, source, sprite_group, _) -> None:
     for _ in range(12):
-        current_sprite = sprite(
-            (2, random.randint(64, 256), 0),
-            GLOBAL.color_dict[5],
-            1,
-            "line"
-        )
+        current_sprite = sprite((2, random.randint(64, 256), 0), GLOBAL.color_dict[5], 1, "line")
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 6
         current_sprite.speed = 0
@@ -96,11 +82,7 @@ def line_brick(sprite, source, sprite_group, _) -> None:
 
 def point_brick(sprite, _, sprite_group, speed):
     for _ in range(24):
-        current_sprite = sprite(
-            color=GLOBAL.color_dict[5],
-            shape=1,
-            type="bullet"
-        )
+        current_sprite = sprite(color=GLOBAL.color_dict[5], shape=1, type="bullet")
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 4
         current_sprite.rect.center = (random.randint(120, 465), random.randint(15, 345))

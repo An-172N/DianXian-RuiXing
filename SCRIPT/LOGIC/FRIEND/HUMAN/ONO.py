@@ -1,3 +1,7 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import random
 import itertools
 import math
@@ -17,12 +21,7 @@ class Ono(pygame.sprite.Sprite):
         th.current_angle = 0
 
         th.original_image = GLOBAL.char_image["Ono"]
-        th.image = th.original_image.subsurface(
-            (
-                0, 0,
-                12, 26
-            )
-        )
+        th.image = th.original_image.subsurface((0, 0, 12, 26))
         th.rect = th.image.get_rect()
 
         th.is_free = False
@@ -38,10 +37,7 @@ class Ono(pygame.sprite.Sprite):
     def free(th) -> None:
         th.bullet_timer += 1
 
-        if (
-            th.bullet_timer % 1 == 0 and
-            th.bullet_counter < 12
-        ):
+        if th.bullet_timer % 1 == 0 and th.bullet_counter < 12:
             th.bullet_delay += 6
 
             for i, j in itertools.product(
@@ -51,11 +47,7 @@ class Ono(pygame.sprite.Sprite):
                 x = th.rect.centerx + 32 * math.cos(math.radians(i))
                 y = th.rect.centery + 32 * math.sin(math.radians(i))
                 pos = (x, y)
-                sprite = GLOBAL.char_dict[7](
-                    color=th.color,
-                    shape=2,
-                    type="barrage"
-                )
+                sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
                 sprite.speed = 3.5
                 sprite.rect.center = pos
                 sprite.current_angle = j
@@ -67,11 +59,7 @@ class Ono(pygame.sprite.Sprite):
         if th.bullet_counter < 1:
             pos = th.rect.center
             for i in range(0, 360, 15):
-                sprite = GLOBAL.char_dict[7](
-                    color=th.color,
-                    shape=2,
-                    type="barrage"
-                )
+                sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
                 sprite.speed = 4
                 sprite.rect.center = pos
                 sprite.current_angle = i
@@ -92,7 +80,4 @@ class Ono(pygame.sprite.Sprite):
 
         GLOBAL.char_dict[7].vector(th, 4)
 
-        if not th.is_free:
-            th.fire()
-        else:
-            th.choice()
+        th.fire() if not th.is_free else th.choice()

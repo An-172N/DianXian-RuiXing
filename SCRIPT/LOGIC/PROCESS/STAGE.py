@@ -1,10 +1,13 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import random
 import json
 import os
 
 from typing import Optional, Any
 
-import SCRIPT.FUNC as FUNC
 import SCRIPT.GLOBAL as GLOBAL
 
 
@@ -47,13 +50,8 @@ def sprite_loader() -> None:
     else:
         level_file = os.path.join(GLOBAL.asset_path, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg")
         with open(level_file, 'r', encoding="ascii") as f:
-            string = f.read()
-            for i in FUNC.Process.process_file(
-                string,
-                0,
-                load_stage
-            ):
-                i
+            for row, line in enumerate(f.read().splitlines(), 0):
+                load_stage(row, line)
 
 
 def level_load() -> None:
@@ -69,10 +67,7 @@ def level_load() -> None:
 
 
 def level_summary() -> None:
-    if (
-        len(GLOBAL.brick_group) == 0
-        and not GLOBAL.talk
-    ):
+    if len(GLOBAL.brick_group) == 0 and not GLOBAL.talk:
         if GLOBAL.wait_level_load_timer <= 120:
             GLOBAL.wait_level_load_timer += 1
             GLOBAL.summary = True
@@ -116,14 +111,10 @@ def load_stage(row, line) -> None:
             c = (
                 GLOBAL.color_dict[GLOBAL.stage]
                 if random.random() >= 0.042
-                else GLOBAL.color_dict[6]
+                else (255, 255, 255)
             )
 
-            brick = GLOBAL.char_dict[7](
-                color=c,
-                shape=shape,
-                type="brick"
-            )
+            brick = GLOBAL.char_dict[7](color=c, shape=shape, type="brick")
 
             if not hasattr(brick, "hp"):
                 brick.hp = 4

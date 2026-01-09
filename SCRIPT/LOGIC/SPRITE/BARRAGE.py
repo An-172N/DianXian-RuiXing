@@ -1,3 +1,7 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import random
 import math
 
@@ -7,15 +11,11 @@ import SCRIPT.GLOBAL as GLOBAL
 
 def circle_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
-    sprite = GLOBAL.char_dict[7](
-        color=brick.color,
-        shape=brick.shape,
-        type="barrage"
-    )
+    sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
     sprite.speed = 2
     sprite.rect.center = brick.rect.center
     sprite_pos = sprite.rect.center
-    two_pt = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+    two_pt = FUNC.delta((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
     sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
     sprite.update()
     GLOBAL.barrage_group.add(sprite)
@@ -24,15 +24,11 @@ def circle_barrage(brick) -> None:
 def polygon_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
     for i in range(char_pos[0] - 32, char_pos[0] + 33, 64):
-        sprite = GLOBAL.char_dict[7](
-            color=brick.color,
-            shape=brick.shape,
-            type="barrage"
-        )
+        sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
         sprite.speed = 2.25
         sprite.rect.center = brick.rect.center
         sprite_pos = sprite.rect.center
-        two_pt = FUNC.Calculate.delta_tuple((i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+        two_pt = FUNC.delta((i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
         sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
         sprite.update()
         GLOBAL.barrage_group.add(sprite)
@@ -43,15 +39,10 @@ def line_barrage(_) -> None:
     start_pos = (random.randint(100, 480), 0)
     end_pos = (char_pos[0], char_pos[1])
 
-    dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
+    dpos = FUNC.delta(end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
                 
-    sprite = GLOBAL.char_dict[7](
-        (2, distance, 0),
-        GLOBAL.color_dict[6],
-        1,
-        "line"
-    )
+    sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
     sprite.speed = 0
     sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
     sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
@@ -62,15 +53,11 @@ def line_barrage(_) -> None:
 def point_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
     for _ in range(3):
-        sprite = GLOBAL.char_dict[7](
-            color=brick.color,
-            shape=brick.shape,
-            type="barrage"
-        )
+        sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
         sprite.speed = 3
         sprite.rect.center = (random.randint(120, 465), random.randint(15, 250))
         sprite_pos = sprite.rect.center
-        two_point = FUNC.Calculate.delta_tuple((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+        two_point = FUNC.delta((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
         sprite.current_angle = math.degrees(math.atan2(-two_point[0], -two_point[1]))
         sprite.update()
         GLOBAL.barrage_group.add(sprite)

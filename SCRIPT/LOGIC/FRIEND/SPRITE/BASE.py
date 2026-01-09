@@ -1,3 +1,7 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import math
 
 import pygame
@@ -43,6 +47,7 @@ class Base(pygame.sprite.Sprite):
         th.timer = 0
 
         th.is_rotated = False
+        th.is_visitable = True
 
         th.original_image = th.get_shape(shape)
         th.image = th.original_image
@@ -106,13 +111,13 @@ class Base(pygame.sprite.Sprite):
             th.is_rotated = True
         
         rad = math.radians(th.current_angle)
-        th.x, th.y = FUNC.Calculate.delta_tuple(
+        th.x, th.y = FUNC.delta(
             (th.x, th.y),
             (math.sin(rad) * th.speed, math.cos(rad) * th.speed)
         )
         th.rect.center = (th.x, th.y)
 
-        if th.type is "line":
+        if th.type == "line":
             th.timer += 1
 
             if th.timer >= 90:

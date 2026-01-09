@@ -1,3 +1,7 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import pygame
 
 import SCRIPT.GLOBAL as GLOBAL
@@ -19,11 +23,7 @@ class Kli(pygame.sprite.Sprite):
     def free(th) -> None:
         th.bullet_timer += 1
 
-        if (
-            th.bullet_timer >= 30 and
-            th.bullet_timer % 1 == 0 and
-            th.bullet_counter < 6
-        ):
+        if th.bullet_timer >= 30 and th.bullet_timer % 1 == 0 and th.bullet_counter < 6:
             for i in range(120, 466, 15):
                 sprite = GLOBAL.char_dict[7](
                     shape=1,
@@ -55,10 +55,7 @@ class Kli(pygame.sprite.Sprite):
         ]
 
         for bullet_info in bullet_type:
-            sprite = GLOBAL.char_dict[7](
-                shape=1,
-                type="bullet"
-            )
+            sprite = GLOBAL.char_dict[7](shape=1, type="bullet")
             if not hasattr(sprite, "damage"):
                 sprite.damage = 4
             sprite.speed = 16
@@ -70,10 +67,7 @@ class Kli(pygame.sprite.Sprite):
 class DecisionPoint(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
-        th.original_image = GLOBAL.char_dict[7](
-            shape=1,
-            type="dec"
-        ).image
+        th.original_image = GLOBAL.char_dict[7](shape=1, type="dec").image
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)

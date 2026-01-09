@@ -1,3 +1,7 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import random
 import math
 
@@ -17,12 +21,7 @@ class Nre(pygame.sprite.Sprite):
         th.current_angle = 0
 
         th.original_image = GLOBAL.char_image["Nre"]
-        th.image = th.original_image.subsurface(
-            (
-                0, 0,
-                12, 26
-            )
-        )
+        th.image = th.original_image.subsurface((0, 0, 12, 26))
         th.rect = th.image.get_rect()
 
         th.is_free = False
@@ -37,22 +36,14 @@ class Nre(pygame.sprite.Sprite):
     def free(th) -> None:
         th.bullet_timer += 1
 
-        if (
-            th.bullet_timer % 1 == 0
-            and th.bullet_counter < 12
-        ):
+        if th.bullet_timer % 1 == 0 and th.bullet_counter < 12:
             start_pos = (random.randint(80, 500), 0)
             end_pos = (random.randint(100, 490), 360)
 
-            dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
+            dpos = FUNC.delta(end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
 
-            sprite = GLOBAL.char_dict[7](
-                (2, distance, 0),
-                GLOBAL.color_dict[6],
-                1,
-                "line"
-            )
+            sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
             sprite.speed = 0
             sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
             sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
@@ -69,15 +60,10 @@ class Nre(pygame.sprite.Sprite):
                 end_pos = (i, 360)
                 start_pos = (i, 0)
 
-                dpos = FUNC.Calculate.delta_tuple(end_pos, start_pos)
+                dpos = FUNC.delta(end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
 
-                sprite = GLOBAL.char_dict[7](
-                    (2, distance, 0),
-                    GLOBAL.color_dict[6],
-                    1,
-                    "line"
-                )
+                sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
                 sprite.speed = 0
                 sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
                 sprite.current_angle = 0
@@ -99,7 +85,4 @@ class Nre(pygame.sprite.Sprite):
 
         GLOBAL.char_dict[7].vector(th, 5.5)
 
-        if not th.is_free:
-            th.fire()
-        else:
-            th.choice()
+        th.fire() if not th.is_free else th.choice()

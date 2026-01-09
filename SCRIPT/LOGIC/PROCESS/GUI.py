@@ -1,3 +1,7 @@
+# Copyright (c) 2025, 26 An_172N
+# 此代码根据GPLv3.0许可证授权
+
+
 import datetime
 
 import pygame
@@ -12,15 +16,9 @@ def show_situ(screen, font, clock) -> None:
         GLOBAL.last_time = current_time
 
     score = f"分　{GLOBAL.score:9d}"
-    power = (
-        f"形　{GLOBAL.s_power:02d} , "
-        f"{GLOBAL.total_s_power:02d}"
-    )
+    power = f"形　{GLOBAL.s_power:02d} , {GLOBAL.total_s_power:02d}"
     flash = f"闪　{GLOBAL.player:02d}"
-    combo = (
-        f"连　{GLOBAL.combo:02d} , "
-        f"{GLOBAL.shoot_counter:02d}"
-    )
+    combo = f"连　{GLOBAL.combo:02d} , {GLOBAL.shoot_counter:02d}"
 
     situ(
         screen, font,
@@ -44,10 +42,7 @@ def pause_menu(screen, font) -> None:
 def load_menu(screen, font) -> None:
     stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
-    stage = (
-        f"Stage {stage_text} - "
-        f"{GLOBAL.level} !!"
-    )
+    stage = f"Stage {stage_text} - {GLOBAL.level} !!"
 
     half_menu(
         screen, font,
@@ -60,28 +55,11 @@ def load_menu(screen, font) -> None:
 def talk_menu(screen, font) -> None:
     text = GLOBAL.text
         
-    human = (
-        text[f"{GLOBAL.text_part}"]
-        [f"{GLOBAL.text_number}"]
-        ["human"]
-    )
-    info = (
-        text[f"{GLOBAL.text_part}"]
-        [f"{GLOBAL.text_number}"]
-        ["info"]
-    )
-    info2 = (
-        text[f"{GLOBAL.text_part}"]
-        [f"{GLOBAL.text_number}"]
-        ["info2"]
-    )
-    sw = (
-        text[f"{GLOBAL.text_part}"]
-        [f"{GLOBAL.text_number}"]
-        ["sw"]
-    )
+    human = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["human"]
+    info = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info"]
+    info2 = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
         
-    GLOBAL.talk = sw
+    GLOBAL.talk = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["sw"]
 
     half_menu(
         screen, font,
@@ -92,20 +70,11 @@ def talk_menu(screen, font) -> None:
 
 
 def summary_menu(screen, font) -> None:
-    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
+    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'
 
-    stage = (
-        f"Stage {stage_text} - "
-        f"{GLOBAL.level} Cleaer!"
-    )
-    point = (
-        f"得点 {GLOBAL.total_s_power} * 512 "
-        f"= {GLOBAL.total_s_power * 512}"
-    )
-    hurt = (
-        f"无伤 {GLOBAL.no_hurt} * 4096 "
-        f"= {GLOBAL.no_hurt * 4096}"
-    )
+    stage = f"Stage {stage_text} - {GLOBAL.level} Cleaer!"
+    point = f"得点 {GLOBAL.total_s_power} * 512 = {GLOBAL.total_s_power * 512}"
+    hurt = f"无伤 {GLOBAL.no_hurt} * 4096 = {GLOBAL.no_hurt * 4096}"
 
     half_menu(
         screen, font,
@@ -136,7 +105,7 @@ def save_menu(screen, font) -> None:
 
     full_menu(
         screen, font,
-        title=f"抚形日志",
+        title="抚形日志",
         text1=tm, text2=score, text3= stage, text4= s_power, text5 = s_flash,
         key1="Ent 记录", key2="ESC 不了", other=name
     )
@@ -166,15 +135,12 @@ def full_menu(
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, GLOBAL.color_dict[6])
+            text = font.render(f"{text_info['text']}", False, (255, 255, 255))
             menu_surface.blit(text, text_info["pos"])
 
         GLOBAL.is_blit = True
 
-    surface.blit(
-        menu_surface,
-        (120, 15)
-    )
+    surface.blit(menu_surface, (120, 15))
 
 
 def half_menu(surface, font, title, text1, text2) -> None:
@@ -184,25 +150,17 @@ def half_menu(surface, font, title, text1, text2) -> None:
         {"text": text2, "pos": (8, 58)}
     ]
 
-    menu_surface = GLOBAL.picture["MENU_BG"].subsurface(
-        (
-            0, 0,
-            345, 85
-        )
-    )
+    menu_surface = GLOBAL.picture["MENU_BG"].subsurface((0, 0, 345, 85))
     if not GLOBAL.is_blit:
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, GLOBAL.color_dict[6])
+            text = font.render(f"{text_info['text']}", False, (255, 255, 255))
             menu_surface.blit(text, text_info["pos"])
 
         GLOBAL.is_blit = True
 
-    surface.blit(
-        menu_surface,
-        (120, 260)
-    )
+    surface.blit(menu_surface, (120, 260))
 
 
 def situ(surface, font, text1, text2, text3, text4, fps) -> None:
@@ -215,38 +173,38 @@ def situ(surface, font, text1, text2, text3, text4, fps) -> None:
     ]
     
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, GLOBAL.color_dict[6])
+        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
         surface.blit(text, text_info["pos"])
 
 
-def menu_display(screen, font) -> None:
+def menu_display() -> None:
     if not GLOBAL.run:
-        start_menu(screen, font)
+        start_menu(GLOBAL.screen, GLOBAL.font)
     elif GLOBAL.pause:
-        pause_menu(screen, font)
+        pause_menu(GLOBAL.screen, GLOBAL.font)
     elif not GLOBAL.level_load:
-        load_menu(screen, font)
+        load_menu(GLOBAL.screen, GLOBAL.font)
     elif GLOBAL.talk:
-        talk_menu(screen, font)
+        talk_menu(GLOBAL.screen, GLOBAL.font)
     elif GLOBAL.summary:
-        summary_menu(screen, font)
+        summary_menu(GLOBAL.screen, GLOBAL.font)
     elif GLOBAL.save:
-        save_menu(screen, font)
+        save_menu(GLOBAL.screen, GLOBAL.font)
 
 
-def window_display(screen) -> None:
-    screen.fill(GLOBAL.color_dict[7])
-    screen.blit(GLOBAL.second_background, (120, 15))
+def window_display() -> None:
+    GLOBAL.screen.fill((0, 0, 0, 0))
+    GLOBAL.screen.blit(GLOBAL.second_background, (120, 15))
 
-    GLOBAL.bullet_group.draw(screen)
+    GLOBAL.bullet_group.draw(GLOBAL.screen)
     if GLOBAL.is_visitable:
-        GLOBAL.plane_group.draw(screen)
-    GLOBAL.brick_group.draw(screen)
-    GLOBAL.item_group.draw(screen)
-    GLOBAL.particle_group.draw(screen)
-    GLOBAL.barrage_group.draw(screen)
+        GLOBAL.plane_group.draw(GLOBAL.screen)
+    GLOBAL.brick_group.draw(GLOBAL.screen)
+    GLOBAL.item_group.draw(GLOBAL.screen)
+    GLOBAL.particle_group.draw(GLOBAL.screen)
+    GLOBAL.barrage_group.draw(GLOBAL.screen)
 
 
-def font_display(screen, font, clock) -> None:
-    screen.blit(GLOBAL.background, (0, 0))
-    show_situ(screen, font, clock)
+def font_display() -> None:
+    GLOBAL.screen.blit(GLOBAL.background, (0, 0))
+    show_situ(GLOBAL.screen, GLOBAL.font, GLOBAL.clock)

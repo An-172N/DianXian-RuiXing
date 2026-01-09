@@ -35,7 +35,7 @@
 
 **火力与常形力挂钩**
 
-**弹幕生成概率由斐波那契数列计算而成，计算方式为F(0) = 0，F(1) = 1, F(stage) = F(stage - 1)+F(stage - 2)**
+**弹幕生成概率由斐波那契数列计算而成**
 
 **每一面的白色砖块有不同的爆炸效果**
 
@@ -65,7 +65,31 @@
 
 **项目使用的第三方库为Pygame**
 
-**项目使用Nuitka工具进行打包分发，并使用--standalone --onefile等模式构建，详细请看/PACK.bat**
+**项目使用Nuitka工具进行打包分发，打包指令如下**
+
+```cmd
+nuitka ^
+    --standalone ^
+    --onefile ^
+    --mingw64 ^
+    --remove-output ^
+    --lto=yes ^
+    --windows-console-mode=disable ^
+    --enable-plugin=anti-bloat ^
+    --file-version="1.0.1" ^
+    --product-version="1.0.1" ^
+    --product-name="RuiXing ~ Thunder Out of the Mountain" ^
+    --copyright="Copyright (c) 2025 An_172N" ^
+    --windows-icon-from-ico=ASSET\IMAGE\IMG_ICON.png ^
+    --include-data-dir=ASSET=ASSET ^
+    --output-filename=DX00 ^
+    --nofollow-import-to=pdb,doctest,unittest,idlelib ^
+    --nofollow-import-to=tkinter,email,xml ^
+    --nofollow-import-to=ensurepip,venv,distutils ^
+    --nofollow-import-to=http,cgi,smtplib,multiprocessing ^
+    --nofollow-import-to=numpy,timidity ^
+    .\MAIN.py
+```
 
 **项目网址：https://github.com/An-172N/DianXian-RuiXing**
 
