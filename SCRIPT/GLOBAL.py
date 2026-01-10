@@ -98,6 +98,10 @@ keydown_over_dict = {
     )
 }
 
+keydown_summary_dict = {
+    pygame.K_z: lambda: LOGIC.StageMgr.summary_closer()
+}
+
 
 keyup_game_dict = {
     pygame.K_RIGHT: lambda: setattr(current_module, "move_right", False),
@@ -112,44 +116,6 @@ fibonacci_list = [
     for i in range(2, 6)
 ]
 
-picture_list = [
-    (1, os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')),
-    (2, os.path.join(asset_path, 'IMAGE\IMG_STAGE2BG.png')),
-    (3, os.path.join(asset_path, 'IMAGE\IMG_STAGE3BG.png')),
-    (4, os.path.join(asset_path, 'IMAGE\IMG_STAGE4BG.png')),
-    ("GAME_BG", os.path.join(asset_path, 'IMAGE\IMG_GAMEBG.png')),
-    ("MENU_BG", os.path.join(asset_path, 'IMAGE\IMG_MENU.png'))
-]
-
-char_image_list = [
-    ("Kli", os.path.join(asset_path, 'IMAGE\IMG_KLI.png')),
-    ("Ono", os.path.join(asset_path, 'IMAGE\IMG_ONO.png')),
-    ("Hro", os.path.join(asset_path, 'IMAGE\IMG_HRO.png')),
-    ("Nre", os.path.join(asset_path, 'IMAGE\IMG_NRE.png')),
-    ("Qdi", os.path.join(asset_path, 'IMAGE\IMG_QDI.png'))
-]
-
-sprite_image_list = [
-    (f"C_BA_{color_dict[1]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEORANGE.png')),
-    (f"C_BA_{color_dict[4]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEYELLOW.png')),
-    (f"C_BA_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEWHITE.png')),
-    (f"P_BA_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBARRAGEGREEN.png')),
-    (f"P_BA_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBARRAGEWHITE.png')),
-    (f"C_BR_{color_dict[1]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKORANGE.png')),
-    (f"C_BR_{color_dict[4]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKYELLOW.png')),
-    (f"C_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKWHITE.png')),
-    (f"P_BR_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBRICKGREEN.png')),
-    (f"P_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBRICKWHITE.png')),
-    (f"R_BR_{color_dict[3]}", os.path.join(asset_path, f'IMAGE\IMG_RECTANGLEBRICKPURPLE.png')),
-    (f"R_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_RECTANGLEBRICKWHITE.png')),
-    (f"R_IT_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_ITEMGREEN.png')),
-    (f"R_IT_{color_dict[5]}", os.path.join(asset_path, f'IMAGE\IMG_ITEMBLUE.png')),
-    (f"R_IT_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_ITEMWHITE.png')),
-    ("KLI_BULLET", os.path.join(asset_path, f'IMAGE\IMG_KLIBULLET.png')),
-    ("KLI_BOMB", os.path.join(asset_path, f'IMAGE\IMG_KLIBOMB.png')),
-    ("DEC", os.path.join(asset_path, f'IMAGE\IMG_DECISIONPOINT.png')),
-]
-
 
 window = pygame.Rect((120, 15, 345, 330))
 effective = pygame.Rect((105, 0, 375, 360))
@@ -162,10 +128,6 @@ talk = False
 save = False
 level_load = False
 is_blit = False
-
-
-last_time = pygame.time.get_ticks()
-fps_text = last_time
 
 
 name = ''
@@ -208,9 +170,47 @@ stage = 1
 level = 0
 
 
-picture = FUNC.preload(picture_list, lambda f: pygame.image.load(f).convert_alpha())
-char_image = FUNC.preload(char_image_list, lambda f: pygame.image.load(f).convert_alpha())
-sprite_image = FUNC.preload(sprite_image_list, lambda f: pygame.image.load(f).convert_alpha())
+picture = {
+    key: pygame.image.load(file).convert_alpha() for key, file in [
+        (1, os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')),
+        (2, os.path.join(asset_path, 'IMAGE\IMG_STAGE2BG.png')),
+        (3, os.path.join(asset_path, 'IMAGE\IMG_STAGE3BG.png')),
+        (4, os.path.join(asset_path, 'IMAGE\IMG_STAGE4BG.png')),
+        ("GAME_BG", os.path.join(asset_path, 'IMAGE\IMG_GAMEBG.png')),
+        ("MENU_BG", os.path.join(asset_path, 'IMAGE\IMG_MENU.png'))
+    ]
+}
+char_image = {
+    key: pygame.image.load(file).convert_alpha() for key, file in [
+        ("Kli", os.path.join(asset_path, 'IMAGE\IMG_KLI.png')),
+        ("Ono", os.path.join(asset_path, 'IMAGE\IMG_ONO.png')),
+        ("Hro", os.path.join(asset_path, 'IMAGE\IMG_HRO.png')),
+        ("Nre", os.path.join(asset_path, 'IMAGE\IMG_NRE.png')),
+        ("Qdi", os.path.join(asset_path, 'IMAGE\IMG_QDI.png'))
+    ]
+}
+sprite_image = {
+    key: pygame.image.load(file).convert_alpha() for key, file in [
+        (f"C_BA_{color_dict[1]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEORANGE.png')),
+        (f"C_BA_{color_dict[4]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEYELLOW.png')),
+        (f"C_BA_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBARRAGEWHITE.png')),
+        (f"P_BA_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBARRAGEGREEN.png')),
+        (f"P_BA_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBARRAGEWHITE.png')),
+        (f"C_BR_{color_dict[1]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKORANGE.png')),
+        (f"C_BR_{color_dict[4]}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKYELLOW.png')),
+        (f"C_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_CIRCLEBRICKWHITE.png')),
+        (f"P_BR_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBRICKGREEN.png')),
+        (f"P_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_POLYGONBRICKWHITE.png')),
+        (f"R_BR_{color_dict[3]}", os.path.join(asset_path, f'IMAGE\IMG_RECTANGLEBRICKPURPLE.png')),
+        (f"R_BR_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_RECTANGLEBRICKWHITE.png')),
+        (f"R_IT_{color_dict[2]}", os.path.join(asset_path, f'IMAGE\IMG_ITEMGREEN.png')),
+        (f"R_IT_{color_dict[5]}", os.path.join(asset_path, f'IMAGE\IMG_ITEMBLUE.png')),
+        (f"R_IT_{(255, 255, 255)}", os.path.join(asset_path, f'IMAGE\IMG_ITEMWHITE.png')),
+        ("KLI_BULLET", os.path.join(asset_path, f'IMAGE\IMG_KLIBULLET.png')),
+        ("KLI_BOMB", os.path.join(asset_path, f'IMAGE\IMG_KLIBOMB.png')),
+        ("DEC", os.path.join(asset_path, f'IMAGE\IMG_DECISIONPOINT.png')),
+    ]
+}
 
 
 background = picture["GAME_BG"]
@@ -232,6 +232,11 @@ item_group = pygame.sprite.Group()
 barrage_group = pygame.sprite.Group()
 particle_group = pygame.sprite.Group()
 
+
+last_time = pygame.time.get_ticks()
+fps_text = last_time
+
+
 def load_image(file):
     pygame.image.load(file).convert_alpha()
 
@@ -249,7 +254,7 @@ def reset1() -> None:
     global pause, summary, talk, save, level_load
     global collide, is_s_divide, cooldown_timer, total_s_power
     global shoot_counter, can_shoot
-    global item_spawn_timer
+    global item_spawn_timer, combo, combo_timer
     global text_number, text_part
     global main_char
     
@@ -269,6 +274,8 @@ def reset1() -> None:
     can_shoot = True
 
     item_spawn_timer = 0
+    combo = 0
+    combo_timer = 120
 
     text_part = 0
     text_number = 0
@@ -276,7 +283,7 @@ def reset1() -> None:
 def reset2() -> None:
     global stage, level, char
     global no_hurt, player, score, s_flash
-    global s_power, can_shoot, combo
+    global s_power, can_shoot
     global run
 
     stage = 1
@@ -290,8 +297,6 @@ def reset2() -> None:
 
     s_power = 0
     can_shoot = False
-
-    combo = 0
 
     run = False
 

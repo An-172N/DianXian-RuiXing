@@ -10,9 +10,9 @@ import SCRIPT.FUNC as FUNC
 
 def move_plane() -> None:
     if GLOBAL.move_right:
-        GLOBAL.main_char.rect.x += 1.5 if GLOBAL.is_slow else 3.5
+        GLOBAL.main_char.rect.x += 2 if GLOBAL.is_slow else 4
     if GLOBAL.move_left:
-        GLOBAL.main_char.rect.x -= 1.5 if GLOBAL.is_slow else 3.5
+        GLOBAL.main_char.rect.x -= 2 if GLOBAL.is_slow else 4
 
     if GLOBAL.main_char.rect.left < GLOBAL.window.left:
         GLOBAL.main_char.rect.left = GLOBAL.window.left

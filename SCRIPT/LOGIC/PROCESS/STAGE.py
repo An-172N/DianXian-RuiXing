@@ -6,7 +6,7 @@ import random
 import json
 import os
 
-from typing import Optional, Any
+from typing import Any
 
 import SCRIPT.GLOBAL as GLOBAL
 
@@ -14,6 +14,7 @@ import SCRIPT.GLOBAL as GLOBAL
 def next_level() -> None:
     GLOBAL.score += GLOBAL.total_s_power * 512
     GLOBAL.score += GLOBAL.no_hurt * 4096
+    GLOBAL.score += 2 ** GLOBAL.combo + GLOBAL.combo * 2
 
     GLOBAL.reset1()
     GLOBAL.group_empty()
@@ -25,17 +26,14 @@ def next_level() -> None:
 
 
 def summary_closer() -> None:
+    GLOBAL.summary = False
+
     if GLOBAL.stage >= 3 and GLOBAL.level == 6:
-        GLOBAL.summary = False
         GLOBAL.save = True
         GLOBAL.is_blit = False
-        GLOBAL.wait_level_load_timer = 0
     else:
         next_level()
         level_logic()
-
-        GLOBAL.summary = False
-        GLOBAL.wait_level_load_timer = 0
 
 
 def sprite_loader() -> None:
@@ -68,18 +66,13 @@ def level_load() -> None:
 
 def level_summary() -> None:
     if len(GLOBAL.brick_group) == 0 and not GLOBAL.talk:
-        if GLOBAL.wait_level_load_timer <= 120:
-            GLOBAL.wait_level_load_timer += 1
-            GLOBAL.summary = True
-            GLOBAL.is_blit = False
-        else:
-            summary_closer()
+        GLOBAL.summary = True
+        GLOBAL.is_blit = False
 
 
 def level_process() -> None:
     if not GLOBAL.level_load:
         level_load()
-        GLOBAL.is_blit = False
     else:
         level_summary()
 
@@ -92,7 +85,7 @@ def level_logic() -> None:
         GLOBAL.level += 1
 
 
-def chs_shhm() -> Optional[Any]:
+def chs_shhm() -> Any:
     return GLOBAL.char_dict.get(GLOBAL.stage)()
 
 

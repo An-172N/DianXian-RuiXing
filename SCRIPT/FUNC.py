@@ -2,18 +2,9 @@
 # 此代码根据GPLv3.0许可证授权
 
 
-def preload(stack: list, func: object) -> dict:
-    """
-    预加载多个文件，func函数会接收文件名并加载文件
-    stack列表存有若干个由项名和文件名组成一对的集合
-    """
-
-    return {key: func(file) for key, file in stack}
-
-
 def delta(minuend: tuple, subtrahend: tuple) -> tuple:
     """
-    计算minuend元组和subtrahend元组对应元素的值差
+    计算minuend元组和subtrahend元组对应元素的值差 \n
     要确保两个元组的项数都一致
     """
 
@@ -22,7 +13,7 @@ def delta(minuend: tuple, subtrahend: tuple) -> tuple:
 
 def fibonacci(former: float, latter: float, frequency: int) -> float:
     """
-    计算广义斐波那契数列的第frequency项
+    计算广义斐波那契数列的第frequency项 \n
     former和latter可以是浮点数
     """
 
@@ -31,7 +22,7 @@ def fibonacci(former: float, latter: float, frequency: int) -> float:
 
 def divide(dividend: float, divisor: float, default: float) -> float:
     """
-    除法计算，但可以安全地除
+    除法计算，但可以安全地除 \n
     推荐default参数为浮点类型
     """
 
@@ -40,7 +31,7 @@ def divide(dividend: float, divisor: float, default: float) -> float:
 
 def digital(count: int, cycle: int, duty: float) -> bool:
     """
-    根据cycle对count计算为对应的数字信号值
+    根据cycle对count计算为对应的数字信号值 \n
     duty的范围指定为0到1区间时使用最佳
     """
 
@@ -49,7 +40,7 @@ def digital(count: int, cycle: int, duty: float) -> bool:
 
 def clamp(value: float, minimum: float, maximum: float) -> float:
     """
-    限制value在minimum和maximum之间
+    限制value在minimum和maximum之间 \n
     如果minimum大于maximum会把这两个参数反转
     """
 

@@ -15,7 +15,7 @@ class Qdi(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 290
+        th.hp = 192
         th.color = GLOBAL.color_dict[4]
         th.shape = 2
         th.current_angle = 0
@@ -70,7 +70,7 @@ class Qdi(pygame.sprite.Sprite):
     def update(th) -> None:
         th.timer += 1
 
-        if th.timer % 120 == 0:
+        if th.timer % 150 == 0:
             th.target_x = random.choice([150, 220, 292, 365, 435])
             th.bullet_counter = 0
             th.is_free = not th.is_free

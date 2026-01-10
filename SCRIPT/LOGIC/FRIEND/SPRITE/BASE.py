@@ -17,6 +17,7 @@ class Base(pygame.sprite.Sprite):
 
     @staticmethod
     def vector(sprite, speed) -> None:
+        
         dir = pygame.math.Vector2(sprite.target_x - sprite.rect.centerx, 0)
         current_pos = pygame.math.Vector2(sprite.rect.centerx, sprite.rect.centery)
         target_pos = pygame.math.Vector2(sprite.target_x, 60)

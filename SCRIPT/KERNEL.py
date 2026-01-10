@@ -85,6 +85,7 @@ def update() -> None:
                 LOGIC.PlaneMgr.invinc()
 
                 LOGIC.ItemMgr.item_spawn_regular()
+                LOGIC.ItemMgr.combo_counter()
             
                 GLOBAL.bullet_group.update()
                 GLOBAL.barrage_group.update()
@@ -101,7 +102,6 @@ def update() -> None:
                 bullet_collide()
                 item_collide()
 
-            LOGIC.ItemMgr.combo_counter()
             LOGIC.StageMgr.level_process()
 
         LOGIC.Key.key_event()

@@ -40,7 +40,7 @@ def save_file() -> None:
         json.dump(dump, f, indent=4)
 
 
-def illegal_char(name):
+def illegal_char(name) -> str:
     char = r'[!<>:"/\\|?*]'
 
     return re.sub(char, '_', name)
@@ -74,5 +74,7 @@ def keydown(event) -> None:
         GLOBAL.keydown_pause_dict[event.key]()
     elif GLOBAL.talk and event.key in GLOBAL.keydown_talk_dict:
         GLOBAL.keydown_talk_dict[event.key]()
+    elif GLOBAL.summary and event.key in GLOBAL.keydown_summary_dict:
+        GLOBAL.keydown_summary_dict[event.key]()
     elif not GLOBAL.summary and GLOBAL.level_load and event.key in GLOBAL.keydown_game_dict:
         GLOBAL.keydown_game_dict[event.key]()

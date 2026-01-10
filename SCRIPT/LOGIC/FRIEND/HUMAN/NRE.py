@@ -15,7 +15,7 @@ class Nre(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 256
+        th.hp = 216
         th.color = GLOBAL.color_dict[3]
         th.shape = 1
         th.current_angle = 0
@@ -75,7 +75,7 @@ class Nre(pygame.sprite.Sprite):
     def update(th) -> None:
         th.timer += 1
 
-        if th.timer % 120 == 0:
+        if th.timer % 100 == 0:
             th.target_x = random.choice([150, 220, 292, 365, 435])
 
             th.bullet_counter = 0

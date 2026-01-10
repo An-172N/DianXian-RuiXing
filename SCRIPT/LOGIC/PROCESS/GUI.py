@@ -71,9 +71,10 @@ def talk_menu(screen, font) -> None:
 
 def summary_menu(screen, font) -> None:
     stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'
+    combo = 2 ** GLOBAL.combo + GLOBAL.combo * 2
 
-    stage = f"Stage {stage_text} - {GLOBAL.level} Cleaer!"
-    point = f"得点 {GLOBAL.total_s_power} * 512 = {GLOBAL.total_s_power * 512}"
+    stage = f"Stage {stage_text} - {GLOBAL.level} Cleaer!（Z 下一关"
+    point = f"得点 {GLOBAL.total_s_power} * 512 + {combo} = {GLOBAL.total_s_power * 512 + combo}"
     hurt = f"无伤 {GLOBAL.no_hurt} * 4096 = {GLOBAL.no_hurt * 4096}"
 
     half_menu(
@@ -98,7 +99,7 @@ def save_menu(screen, font) -> None:
 
     tm = f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}"
     score = f"得到了 {GLOBAL.score} 分"
-    stage = f"最远达到的地方是 {stage_text} - {GLOBAL.level}"
+    stage = f"最远达到的地方是 {stage_text} - {GLOBAL.level} 站"
     s_power = f"拾形点率为 {GLOBAL.cal_s_power()}"
     s_flash = f"使用了 {GLOBAL.s_flash} 次形闪"
     name = f"由 {GLOBAL.name} 助记"

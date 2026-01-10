@@ -15,7 +15,7 @@ class Hro(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 224
+        th.hp = 200
         th.color = GLOBAL.color_dict[2]
         th.shape = 0
         th.current_angle = 0
@@ -97,7 +97,7 @@ class Hro(pygame.sprite.Sprite):
     def update(th) -> None:
         th.timer += 1
 
-        if th.timer % 120 == 0:
+        if th.timer % 110 == 0:
             th.target_x = random.choice([150, 220, 292, 365, 435])
 
             th.bullet_counter = 0
