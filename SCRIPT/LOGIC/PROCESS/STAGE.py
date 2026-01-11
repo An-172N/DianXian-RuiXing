@@ -6,8 +6,6 @@ import random
 import json
 import os
 
-from typing import Any
-
 import SCRIPT.GLOBAL as GLOBAL
 
 
@@ -51,6 +49,8 @@ def sprite_loader() -> None:
             for row, line in enumerate(f.read().splitlines(), 0):
                 load_stage(row, line)
 
+            choose_brick()
+
 
 def level_load() -> None:
     if GLOBAL.wait_level_load_timer <= 60:
@@ -65,7 +65,7 @@ def level_load() -> None:
 
 
 def level_summary() -> None:
-    if len(GLOBAL.brick_group) == 0 and not GLOBAL.talk:
+    if len(GLOBAL.brick_group) == 0 and len(GLOBAL.item_group) == 0 and not GLOBAL.talk:
         GLOBAL.summary = True
         GLOBAL.is_blit = False
 
@@ -85,7 +85,7 @@ def level_logic() -> None:
         GLOBAL.level += 1
 
 
-def chs_shhm() -> Any:
+def chs_shhm() -> object:
     return GLOBAL.char_dict.get(GLOBAL.stage)()
 
 
@@ -98,15 +98,11 @@ def shhm_lose() -> None:
 
 
 def load_stage(row, line) -> None:
+    rand = random.random
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
-            c = (
-                GLOBAL.color_dict[GLOBAL.stage]
-                if random.random() >= 0.042
-                else (255, 255, 255)
-            )
-
+            c = GLOBAL.color_dict[GLOBAL.stage] if rand() >= 0.031 else (255, 255, 255)
             brick = GLOBAL.char_dict[7](color=c, shape=shape, type="brick")
 
             if not hasattr(brick, "hp"):
@@ -114,6 +110,17 @@ def load_stage(row, line) -> None:
             brick.rect.center = (127 + i * 15, 22 + row * 15)
 
             GLOBAL.brick_group.add(brick)
+
+
+def choose_brick() -> None:
+    sample = random.sample
+    brick_list = list(GLOBAL.brick_group)
+    choose_power = sample(range(len(brick_list)), 10 + GLOBAL.level)
+    choose_flash = sample(range(len(brick_list)), 1)
+    for i in choose_power:
+        brick_list[i].have_power = True
+    for j in choose_flash:
+        brick_list[j].have_flash = True
 
 
 def load_text(stage) -> str:

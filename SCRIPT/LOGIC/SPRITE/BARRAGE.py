@@ -12,11 +12,12 @@ import SCRIPT.GLOBAL as GLOBAL
 def circle_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
     sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
-    sprite.speed = 2
+    sprite.speed = 3
     sprite.rect.center = brick.rect.center
     sprite_pos = sprite.rect.center
-    two_pt = FUNC.delta((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
-    sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
+    two_point = FUNC.delta((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+    atan2 = math.atan2(-two_point[0], -two_point[1])
+    sprite.current_angle = math.degrees(atan2)
     sprite.update()
     GLOBAL.barrage_group.add(sprite)
 
@@ -25,11 +26,12 @@ def polygon_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
     for i in range(char_pos[0] - 32, char_pos[0] + 33, 64):
         sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
-        sprite.speed = 2.25
+        sprite.speed = 2.5
         sprite.rect.center = brick.rect.center
         sprite_pos = sprite.rect.center
-        two_pt = FUNC.delta((i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
-        sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
+        two_point = FUNC.delta((i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+        atan2 = math.atan2(-two_point[0], -two_point[1])
+        sprite.current_angle = math.degrees(atan2)
         sprite.update()
         GLOBAL.barrage_group.add(sprite)
 
@@ -45,20 +47,23 @@ def line_barrage(_) -> None:
     sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
     sprite.speed = 0
     sprite.rect.center = (start_pos[0] + dpos[0] / 2, start_pos[1] + dpos[1] / 2)
-    sprite.current_angle = math.degrees(math.atan2(-dpos[0], -dpos[1]))
+    atan2 = math.atan2(-dpos[0], -dpos[1])
+    sprite.current_angle = math.degrees(atan2)
     sprite.update()
     GLOBAL.barrage_group.add(sprite)
 
 
 def point_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
+    randint = random.randint
     for _ in range(3):
         sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
-        sprite.speed = 3
-        sprite.rect.center = (random.randint(120, 465), random.randint(15, 250))
+        sprite.speed = 4
+        sprite.rect.center = (randint(120, 465), randint(15, 225))
         sprite_pos = sprite.rect.center
         two_point = FUNC.delta((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
-        sprite.current_angle = math.degrees(math.atan2(-two_point[0], -two_point[1]))
+        atan2 = math.atan2(-two_point[0], -two_point[1])
+        sprite.current_angle = math.degrees(atan2)
         sprite.update()
         GLOBAL.barrage_group.add(sprite)
 

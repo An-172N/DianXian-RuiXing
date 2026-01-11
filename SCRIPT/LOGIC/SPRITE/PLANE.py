@@ -9,29 +9,37 @@ import SCRIPT.FUNC as FUNC
 
 
 def move_plane() -> None:
+    main_char_rect = GLOBAL.main_char.rect
+
     if GLOBAL.move_right:
-        GLOBAL.main_char.rect.x += 2 if GLOBAL.is_slow else 4
+        main_char_rect.x += 8 if GLOBAL.is_fast else 4
     if GLOBAL.move_left:
-        GLOBAL.main_char.rect.x -= 2 if GLOBAL.is_slow else 4
+        main_char_rect.x -= 8 if GLOBAL.is_fast else 4
 
-    if GLOBAL.main_char.rect.left < GLOBAL.window.left:
-        GLOBAL.main_char.rect.left = GLOBAL.window.left
-    elif GLOBAL.main_char.rect.right > GLOBAL.window.right:
-        GLOBAL.main_char.rect.right = GLOBAL.window.right
+    
+def keep_position() -> None:
+    main_char_rect = GLOBAL.main_char.rect
+    decision_point_rect = GLOBAL.decision_point.rect
 
-    GLOBAL.decision_point.rect.center = GLOBAL.main_char.rect.center
+    if main_char_rect.left < GLOBAL.window.left:
+        main_char_rect.left = GLOBAL.window.left
+    elif main_char_rect.right > GLOBAL.window.right:
+        main_char_rect.right = GLOBAL.window.right
+
+    decision_point_rect.center = main_char_rect.center
 
 
 def turn_side() -> None:
-    turn_side_image = GLOBAL.main_char.original_image.subsurface((12, 0, 12, 26))
+    main_char = GLOBAL.main_char
+    turn_side_image = main_char.original_image.subsurface((12, 0, 12, 26))
     flipped_image = pygame.transform.flip(turn_side_image, True, False)
 
     if GLOBAL.move_right:
-        GLOBAL.main_char.image = flipped_image
+        main_char.image = flipped_image
     elif GLOBAL.move_left:
-        GLOBAL.main_char.image = turn_side_image
+        main_char.image = turn_side_image
     else:
-        GLOBAL.main_char.image = GLOBAL.main_char.original_image.subsurface((0, 0, 12, 26))
+        main_char.image = main_char.original_image.subsurface((0, 0, 12, 26))
 
 
 def collide_barrage() -> None:
@@ -49,6 +57,7 @@ def life_logic() -> None:
 
 
 def invinc() -> None:
+    main_char = GLOBAL.main_char
     if GLOBAL.is_s_divide or GLOBAL.collide:
         GLOBAL.cooldown_timer += 1
 
@@ -57,9 +66,9 @@ def invinc() -> None:
                 GLOBAL.is_s_divide = False
                 GLOBAL.collide = False
                 GLOBAL.cooldown_timer = 0
-                GLOBAL.main_char.bullet_counter = 0
-                GLOBAL.main_char.bullet_timer = 0
-                GLOBAL.total_s_power = 0
+
+                main_char.bullet_counter = 0
+                main_char.bullet_timer = 0
 
             GLOBAL.collide = False
         else:

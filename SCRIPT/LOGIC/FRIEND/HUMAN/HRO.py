@@ -25,6 +25,8 @@ class Hro(pygame.sprite.Sprite):
         th.rect = th.image.get_rect()
 
         th.is_free = False
+        th.have_power = False
+        th.have_flash = True
         th.choice = None
 
         th.target_x = 292

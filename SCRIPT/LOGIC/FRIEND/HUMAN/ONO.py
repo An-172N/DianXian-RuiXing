@@ -25,6 +25,8 @@ class Ono(pygame.sprite.Sprite):
         th.rect = th.image.get_rect()
 
         th.is_free = False
+        th.have_power = True
+        th.have_flash = False
         th.choice = None
 
         th.target_x = 292
@@ -37,10 +39,11 @@ class Ono(pygame.sprite.Sprite):
     def free(th) -> None:
         th.bullet_timer += 1
 
+        product = itertools.product
         if th.bullet_timer % 1 == 0 and th.bullet_counter < 12:
             th.bullet_delay += 6
 
-            for i, j in itertools.product(
+            for i, j in product(
                 range(0 + th.bullet_delay, 360 + th.bullet_delay, 180),
                 range(0 + th.bullet_delay, 360 + th.bullet_delay, 90)
             ):
@@ -70,13 +73,14 @@ class Ono(pygame.sprite.Sprite):
     def update(th) -> None:
         th.timer += 1
 
+        choice = random.choice
         if th.timer % 120 == 0:
-            th.target_x = random.choice([150, 220, 292, 365, 435])
+            th.target_x = choice([150, 220, 292, 365, 435])
 
             th.bullet_counter = 0
             th.bullet_delay = 0
             th.is_free = not th.is_free
-            th.choice = random.choice([th.fire, th.free])
+            th.choice = choice([th.fire, th.free])
 
         GLOBAL.char_dict[7].vector(th, 4)
 

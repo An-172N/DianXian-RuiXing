@@ -11,8 +11,11 @@ def spawn_bullet() -> None:
     p = 2 ** (GLOBAL.s_power // 32)
     q = 2 ** (GLOBAL.s_power // 16)
 
-    for i, j in itertools.product(range(0, p), range(-q, q + 1, q)):
-        GLOBAL.main_char.fire(0 + i * 10, 0 + i * 12, j)
+    product = itertools.product
+    main_char = GLOBAL.main_char
+    
+    for i, j in product(range(0, p), range(-q, q + 1, q)):
+        main_char.fire(0 + i * 10, 0 + i * 12, j)
 
     GLOBAL.shoot_counter -= 1
 

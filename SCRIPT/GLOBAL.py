@@ -10,12 +10,11 @@ import pygame
 import SCRIPT.LOGIC as LOGIC
 import SCRIPT.FUNC as FUNC
 
-clock = pygame.time.Clock()
+
 asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
 current_module = sys.modules[__name__]
 font = pygame.font.Font(os.path.join(asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
 icon = pygame.display.set_icon(pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_ICON.png')))
-screen = pygame.display.set_mode((480, 360), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN|pygame.SCALED, vsync=1)
 
 
 color_dict = {
@@ -41,9 +40,9 @@ char_dict = {
 keydown_game_dict = {
     pygame.K_RIGHT: lambda: setattr(current_module, "move_right", True),
     pygame.K_LEFT: lambda: setattr(current_module, "move_left", True),
-    pygame.K_LSHIFT: lambda: setattr(current_module, "is_slow", True),
+    pygame.K_x: lambda: setattr(current_module, "is_fast", True),
     pygame.K_z: lambda : setattr(current_module, "can_shoot", False),
-    pygame.K_x: lambda : LOGIC.BulletMgr.single_bomb(),
+    pygame.K_SPACE: lambda : LOGIC.BulletMgr.single_bomb(),
     pygame.K_ESCAPE: lambda: (
         setattr(current_module, "pause", True),
         setattr(current_module, "is_blit", False)
@@ -106,7 +105,7 @@ keydown_summary_dict = {
 keyup_game_dict = {
     pygame.K_RIGHT: lambda: setattr(current_module, "move_right", False),
     pygame.K_LEFT: lambda: setattr(current_module, "move_left", False),
-    pygame.K_LSHIFT: lambda: setattr(current_module, "is_slow", False),
+    pygame.K_x: lambda: setattr(current_module, "is_fast", False),
     pygame.K_z: lambda: setattr(current_module, "can_shoot", True)
 }
 
@@ -118,7 +117,7 @@ fibonacci_list = [
 
 
 window = pygame.Rect((120, 15, 345, 330))
-effective = pygame.Rect((105, 0, 375, 360))
+effective = pygame.Rect(105, -50, 375, 410)
 
 
 run = False
@@ -141,7 +140,7 @@ can_shoot = True
 
 
 item_spawn_timer = 0
-combo_timer = 120
+combo_timer = 136
 combo = 0
 
 
@@ -157,7 +156,7 @@ total_spawn_s_power = 0
 
 move_right = False
 move_left = False
-is_slow = False
+is_fast = False
 is_visitable = True
 is_s_divide = False
 collide = True
@@ -237,10 +236,6 @@ last_time = pygame.time.get_ticks()
 fps_text = last_time
 
 
-def load_image(file):
-    pygame.image.load(file).convert_alpha()
-
-
 def group_empty() -> None:
     item_group.empty()
     brick_group.empty()
@@ -275,7 +270,7 @@ def reset1() -> None:
 
     item_spawn_timer = 0
     combo = 0
-    combo_timer = 120
+    combo_timer = 136
 
     text_part = 0
     text_number = 0

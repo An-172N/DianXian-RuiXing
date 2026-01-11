@@ -90,7 +90,7 @@ def start_menu(screen, font) -> None:
         screen, font,
         title="锐行 ~ Thunder Out of the Mountain",
         key1="Z 开始", key2="Q 退出",
-        other="Copyright (c) 2025 An_172N"
+        other="Copyright (c) 2025, 26 An_172N"
     )
 
 
@@ -178,34 +178,34 @@ def situ(surface, font, text1, text2, text3, text4, fps) -> None:
         surface.blit(text, text_info["pos"])
 
 
-def menu_display() -> None:
+def menu_display(screen) -> None:
     if not GLOBAL.run:
-        start_menu(GLOBAL.screen, GLOBAL.font)
+        start_menu(screen, GLOBAL.font)
     elif GLOBAL.pause:
-        pause_menu(GLOBAL.screen, GLOBAL.font)
+        pause_menu(screen, GLOBAL.font)
     elif not GLOBAL.level_load:
-        load_menu(GLOBAL.screen, GLOBAL.font)
+        load_menu(screen, GLOBAL.font)
     elif GLOBAL.talk:
-        talk_menu(GLOBAL.screen, GLOBAL.font)
+        talk_menu(screen, GLOBAL.font)
     elif GLOBAL.summary:
-        summary_menu(GLOBAL.screen, GLOBAL.font)
+        summary_menu(screen, GLOBAL.font)
     elif GLOBAL.save:
-        save_menu(GLOBAL.screen, GLOBAL.font)
+        save_menu(screen, GLOBAL.font)
 
 
-def window_display() -> None:
-    GLOBAL.screen.fill((0, 0, 0, 0))
-    GLOBAL.screen.blit(GLOBAL.second_background, (120, 15))
+def window_display(screen) -> None:
+    screen.fill((0, 0, 0, 0))
+    screen.blit(GLOBAL.second_background, (120, 15))
 
-    GLOBAL.bullet_group.draw(GLOBAL.screen)
+    GLOBAL.bullet_group.draw(screen)
     if GLOBAL.is_visitable:
-        GLOBAL.plane_group.draw(GLOBAL.screen)
-    GLOBAL.brick_group.draw(GLOBAL.screen)
-    GLOBAL.item_group.draw(GLOBAL.screen)
-    GLOBAL.particle_group.draw(GLOBAL.screen)
-    GLOBAL.barrage_group.draw(GLOBAL.screen)
+        GLOBAL.plane_group.draw(screen)
+    GLOBAL.brick_group.draw(screen)
+    GLOBAL.item_group.draw(screen)
+    GLOBAL.particle_group.draw(screen)
+    GLOBAL.barrage_group.draw(screen)
 
 
-def font_display() -> None:
-    GLOBAL.screen.blit(GLOBAL.background, (0, 0))
-    show_situ(GLOBAL.screen, GLOBAL.font, GLOBAL.clock)
+def font_display(screen, clock) -> None:
+    screen.blit(GLOBAL.background, (0, 0))
+    show_situ(screen, GLOBAL.font, clock)

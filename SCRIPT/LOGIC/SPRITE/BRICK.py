@@ -41,17 +41,19 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
     midleft = source.rect.midleft
     midright = source.rect.midright
     midbottom = source.rect.midbottom
+    choice = random.choice
+
     bullet_index = [
         {
-            'angle': random.choice([-30, -210]),
+            'angle': choice([-30, -210]),
             'pos': midleft
         },
         {
-            'angle': random.choice([30, 210]),
+            'angle': choice([30, 210]),
             'pos': midright
         },
         {
-            'angle': random.choice([90, 270]),
+            'angle': choice([90, 270]),
             'pos': midbottom
         }
     ]
@@ -68,25 +70,29 @@ def polygon_brick(sprite, source, sprite_group, speed) -> None:
 
 
 def line_brick(sprite, source, sprite_group, _) -> None:
+    randint = random.randint
+
     for _ in range(12):
-        current_sprite = sprite((2, random.randint(64, 256), 0), GLOBAL.color_dict[5], 1, "line")
+        current_sprite = sprite((2, randint(64, 256), 0), GLOBAL.color_dict[5], 1, "line")
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 6
         current_sprite.speed = 0
         current_sprite.rect.center = source.rect.center
-        rands = random.randint(0, 360)
+        rands = randint(0, 360)
         current_sprite.current_angle = rands
         current_sprite.update()
         sprite_group.add(current_sprite)
 
 
 def point_brick(sprite, _, sprite_group, speed):
+    randint = random.randint
+    
     for _ in range(24):
         current_sprite = sprite(color=GLOBAL.color_dict[5], shape=1, type="bullet")
         if not hasattr(current_sprite, "damage"):
             current_sprite.damage = 4
-        current_sprite.rect.center = (random.randint(120, 465), random.randint(15, 345))
-        rands = random.randint(0, 360)
+        current_sprite.rect.center = (randint(120, 465), randint(15, 345))
+        rands = randint(0, 360)
         current_sprite.current_angle = rands
         current_sprite.speed = speed
         current_sprite.update()

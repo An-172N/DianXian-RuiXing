@@ -49,6 +49,8 @@ class Base(pygame.sprite.Sprite):
 
         th.is_rotated = False
         th.is_visitable = True
+        th.have_power = False
+        th.have_flash = False
 
         th.original_image = th.get_shape(shape)
         th.image = th.original_image
@@ -112,16 +114,24 @@ class Base(pygame.sprite.Sprite):
             th.is_rotated = True
         
         rad = math.radians(th.current_angle)
+        sin = math.sin(rad)
+        cos = math.cos(rad)
         th.x, th.y = FUNC.delta(
             (th.x, th.y),
-            (math.sin(rad) * th.speed, math.cos(rad) * th.speed)
+            (sin * th.speed, cos * th.speed)
         )
         th.rect.center = (th.x, th.y)
+
+        if th.type in ["flash", "power"]:
+            th.speed -= 0.1
+
+            if th.speed < -2:
+                th.speed = -2
 
         if th.type == "line":
             th.timer += 1
 
-            if th.timer >= 90:
+            if th.timer >= 68:
                 th.kill()
             elif th.timer >= 45 and th.color != GLOBAL.color_dict[3]:
                 th.color = GLOBAL.color_dict[3]

@@ -25,6 +25,8 @@ class Qdi(pygame.sprite.Sprite):
         th.rect = th.image.get_rect()
 
         th.is_free = False
+        th.have_power = True
+        th.have_flash = False
         th.choice = None
 
         th.target_x = 292
@@ -38,9 +40,7 @@ class Qdi(pygame.sprite.Sprite):
 
         if th.bullet_counter < 1:
             for _ in range(48):
-                x = random.randint(120, 465)
-                y = random.randint(15, 250)
-                pos = (x, y)
+                pos = (random.randint(120, 465), random.randint(15, 225))
                 sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
                 sprite.speed = 4
                 sprite.rect.center = pos
@@ -56,7 +56,7 @@ class Qdi(pygame.sprite.Sprite):
             char = GLOBAL.main_char
             sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
             sprite.speed = 3.5
-            sprite.rect.center = (random.randint(120, 465), random.randint(15, 255))
+            sprite.rect.center = (random.randint(120, 465), random.randint(15, 230))
             x1 = char.rect.centerx
             x2 = sprite.rect.centerx
             y1 = char.rect.centery

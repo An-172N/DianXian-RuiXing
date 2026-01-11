@@ -19,9 +19,9 @@
 
 **z是蓄力，松开后会根据蓄力点释放常形力** *（就是发射子弹* 
 
-**x是释放形分** *（也就是Bomb*
+**x是快移动**
 
-**L-Shift是慢移动**
+**c是释放形分** *（也就是Bomb*
 
 **在对话中按z看下一则对话，也可以按x跳过**
 
@@ -31,11 +31,11 @@
 
 **蓄力上限为6点，不蓄力则照常释放常形力**
 
-**在2秒内拾形力点和形闪点可以加combo，最多能combo 16点，拾任何形点可以重新计时，加分规则为2^n**
+**在2.25秒内拾形力点和形闪点可以加combo，最多能combo 16点，拾任何形点可以重新计时，加分规则为2^n**
 
-**如果在结算中保有combo数会额外加combo*2分, combo为0的话加1分**
+**如果在结算中保有combo数会额外加combox2分, combo为0的话加1分**
 
-**火力与常形力挂钩**
+**火力与形力挂钩**
 
 **弹幕生成概率由斐波那契数列计算而成**
 
@@ -81,7 +81,7 @@ nuitka ^
     --file-version="1.0.1" ^
     --product-version="1.0.1" ^
     --product-name="RuiXing ~ Thunder Out of the Mountain" ^
-    --copyright="Copyright (c) 2025 An_172N" ^
+    --copyright="Copyright (c) 2025, 26 An_172N" ^
     --windows-icon-from-ico=ASSET\IMAGE\IMG_ICON.png ^
     --include-data-dir=ASSET=ASSET ^
     --output-filename=DX00 ^

@@ -71,7 +71,7 @@ def bullet_collide() -> None:
                 bullet.kill()
 
 
-def update() -> None:
+def update(clock, screen, _) -> None:
     option()
 
     while True:
@@ -82,6 +82,7 @@ def update() -> None:
 
                 LOGIC.PlaneMgr.turn_side()
                 LOGIC.PlaneMgr.move_plane()
+                LOGIC.PlaneMgr.keep_position()
                 LOGIC.PlaneMgr.invinc()
 
                 LOGIC.ItemMgr.item_spawn_regular()
@@ -106,9 +107,9 @@ def update() -> None:
 
         LOGIC.Key.key_event()
 
-        LOGIC.GUI.window_display()
-        LOGIC.GUI.menu_display()
-        LOGIC.GUI.font_display()
+        LOGIC.GUI.window_display(screen)
+        LOGIC.GUI.menu_display(screen)
+        LOGIC.GUI.font_display(screen, clock)
 
         pygame.display.flip()
-        GLOBAL.clock.tick(60)
+        clock.tick(60)

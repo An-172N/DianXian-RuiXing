@@ -25,6 +25,8 @@ class Nre(pygame.sprite.Sprite):
         th.rect = th.image.get_rect()
 
         th.is_free = False
+        th.have_power = True
+        th.have_flash = False
         th.choice = None
 
         th.target_x = 292
