@@ -10,10 +10,6 @@ import SCRIPT.GLOBAL as GLOBAL
 
 
 def next_level() -> None:
-    GLOBAL.score += GLOBAL.total_s_power * 512
-    GLOBAL.score += GLOBAL.no_hurt * 4096
-    GLOBAL.score += 2 ** GLOBAL.combo + GLOBAL.combo * 2
-
     GLOBAL.reset1()
     GLOBAL.group_empty()
 
@@ -25,6 +21,10 @@ def next_level() -> None:
 
 def summary_closer() -> None:
     GLOBAL.summary = False
+
+    GLOBAL.score += GLOBAL.total_s_power * 512
+    GLOBAL.score += GLOBAL.no_hurt * 4096
+    GLOBAL.score += 2 ** GLOBAL.combo + GLOBAL.combo * 2
 
     if GLOBAL.stage >= 3 and GLOBAL.level == 6:
         GLOBAL.save = True
