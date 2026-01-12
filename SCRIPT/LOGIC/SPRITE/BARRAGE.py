@@ -26,7 +26,7 @@ def polygon_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
     for i in range(char_pos[0] - 32, char_pos[0] + 33, 64):
         sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
-        sprite.speed = 2.5
+        sprite.speed = 3
         sprite.rect.center = brick.rect.center
         sprite_pos = sprite.rect.center
         two_point = FUNC.delta((i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
@@ -56,6 +56,7 @@ def line_barrage(_) -> None:
 def point_barrage(brick) -> None:
     char_pos = GLOBAL.main_char.rect.center
     randint = random.randint
+
     for _ in range(3):
         sprite = GLOBAL.char_dict[7](color=brick.color, shape=brick.shape, type="barrage")
         sprite.speed = 4
@@ -69,7 +70,7 @@ def point_barrage(brick) -> None:
 
 
 def spawn_barrage(brick) -> None:
-    if random.random() <= 0.25 + GLOBAL.fibonacci_list[GLOBAL.stage - 1]:
+    if random.random() <= 0.167 + GLOBAL.fibonacci_list[GLOBAL.stage - 1]:
         barrage_dict = {
             1: circle_barrage,
             2: polygon_barrage,

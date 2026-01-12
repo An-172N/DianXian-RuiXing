@@ -128,6 +128,13 @@ class Base(pygame.sprite.Sprite):
             if th.speed < -2:
                 th.speed = -2
 
+            dpos = FUNC.delta(th.rect.center, GLOBAL.main_char.rect.center)
+            ddis = math.hypot(dpos[0], dpos[1])
+            if ddis <= 28:
+                atan2 = math.atan2(-dpos[0], -dpos[1])
+                th.speed = -8
+                th.current_angle = math.degrees(atan2)
+
         if th.type == "line":
             th.timer += 1
 

@@ -140,7 +140,7 @@ can_shoot = True
 
 
 item_spawn_timer = 0
-combo_timer = 136
+combo_timer = 120
 combo = 0
 
 
@@ -270,7 +270,7 @@ def reset1() -> None:
 
     item_spawn_timer = 0
     combo = 0
-    combo_timer = 136
+    combo_timer = 120
 
     text_part = 0
     text_number = 0

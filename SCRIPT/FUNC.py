@@ -11,7 +11,7 @@ def delta(minuend: tuple, subtrahend: tuple) -> tuple:
     return tuple(i - j for i, j in zip(minuend, subtrahend))
 
 
-def fibonacci(former: float, latter: float, frequency: int) -> float:
+def fibonacci(former: int, latter: int, frequency: int) -> int:
     """
     计算广义斐波那契数列的第frequency项 \n
     former和latter可以是浮点数

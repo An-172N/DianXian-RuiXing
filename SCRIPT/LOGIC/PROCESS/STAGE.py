@@ -46,7 +46,9 @@ def sprite_loader() -> None:
     else:
         level_file = os.path.join(GLOBAL.asset_path, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg")
         with open(level_file, 'r', encoding="ascii") as f:
-            for row, line in enumerate(f.read().splitlines(), 0):
+            string = f.read().splitlines()
+            
+            for row, line in enumerate(string, 0):
                 load_stage(row, line)
 
             choose_brick()
@@ -99,6 +101,7 @@ def shhm_lose() -> None:
 
 def load_stage(row, line) -> None:
     rand = random.random
+
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
@@ -117,6 +120,7 @@ def choose_brick() -> None:
     brick_list = list(GLOBAL.brick_group)
     choose_power = sample(range(len(brick_list)), 10 + GLOBAL.level)
     choose_flash = sample(range(len(brick_list)), 1)
+    
     for i in choose_power:
         brick_list[i].have_power = True
     for j in choose_flash:

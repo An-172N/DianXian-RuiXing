@@ -58,6 +58,7 @@ def life_logic() -> None:
 
 def invinc() -> None:
     main_char = GLOBAL.main_char
+    
     if GLOBAL.is_s_divide or GLOBAL.collide:
         GLOBAL.cooldown_timer += 1
 
