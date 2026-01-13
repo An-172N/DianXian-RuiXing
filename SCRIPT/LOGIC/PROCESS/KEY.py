@@ -11,6 +11,7 @@ import datetime
 import pygame
 
 import SCRIPT.GLOBAL as GLOBAL
+import SCRIPT.LOGIC.PROCESS.RESET as RESET
 
 
 def save_file() -> None:
@@ -30,7 +31,7 @@ def save_file() -> None:
             'Nickname': GLOBAL.name,
             'Score': GLOBAL.score,
             'The farthest place that you reached': f"{stage} - {GLOBAL.level}",
-            'Pick up SPower rate': GLOBAL.cal_s_power(),
+            'Pick up SPower rate': RESET.cal_s_power(),
             'Shape Flash': GLOBAL.s_flash,
             'Record date': datetime.datetime.now().strftime('%Y-%m-%d')
         }

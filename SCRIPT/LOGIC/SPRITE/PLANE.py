@@ -73,7 +73,7 @@ def invinc() -> None:
 
             GLOBAL.collide = False
         else:
-            GLOBAL.is_visitable = FUNC.digital(GLOBAL.cooldown_timer, 12, 0.5)
+            GLOBAL.is_visitable = (GLOBAL.cooldown_timer // 6) % 2
     else:
         GLOBAL.cooldown_timer = 0
         GLOBAL.is_visitable = True

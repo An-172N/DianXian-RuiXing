@@ -2,13 +2,13 @@
 # 此代码根据GPLv3.0许可证授权
 
 
-def delta(minuend: tuple, subtrahend: tuple) -> tuple:
+def wise(calculate: object, *tuples: tuple) -> tuple:
     """
-    计算minuend元组和subtrahend元组对应元素的值差 \n
+    对*tuples元组的对应元素用calculate函数进行计算操作 \n
     要确保两个元组的项数都一致
     """
 
-    return tuple(i - j for i, j in zip(minuend, subtrahend))
+    return tuple(calculate(i) for i in zip(*tuples))
 
 
 def fibonacci(former: int, latter: int, frequency: int) -> int:
@@ -18,24 +18,6 @@ def fibonacci(former: int, latter: int, frequency: int) -> int:
     """
 
     return former if frequency <= 0 else fibonacci(latter, former + latter, frequency - 1)
-
-
-def divide(dividend: float, divisor: float, default: float) -> float:
-    """
-    除法计算，但可以安全地除 \n
-    推荐default参数为浮点类型
-    """
-
-    return dividend / divisor if divisor != 0 else default
-
-
-def digital(count: int, cycle: int, duty: float) -> bool:
-    """
-    根据cycle对count计算为对应的数字信号值 \n
-    duty的范围指定为0到1区间时使用最佳
-    """
-
-    return count % cycle < cycle * duty
 
 
 def clamp(value: float, minimum: float, maximum: float) -> float:

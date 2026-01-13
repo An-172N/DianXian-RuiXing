@@ -63,7 +63,8 @@ def bullet_collide() -> None:
                 LOGIC.ParticleMgr.spawn_particles(2, 2, brick.rect.center, (4, 8), brick.color, (255, 255, 255))
                 if hasattr(brick, "free"):
                     LOGIC.StageMgr.shhm_lose()
-                LOGIC.ItemMgr.item_spawn(brick)
+                LOGIC.ItemMgr.item_spawn(brick.have_power, brick.rect.center, GLOBAL.color_dict[5], "power")
+                LOGIC.ItemMgr.item_spawn(brick.have_flash, brick.rect.center, GLOBAL.color_dict[2], "flash")
                 LOGIC.BrickMgr.brick_blast(brick)
                 LOGIC.BarrageMgr.spawn_barrage(brick)
                 brick.kill()

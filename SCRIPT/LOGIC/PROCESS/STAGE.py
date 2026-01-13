@@ -7,11 +7,12 @@ import json
 import os
 
 import SCRIPT.GLOBAL as GLOBAL
+import SCRIPT.LOGIC.PROCESS.RESET as RESET
 
 
 def next_level() -> None:
-    GLOBAL.reset1()
-    GLOBAL.group_empty()
+    RESET.reset1()
+    RESET.group_empty()
 
     GLOBAL.no_hurt += 1
     GLOBAL.main_char.rect.center = (292, 331)
@@ -19,12 +20,14 @@ def next_level() -> None:
     GLOBAL.plane_group.add(GLOBAL.decision_point)
 
 
+def score_summary(power, unhurt, combo, collection):
+    return power * collection[0] + unhurt * collection[1] + collection[2] ** combo + combo * collection[3]
+
+
 def summary_closer() -> None:
     GLOBAL.summary = False
 
-    GLOBAL.score += GLOBAL.total_s_power * 512
-    GLOBAL.score += GLOBAL.no_hurt * 4096
-    GLOBAL.score += 2 ** GLOBAL.combo + GLOBAL.combo * 2
+    GLOBAL.score += score_summary(GLOBAL.total_s_power, GLOBAL.no_hurt, GLOBAL.combo, (512, 4096, 2, 2))
 
     if GLOBAL.stage >= 3 and GLOBAL.level == 6:
         GLOBAL.save = True
@@ -48,7 +51,7 @@ def sprite_loader() -> None:
         with open(level_file, 'r', encoding="ascii") as f:
             string = f.read().splitlines()
             
-            for row, line in enumerate(string, 0):
+            for row, line in enumerate(string):
                 load_stage(row, line)
 
             choose_brick()
@@ -118,7 +121,7 @@ def load_stage(row, line) -> None:
 def choose_brick() -> None:
     sample = random.sample
     brick_list = list(GLOBAL.brick_group)
-    choose_power = sample(range(len(brick_list)), 10 + GLOBAL.level)
+    choose_power = sample(range(len(brick_list)), 4 + GLOBAL.level + GLOBAL.stage)
     choose_flash = sample(range(len(brick_list)), 1)
     
     for i in choose_power:

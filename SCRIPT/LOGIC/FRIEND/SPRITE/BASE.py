@@ -17,7 +17,6 @@ class Base(pygame.sprite.Sprite):
 
     @staticmethod
     def vector(sprite, speed) -> None:
-        
         dir = pygame.math.Vector2(sprite.target_x - sprite.rect.centerx, 0)
         current_pos = pygame.math.Vector2(sprite.rect.centerx, sprite.rect.centery)
         target_pos = pygame.math.Vector2(sprite.target_x, 60)
@@ -116,10 +115,7 @@ class Base(pygame.sprite.Sprite):
         rad = math.radians(th.current_angle)
         sin = math.sin(rad)
         cos = math.cos(rad)
-        th.x, th.y = FUNC.delta(
-            (th.x, th.y),
-            (sin * th.speed, cos * th.speed)
-        )
+        th.x, th.y = FUNC.wise(lambda a: a[0] - a[1], (th.x, th.y), (sin * th.speed, cos * th.speed))
         th.rect.center = (th.x, th.y)
 
         if th.type in ["flash", "power"]:
@@ -128,7 +124,7 @@ class Base(pygame.sprite.Sprite):
             if th.speed < -2:
                 th.speed = -2
 
-            dpos = FUNC.delta(th.rect.center, GLOBAL.main_char.rect.center)
+            dpos = FUNC.wise(lambda a: a[0] - a[1], th.rect.center, GLOBAL.main_char.rect.center)
             ddis = math.hypot(dpos[0], dpos[1])
             if ddis <= 28:
                 atan2 = math.atan2(-dpos[0], -dpos[1])

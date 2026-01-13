@@ -16,7 +16,7 @@ def combo_counter() -> None:
             GLOBAL.score += 2 ** GLOBAL.combo
 
         GLOBAL.combo = 0
-        GLOBAL.combo_timer = 120
+        GLOBAL.combo_timer = 135
 
 
 def item_spawn_regular() -> None:
@@ -33,7 +33,7 @@ def item_spawn_regular() -> None:
 
 
 def item_collide(source) -> None:
-    GLOBAL.combo_timer = 120
+    GLOBAL.combo_timer = 135
     GLOBAL.shoot_counter = int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
     if source.type == "power":
@@ -50,18 +50,10 @@ def item_collide(source) -> None:
     source.kill()
 
 
-def item_spawn(brick) -> None:
-    brick_pos = brick.rect.center
-
-    if brick.have_power:
-        sprite = GLOBAL.char_dict[7](color=GLOBAL.color_dict[5], shape=1, type="power")
+def item_spawn(condition, pos, color, item_type) -> None:
+    if condition:
+        sprite = GLOBAL.char_dict[7](color=color, shape=1, type=item_type)
         sprite.speed = 2.5
-        sprite.rect.center = brick_pos
-        GLOBAL.item_group.add(sprite)
-        GLOBAL.total_spawn_s_power += 1
-    elif brick.have_flash:
-        sprite = GLOBAL.char_dict[7](color=GLOBAL.color_dict[2], shape=1, type="flash")
-        sprite.speed = 2.5
-        sprite.rect.center = brick_pos
+        sprite.rect.center = pos
         GLOBAL.item_group.add(sprite)
         GLOBAL.total_spawn_s_power += 1

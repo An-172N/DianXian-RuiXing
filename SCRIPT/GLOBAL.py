@@ -60,9 +60,9 @@ keydown_talk_dict = {
 keydown_pause_dict = {
     pygame.K_ESCAPE: lambda : setattr(current_module, "pause", False),
     pygame.K_q: lambda : (
-        reset1(),
-        reset2(),
-        group_empty(),
+        LOGIC.Reset.reset1(),
+        LOGIC.Reset.reset2(),
+        LOGIC.Reset.group_empty(),
         setattr(current_module, "is_blit", False)
     )
 }
@@ -80,15 +80,15 @@ keydown_start_dict = {
 keydown_over_dict = {
     pygame.K_RETURN: lambda: (
         LOGIC.Key.save_file(),
-        reset1(),
-        reset2(),
-        group_empty(),
+        LOGIC.Reset.reset1(),
+        LOGIC.Reset.reset2(),
+        LOGIC.Reset.group_empty(),
         setattr(current_module, "is_blit", False)
     ),
     pygame.K_ESCAPE: lambda: (
-        reset1(),
-        reset2(),
-        group_empty(),
+        LOGIC.Reset.reset1(),
+        LOGIC.Reset.reset2(),
+        LOGIC.Reset.group_empty(),
         setattr(current_module, "is_blit", False)
     ),
     pygame.K_BACKSPACE: lambda: (
@@ -140,7 +140,7 @@ can_shoot = True
 
 
 item_spawn_timer = 0
-combo_timer = 120
+combo_timer = 135
 combo = 0
 
 
@@ -236,65 +236,5 @@ last_time = pygame.time.get_ticks()
 fps_text = last_time
 
 
-def group_empty() -> None:
-    item_group.empty()
-    brick_group.empty()
-    plane_group.empty()
-    bullet_group.empty()
-    particle_group.empty()
-    barrage_group.empty()
-
-
-def reset1() -> None:
-    global pause, summary, talk, save, level_load
-    global collide, is_s_divide, cooldown_timer, total_s_power
-    global shoot_counter, can_shoot
-    global item_spawn_timer, combo, combo_timer
-    global text_number, text_part
-    global main_char
-    
-    pause = False
-    summary = False
-    talk = False
-    save = False
-    level_load = False
-
-    collide = False
-    is_s_divide = False
-    cooldown_timer = 0
-    main_char = char_dict.get(5)()
-    total_s_power = 0
-
-    shoot_counter = 0
-    can_shoot = True
-
-    item_spawn_timer = 0
-    combo = 0
-    combo_timer = 120
-
-    text_part = 0
-    text_number = 0
-
-def reset2() -> None:
-    global stage, level, char
-    global no_hurt, player, score, s_flash
-    global s_power, can_shoot
-    global run
-
-    stage = 1
-    level = 0
-    char = None
-
-    no_hurt = 0
-    player = 4
-    score = 0
-    s_flash = 0
-
-    s_power = 0
-    can_shoot = False
-
-    run = False
-
-
-def cal_s_power() -> str:
-    return f"{FUNC.divide(stage_total_s_power, total_spawn_s_power, 0) * 100:.2f} %"
+def divide(dividend: float, divisor: float, default: float) -> float:
+    return dividend / divisor if divisor != 0 else default

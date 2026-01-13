@@ -42,7 +42,7 @@ class Nre(pygame.sprite.Sprite):
             start_pos = (random.randint(80, 500), 0)
             end_pos = (random.randint(100, 490), 360)
 
-            dpos = FUNC.delta(end_pos, start_pos)
+            dpos = FUNC.wise(lambda a: a[0] - a[1], end_pos, start_pos)
             distance = math.hypot(dpos[0], dpos[1])
 
             sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
@@ -62,7 +62,7 @@ class Nre(pygame.sprite.Sprite):
                 end_pos = (i, 360)
                 start_pos = (i, 0)
 
-                dpos = FUNC.delta(end_pos, start_pos)
+                dpos = FUNC.wise(lambda a: a[0] - a[1], end_pos, start_pos)
                 distance = math.hypot(dpos[0], dpos[1])
 
                 sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")

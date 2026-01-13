@@ -15,7 +15,7 @@ def circle_barrage(brick) -> None:
     sprite.speed = 3
     sprite.rect.center = brick.rect.center
     sprite_pos = sprite.rect.center
-    two_point = FUNC.delta((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+    two_point = FUNC.wise(lambda a: a[0] - a[1], (char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
     atan2 = math.atan2(-two_point[0], -two_point[1])
     sprite.current_angle = math.degrees(atan2)
     sprite.update()
@@ -29,7 +29,7 @@ def polygon_barrage(brick) -> None:
         sprite.speed = 3
         sprite.rect.center = brick.rect.center
         sprite_pos = sprite.rect.center
-        two_point = FUNC.delta((i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+        two_point = FUNC.wise(lambda a: a[0] - a[1], (i, char_pos[1]), (sprite_pos[0], sprite_pos[1]))
         atan2 = math.atan2(-two_point[0], -two_point[1])
         sprite.current_angle = math.degrees(atan2)
         sprite.update()
@@ -41,7 +41,7 @@ def line_barrage(_) -> None:
     start_pos = (random.randint(100, 480), 0)
     end_pos = (char_pos[0], char_pos[1])
 
-    dpos = FUNC.delta(end_pos, start_pos)
+    dpos = FUNC.wise(lambda a: a[0] - a[1], end_pos, start_pos)
     distance = math.hypot(dpos[0], dpos[1])
                 
     sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
@@ -62,7 +62,7 @@ def point_barrage(brick) -> None:
         sprite.speed = 4
         sprite.rect.center = (randint(120, 465), randint(15, 225))
         sprite_pos = sprite.rect.center
-        two_point = FUNC.delta((char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
+        two_point = FUNC.wise(lambda a: a[0] - a[1], (char_pos[0], char_pos[1]), (sprite_pos[0], sprite_pos[1]))
         atan2 = math.atan2(-two_point[0], -two_point[1])
         sprite.current_angle = math.degrees(atan2)
         sprite.update()

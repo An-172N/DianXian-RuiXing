@@ -89,7 +89,7 @@ class Hro(pygame.sprite.Sprite):
                 sprite = GLOBAL.char_dict[7](color=th.color, shape=0, type="barrage")
                 sprite.speed = 4
                 sprite.rect.center = pos
-                two_pt = FUNC.delta((char_pos[0], char_pos[1]), (pos[0], pos[1]))
+                two_pt = FUNC.wise(lambda a: a[0] - a[1], (char_pos[0], char_pos[1]), (pos[0], pos[1]))
                 atan = math.atan2(-two_pt[0], -two_pt[1])
                 sprite.current_angle = math.degrees(atan) + i
                 GLOBAL.barrage_group.add(sprite)
