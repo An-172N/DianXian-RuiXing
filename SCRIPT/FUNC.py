@@ -5,7 +5,7 @@
 def wise(calculate: object, *tuples: tuple) -> tuple:
     """
     对*tuples元组的对应元素用calculate函数进行计算操作 \n
-    要确保两个元组的项数都一致
+    calculate函数会接收由对应项组成的元组
     """
 
     return tuple(calculate(i) for i in zip(*tuples))
