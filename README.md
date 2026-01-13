@@ -89,7 +89,7 @@ nuitka ^
     --nofollow-import-to=tkinter,email,xml ^
     --nofollow-import-to=ensurepip,venv,distutils ^
     --nofollow-import-to=http,cgi,smtplib,multiprocessing ^
-    --nofollow-import-to=numpy,timidity ^
+    --nofollow-import-to=numpy,timidity,pygame.examples ^
     .\MAIN.py
 ```
 

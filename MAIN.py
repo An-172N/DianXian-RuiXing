@@ -24,7 +24,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.dont_write_bytecode = True
-    for module in ['numpy', 'timidity']:
+    for module in ['numpy', 'timidity', 'pygame.examples']:
         sys.modules[module] = None
 
     main()
