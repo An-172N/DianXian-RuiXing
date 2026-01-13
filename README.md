@@ -79,6 +79,8 @@ nuitka ^
     --file-version="1.0.1" ^
     --product-version="1.0.1" ^
     --product-name="RuiXing ~ Thunder Out of the Mountain" ^
+    --company-name="An_172N" ^
+    --file-description="RuiXing ~ Thunder Out of the Mountain" ^
     --copyright="Copyright (c) 2025, 26 An_172N" ^
     --windows-icon-from-ico=ASSET\IMAGE\IMG_ICON.png ^
     --include-data-dir=ASSET=ASSET ^
