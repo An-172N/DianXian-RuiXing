@@ -112,7 +112,7 @@ keyup_game_dict = {
 
 fibonacci_list = [
     FUNC.fibonacci(0, 1, i) / 100
-    for i in range(2, 6)
+    for i in range(3, 7)
 ]
 
 
@@ -140,7 +140,7 @@ can_shoot = True
 
 
 item_spawn_timer = 0
-combo_timer = 135
+combo_timer = 120
 combo = 0
 
 

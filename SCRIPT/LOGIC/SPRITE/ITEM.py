@@ -16,7 +16,7 @@ def combo_counter() -> None:
             GLOBAL.score += 2 ** GLOBAL.combo
 
         GLOBAL.combo = 0
-        GLOBAL.combo_timer = 135
+        GLOBAL.combo_timer = 120
 
 
 def item_spawn_regular() -> None:
@@ -33,7 +33,7 @@ def item_spawn_regular() -> None:
 
 
 def item_collide(source) -> None:
-    GLOBAL.combo_timer = 135
+    GLOBAL.combo_timer = 120
     GLOBAL.shoot_counter = int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
     if source.type == "power":

@@ -28,7 +28,7 @@ def reset1() -> None:
 
     GLOBAL.item_spawn_timer = 0
     GLOBAL.combo = 0
-    GLOBAL.combo_timer = 135
+    GLOBAL.combo_timer = 120
 
     GLOBAL.text_part = 0
     GLOBAL.text_number = 0
