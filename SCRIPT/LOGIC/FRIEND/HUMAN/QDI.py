@@ -8,14 +8,13 @@ import math
 import pygame
 
 import SCRIPT.GLOBAL as GLOBAL
-import SCRIPT.FUNC as FUNC
 
 
 class Qdi(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 192
+        th.hp = 96
         th.color = GLOBAL.color_dict[4]
         th.shape = 2
         th.current_angle = 0
@@ -61,7 +60,7 @@ class Qdi(pygame.sprite.Sprite):
             x2 = sprite.rect.centerx
             y1 = char.rect.centery
             y2 = sprite.rect.centery
-            two_pt = FUNC.wise(lambda a: a[0] - a[1], (x1, y1), (x2, y2))
+            two_pt = tuple(map(lambda a, b: a - b, (x1, y1), (x2, y2)))
             sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
             GLOBAL.barrage_group.add(sprite)
 

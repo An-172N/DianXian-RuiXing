@@ -8,14 +8,13 @@ import math
 import pygame
 
 import SCRIPT.GLOBAL as GLOBAL
-import SCRIPT.FUNC as FUNC
 
 
 class Hro(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 200
+        th.hp = 224
         th.color = GLOBAL.color_dict[2]
         th.shape = 0
         th.current_angle = 0
@@ -89,7 +88,7 @@ class Hro(pygame.sprite.Sprite):
                 sprite = GLOBAL.char_dict[7](color=th.color, shape=0, type="barrage")
                 sprite.speed = 4
                 sprite.rect.center = pos
-                two_pt = FUNC.wise(lambda a: a[0] - a[1], (char_pos[0], char_pos[1]), (pos[0], pos[1]))
+                two_pt = tuple(map(lambda a, b: a - b, (char_pos[0], char_pos[1]), (pos[0], pos[1])))
                 atan = math.atan2(-two_pt[0], -two_pt[1])
                 sprite.current_angle = math.degrees(atan) + i
                 GLOBAL.barrage_group.add(sprite)
@@ -108,6 +107,6 @@ class Hro(pygame.sprite.Sprite):
             th.is_choice = False
             th.choice = random.choice([th.fire, th.free])
 
-        GLOBAL.char_dict[7].vector(th, 4.5)
+        GLOBAL.char_dict[7].vector(th, 5)
 
         th.fire() if not th.is_free else th.choice()

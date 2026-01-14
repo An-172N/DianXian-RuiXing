@@ -8,14 +8,13 @@ import math
 import pygame
 
 import SCRIPT.GLOBAL as GLOBAL
-import SCRIPT.FUNC as FUNC
 
 
 class Nre(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
 
-        th.hp = 216
+        th.hp = 256
         th.color = GLOBAL.color_dict[3]
         th.shape = 1
         th.current_angle = 0
@@ -42,7 +41,7 @@ class Nre(pygame.sprite.Sprite):
             start_pos = (random.randint(80, 500), 0)
             end_pos = (random.randint(100, 490), 360)
 
-            dpos = FUNC.wise(lambda a: a[0] - a[1], end_pos, start_pos)
+            dpos = tuple(map(lambda a, b: a - b, end_pos, start_pos))
             distance = math.hypot(dpos[0], dpos[1])
 
             sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
@@ -62,7 +61,7 @@ class Nre(pygame.sprite.Sprite):
                 end_pos = (i, 360)
                 start_pos = (i, 0)
 
-                dpos = FUNC.wise(lambda a: a[0] - a[1], end_pos, start_pos)
+                dpos = tuple(map(lambda a, b: a - b, end_pos, start_pos))
                 distance = math.hypot(dpos[0], dpos[1])
 
                 sprite = GLOBAL.char_dict[7]((2, distance, 0), (255, 255, 255), 1, "line")
@@ -85,6 +84,6 @@ class Nre(pygame.sprite.Sprite):
             th.is_free = not th.is_free
             th.choice = random.choice([th.fire, th.free])
 
-        GLOBAL.char_dict[7].vector(th, 5.5)
+        GLOBAL.char_dict[7].vector(th, 6)
 
         th.fire() if not th.is_free else th.choice()
