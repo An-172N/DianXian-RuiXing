@@ -1,4 +1,4 @@
-import SCRIPT.GLOBAL as GLOBAL
+from SCRIPT import GLOBAL, LOGIC
 
 
 def group_empty() -> None:
@@ -10,21 +10,21 @@ def group_empty() -> None:
     GLOBAL.barrage_group.empty()
 
 
-def reset1() -> None:
-    GLOBAL.pause = False
-    GLOBAL.summary = False
-    GLOBAL.talk = False
-    GLOBAL.save = False
-    GLOBAL.level_load = False
+def mode_one() -> None:
+    GLOBAL.is_pause = False
+    GLOBAL.is_summary = False
+    GLOBAL.is_talk = False
+    GLOBAL.is_save = False
+    GLOBAL.is_level_load = False
 
-    GLOBAL.collide = False
+    GLOBAL.is_collide = False
     GLOBAL.is_s_divide = False
     GLOBAL.cooldown_timer = 0
-    GLOBAL.main_char = GLOBAL.char_dict.get(5)()
+    GLOBAL.main_char = LOGIC.Kli()
     GLOBAL.total_s_power = 0
 
     GLOBAL.shoot_counter = 0
-    GLOBAL.can_shoot = True
+    GLOBAL.is_shoot = True
 
     GLOBAL.item_spawn_timer = 0
     GLOBAL.combo = 0
@@ -33,7 +33,7 @@ def reset1() -> None:
     GLOBAL.text_part = 0
     GLOBAL.text_number = 0
 
-def reset2() -> None:
+def mode_two() -> None:
     GLOBAL.stage = 1
     GLOBAL.level = 0
     GLOBAL.char = None
@@ -44,9 +44,9 @@ def reset2() -> None:
     GLOBAL.s_flash = 0
 
     GLOBAL.s_power = 0
-    GLOBAL.can_shoot = False
+    GLOBAL.is_shoot = False
 
-    GLOBAL.run = False
+    GLOBAL.is_run = False
 
 
 def cal_s_power() -> str:

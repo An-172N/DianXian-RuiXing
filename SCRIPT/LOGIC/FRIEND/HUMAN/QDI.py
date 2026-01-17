@@ -1,4 +1,4 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
@@ -7,7 +7,7 @@ import math
 
 import pygame
 
-import SCRIPT.GLOBAL as GLOBAL
+from SCRIPT import GLOBAL, LOGIC, FUNC
 
 
 class Qdi(pygame.sprite.Sprite):
@@ -39,11 +39,10 @@ class Qdi(pygame.sprite.Sprite):
 
         if th.bullet_counter < 1:
             for _ in range(48):
-                pos = (random.randint(120, 465), random.randint(15, 225))
-                sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
-                sprite.speed = 4
-                sprite.rect.center = pos
+                sprite = LOGIC.Barrage(th.shape, 4, th.color)
+                sprite.rect.center = (random.randint(120, 465), random.randint(15, 225))
                 sprite.current_angle = random.randint(0, 360)
+
                 GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1
@@ -52,16 +51,14 @@ class Qdi(pygame.sprite.Sprite):
         th.bullet_timer += 1
 
         if th.bullet_counter < 6 and th.bullet_timer % 2 == 0:
-            char = GLOBAL.main_char
-            sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
-            sprite.speed = 3.5
+            char_pos = GLOBAL.main_char.rect.center
+
+            sprite = LOGIC.Barrage(th.shape, 3.5, th.color)
             sprite.rect.center = (random.randint(120, 465), random.randint(15, 230))
-            x1 = char.rect.centerx
-            x2 = sprite.rect.centerx
-            y1 = char.rect.centery
-            y2 = sprite.rect.centery
-            two_pt = tuple(map(lambda a, b: a - b, (x1, y1), (x2, y2)))
-            sprite.current_angle = math.degrees(math.atan2(-two_pt[0], -two_pt[1]))
+            sprite_pos = sprite.rect.center
+            two_point = FUNC.add((char_pos[0], char_pos[1]), (-sprite_pos[0], -sprite_pos[1]))
+            sprite.current_angle = math.degrees(math.atan2(-two_point[0], -two_point[1]))
+
             GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1

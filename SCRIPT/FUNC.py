@@ -1,5 +1,14 @@
-# Copyright (c) 2025, 26 An_172N
-# 此代码根据GPLv3.0许可证授权
+# Copyright (c) 2026 An_172N
+# 此代码根据 GPLv3.0 许可证授权
+
+
+def add(*tuples: tuple) -> tuple:
+    """
+    对*tuples元组进行加法运算 \n
+    推荐每个元组的长度都一样
+    """
+
+    return tuple(map(sum, zip(*tuples)))
 
 
 def fibonacci(former: int, latter: int, frequency: int) -> int:

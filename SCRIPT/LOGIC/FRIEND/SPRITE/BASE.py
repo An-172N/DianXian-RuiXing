@@ -1,142 +1,22 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
-import math
-
 import pygame
 
-import SCRIPT.FUNC as FUNC
-import SCRIPT.GLOBAL as GLOBAL
 
+def vector(sprite_pos: tuple, target_pos: tuple, speed: float) -> pygame.Vector2:
+    dir = pygame.math.Vector2(target_pos[0] - sprite_pos[0], target_pos[1] - sprite_pos[1])
+    current = pygame.math.Vector2(sprite_pos[0], sprite_pos[1])
+    target = pygame.math.Vector2(target_pos[0], target_pos[1])
 
-class Base(pygame.sprite.Sprite):
-    POLYGON = 0
-    RECT = 1
-    CIRCLE = 2
+    delta_vec = target_pos - current
+    distance = delta_vec.length()
 
-    @staticmethod
-    def vector(sprite, speed) -> None:
-        dir = pygame.math.Vector2(sprite.target_x - sprite.rect.centerx, 0)
-        current_pos = pygame.math.Vector2(sprite.rect.centerx, sprite.rect.centery)
-        target_pos = pygame.math.Vector2(sprite.target_x, 60)
+    if distance < speed:
+        return target
+    else:
+        if distance > 0:
+            dir.normalize_ip()
 
-        delta_vec = target_pos - current_pos
-        distance = delta_vec.length()
-
-        if distance < speed:
-            sprite.rect.center = target_pos
-        else:
-            if distance > 0:
-                dir.normalize_ip()
-
-            new_pos = current_pos + dir * speed
-            sprite.rect.center = new_pos
-
-    def __init__(th, value=(0, 0, 0), color=(0, 0, 0), shape=0, type="barrage"):
-        super().__init__()
-        th.width = value[0]
-        th.height = value[1]
-        th.border = value[2]
-        th.color = color
-        th.type = type
-        th.shape = shape
-
-        th.current_angle = 0
-        th.speed = 0
-        th.timer = 0
-
-        th.is_rotated = False
-        th.is_visitable = True
-        th.have_power = False
-        th.have_flash = False
-
-        th.original_image = th.get_shape(shape)
-        th.image = th.original_image
-        th.rect = th.image.get_rect()
-        th.mask = pygame.mask.from_surface(th.image)
-
-    def get_shape(th, shape) -> None:
-        shape_dict = {
-            th.POLYGON: th.polygon,
-            th.RECT: th.rectangle,
-            th.CIRCLE: th.circle,
-        }
-
-        return shape_dict.get(shape)()
-    
-    def polygon(self) -> pygame.Surface:
-        type_dict = {
-            "brick": lambda: GLOBAL.sprite_image[f"P_BR_{self.color}"],
-            "barrage": lambda: GLOBAL.sprite_image[f"P_BA_{self.color}"]
-        }
-        
-        return type_dict.get(self.type)()
-
-    def rectangle(self) -> pygame.Surface:
-        type_dict = {
-            "brick": lambda: GLOBAL.sprite_image[f"R_BR_{self.color}"],
-            "barrage": lambda:GLOBAL.sprite_image[f"R_BA_{self.color}"],
-            "bomb": lambda: GLOBAL.sprite_image[f"KLI_BOMB"],
-            "bullet": lambda: GLOBAL.sprite_image[f"KLI_BULLET"],
-            "bullet-cross": lambda: GLOBAL.sprite_image[f"KLI_BULLET"],
-            "power": lambda: GLOBAL.sprite_image[f"R_IT_{self.color}"],
-            "flash": lambda: GLOBAL.sprite_image[f"R_IT_{self.color}"],
-            "fire": lambda: GLOBAL.sprite_image[f"R_IT_{self.color}"],
-            "dec": lambda: GLOBAL.sprite_image[f"DEC"]
-        }
-
-        def not_in_type_dict():
-            surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-            pygame.draw.rect(surface, self.color, surface.get_rect(), self.border)
-            return surface
-        
-        return type_dict.get(self.type, not_in_type_dict)()
-            
-
-    def circle(self) -> pygame.Surface:
-        type_dict = {
-            "brick": lambda: GLOBAL.sprite_image[f"C_BR_{self.color}"],
-            "barrage": lambda: GLOBAL.sprite_image[f"C_BA_{self.color}"]
-        }
-
-        return type_dict.get(self.type)()
-    
-    def update(th) -> None:
-        if not th.is_rotated:
-            th.image = pygame.transform.rotate(th.original_image, th.current_angle)
-            th.mask = pygame.mask.from_surface(th.image)
-            th.rect = th.image.get_rect(center=th.rect.center)
-
-            th.x = getattr(th, 'x', th.rect.centerx)
-            th.y = getattr(th, 'y', th.rect.centery)
-            th.is_rotated = True
-        
-        rad = math.radians(th.current_angle)
-        sin = math.sin(rad)
-        cos = math.cos(rad)
-        th.x, th.y = tuple(map(lambda a, b: a - b, (th.x, th.y), (sin * th.speed, cos * th.speed)))
-        th.rect.center = (th.x, th.y)
-
-        if th.type in ["flash", "power"]:
-            th.speed -= 0.1
-
-            if th.speed < -2:
-                th.speed = -2
-
-            dpos = tuple(map(lambda a, b: a - b, th.rect.center, GLOBAL.main_char.rect.center))
-            ddis = math.hypot(dpos[0], dpos[1])
-            if ddis <= 28:
-                atan2 = math.atan2(-dpos[0], -dpos[1])
-                th.speed = -8
-                th.current_angle = math.degrees(atan2)
-
-        if th.type == "line":
-            th.timer += 1
-
-            if th.timer >= 68:
-                th.kill()
-            elif th.timer >= 45 and th.color != GLOBAL.color_dict[3]:
-                th.color = GLOBAL.color_dict[3]
-
-                th.image.fill(th.color, special_flags=pygame.BLEND_RGBA_MULT)
+        return current + dir * speed

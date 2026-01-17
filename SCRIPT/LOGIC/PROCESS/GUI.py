@@ -1,4 +1,4 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
@@ -6,11 +6,10 @@ import datetime
 
 import pygame
 
-import SCRIPT.GLOBAL as GLOBAL
-import SCRIPT.LOGIC.PROCESS.RESET as RESET
+from SCRIPT import GLOBAL, LOGIC
 
 
-def show_situ(screen, font, clock) -> None:
+def show_situation(screen: pygame.Surface, font: pygame.font.Font, clock: pygame.time.Clock) -> None:
     current_time = pygame.time.get_ticks()
     if current_time - GLOBAL.last_time >= 500:
         GLOBAL.fps_text = f"{clock.get_fps():.1f} FPS"
@@ -21,56 +20,40 @@ def show_situ(screen, font, clock) -> None:
     flash = f"闪　{GLOBAL.player:02d}"
     combo = f"连　{GLOBAL.combo:02d} , {GLOBAL.shoot_counter:02d}"
 
-    situ(
-        screen, font,
-        score,
-        power,
-        flash,
-        combo,
-        GLOBAL.fps_text
-    )
+    text = [score, power, flash, combo]
+
+    situation(screen, font, text, GLOBAL.fps_text)
 
 
-def pause_menu(screen, font) -> None:
-    half_menu(
-        screen, font,
-        "休息ing",
-        "ESC 休息好了",
-        "Q 不玩了"
-    )
+def pause_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
+    title = "休息ing"
+    text = ["ESC 休息好了", "Q 不玩了"]
+
+    half_menu(screen, font, title, text)
 
 
-def load_menu(screen, font) -> None:
+def load_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
-    stage = f"Stage {stage_text} - {GLOBAL.level} !!"
+    title = "这一关是————"
+    text = [f"Stage {stage_text} - {GLOBAL.level} !!", "START!!!!"]
 
-    half_menu(
-        screen, font,
-        "这一关是————",
-        stage,
-        "START!!!!"
-    )
+    half_menu(screen, font, title, text)
 
 
-def talk_menu(screen, font) -> None:
-    text = GLOBAL.text
+def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:   
+    human = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["human"]
+    info = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info"]
+    info2 = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
         
-    human = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["human"]
-    info = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info"]
-    info2 = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
-        
-    GLOBAL.talk = text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["sw"]
+    GLOBAL.is_talk = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["sw"]
 
-    half_menu(
-        screen, font,
-        human,
-        info,
-        info2
-    )
+    text = [info, info2]
+
+    half_menu(screen, font, human, text)
 
 
-def summary_menu(screen, font) -> None:
+def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'
     combo = 2 ** GLOBAL.combo + GLOBAL.combo * 2
 
@@ -78,61 +61,53 @@ def summary_menu(screen, font) -> None:
     point = f"得点 {GLOBAL.total_s_power} * 512 + {combo} = {GLOBAL.total_s_power * 512 + combo}"
     hurt = f"无伤 {GLOBAL.no_hurt} * 4096 = {GLOBAL.no_hurt * 4096}"
 
-    half_menu(
-        screen, font,
-        stage,
-        point,
-        hurt
-    )
+    text = [point, hurt]
+
+    half_menu(screen, font, stage, text)
 
 
-def start_menu(screen, font) -> None:
-    full_menu(
-        screen, font,
-        title="锐行 ~ Thunder Out of the Mountain",
-        key1="Z 开始", key2="Q 退出",
-        other="Copyright (c) 2025, 26 An_172N"
-    )
+def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
+    title = "锐行 ~ Thunder Out of the Mountain"
+    other = "Copyright (c) 2026 An_172N"
+
+    text = ['Ver 1.0.1', '', '', '', '']
+    key = ["（Z 开始", "（Q 退出"]
+
+    full_menu(screen, font, title, text, key, other)
 
 
-def save_menu(screen, font) -> None:
+def save_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
+    title = "抚形日志"
     tm = f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}"
     score = f"得到了 {GLOBAL.score} 分"
     stage = f"最远达到的地方是 {stage_text} - {GLOBAL.level} 站"
-    s_power = f"拾形点率为 {RESET.cal_s_power()}"
+    s_power = f"拾形点率为 {LOGIC.Reset.cal_s_power()}"
     s_flash = f"使用了 {GLOBAL.s_flash} 次形闪"
     name = f"由 {GLOBAL.name} 助记"
 
-    full_menu(
-        screen, font,
-        title="抚形日志",
-        text1=tm, text2=score, text3= stage, text4= s_power, text5 = s_flash,
-        key1="Ent 记录", key2="ESC 不了", other=name
-    )
+    text = [tm, score, stage, s_power, s_flash]
+    key = ["（Ent 记录", "（ESC 不了"]
+
+    full_menu(screen, font, title, text, key, name)
 
 
-def full_menu(
-    surface, font,
-    title="",
-    text1="", text2="", text3="", text4="", text5="",
-    key1="", key2="",
-    other=""
-) -> None:
+def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text: list, key: list, other: str) -> None:
     text_type = [
         {"text": title, "pos": (8, 10)},
-        {"text": text1, "pos": (8, 60)},
-        {"text": text2, "pos": (8, 85)},
-        {"text": text3, "pos": (8, 110)},
-        {"text": text4, "pos": (8, 135)},
-        {"text": text5, "pos": (8, 160)},
-        {"text": key1, "pos": (270, 220)},
-        {"text": key2, "pos": (270, 270)},
+        {"text": text[0], "pos": (8, 60)},
+        {"text": text[1], "pos": (8, 85)},
+        {"text": text[2], "pos": (8, 110)},
+        {"text": text[3], "pos": (8, 135)},
+        {"text": text[4], "pos": (8, 160)},
+        {"text": key[0], "pos": (260, 220)},
+        {"text": key[1], "pos": (260, 270)},
         {"text": other, "pos": (8, 305)}
     ]
 
     menu_surface = GLOBAL.picture["MENU_BG"]
+
     if not GLOBAL.is_blit:
         menu_surface.fill((0, 0, 0))
 
@@ -145,14 +120,15 @@ def full_menu(
     surface.blit(menu_surface, (120, 15))
 
 
-def half_menu(surface, font, title, text1, text2) -> None:
+def half_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text: list) -> None:
     text_type = [
         {"text": title, "pos": (8, 8)},
-        {"text": text1, "pos": (8, 33)},
-        {"text": text2, "pos": (8, 58)}
+        {"text": text[0], "pos": (8, 33)},
+        {"text": text[1], "pos": (8, 58)}
     ]
 
     menu_surface = GLOBAL.picture["MENU_BG"].subsurface((0, 0, 345, 85))
+
     if not GLOBAL.is_blit:
         menu_surface.fill((0, 0, 0))
 
@@ -162,15 +138,15 @@ def half_menu(surface, font, title, text1, text2) -> None:
 
         GLOBAL.is_blit = True
 
-    surface.blit(menu_surface, (120, 260))
+    surface.blit(menu_surface, (120, 15))
 
 
-def situ(surface, font, text1, text2, text3, text4, fps) -> None:
+def situation(surface: pygame.Surface, font: pygame.font.Font, text: list, fps: str) -> None:
     text_type = [
-        {"text": text1, "pos": (8, 25)},
-        {"text": text2, "pos": (8, 270)},
-        {"text": text3, "pos": (8, 295)},
-        {"text": text4, "pos": (8, 320)},
+        {"text": text[0], "pos": (8, 25)},
+        {"text": text[1], "pos": (8, 270)},
+        {"text": text[2], "pos": (8, 295)},
+        {"text": text[3], "pos": (8, 320)},
         {"text": fps, "pos": (395, 343)}
     ]
     
@@ -179,22 +155,22 @@ def situ(surface, font, text1, text2, text3, text4, fps) -> None:
         surface.blit(text, text_info["pos"])
 
 
-def menu_display(screen) -> None:
-    if not GLOBAL.run:
+def menu_display(screen: pygame.Surface) -> None:
+    if not GLOBAL.is_run:
         start_menu(screen, GLOBAL.font)
-    elif GLOBAL.pause:
+    elif GLOBAL.is_pause:
         pause_menu(screen, GLOBAL.font)
-    elif not GLOBAL.level_load:
+    elif not GLOBAL.is_level_load:
         load_menu(screen, GLOBAL.font)
-    elif GLOBAL.talk:
+    elif GLOBAL.is_talk:
         talk_menu(screen, GLOBAL.font)
-    elif GLOBAL.summary:
+    elif GLOBAL.is_summary:
         summary_menu(screen, GLOBAL.font)
-    elif GLOBAL.save:
+    elif GLOBAL.is_save:
         save_menu(screen, GLOBAL.font)
 
 
-def window_display(screen) -> None:
+def window_display(screen: pygame.Surface) -> None:
     screen.fill((0, 0, 0, 0))
     screen.blit(GLOBAL.second_background, (120, 15))
 
@@ -207,6 +183,6 @@ def window_display(screen) -> None:
     GLOBAL.barrage_group.draw(screen)
 
 
-def font_display(screen, clock) -> None:
+def font_display(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
     screen.blit(GLOBAL.background, (0, 0))
-    show_situ(screen, GLOBAL.font, clock)
+    show_situation(screen, GLOBAL.font, clock)

@@ -1,4 +1,4 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
@@ -24,6 +24,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.dont_write_bytecode = True
+    
     block_module = [
         'numpy', 'timidity',
         'pygame._freetype', 'pygame._sdl2', 'pygame._camera',
@@ -32,7 +33,7 @@ if __name__ == "__main__":
         'pygame.gfxdraw', 'pygame.mouse', 'pygame.threads',
         'pygame.pypm', 'pygame.macosx', 'pygame.examples',
         'pygame.locals', 'pygame.camera', 'pygame.__pyinstaller',
-        'pygame.freetype', 'pygame.midi',
+        'pygame.freetype', 'pygame.midi', 'pygame.scrap',
         'gzip', 'calendar', 'html',
         'heapq', 'csv', 'logging',
         'urllib', 'pkgutil', 'cgi',
@@ -41,8 +42,30 @@ if __name__ == "__main__":
         'tkinter', 'email', 'xml',
         'doctest', 'unittest', 'idlelib',
         'uu', 'ftplib', 'hashlib',
-        'pathlib', 'mailcap', 'webbrowser'
+        'pathlib', 'mailcap', 'webbrowser',
+        'quopri', 'cgitb', 'cmd',
+        'imaplib', 'imghdr', 'platform',
+        'poplib', 'tarfile', 'xdrlib',
+        'zipfile', 'lzma', 'pstats',
+        'sndhdr', 'shlex', 'sched',
+        'pipes', 'netrc', 'pprint',
+        'string', 'stringprep', 'struct',
+        'symtable', 'timeit', 'tomllib',
+        'socketserver', 'unicodedata', 'rlcompleter',
+        'numbers', 'nturl2path', 'token',
+        'tokenize', 'colorsys', 'code',
+        'codeop', 'configparser', 'dis',
+        'linecache', 'inspect', 'bz2',
+        'opcode', 'select', 'selectors',
+        'base64', 'chunk', 'copy',
+        'dataclasses', 'difflib', 'fileinput',
+        'filecmp', 'getopt', 'glob',
+        'fractions', 'decimal', 'statistics',
+        'tempfile', 'mimetypes', 'modulefinder',
+        'pickle', 'pickletools', 'pyclbr',
+        'rlcompleter', 'sysconfig', 'textwrap'
     ]
+
     for module in block_module:
         sys.modules[module] = None
 

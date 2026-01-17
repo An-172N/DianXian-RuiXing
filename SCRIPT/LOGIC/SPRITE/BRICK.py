@@ -1,13 +1,15 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
 import random
 
-import SCRIPT.GLOBAL as GLOBAL
+import pygame
+
+from SCRIPT import GLOBAL, LOGIC
 
 
-def brick_blast(brick) -> None:
+def brick_blast(brick: LOGIC.Brick) -> None:
     if brick.color == (255, 255, 255):
         process_dict = {
             1: circle_brick,
@@ -16,84 +18,66 @@ def brick_blast(brick) -> None:
             4: point_brick
         }
 
-        process_dict[GLOBAL.stage](GLOBAL.char_dict[7], brick, GLOBAL.bullet_group, 16)
+        process_dict[GLOBAL.stage](brick, GLOBAL.bullet_group, 16)
 
 
-def brick_death(target):
+def brick_death(target: LOGIC.Brick):
     target.is_die = True
 
 
-def circle_brick(sprite, source, sprite_group, speed) -> None:
+def circle_brick(source: LOGIC.Brick, sprite_group: pygame.sprite.Group, speed: float) -> None:
     rands = random.randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 15):
-        current_sprite = sprite(color=GLOBAL.color_dict[5], shape=1, type="bullet")
-        if not hasattr(current_sprite, "damage"):
-            current_sprite.damage = 4
-        current_sprite.speed = speed
+        current_sprite = LOGIC.Bullet("bullet", speed, i, 4)
         current_sprite.rect.center = source.rect.center
-        current_sprite.current_angle = i
         current_sprite.update()
+
         sprite_group.add(current_sprite)
 
 
-def polygon_brick(sprite, source, sprite_group, speed) -> None:
+def polygon_brick(source: LOGIC.Brick, sprite_group: pygame.sprite.Group, speed: float) -> None:
     midleft = source.rect.midleft
     midright = source.rect.midright
     midbottom = source.rect.midbottom
-    choice = random.choice
 
     bullet_index = [
         {
-            'angle': choice([-30, -210]),
+            'angle': random.choice([-30, -210]),
             'pos': midleft
         },
         {
-            'angle': choice([30, 210]),
+            'angle': random.choice([30, 210]),
             'pos': midright
         },
         {
-            'angle': choice([90, 270]),
+            'angle': random.choice([90, 270]),
             'pos': midbottom
         }
     ]
 
     for bullet_info in bullet_index:
-        current_sprite = sprite(color=GLOBAL.color_dict[5], shape=1, type="bullet-cross")
-        if not hasattr(current_sprite, "damage"):
-            current_sprite.damage = 4
-        current_sprite.speed = speed
+        current_sprite = LOGIC.Bullet("bullet-cross", speed, bullet_info['angle'], 4)
         current_sprite.rect.center = bullet_info['pos']
-        current_sprite.current_angle = bullet_info['angle']
         current_sprite.update()
+
         sprite_group.add(current_sprite)
 
 
-def line_brick(sprite, source, sprite_group, _) -> None:
-    randint = random.randint
-
+def line_brick(source: LOGIC.Brick, sprite_group: pygame.sprite.Group, _: None) -> None:
     for _ in range(12):
-        current_sprite = sprite((2, randint(64, 256), 0), GLOBAL.color_dict[5], 1, "line")
-        if not hasattr(current_sprite, "damage"):
-            current_sprite.damage = 6
-        current_sprite.speed = 0
+        current_sprite = LOGIC.Line((2, random.randint(64, 256)), 0, 6, GLOBAL.color_dict[5])
         current_sprite.rect.center = source.rect.center
-        rands = randint(0, 360)
-        current_sprite.current_angle = rands
+        current_sprite.current_angle = random.randint(0, 360)
         current_sprite.update()
+
         sprite_group.add(current_sprite)
 
 
-def point_brick(sprite, _, sprite_group, speed):
-    randint = random.randint
-    
+def point_brick(_: None, sprite_group: pygame.sprite.Group, speed: float):
     for _ in range(24):
-        current_sprite = sprite(color=GLOBAL.color_dict[5], shape=1, type="bullet")
-        if not hasattr(current_sprite, "damage"):
-            current_sprite.damage = 4
-        current_sprite.rect.center = (randint(120, 465), randint(15, 345))
-        rands = randint(0, 360)
-        current_sprite.current_angle = rands
-        current_sprite.speed = speed
+        current_sprite = LOGIC.Bullet("bullet", speed, random.randint(0, 360), 4)
+        current_sprite.rect.center = (random.randint(120, 465), random.randint(15, 345))
         current_sprite.update()
+
         sprite_group.add(current_sprite)

@@ -1,20 +1,18 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
 import itertools
 
-import SCRIPT.GLOBAL as GLOBAL
+from SCRIPT import GLOBAL, LOGIC
 
 
 def spawn_bullet() -> None:
+    main_char = GLOBAL.main_char
     p = 2 ** (GLOBAL.s_power // 32)
     q = 2 ** (GLOBAL.s_power // 16)
-
-    product = itertools.product
-    main_char = GLOBAL.main_char
     
-    for i, j in product(range(0, p), range(-q, q + 1, q)):
+    for i, j in itertools.product(range(0, p), range(-q, q + 1, q)):
         main_char.fire(0 + i * 10, 0 + i * 12, j)
 
     GLOBAL.shoot_counter -= 1
@@ -26,6 +24,6 @@ def single_bomb() -> None:
         GLOBAL.is_s_divide = True
 
 
-def bullet_collide(source, target) -> None:
+def bullet_collide(source: LOGIC.Bullet, target: object) -> None:
     target.hp -= source.damage
     GLOBAL.score += 64

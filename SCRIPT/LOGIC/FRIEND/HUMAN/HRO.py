@@ -1,4 +1,4 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
@@ -7,7 +7,7 @@ import math
 
 import pygame
 
-import SCRIPT.GLOBAL as GLOBAL
+from SCRIPT import GLOBAL, LOGIC, FUNC
 
 
 class Hro(pygame.sprite.Sprite):
@@ -69,11 +69,11 @@ class Hro(pygame.sprite.Sprite):
                 current_pos = start_pos + delta_pos * current_step
                 
                 for j in range(45, 136, 90):
-                    sprite = GLOBAL.char_dict[7](color=th.color, shape=0, type="barrage")
-                    sprite.speed = 4
+                    sprite = LOGIC.Barrage(0, 4, th.color)
                     sprite.rect.center = (current_pos.x, current_pos.y)
                     atan = math.atan2(-delta_pos.x, -delta_pos.y)
                     sprite.current_angle = math.degrees(atan) + j + th.bullet_delay
+
                     GLOBAL.barrage_group.add(sprite)
         
             th.bullet_counter += 1
@@ -84,12 +84,13 @@ class Hro(pygame.sprite.Sprite):
         if th.bullet_timer % 8 == 0 and th.bullet_counter < 3:
             pos = th.rect.center
             char_pos = GLOBAL.main_char.rect.center
+            
             for i in range(-30, 31, 30):
-                sprite = GLOBAL.char_dict[7](color=th.color, shape=0, type="barrage")
+                sprite = LOGIC.Barrage(0, 4, th.color)
                 sprite.speed = 4
                 sprite.rect.center = pos
-                two_pt = tuple(map(lambda a, b: a - b, (char_pos[0], char_pos[1]), (pos[0], pos[1])))
-                atan = math.atan2(-two_pt[0], -two_pt[1])
+                two_point = FUNC.add((char_pos[0], char_pos[1]), (-pos[0], -pos[1]))
+                atan = math.atan2(-two_point[0], -two_point[1])
                 sprite.current_angle = math.degrees(atan) + i
                 GLOBAL.barrage_group.add(sprite)
 
@@ -107,6 +108,6 @@ class Hro(pygame.sprite.Sprite):
             th.is_choice = False
             th.choice = random.choice([th.fire, th.free])
 
-        GLOBAL.char_dict[7].vector(th, 5)
+        th.rect.center = LOGIC.Base.vector(th.rect.center, (th.target_x, th.target_y), 5)
 
         th.fire() if not th.is_free else th.choice()

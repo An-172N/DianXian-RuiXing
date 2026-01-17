@@ -1,10 +1,10 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
 import pygame
 
-import SCRIPT.GLOBAL as GLOBAL
+from SCRIPT import GLOBAL, LOGIC
 
 
 class Kli(pygame.sprite.Sprite):
@@ -25,22 +25,17 @@ class Kli(pygame.sprite.Sprite):
 
         if th.bullet_timer >= 30 and th.bullet_timer % 1 == 0 and th.bullet_counter < 6:
             for i in range(120, 466, 15):
-                sprite = GLOBAL.char_dict[7](
-                    shape=1,
-                    type="bomb"
-                )
-                if not hasattr(sprite, "damage"):
-                    sprite.damage = 6
-                sprite.speed = -24
+                sprite = LOGIC.Bullet("bomb", -24, 0, 6)
                 sprite.rect.center = (i, 0)
                 GLOBAL.bullet_group.add(sprite)
 
             th.bullet_counter += 1
 
-    def fire(th, dx, dy, angle) -> None:
-        left = GLOBAL.main_char.rect.left
-        top = GLOBAL.main_char.rect.top
-        right = GLOBAL.main_char.rect.right
+    def fire(th, dx: float, dy: float, angle: float) -> None:
+        left = th.rect.left
+        top = th.rect.top
+        right = th.rect.right
+
         bullet_type = [
             {
                 'x': left - dx,
@@ -55,19 +50,15 @@ class Kli(pygame.sprite.Sprite):
         ]
 
         for bullet_info in bullet_type:
-            sprite = GLOBAL.char_dict[7](shape=1, type="bullet")
-            if not hasattr(sprite, "damage"):
-                sprite.damage = 4
-            sprite.speed = 16
+            sprite = LOGIC.Bullet("bullet", 16, bullet_info['angle'], 4)
             sprite.rect.center = (bullet_info['x'], bullet_info['y'])
-            sprite.current_angle = bullet_info['angle']
             GLOBAL.bullet_group.add(sprite)
 
 
 class DecisionPoint(pygame.sprite.Sprite):
     def __init__(th):
         super().__init__()
-        th.original_image = GLOBAL.char_dict[7](shape=1, type="dec").image
+        th.original_image = GLOBAL.sprite_image[f"DEC"]
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)

@@ -1,4 +1,4 @@
-# Copyright (c) 2025, 26 An_172N
+# Copyright (c) 2026 An_172N
 # 此代码根据GPLv3.0许可证授权
 
 
@@ -8,7 +8,7 @@ import math
 
 import pygame
 
-import SCRIPT.GLOBAL as GLOBAL
+from SCRIPT import GLOBAL, LOGIC
 
 
 class Ono(pygame.sprite.Sprite):
@@ -49,23 +49,22 @@ class Ono(pygame.sprite.Sprite):
             ):
                 x = th.rect.centerx + 32 * math.cos(math.radians(i))
                 y = th.rect.centery + 32 * math.sin(math.radians(i))
-                pos = (x, y)
-                sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
+                sprite = LOGIC.Barrage(th.shape, 3.5, th.color)
                 sprite.speed = 3.5
-                sprite.rect.center = pos
+                sprite.rect.center = (x, y)
                 sprite.current_angle = j
+
                 GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1
 
     def fire(th) -> None:
         if th.bullet_counter < 1:
-            pos = th.rect.center
             for i in range(0, 360, 15):
-                sprite = GLOBAL.char_dict[7](color=th.color, shape=2, type="barrage")
-                sprite.speed = 4
-                sprite.rect.center = pos
+                sprite = LOGIC.Barrage(th.shape, 4, th.color)
+                sprite.rect.center = th.rect.center
                 sprite.current_angle = i
+
                 GLOBAL.barrage_group.add(sprite)
 
             th.bullet_counter += 1
@@ -82,6 +81,6 @@ class Ono(pygame.sprite.Sprite):
             th.is_free = not th.is_free
             th.choice = choice([th.fire, th.free])
 
-        GLOBAL.char_dict[7].vector(th, 4)
+        th.rect.center = LOGIC.Base.vector(th.rect.center, (th.target_x, th.target_y), 4)
 
         th.fire() if not th.is_free else th.choice()
