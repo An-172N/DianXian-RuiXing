@@ -47,10 +47,10 @@ def collide_barrage() -> None:
 
 def life_logic() -> None:
     GLOBAL.no_hurt = 0
-    GLOBAL.player -= 1
-    GLOBAL.s_flash += 1
+    GLOBAL.flash -= 1
+    GLOBAL.use_flash += 1
 
-    if GLOBAL.player == 0:
+    if GLOBAL.flash == 0:
         GLOBAL.is_save = True
         GLOBAL.is_blit = False
 

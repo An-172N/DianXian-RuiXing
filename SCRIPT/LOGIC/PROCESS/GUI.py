@@ -16,8 +16,8 @@ def show_situation(screen: pygame.Surface, font: pygame.font.Font, clock: pygame
         GLOBAL.last_time = current_time
 
     score = f"分　{GLOBAL.score:9d}"
-    power = f"形　{GLOBAL.s_power:02d} , {GLOBAL.total_s_power:02d}"
-    flash = f"闪　{GLOBAL.player:02d}"
+    power = f"形　{GLOBAL.power:02d} , {GLOBAL.total_power:02d}"
+    flash = f"闪　{GLOBAL.flash:02d}"
     combo = f"连　{GLOBAL.combo:02d} , {GLOBAL.shoot_counter:02d}"
 
     text = [score, power, flash, combo]
@@ -58,7 +58,7 @@ def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     combo = 2 ** GLOBAL.combo + GLOBAL.combo * 2
 
     stage = f"Stage {stage_text} - {GLOBAL.level} Cleaer!（Z 下一关"
-    point = f"得点 {GLOBAL.total_s_power} * 512 + {combo} = {GLOBAL.total_s_power * 512 + combo}"
+    point = f"得点 {GLOBAL.total_power} * 512 + {combo} = {GLOBAL.total_power * 512 + combo}"
     hurt = f"无伤 {GLOBAL.no_hurt} * 4096 = {GLOBAL.no_hurt * 4096}"
 
     text = [point, hurt]
@@ -84,7 +84,7 @@ def save_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     score = f"得到了 {GLOBAL.score} 分"
     stage = f"最远达到的地方是 {stage_text} - {GLOBAL.level} 站"
     s_power = f"拾形点率为 {LOGIC.Reset.cal_s_power()}"
-    s_flash = f"使用了 {GLOBAL.s_flash} 次形闪"
+    s_flash = f"使用了 {GLOBAL.use_flash} 次形闪"
     name = f"由 {GLOBAL.name} 助记"
 
     text = [tm, score, stage, s_power, s_flash]

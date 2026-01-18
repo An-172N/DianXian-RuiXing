@@ -107,7 +107,7 @@ def save_file() -> None:
             'Score': GLOBAL.score,
             'The farthest station that you reached': f"{stage} - {GLOBAL.level}",
             'Pick up Shape Power rate': LOGIC.Reset.cal_s_power(),
-            'Shape Flash': GLOBAL.s_flash,
+            'Shape Flash': GLOBAL.use_flash,
             'Record date': datetime.datetime.now().strftime('%Y-%m-%d')
         }
     )

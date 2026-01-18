@@ -9,8 +9,8 @@ from SCRIPT import GLOBAL, LOGIC
 
 def spawn_bullet() -> None:
     main_char = GLOBAL.main_char
-    p = 2 ** (GLOBAL.s_power // 32)
-    q = 2 ** (GLOBAL.s_power // 16)
+    p = 2 ** (GLOBAL.power // 32)
+    q = 2 ** (GLOBAL.power // 16)
     
     for i, j in itertools.product(range(0, p), range(-q, q + 1, q)):
         main_char.fire(0 + i * 10, 0 + i * 12, j)
@@ -19,8 +19,8 @@ def spawn_bullet() -> None:
 
 
 def single_bomb() -> None:
-    if not GLOBAL.is_s_divide and GLOBAL.s_power >= 12:
-        GLOBAL.s_power -= 12
+    if not GLOBAL.is_s_divide and GLOBAL.power >= 12:
+        GLOBAL.power -= 12
         GLOBAL.is_s_divide = True
 
 

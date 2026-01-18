@@ -35,15 +35,15 @@ def item_collide(item: LOGIC.Item) -> None:
     GLOBAL.shoot_counter = int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
     if item.type == "power":
-        GLOBAL.s_power = int(FUNC.clamp(GLOBAL.s_power + 1, 0, 32))
+        GLOBAL.power = int(FUNC.clamp(GLOBAL.power + 1, 0, 32))
         GLOBAL.combo += 1
-        GLOBAL.total_s_power += 1
-        GLOBAL.stage_total_s_power += 1
+        GLOBAL.total_power += 1
+        GLOBAL.stage_total_power += 1
     elif item.type == "flash":
-        GLOBAL.player += 1
+        GLOBAL.flash += 1
         GLOBAL.combo += 1
-        GLOBAL.total_s_power += 1
-        GLOBAL.stage_total_s_power += 1
+        GLOBAL.total_power += 1
+        GLOBAL.stage_total_power += 1
 
     item.kill()
 
@@ -54,5 +54,3 @@ def item_spawn(condition: bool, pos: tuple, color: tuple, item_type: str) -> Non
         sprite.rect.center = pos
 
         GLOBAL.item_group.add(sprite)
-        
-        GLOBAL.total_spawn_s_power += 1

@@ -21,7 +21,7 @@ def mode_one() -> None:
     GLOBAL.is_s_divide = False
     GLOBAL.cooldown_timer = 0
     GLOBAL.main_char = LOGIC.Kli()
-    GLOBAL.total_s_power = 0
+    GLOBAL.total_power = 0
 
     GLOBAL.shoot_counter = 0
     GLOBAL.is_shoot = True
@@ -39,15 +39,15 @@ def mode_two() -> None:
     GLOBAL.char = None
 
     GLOBAL.no_hurt = 0
-    GLOBAL.player = 4
+    GLOBAL.flash = 3
     GLOBAL.score = 0
-    GLOBAL.s_flash = 0
+    GLOBAL.use_flash = 0
 
-    GLOBAL.s_power = 0
+    GLOBAL.power = 0
     GLOBAL.is_shoot = False
 
     GLOBAL.is_run = False
 
 
 def cal_s_power() -> str:
-    return f"{GLOBAL.divide(GLOBAL.stage_total_s_power, GLOBAL.total_spawn_s_power, 0) * 100:.2f} %"
+    return f"{GLOBAL.divide(GLOBAL.stage_total_power, 153 if GLOBAL.stage <= 3 else 61, 0) * 100:.2f} %"

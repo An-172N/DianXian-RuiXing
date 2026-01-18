@@ -14,15 +14,15 @@ def option() -> None:
 
     parser.add_argument('--stage', type=int, default=1)
     parser.add_argument('--level', type=int, default=0)
-    parser.add_argument('--player', type=int, default=4)
-    parser.add_argument('--s_power', type=int, default=0)
+    parser.add_argument('--flash', type=int, default=3)
+    parser.add_argument('--power', type=int, default=0)
 
     args = parser.parse_args()
 
     GLOBAL.stage = int(FUNC.clamp(args.stage, 1, 4))
     GLOBAL.level = int(FUNC.clamp(args.level, 0, 5))
-    GLOBAL.player = int(FUNC.clamp(args.player, 0, 96))
-    GLOBAL.s_power = int(FUNC.clamp(args.s_power, 0, 32))
+    GLOBAL.flash = int(FUNC.clamp(args.flash, 0, 96))
+    GLOBAL.power = int(FUNC.clamp(args.power, 0, 32))
 
 
 def remove_sprite(sprite_group: pygame.sprite.Group, effective_range: pygame.Rect) -> None:

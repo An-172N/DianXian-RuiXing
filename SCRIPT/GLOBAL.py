@@ -42,7 +42,7 @@ is_blit = False
 name = ''
 
 
-s_power = 0
+power = 0
 shoot_counter = 0
 
 
@@ -54,14 +54,13 @@ combo_timer = 120
 combo = 0
 
 
-player = 4
+flash = 3
 no_hurt = 0
 score = 0
 cooldown_timer = 0
-s_flash = 0
-total_s_power = 0
-stage_total_s_power = 0
-total_spawn_s_power = 0
+use_flash = 0
+total_power = 0
+stage_total_power = 0
 
 
 is_move_right = False
