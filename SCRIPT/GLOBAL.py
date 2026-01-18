@@ -146,7 +146,3 @@ particle_group = pygame.sprite.Group()
 
 last_time = pygame.time.get_ticks()
 fps_text = last_time
-
-
-def divide(dividend: float, divisor: float, default: float) -> float:
-    return dividend / divisor if divisor != 0 else default

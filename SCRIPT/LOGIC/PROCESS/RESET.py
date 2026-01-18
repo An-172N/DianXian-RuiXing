@@ -50,4 +50,4 @@ def mode_two() -> None:
 
 
 def cal_s_power() -> str:
-    return f"{GLOBAL.divide(GLOBAL.stage_total_power, 153 if GLOBAL.stage <= 3 else 61, 0) * 100:.2f} %"
+    return f"{(GLOBAL.stage_total_power / (153 if GLOBAL.stage <= 3 else 61)) * 100:.2f} %"
