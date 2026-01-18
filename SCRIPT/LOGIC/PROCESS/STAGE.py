@@ -16,8 +16,8 @@ def next_level() -> None:
     GLOBAL.no_hurt += 1
     GLOBAL.plane_group.add(GLOBAL.main_char)
     GLOBAL.plane_group.add(GLOBAL.decision_point)
-    GLOBAL.main_char.rect.center = (292, 331)
-    GLOBAL.decision_point.rect.center = (292, 331)
+    GLOBAL.main_char.rect.center = (292, 332)
+    GLOBAL.decision_point.rect.center = (292, 332)
 
 
 def score_summary(power: int, unhurt: int, combo: int, collection: tuple):

@@ -14,6 +14,8 @@ def move_plane() -> None:
         main_char_rect.x += 8 if GLOBAL.is_fast else 4
     if GLOBAL.is_move_left:
         main_char_rect.x -= 8 if GLOBAL.is_fast else 4
+    
+    main_char_rect.centery = 331 if GLOBAL.is_fast else 332
 
 
 def keep_position() -> None:
