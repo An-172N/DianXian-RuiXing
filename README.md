@@ -83,12 +83,13 @@
 ---
 
 ## 备注区
-**本项目采用GNU GPL-3.0授权**  
-**项目包含GNU Unifont字体**  
-**项目使用的第三方库为Pygame**  
-**项目网址：https://github.com/An-172N/DianXian-RuiXing**  
+**本项目采用GNU GPLv3.0授权**  
+**本项目包含GNU Unifont字体**  
+**本项目使用的第三方库为Pygame**  
+**本项目使用Nuitka打包**  
+**本项目网址：https://github.com/An-172N/DianXian-RuiXing**  
 
 ---
 
-**——An_172N**  
-**——2026/1/16**  
+**Copyright (c) 2026 An_172N**  
+**2026/1/18**  
