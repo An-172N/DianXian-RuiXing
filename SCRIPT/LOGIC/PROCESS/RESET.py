@@ -41,7 +41,7 @@ def mode_two() -> None:
     GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
     GLOBAL.second_background.set_alpha(128)
 
-    GLOBAL.no_hurt = 0
+    GLOBAL.no_flash = 0
     GLOBAL.flash = 3
     GLOBAL.score = 0
     GLOBAL.use_flash = 0

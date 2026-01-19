@@ -13,7 +13,7 @@ def next_level() -> None:
     LOGIC.Reset.mode_one()
     LOGIC.Reset.group_empty()
 
-    GLOBAL.no_hurt += 1
+    GLOBAL.no_flash += 1
     GLOBAL.plane_group.add(GLOBAL.main_char)
     GLOBAL.plane_group.add(GLOBAL.decision_point)
     GLOBAL.main_char.rect.center = (292, 332)
@@ -27,7 +27,7 @@ def score_summary(power: int, unhurt: int, combo: int, collection: tuple):
 def summary_closer() -> None:
     GLOBAL.is_summary = False
 
-    GLOBAL.score += score_summary(GLOBAL.total_power, GLOBAL.no_hurt, GLOBAL.combo, (512, 4096, 2, 2))
+    GLOBAL.score += score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2, 2))
 
     if GLOBAL.stage >= 3 and GLOBAL.level == 6:
         GLOBAL.is_save = True

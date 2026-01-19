@@ -48,7 +48,7 @@ def collide_barrage() -> None:
 
 
 def life_logic() -> None:
-    GLOBAL.no_hurt = 0
+    GLOBAL.no_flash = 0
     GLOBAL.flash -= 1
     GLOBAL.use_flash += 1
 

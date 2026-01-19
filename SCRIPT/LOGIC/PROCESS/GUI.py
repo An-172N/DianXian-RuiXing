@@ -59,7 +59,7 @@ def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 
     stage = f"Stage {stage_text} - {GLOBAL.level} Cleaer!（Z 下一关"
     point = f"得点 {GLOBAL.total_power} * 512 + {combo} = {GLOBAL.total_power * 512 + combo}"
-    hurt = f"无伤 {GLOBAL.no_hurt} * 4096 = {GLOBAL.no_hurt * 4096}"
+    hurt = f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"
 
     text = [point, hurt]
 

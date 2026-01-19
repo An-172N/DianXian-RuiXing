@@ -55,7 +55,7 @@ combo = 0
 
 
 flash = 3
-no_hurt = 0
+no_flash = 0
 score = 0
 cooldown_timer = 0
 use_flash = 0
