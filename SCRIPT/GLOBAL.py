@@ -11,7 +11,6 @@ from SCRIPT import LOGIC, FUNC
 
 asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
 font = pygame.font.Font(os.path.join(asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
-icon = pygame.display.set_icon(pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_ICON.png')))
 
 
 color_dict = {
