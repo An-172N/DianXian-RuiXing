@@ -36,6 +36,9 @@ def summary_closer() -> None:
         next_level()
         level_logic()
 
+    GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
+    GLOBAL.second_background.set_alpha(128)
+
 
 def sprite_loader() -> None:
     if GLOBAL.level == 6:
@@ -63,8 +66,6 @@ def level_load() -> None:
     else:
         sprite_loader()
 
-        GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
-        GLOBAL.second_background.set_alpha(191)
         GLOBAL.wait_level_load_timer = 0
         GLOBAL.is_level_load = True
 
@@ -96,7 +97,6 @@ def chs_shhm() -> LOGIC.Ono | LOGIC.Hro | LOGIC.Nre | LOGIC.Qdi:
         2: LOGIC.Hro,
         3: LOGIC.Nre,
         4: LOGIC.Qdi,
-        5: LOGIC.Kli
     }
 
     return char_dict.get(GLOBAL.stage)()

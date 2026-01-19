@@ -23,6 +23,8 @@ def option() -> None:
     GLOBAL.level = int(FUNC.clamp(args.level, 0, 5))
     GLOBAL.flash = int(FUNC.clamp(args.flash, 0, 96))
     GLOBAL.power = int(FUNC.clamp(args.power, 0, 32))
+    GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
+    GLOBAL.second_background.set_alpha(128)
 
 
 def remove_sprite(sprite_group: pygame.sprite.Group, effective_range: pygame.Rect) -> None:
@@ -67,12 +69,10 @@ def bullet_collide() -> None:
 
                 LOGIC.BrickMgr.brick_death(brick)
                 LOGIC.ParticleMgr.spawn_particles(2, 2, brick.rect.center, (4, 8), brick.color, (255, 255, 255))
-                if hasattr(brick, "free"):
-                    LOGIC.StageMgr.shhm_lose()
+                LOGIC.StageMgr.shhm_lose() if hasattr(brick, "free") else LOGIC.BarrageMgr.spawn_barrage(brick)
                 LOGIC.ItemMgr.item_spawn(brick.have_power, brick.rect.center, GLOBAL.color_dict[5], "power")
                 LOGIC.ItemMgr.item_spawn(brick.have_flash, brick.rect.center, GLOBAL.color_dict[2], "flash")
                 LOGIC.BrickMgr.brick_blast(brick)
-                LOGIC.BarrageMgr.spawn_barrage(brick)
                 brick.kill()
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()

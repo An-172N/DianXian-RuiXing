@@ -125,7 +125,7 @@ sprite_image = {
 
 background = picture["GAME_BG"]
 second_background = picture[stage]
-second_background.set_alpha(191)
+second_background.set_alpha(128)
 
 
 char = None
