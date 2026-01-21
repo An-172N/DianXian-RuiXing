@@ -1,8 +1,9 @@
 # Copyright (c) 2026 An_172N
-# 此代码根据GPLv3.0许可证授权
+# 此代码根据 GPLv3.0 许可证授权
 
 
 import argparse
+import random
 
 import pygame
 
@@ -70,8 +71,8 @@ def bullet_collide() -> None:
                 LOGIC.BrickMgr.brick_death(brick)
                 LOGIC.ParticleMgr.spawn_particles(2, 2, brick.rect.center, (4, 8), brick.color, (255, 255, 255))
                 LOGIC.StageMgr.shhm_lose() if hasattr(brick, "free") else LOGIC.BarrageMgr.spawn_barrage(brick)
-                LOGIC.ItemMgr.item_spawn(brick.have_power, brick.rect.center, GLOBAL.color_dict[5], "power")
-                LOGIC.ItemMgr.item_spawn(brick.have_flash, brick.rect.center, GLOBAL.color_dict[2], "flash")
+                LOGIC.ItemMgr.item_spawn(brick.have_power, brick.rect.center, 2.5, GLOBAL.color_dict[5], "power")
+                LOGIC.ItemMgr.item_spawn(brick.have_flash, brick.rect.center, 2.5, GLOBAL.color_dict[2], "flash")
                 LOGIC.BrickMgr.brick_blast(brick)
                 brick.kill()
             if bullet.type in ("bullet", "bomb"):
@@ -92,7 +93,14 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 LOGIC.PlaneMgr.keep_position()
                 LOGIC.PlaneMgr.invinc()
 
-                LOGIC.ItemMgr.item_spawn_regular()
+                GLOBAL.item_spawn_timer = LOGIC.ItemMgr.item_spawn(
+                    GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0,
+                    (random.randint(120, 465), 10),
+                    -2,
+                    (255, 255, 255),
+                    "fire",
+                    GLOBAL.item_spawn_timer
+                )
                 LOGIC.ItemMgr.combo_counter()
             
                 GLOBAL.bullet_group.update()

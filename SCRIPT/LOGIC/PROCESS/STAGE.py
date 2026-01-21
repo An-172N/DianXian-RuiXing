@@ -1,5 +1,5 @@
 # Copyright (c) 2026 An_172N
-# 此代码根据GPLv3.0许可证授权
+# 此代码根据 GPLv3.0 许可证授权
 
 
 import random
@@ -51,9 +51,10 @@ def sprite_loader() -> None:
         GLOBAL.brick_group.add(GLOBAL.char)
     else:
         level_file = os.path.join(GLOBAL.asset_path, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg")
+
         with open(level_file, 'r', encoding="ascii") as f:
             string = f.read().splitlines()
-            
+
             for row, line in enumerate(string):
                 load_stage(row, line)
 
@@ -77,10 +78,7 @@ def level_summary() -> None:
 
 
 def level_process() -> None:
-    if not GLOBAL.is_level_load:
-        level_load()
-    else:
-        level_summary()
+    level_load() if not GLOBAL.is_level_load else level_summary()
 
 
 def level_logic() -> None:

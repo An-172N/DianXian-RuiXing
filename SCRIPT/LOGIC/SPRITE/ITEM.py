@@ -1,8 +1,6 @@
 # Copyright (c) 2026 An_172N
-# 此代码根据GPLv3.0许可证授权
+# 此代码根据 GPLv3.0 许可证授权
 
-
-import random
 
 from SCRIPT import GLOBAL, LOGIC, FUNC
 
@@ -16,18 +14,6 @@ def combo_counter() -> None:
 
         GLOBAL.combo = 0
         GLOBAL.combo_timer = 120
-
-
-def item_spawn_regular() -> None:
-    GLOBAL.item_spawn_timer += 1
-    
-    if GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0:
-        sprite = LOGIC.Item("fire", -2, (255, 255, 255))
-        sprite.rect.center = (random.randint(120, 465), 10)
-
-        GLOBAL.item_group.add(sprite)
-
-        GLOBAL.item_spawn_timer = 0
 
 
 def item_collide(item: LOGIC.Item) -> None:
@@ -48,9 +34,15 @@ def item_collide(item: LOGIC.Item) -> None:
     item.kill()
 
 
-def item_spawn(condition: bool, pos: tuple, color: tuple, item_type: str) -> None:
+def item_spawn(condition: bool, pos: tuple, speed: float, color: tuple, item_type: str, timer: int=0) -> None:
+    timer += 1
+
     if condition:
-        sprite = LOGIC.Item(item_type, 2.5, color)
+        sprite = LOGIC.Item(item_type, speed, color)
         sprite.rect.center = pos
 
         GLOBAL.item_group.add(sprite)
+
+        timer = 0
+
+    return timer

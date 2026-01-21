@@ -1,5 +1,5 @@
 # Copyright (c) 2026 An_172N
-# 此代码根据GPLv3.0许可证授权
+# 此代码根据 GPLv3.0 许可证授权
 
 
 import sys
@@ -34,7 +34,10 @@ if __name__ == "__main__":
         'pygame.pypm', 'pygame.macosx', 'pygame.examples',
         'pygame.locals', 'pygame.camera', 'pygame.__pyinstaller',
         'pygame.freetype', 'pygame.midi', 'pygame.scrap',
-        'pygame.pixelarray', 'pygame.pixelcopy', 'pygame.newbuffer'
+        'pygame.pixelarray', 'pygame.pixelcopy', 'pygame.newbuffer',
+        'pygame.ftfont', 'pygame.fastevent', 'pygame.sndarray',
+        'pygame.surfarray', 'pygame.cursors', 'pygame.pkgdata',
+        'pygame.draw_py'
     ]
 
     for module in block_module:
