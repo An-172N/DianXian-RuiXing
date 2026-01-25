@@ -7,7 +7,7 @@ import datetime
 import pygame
 
 from SCRIPT import LOGIC
-from SCRIPT.SCRIPT import GLOBAL
+from SCRIPT.SCRIPT import GLOBAL, RESET
 
 
 def show_situation(screen: pygame.Surface, font: pygame.font.Font, clock: pygame.time.Clock) -> None:
@@ -84,7 +84,7 @@ def save_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     tm = f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}"
     score = f"得到了 {GLOBAL.score} 分"
     stage = f"最远达到的地方是 {stage_text} - {GLOBAL.level} 站"
-    s_power = f"拾形点率为 {LOGIC.Reset.cal_s_power()}"
+    s_power = f"拾形点率为 {RESET.cal_s_power()}"
     s_flash = f"使用了 {GLOBAL.use_flash} 次形闪"
     name = f"由 {GLOBAL.name} 助记"
 

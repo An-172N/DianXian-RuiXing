@@ -52,16 +52,12 @@ def collide_item(stage_power: int, game_power: int) -> tuple:
     return stage_power, game_power
 
 
-def flash_logic(no_flash: int, flash: int, use_flash: int, is_save: bool, is_blit: bool) -> tuple:
+def flash_logic(no_flash: int, flash: int, use_flash: int) -> tuple:
     no_flash = 0
     flash -= 1
     use_flash += 1
 
-    if flash == 0:
-        is_save = True
-        is_blit = False
-
-    return no_flash, flash, use_flash, is_save, is_blit
+    return no_flash, flash, use_flash
 
 
 def invinc(condition1: bool, condition2: bool, is_visitable: bool, timer: int, reset_bullet: object) -> tuple:

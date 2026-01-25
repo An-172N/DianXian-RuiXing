@@ -106,19 +106,21 @@ def next_level() -> None:
 
 
 def close_summary():
-    def next_logic():
+    def next_logic1():
+        GLOBAL.is_save = True
+        GLOBAL.is_blit = False
+
+    def next_logic2():
         next_level()
         level_logic()
 
     GLOBAL.is_summary, GLOBAL.is_save, GLOBAL.is_blit, GLOBAL.score = LOGIC.StageMgr.close_summary(
         GLOBAL.is_summary,
-        GLOBAL.is_save,
-        GLOBAL.is_blit,
-        GLOBAL.stage,
-        GLOBAL.level,
+        (GLOBAL.stage, GLOBAL.level),
         GLOBAL.score,
         LOGIC.StageMgr.score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2, 2)),
-        next_logic
+        next_logic1,
+        next_logic2
     )
     GLOBAL.second_background = LOGIC.StageMgr.change_background(GLOBAL.picture[GLOBAL.stage])
 

@@ -10,7 +10,7 @@ from SCRIPT import FUNC, HUMAN, SPRITE
 
 
 asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\..\ASSET')
-font = pygame.font.Font(os.path.join(asset_path, 'FONT\FONT_GNUUNIFONT.otf'), 15)
+font = pygame.font.SysFont('unifont', 15)
 icon = pygame.display.set_icon(pygame.image.load(os.path.join(asset_path, '..\ICON.ico')))
 
 
@@ -23,7 +23,7 @@ color_dict = {
 }
 
 
-fibonacci_list = [FUNC.fibonacci(0, 1, i) / 100 for i in range(3, 7)]
+fibonacci_list = [FUNC.fibonacci(0, 1, i) / 100 for i in range(4, 8)]
 
 
 window = pygame.Rect((120, 15, 345, 330))

@@ -14,18 +14,17 @@ def score_summary(power: int, unhurt: int, combo: int, collection: tuple):
     return power * collection[0] + unhurt * collection[1] + collection[2] ** combo + combo * collection[3]
 
 
-def close_summary(is_summary: bool, is_save: bool, is_blit: bool, stage: int, level: int, score: int, add_score: int, not_end: object) -> tuple:
+def close_summary(is_summary: bool, stage_level: tuple, score: int, add_score: int, end: object, not_end: object) -> tuple:
     is_summary = False
 
     score += add_score
 
-    if stage >= 3 and level == 6:
-        is_save = True
-        is_blit = False
+    if stage_level[0] >= 3 and stage_level[1] == 6:
+        end()
     else:
         not_end()
 
-    return is_summary, is_save, is_blit, score
+    return is_summary, score
 
 
 def change_background(picture: pygame.Surface):
@@ -47,12 +46,11 @@ def level_load(timer: int, is_level_load: bool, load: object) -> tuple:
     return timer, is_level_load
 
 
-def level_summary(group1: pygame.sprite.Group, group2: pygame.sprite.Group, condition: bool, is_summary: bool, is_blit: bool) -> tuple:
-    if len(group1) == 0 and len(group2) == 0 and not condition:
+def level_summary(condition: bool, is_summary: bool) -> bool:
+    if condition:
         is_summary = True
-        is_blit = False
 
-    return is_summary, is_blit
+    return is_summary
 
 
 def level_logic(stage: int, level: int) -> tuple:
@@ -63,16 +61,6 @@ def level_logic(stage: int, level: int) -> tuple:
         level += 1
 
     return stage, level
-
-
-def boss_lose(part: int, number: int, is_talk: bool, is_blit: bool) -> tuple:
-    part += 1
-    number = 0
-
-    is_talk = True
-    is_blit = False
-
-    return part, number, is_talk, is_blit
 
 
 def load_stage(row: int, line: str, color: tuple, group: pygame.sprite.Group) -> None:

@@ -9,23 +9,6 @@ import pygame
 from SCRIPT import SPRITE
 
 
-def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos: tuple) -> None:
-    if color[0] == (255, 255, 255):
-        process_dict = {
-            1: circle_brick,
-            2: polygon_brick,
-            3: line_brick,
-            4: point_brick
-        }
-
-        if stage in [1, 2]:
-            return process_dict.get(stage)(group, *spawn_pos)
-        elif stage == 3:
-            return process_dict.get(stage)(group, color[1], *spawn_pos)
-        else:
-            return process_dict.get(stage)(group)
-
-
 def brick_death(death_condition: bool) -> bool:
     death_condition = True
 
@@ -65,11 +48,11 @@ def polygon_brick(group: pygame.sprite.Group, *spawn_pos: tuple) -> None:
         group.add(sprite)
 
 
-def line_brick(group: pygame.sprite.Group, color: tuple, spawn_pos: tuple) -> None:
+def line_brick(group: pygame.sprite.Group, color: tuple, target_color: tuple, *spawn_pos: tuple) -> None:
     for _ in range(12):
         current_angle = random.randint(0, 360)
 
-        sprite = SPRITE.Line((2, random.randint(64, 256)), 0, 6, current_angle, spawn_pos[3], color, (128, 0, 128))
+        sprite = SPRITE.Line((2, random.randint(64, 256)), 0, 6, current_angle, spawn_pos[3], color, target_color)
         sprite.update()
 
         group.add(sprite)

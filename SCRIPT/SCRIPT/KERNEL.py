@@ -71,13 +71,14 @@ def barrage_collide(position) -> None:
         if barrage.color != (255, 255, 255) and not (GLOBAL.is_collide or GLOBAL.is_s_divide):
             GLOBAL.is_collide = LOGIC.PlaneMgr.collide_barrage(GLOBAL.is_collide)
             LOGIC.ParticleMgr.spawn_particles(GLOBAL.particle_group, 9, 9, position, (10, 16), GLOBAL.color_dict[5], (255, 255, 255))
-            GLOBAL.no_flash, GLOBAL.flash, GLOBAL.use_flash, GLOBAL.is_save, GLOBAL.is_blit = LOGIC.PlaneMgr.flash_logic(
+            GLOBAL.no_flash, GLOBAL.flash, GLOBAL.use_flash = LOGIC.PlaneMgr.flash_logic(
                 GLOBAL.no_flash,
                 GLOBAL.flash,
                 GLOBAL.use_flash,
-                GLOBAL.is_save,
-                GLOBAL.is_blit
             )
+            if GLOBAL.flash == 0:
+                GLOBAL.is_save = True
+                GLOBAL.is_blit = False
 
             barrage.kill()
 
@@ -104,19 +105,19 @@ def bullet_collide() -> None:
                     (255, 255, 255)
                 )
                 if hasattr(brick, "free"):
-                    GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = LOGIC.StageMgr.boss_lose(
+                    GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = boss_lose(
                         GLOBAL.text_part,
                         GLOBAL.text_number,
                         GLOBAL.is_talk,
                         GLOBAL.is_blit
                     )
                 else:
-                    LOGIC.BarrageMgr.spawn_barrage(
+                    spawn_barrage(
                         GLOBAL.stage,
                         GLOBAL.barrage_group,
                         GLOBAL.fibonacci_list,
                         brick.type,
-                        brick.color,
+                        [brick.color, (255, 255, 255), GLOBAL.color_dict[3]],
                         brick.rect.center,
                         GLOBAL.main_char.rect.center
                     )
@@ -136,10 +137,10 @@ def bullet_collide() -> None:
                     GLOBAL.color_dict[2],
                     "flash"
                 )
-                LOGIC.BrickMgr.brick_blast(
+                brick_blast(
                     GLOBAL.bullet_group,
                     GLOBAL.stage,
-                    [brick.color, GLOBAL.color_dict[5]],
+                    [brick.color, GLOBAL.color_dict[5], GLOBAL.color_dict[3]],
                     brick.rect.midleft,
                     brick.rect.midright,
                     brick.rect.midbottom,
@@ -148,6 +149,50 @@ def bullet_collide() -> None:
                 brick.kill()
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()
+
+
+def boss_lose(part: int, number: int, is_talk: bool, is_blit: bool) -> tuple:
+    part += 1
+    number = 0
+
+    is_talk = True
+    is_blit = False
+
+    return part, number, is_talk, is_blit
+
+
+def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, target_pos: tuple) -> None:
+    if random.random() <= 0.17 + fib[stage - 1]:
+        barrage_dict = {
+            1: LOGIC.BarrageMgr.circle_barrage,
+            2: LOGIC.BarrageMgr.polygon_barrage,
+            3: LOGIC.BarrageMgr.line_barrage,
+            4: LOGIC.BarrageMgr.point_barrage
+        }
+
+        if stage in [1, 2]:
+            return barrage_dict.get(stage)(type, color, spawn_pos, target_pos, group)
+        elif stage == 3:
+            return barrage_dict.get(stage)(color, target_pos, group)
+        else:
+            return barrage_dict.get(stage)(type, color, target_pos, group)
+        
+
+def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos: tuple) -> None:
+    if color[0] == (255, 255, 255):
+        process_dict = {
+            1: LOGIC.BrickMgr.circle_brick,
+            2: LOGIC.BrickMgr.polygon_brick,
+            3: LOGIC.BrickMgr.line_brick,
+            4: LOGIC.BrickMgr.point_brick
+        }
+
+        if stage in [1, 2]:
+            return process_dict.get(stage)(group, *spawn_pos)
+        elif stage == 3:
+            return process_dict.get(stage)(group, color[1], color[2], *spawn_pos)
+        else:
+            return process_dict.get(stage)(group)
 
 
 def sprite_loader() -> None:
@@ -261,13 +306,11 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                     sprite_loader
                 )
             else:
-                GLOBAL.is_summary, GLOBAL.is_blit = LOGIC.StageMgr.level_summary(
-                    GLOBAL.brick_group,
-                    GLOBAL.item_group,
-                    GLOBAL.is_talk,
+                GLOBAL.is_summary = LOGIC.StageMgr.level_summary(
+                    len(GLOBAL.brick_group) == 0 and len(GLOBAL.item_group) == 0 and not GLOBAL.is_talk,
                     GLOBAL.is_summary,
-                    GLOBAL.is_blit
                 )
+                GLOBAL.is_blit = False
 
         KEY.key_event()
 
