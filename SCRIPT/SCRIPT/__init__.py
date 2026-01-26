@@ -1,9 +1,0 @@
-# Copyright (c) 2026 An_172N
-# 此代码根据 GPLv3.0 许可证授权
-
-
-import SCRIPT.SCRIPT.KERNEL as KERNEL
-import SCRIPT.SCRIPT.GLOBAL as GLOBAL
-import SCRIPT.SCRIPT.GUI as GUI
-import SCRIPT.SCRIPT.KEY as KEY
-import SCRIPT.SCRIPT.RESET as RESET
