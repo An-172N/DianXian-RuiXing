@@ -2,12 +2,11 @@
 # 此代码根据 GPLv3.0 许可证授权
 
 
-import datetime
 import json
 import os
 
 
-def dump_file(file: str, name: str, stage_level: tuple, score: int, power_rate: str, use_flash: int) -> None:
+def dump_file(file: str, name: str, stage_level: tuple, score: int, power_rate: str, use_flash: int, date: str) -> None:
     dump = ["锐山抚形日志"]
     dump.append(
         {
@@ -16,15 +15,15 @@ def dump_file(file: str, name: str, stage_level: tuple, score: int, power_rate: 
             '最远到达的地方': f"{stage_level[0]} - {stage_level[1]}",
             '拾形点率': power_rate,
             '形闪次数': use_flash,
-            '记录日期': datetime.datetime.now().strftime('%Y-%m-%d')
+            '记录日期': date
         }
     )
-        
+
     with open(file, 'w', encoding='utf-8') as f:
-        json.dump(dump, f, indent=4)
+        return json.dump(dump, f, indent=4)
 
 
-def create_file(name: str, game: str, now_datetime: tuple) -> str:
+def return_file(name: str, game: str, now_datetime: tuple) -> str:
     folder = f'{os.environ["USERPROFILE"]}/Saved Games/{game}'
     file = f'{os.environ["USERPROFILE"]}/Saved Games/{game}/{name}_{now_datetime[0]}_{now_datetime[1]}.json'
 

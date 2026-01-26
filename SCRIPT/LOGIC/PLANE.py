@@ -39,12 +39,6 @@ def turn_side(original_image: pygame.Surface, turn_side_image: pygame.Surface, f
         return original_image
 
 
-def collide_barrage(is_collide: bool) -> bool:
-    is_collide = True
-
-    return is_collide
-
-
 def collide_item(stage_power: int, game_power: int) -> tuple:
     stage_power += 1
     game_power += 1

@@ -85,14 +85,16 @@ keyup_game_dict = {
 
 def save_file() -> None:
     name = TOOL.replace_illegal_char(GLOBAL.name)
+    date_time = TOOL.get_datetime()
 
     LOGIC.File.dump_file(
-        LOGIC.File.create_file(name, "DX00", TOOL.get_datetime()),
+        LOGIC.File.return_file(name, "DX00", date_time),
         GLOBAL.name,
         (GLOBAL.stage, GLOBAL.level),
         GLOBAL.score,
         LOGIC.Item.calculate_item_rate(GLOBAL.stage_total_power, GLOBAL.stage <= 3, (153, 61)),
-        GLOBAL.use_flash
+        GLOBAL.use_flash,
+        date_time[0]
     )
 
 

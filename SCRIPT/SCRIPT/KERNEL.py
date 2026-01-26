@@ -91,7 +91,7 @@ def barrage_collide(position) -> None:
 
     for barrage in collide1:
         if barrage.color != (255, 255, 255) and not (GLOBAL.is_collide or GLOBAL.is_s_divide):
-            GLOBAL.is_collide = LOGIC.Plane.collide_barrage(GLOBAL.is_collide)
+            GLOBAL.is_collide = True
             SPRITE.Particle.spawn_particles(
                 GLOBAL.particle_group,
                 (9, 9),
@@ -124,7 +124,7 @@ def bullet_collide() -> None:
                     bullet.kill()
                     break
 
-                brick.is_die = LOGIC.Bullet.brick_death(brick.is_die)
+                brick.is_die = True
                 SPRITE.Particle.spawn_particles(
                     GLOBAL.particle_group,
                     (2, 2),
@@ -304,6 +304,9 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 )
                 main_char.rect.center = keep_position
                 decision_point.rect.center = keep_position
+
+                if hasattr(GLOBAL.char, "target_pos"):
+                    GLOBAL.char.target_pos = GLOBAL.main_char.rect.center
                 GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = LOGIC.Plane.invinc(
                     GLOBAL.is_s_divide,
                     GLOBAL.is_collide,

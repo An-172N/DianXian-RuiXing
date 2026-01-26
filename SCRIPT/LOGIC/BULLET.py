@@ -15,9 +15,3 @@ def bullet_collide(hp: int, damage: int, score: int, add_score: int) -> tuple:
     score += add_score
 
     return hp, score
-
-
-def brick_death(death_condition: bool) -> bool:
-    death_condition = True
-
-    return death_condition

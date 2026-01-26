@@ -26,10 +26,7 @@ def vector(sprite_pos: tuple, target_pos: tuple, speed: float) -> pygame.Vector2
     
 
 def get_datetime() -> tuple:
-    date = datetime.datetime.now().strftime('%Y-%m-%d')
-    time = datetime.datetime.now().strftime('%H-%M-%S')
-
-    return date, time
+    return datetime.datetime.now().strftime('%Y-%m-%d'), datetime.datetime.now().strftime('%H-%M-%S')
 
 
 def replace_illegal_char(name: str) -> str:
