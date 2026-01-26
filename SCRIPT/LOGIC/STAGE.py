@@ -16,13 +16,9 @@ def score_summary(power: int, unhurt: int, combo: int, collection: tuple):
 
 def close_summary(is_summary: bool, stage_level: tuple, score: int, add_score: int, end: object, not_end: object) -> tuple:
     is_summary = False
-
     score += add_score
 
-    if stage_level[0] >= 3 and stage_level[1] == 6:
-        end()
-    else:
-        not_end()
+    end() if stage_level[0] >= 3 and stage_level[1] == 6 else not_end()
 
     return is_summary, score
 

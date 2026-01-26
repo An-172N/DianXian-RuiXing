@@ -42,14 +42,18 @@ def load_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     half_menu(screen, font, title, text)
 
 
-def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:   
-    human = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["human"]
-    info = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info"]
-    info2 = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
-        
-    GLOBAL.is_talk = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["sw"]
+def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
+    human = ''
+    text = ['', '']
 
-    text = [info, info2]
+    try:
+        human = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["human"]
+        info = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info"]
+        info2 = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
+
+        text = [info, info2]
+    except KeyError:
+        GLOBAL.is_talk = False
 
     half_menu(screen, font, human, text)
 

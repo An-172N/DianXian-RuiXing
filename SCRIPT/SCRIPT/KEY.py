@@ -114,7 +114,7 @@ def close_summary():
         next_level()
         level_logic()
 
-    GLOBAL.is_summary, GLOBAL.is_save, GLOBAL.is_blit, GLOBAL.score = LOGIC.StageMgr.close_summary(
+    GLOBAL.is_summary, GLOBAL.score = LOGIC.StageMgr.close_summary(
         GLOBAL.is_summary,
         (GLOBAL.stage, GLOBAL.level),
         GLOBAL.score,
