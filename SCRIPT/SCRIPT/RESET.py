@@ -6,21 +6,19 @@ from SCRIPT import HUMAN
 from SCRIPT.SCRIPT import GLOBAL
 
 
-def group_empty() -> None:
-    GLOBAL.item_group.empty()
-    GLOBAL.brick_group.empty()
-    GLOBAL.plane_group.empty()
-    GLOBAL.bullet_group.empty()
-    GLOBAL.particle_group.empty()
-    GLOBAL.barrage_group.empty()
-
-
 def mode_one() -> None:
     GLOBAL.is_pause = False
     GLOBAL.is_summary = False
     GLOBAL.is_talk = False
     GLOBAL.is_save = False
     GLOBAL.is_level_load = False
+
+    GLOBAL.item_group.empty()
+    GLOBAL.brick_group.empty()
+    GLOBAL.plane_group.empty()
+    GLOBAL.bullet_group.empty()
+    GLOBAL.particle_group.empty()
+    GLOBAL.barrage_group.empty()
 
     GLOBAL.is_collide = False
     GLOBAL.is_s_divide = False
@@ -55,7 +53,3 @@ def mode_two() -> None:
     GLOBAL.is_shoot = False
 
     GLOBAL.is_run = False
-
-
-def cal_s_power() -> str:
-    return f"{(GLOBAL.stage_total_power / (153 if GLOBAL.stage <= 3 else 61)) * 100:.2f} %"

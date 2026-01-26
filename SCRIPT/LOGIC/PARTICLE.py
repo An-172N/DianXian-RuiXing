@@ -9,12 +9,12 @@ import pygame
 from SCRIPT import SPRITE
 
 
-def spawn_particles(group: pygame.sprite.Group, width: int, height: int, pos: tuple, speed: int, color1: tuple, color2: tuple=()):
+def spawn_particles(group: pygame.sprite.Group, size: tuple, pos: tuple, speed: tuple, interval: int, color1: tuple, color2: tuple=()):
     rands = random.randint(0, 45)
     
-    for i in range(0 + rands, 360 + rands, 45):
+    for i in range(0 + rands, 360 + rands, interval):
         color = color1 if color2 == () else random.choice([color1, color2])
 
-        sprite = SPRITE.Particle((width, height), random.randint(speed[0], speed[1]), i, pos, color)
+        sprite = SPRITE.Particle((size[0], size[1]), random.randint(speed[0], speed[1]), i, pos, color)
         
         group.add(sprite)

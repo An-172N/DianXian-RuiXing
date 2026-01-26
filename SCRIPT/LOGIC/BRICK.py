@@ -58,7 +58,7 @@ def line_brick(group: pygame.sprite.Group, color: tuple, target_color: tuple, *s
         group.add(sprite)
 
 
-def point_brick(group: pygame.sprite.Group):
+def point_brick(group: pygame.sprite.Group) -> None:
     for _ in range(24):
         sprite_pos = (random.randint(120, 465), random.randint(15, 345))
         current_angle = random.randint(0, 360)

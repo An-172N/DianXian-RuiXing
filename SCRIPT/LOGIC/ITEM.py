@@ -4,10 +4,10 @@
 
 import pygame
 
-from SCRIPT import SPRITE, FUNC
+from SCRIPT import SPRITE
 
 
-def combo_counter(timer: int, combo: int, score: int) -> tuple:
+def combo_counter(timer: int, combo: int, score: int, end: int) -> tuple:
     timer -= 1
 
     if timer <= 0:
@@ -15,26 +15,20 @@ def combo_counter(timer: int, combo: int, score: int) -> tuple:
             score += 2 ** combo
 
         combo = 0
-        timer = 120
+        timer = end
 
     return timer, combo, score
 
 
-def item_collide(timer: int, fire: int, variable1: int, variable2: int, type: str, combo: int) -> tuple:
-    timer = 120
-    fire = int(FUNC.clamp(fire + 1, 0, 6))
+def item_collide(timer: int, fire: int, variable: int, combo: int, reset: int) -> tuple:
+    timer = reset
+    variable += 1
+    combo += 1
 
-    if type == "power":
-        variable1 = int(FUNC.clamp(variable1 + 1, 0, 32))
-        combo += 1
-    elif type == "flash":
-        variable2 += 1
-        combo += 1
-
-    return timer, fire, combo, variable1, variable2
+    return timer, fire, combo, variable
 
 
-def item_spawn(group: pygame.sprite.Group, condition: bool, pos: tuple, speed: float, color: tuple, type: str, timer: int=0) -> None:
+def item_spawn(group: pygame.sprite.Group, condition: bool, pos: tuple, speed: float, color: tuple, type: str, timer: int=0) -> int:
     timer += 1
 
     if condition:
@@ -45,3 +39,7 @@ def item_spawn(group: pygame.sprite.Group, condition: bool, pos: tuple, speed: f
         timer = 0
 
     return timer
+
+
+def calculate_item_rate(game_power: int, condition: bool, critical: tuple) -> str:
+    return f"{(game_power / (critical[0] if condition else critical[1])) * 100:.2f} %"

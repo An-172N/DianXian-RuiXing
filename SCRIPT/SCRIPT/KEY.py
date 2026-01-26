@@ -38,7 +38,6 @@ keydown_pause_dict = {
     pygame.K_q: lambda: (
         RESET.mode_one(),
         RESET.mode_two(),
-        RESET.group_empty(),
         setattr(GLOBAL, "is_blit", False)
     )
 }
@@ -55,16 +54,14 @@ keydown_start_dict = {
 
 keydown_over_dict = {
     pygame.K_RETURN: lambda: (
-        LOGIC.SAVE.save_file(GLOBAL.name, GLOBAL.stage, GLOBAL.level, GLOBAL.score, RESET.cal_s_power(), GLOBAL.use_flash),
+        save_file(),
         RESET.mode_one(),
         RESET.mode_two(),
-        RESET.group_empty(),
         setattr(GLOBAL, "is_blit", False)
     ),
     pygame.K_ESCAPE: lambda: (
         RESET.mode_one(),
         RESET.mode_two(),
-        RESET.group_empty(),
         setattr(GLOBAL, "is_blit", False)
     ),
     pygame.K_BACKSPACE: lambda: (
@@ -86,17 +83,29 @@ keyup_game_dict = {
 }
 
 
+def save_file() -> None:
+    name = LOGIC.FILE.illegal_char(GLOBAL.name)
+
+    LOGIC.FILE.dump_file(
+        LOGIC.FILE.create_file(name, "DX00", LOGIC.FILE.get_datetime()),
+        GLOBAL.name,
+        (GLOBAL.stage, GLOBAL.level),
+        GLOBAL.score,
+        LOGIC.ItemMgr.calculate_item_rate(GLOBAL.stage_total_power, GLOBAL.stage <= 3, (153, 61)),
+        GLOBAL.use_flash
+    )
+
+
 def single_bomb() -> None:
-    GLOBAL.is_s_divide, GLOBAL.power = LOGIC.BulletMgr.single_bomb(GLOBAL.is_s_divide, GLOBAL.power)
+    GLOBAL.is_s_divide, GLOBAL.power = LOGIC.BulletMgr.single_bomb(GLOBAL.is_s_divide, GLOBAL.power, 12)
 
 
 def level_logic() -> None:
-    GLOBAL.stage, GLOBAL.level = LOGIC.StageMgr.level_logic(GLOBAL.stage, GLOBAL.level)
+    GLOBAL.stage, GLOBAL.level = LOGIC.StageMgr.level_logic((GLOBAL.stage, GLOBAL.level), 6)
 
 
 def next_level() -> None:
     RESET.mode_one()
-    RESET.group_empty()
 
     GLOBAL.no_flash += 1
     GLOBAL.plane_group.add(GLOBAL.main_char)
@@ -119,10 +128,11 @@ def close_summary():
         (GLOBAL.stage, GLOBAL.level),
         GLOBAL.score,
         LOGIC.StageMgr.score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2, 2)),
+        (3, 6),
         next_logic1,
         next_logic2
     )
-    GLOBAL.second_background = LOGIC.StageMgr.change_background(GLOBAL.picture[GLOBAL.stage])
+    GLOBAL.second_background = LOGIC.StageMgr.change_background(GLOBAL.picture[GLOBAL.stage], 128)
 
 
 def key_event() -> None:

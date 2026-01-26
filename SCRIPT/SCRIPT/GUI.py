@@ -87,8 +87,8 @@ def save_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     title = "抚形日志"
     tm = f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}"
     score = f"得到了 {GLOBAL.score} 分"
-    stage = f"最远达到的地方是 {stage_text} - {GLOBAL.level} 站"
-    s_power = f"拾形点率为 {RESET.cal_s_power()}"
+    stage = f"最远到达的地方是 {stage_text} - {GLOBAL.level} 站"
+    s_power = f"拾形点率为 {LOGIC.ItemMgr.calculate_item_rate(GLOBAL.stage_total_power, GLOBAL.stage <= 3, (153, 61))}"
     s_flash = f"使用了 {GLOBAL.use_flash} 次形闪"
     name = f"由 {GLOBAL.name} 助记"
 

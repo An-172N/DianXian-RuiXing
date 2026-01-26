@@ -38,24 +38,39 @@ def remove_sprite(sprite_group: pygame.sprite.Group, effective_range: pygame.Rec
 
 def item_collide() -> None:
     if GLOBAL.is_shoot and GLOBAL.shoot_counter > 0:
-        GLOBAL.shoot_counter = LOGIC.BulletMgr.spawn_bullet(
-            GLOBAL.power,
-            GLOBAL.shoot_counter,
-            GLOBAL.main_char.fire
-        )
-        LOGIC.ParticleMgr.spawn_particles(GLOBAL.particle_group, 2, 2, GLOBAL.main_char.rect.center, (4, 8), GLOBAL.main_char.color)
+        GLOBAL.main_char.fire(GLOBAL.power)
+        GLOBAL.shoot_counter -= 1
+        LOGIC.ParticleMgr.spawn_particles(GLOBAL.particle_group, (2, 2), GLOBAL.main_char.rect.center, (4, 8), 45, GLOBAL.main_char.color)
 
     collide3 = pygame.sprite.spritecollide(GLOBAL.main_char, GLOBAL.item_group, False)
 
     for item in collide3:
-        GLOBAL.combo_timer, GLOBAL.shoot_counter, GLOBAL.combo, GLOBAL.power, GLOBAL.flash = LOGIC.ItemMgr.item_collide(
-            GLOBAL.combo_timer,
-            GLOBAL.shoot_counter,
-            GLOBAL.power,
-            GLOBAL.flash,
-            item.type,
-            GLOBAL.combo
-        )
+        if item.type == "power":
+            GLOBAL.combo_timer, GLOBAL.shoot_counter, GLOBAL.combo, GLOBAL.power = LOGIC.ItemMgr.item_collide(
+                GLOBAL.combo_timer,
+                int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6)),
+                GLOBAL.power,
+                GLOBAL.combo,
+                120
+            )
+            GLOBAL.power = int(FUNC.clamp(GLOBAL.power, 0, 32))
+        elif item.type == "flash":
+            GLOBAL.combo_timer, GLOBAL.shoot_counter, GLOBAL.combo, GLOBAL.flash = LOGIC.ItemMgr.item_collide(
+                GLOBAL.combo_timer,
+                int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6)),
+                GLOBAL.flash,
+                GLOBAL.combo,
+                120
+            )
+        else:
+            GLOBAL.combo_timer, GLOBAL.shoot_counter, _, __ = LOGIC.ItemMgr.item_collide(
+                GLOBAL.combo_timer,
+                int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6)),
+                0,
+                0,
+                120
+            )
+
         if item.type in ['flash', 'power']:
             GLOBAL.total_power, GLOBAL.stage_total_power = LOGIC.PlaneMgr.collide_item(
                 GLOBAL.total_power,
@@ -70,7 +85,7 @@ def barrage_collide(position) -> None:
     for barrage in collide1:
         if barrage.color != (255, 255, 255) and not (GLOBAL.is_collide or GLOBAL.is_s_divide):
             GLOBAL.is_collide = LOGIC.PlaneMgr.collide_barrage(GLOBAL.is_collide)
-            LOGIC.ParticleMgr.spawn_particles(GLOBAL.particle_group, 9, 9, position, (10, 16), GLOBAL.color_dict[5], (255, 255, 255))
+            LOGIC.ParticleMgr.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), 45, GLOBAL.color_dict[5], (255, 255, 255))
             GLOBAL.no_flash, GLOBAL.flash, GLOBAL.use_flash = LOGIC.PlaneMgr.flash_logic(
                 GLOBAL.no_flash,
                 GLOBAL.flash,
@@ -88,7 +103,7 @@ def bullet_collide() -> None:
 
     for bullet, hit_bricks in collide2.items():
         for brick in hit_bricks:
-            brick.hp, GLOBAL.score = LOGIC.BulletMgr.bullet_collide(brick.hp, bullet.damage, GLOBAL.score)
+            brick.hp, GLOBAL.score = LOGIC.BulletMgr.bullet_collide(brick.hp, bullet.damage, GLOBAL.score, 64)
             if brick.hp <= 0:
                 if bullet.type in ("bullet", "line", "bomb") and brick.is_die:
                     bullet.kill()
@@ -97,10 +112,10 @@ def bullet_collide() -> None:
                 brick.is_die = LOGIC.BrickMgr.brick_death(brick.is_die)
                 LOGIC.ParticleMgr.spawn_particles(
                     GLOBAL.particle_group,
-                    2,
-                    2,
+                    (2, 2),
                     brick.rect.center,
                     (4, 8),
+                    45,
                     brick.color,
                     (255, 255, 255)
                 )
@@ -149,6 +164,17 @@ def bullet_collide() -> None:
                 brick.kill()
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()
+
+
+def choose_brick(group: pygame.sprite.Group, stage_level: tuple, basic_power: int, basic_flash: int) -> None:
+    brick_list = list(group)
+    choose_power = random.sample(range(len(brick_list)), basic_power + stage_level[0] + stage_level[1])
+    choose_flash = random.sample(range(len(brick_list)), basic_flash)
+    
+    for i in choose_power:
+        brick_list[i].have_power = True
+    for j in choose_flash:
+        brick_list[j].have_flash = True
 
 
 def boss_lose(part: int, number: int, is_talk: bool, is_blit: bool) -> tuple:
@@ -210,9 +236,9 @@ def sprite_loader() -> None:
             string = f.read().splitlines()
 
             for row, line in enumerate(string):
-                LOGIC.StageMgr.load_stage(row, line, GLOBAL.color_dict[GLOBAL.stage], GLOBAL.brick_group)
+                LOGIC.StageMgr.load_stage(row, line, GLOBAL.color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
 
-            LOGIC.StageMgr.choose_brick(GLOBAL.brick_group, GLOBAL.stage, GLOBAL.level)
+            choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
 
 
 def chs_shhm() -> HUMAN.Ono | HUMAN.Hro | HUMAN.Nre | HUMAN.Qdi:
@@ -250,6 +276,8 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 main_char.rect.x, main_char.rect.centery = LOGIC.PlaneMgr.move_plane(
                     main_char.rect.x,
                     main_char.rect.centery,
+                    (4, 8),
+                    (331, 332),
                     GLOBAL.is_move_right,
                     GLOBAL.is_move_left,
                     GLOBAL.is_fast
@@ -266,6 +294,8 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                     GLOBAL.is_collide,
                     GLOBAL.is_visitable,
                     GLOBAL.cooldown_timer,
+                    180,
+                    6,
                     main_char.reset_bullet
                 )
 
@@ -281,7 +311,8 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = LOGIC.ItemMgr.combo_counter(
                     GLOBAL.combo_timer,
                     GLOBAL.combo,
-                    GLOBAL.score
+                    GLOBAL.score,
+                    120
                 )
             
                 GLOBAL.bullet_group.update()
@@ -303,6 +334,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 GLOBAL.wait_level_load_timer, GLOBAL.is_level_load =LOGIC.StageMgr.level_load(
                     GLOBAL.wait_level_load_timer,
                     GLOBAL.is_level_load,
+                    60,
                     sprite_loader
                 )
             else:

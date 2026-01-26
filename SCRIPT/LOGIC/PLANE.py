@@ -5,13 +5,13 @@
 import pygame
 
 
-def move_plane(x: float, y: float, move_right_condition: bool, move_left_condition: bool, speed_condition: bool) -> tuple:
+def move_plane(x: float, y: float, speed: tuple, up_down: tuple, move_right_condition: bool, move_left_condition: bool, speed_condition: bool) -> tuple:
     if move_right_condition:
-        x += 8 if speed_condition else 4
+        x += speed[1] if speed_condition else speed[0]
     if move_left_condition:
-        x -= 8 if speed_condition else 4
+        x -= speed[1] if speed_condition else speed[0]
 
-    y = 331 if speed_condition else 332
+    y = up_down[0] if speed_condition else up_down[1]
     
     return x, y
 
@@ -60,11 +60,11 @@ def flash_logic(no_flash: int, flash: int, use_flash: int) -> tuple:
     return no_flash, flash, use_flash
 
 
-def invinc(condition1: bool, condition2: bool, is_visitable: bool, timer: int, reset_bullet: object) -> tuple:
+def invinc(condition1: bool, condition2: bool, is_visitable: bool, timer: int, end: int, interval: int, reset_bullet: object) -> tuple:
     if condition1 or condition2:
         timer += 1
 
-        if timer >= 180:
+        if timer >= end:
             if condition1:
                 condition1 = False
                 condition2 = False
@@ -74,7 +74,7 @@ def invinc(condition1: bool, condition2: bool, is_visitable: bool, timer: int, r
 
             condition2 = False
         else:
-            is_visitable = (timer // 6) % 2
+            is_visitable = (timer // interval) % 2
     else:
         timer = 0
         is_visitable = True
