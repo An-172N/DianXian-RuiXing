@@ -48,7 +48,6 @@ def invinc(condition1: bool, condition2: bool, is_visitable: bool, timer: int, e
         if timer >= end:
             if condition1:
                 condition1 = False
-                condition2 = False
                 timer = 0
 
                 reset_bullet()

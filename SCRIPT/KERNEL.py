@@ -3,6 +3,7 @@
 
 
 import argparse
+import json
 import random
 import os
 
@@ -52,45 +53,20 @@ def item_collide() -> None:
     collide3 = pygame.sprite.spritecollide(GLOBAL.main_char, GLOBAL.item_group, False)
 
     for item in collide3:
-        if item.type == "power":
-            GLOBAL.combo_timer, GLOBAL.power, GLOBAL.combo = LOGIC.Tool.reset_add_add(
-                GLOBAL.combo_timer,
-                GLOBAL.power,
-                GLOBAL.combo,
-                120,
-                1,
-                1
-            )
-            GLOBAL.power = int(LOGIC.FUNC.clamp(GLOBAL.power, 0, 32))
-        elif item.type == "flash":
-            GLOBAL.combo_timer, GLOBAL.flash, GLOBAL.combo = LOGIC.Tool.reset_add_add(
-                GLOBAL.combo_timer,
-                GLOBAL.flash,
-                GLOBAL.combo,
-                120,
-                1,
-                1
-            )
-        else:
-            GLOBAL.combo_timer, _, __ = LOGIC.Tool.reset_add_add(
-                GLOBAL.combo_timer,
-                0,
-                0,
-                120,
-                0,
-                0
-            )
+        GLOBAL.combo_timer = 120
         GLOBAL.shoot_counter = int(LOGIC.FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
+        if item.type == "power":
+            GLOBAL.power = int(LOGIC.FUNC.clamp(GLOBAL.power + 1, 0, 32))
+            GLOBAL.combo += 1
+        elif item.type == "flash":
+            GLOBAL.flash += 1
+            GLOBAL.combo += 1
+
         if item.type in ['flash', 'power']:
-            _, GLOBAL.total_power, GLOBAL.stage_total_power = LOGIC.Tool.reset_add_add(
-                0,
-                GLOBAL.total_power,
-                GLOBAL.stage_total_power,
-                0,
-                1,
-                1
-            )
+            GLOBAL.total_power += 1
+            GLOBAL.stage_total_power += 1
+
         item.kill()
 
 
@@ -109,14 +85,11 @@ def barrage_collide(position) -> None:
                 GLOBAL.color_dict[5],
                 (255, 255, 255)
             )
-            GLOBAL.no_flash, GLOBAL.flash, GLOBAL.use_flash = LOGIC.Tool.reset_add_add(
-                GLOBAL.no_flash,
-                GLOBAL.flash,
-                GLOBAL.use_flash,
-                0,
-                -1,
-                1
-            )
+
+            GLOBAL.no_flash = 0
+            GLOBAL.flash -= 1
+            GLOBAL.use_flash += 1
+
             if GLOBAL.flash == 0:
                 GLOBAL.is_save = True
                 GLOBAL.is_blit = False
@@ -129,7 +102,9 @@ def bullet_collide() -> None:
 
     for bullet, hit_bricks in collide2.items():
         for brick in hit_bricks:
-            _, brick.hp, GLOBAL.score = LOGIC.Tool.reset_add_add(0, brick.hp, GLOBAL.score, 0, -bullet.damage, 64)
+            brick.hp -= bullet.damage
+            GLOBAL.score += 64
+
             if brick.hp <= 0:
                 if bullet.type in ("bullet", "line", "bomb") and brick.is_die:
                     bullet.kill()
@@ -250,7 +225,8 @@ def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos:
 def sprite_loader() -> None:
     if GLOBAL.level == 6:
         GLOBAL.char = chs_shhm()
-        GLOBAL.text = LOGIC.File.read_json(os.path.join(GLOBAL.asset_path, f"JSON\TALK_{GLOBAL.stage}.json"))
+        with open(os.path.join(GLOBAL.asset_path, f"JSON\TALK_{GLOBAL.stage}.json"), 'r', encoding="utf-8") as f:
+            GLOBAL.text = json.load(f)
         GLOBAL.is_talk = True
         GLOBAL.is_blit = False
 

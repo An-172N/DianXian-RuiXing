@@ -14,18 +14,11 @@ def dump_file(file: str, title: str, append: object) -> None:
         return json.dump(dump, f, indent=4)
 
 
-def return_file(folder: str, file: str) -> str:
-    file = f'{folder}/{file}'
-
+def return_file_with_makedir(folder: str, file: str) -> str:
     if not os.path.exists(folder):
         os.makedirs(folder)
 
-    return file
-
-
-def read_json(file: str) -> str:
-    with open(file, 'r', encoding="utf-8") as f:
-        return json.load(f)
+    return f'{folder}/{file}'
 
 
 def read_level(file: str, load: object, *args: tuple) -> str:

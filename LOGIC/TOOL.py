@@ -35,11 +35,3 @@ def replace_illegal_char(string: str) -> str:
 
 def turncate_string(string: str, length: int) -> str:
     return string if len(string) <= length else string[:length]
-
-
-def reset_add_add(reset_variable: int, add_variable1: int, add_variable2: int, reset: int, add1: int, add2: int) -> tuple:
-    reset_variable = reset
-    add_variable1 += add1
-    add_variable2 += add2
-
-    return reset_variable, add_variable1, add_variable2

@@ -98,7 +98,7 @@ def save_file() -> None:
     }
 
     LOGIC.File.dump_file(
-        LOGIC.File.return_file(
+        LOGIC.File.return_file_with_makedir(
             f'{os.environ["USERPROFILE"]}/Saved Games/DX00',
             f'{name}_{date_time[0]}_{date_time[1]}.json'
         ),
