@@ -46,7 +46,6 @@ def item_collide() -> None:
             (2, 2),
             GLOBAL.main_char.rect.center,
             (4, 8),
-            45,
             GLOBAL.main_char.color
         )
 
@@ -81,7 +80,6 @@ def barrage_collide(position) -> None:
                 (9, 9),
                 position,
                 (10, 16),
-                45,
                 GLOBAL.color_dict[5],
                 (255, 255, 255)
             )
@@ -116,7 +114,6 @@ def bullet_collide() -> None:
                     (2, 2),
                     brick.rect.center,
                     (4, 8),
-                    45,
                     brick.color,
                     (255, 255, 255)
                 )
@@ -282,8 +279,8 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                     (main_char.rect.x, main_char.rect.centery),
                     (4, 8),
                     (331, 332),
-                    GLOBAL.is_move_right,
                     GLOBAL.is_move_left,
+                    GLOBAL.is_move_right,
                     GLOBAL.is_fast
                 )
                 keep_position = LOGIC.Plane.keep_position(
