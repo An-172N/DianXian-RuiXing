@@ -14,9 +14,8 @@ def dump_file(file: str, title: str, append: object) -> None:
         return json.dump(dump, f, indent=4)
 
 
-def return_file(name: str, game: str, now_datetime: tuple) -> str:
-    folder = f'{os.environ["USERPROFILE"]}/Saved Games/{game}'
-    file = f'{os.environ["USERPROFILE"]}/Saved Games/{game}/{name}_{now_datetime[0]}_{now_datetime[1]}.json'
+def return_file(folder: str, file: str) -> str:
+    file = f'{folder}/{file}'
 
     if not os.path.exists(folder):
         os.makedirs(folder)

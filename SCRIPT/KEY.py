@@ -3,6 +3,7 @@
 
 
 import sys
+import os
 
 import pygame
 
@@ -97,7 +98,10 @@ def save_file() -> None:
     }
 
     LOGIC.File.dump_file(
-        LOGIC.File.return_file(name, "DX00", date_time),
+        LOGIC.File.return_file(
+            f'{os.environ["USERPROFILE"]}/Saved Games/DX00',
+            f'{name}_{date_time[0]}_{date_time[1]}.json'
+        ),
         "锐山抚形日志",
         dump_content
     )
@@ -164,7 +168,7 @@ def keydown(event: pygame.event.Event) -> None:
         if event.key in keydown_over_dict:
             keydown_over_dict[event.key]()
         else:
-            GLOBAL.name += event.unicode
+            GLOBAL.name = LOGIC.Tool.turncate_string(GLOBAL.name + event.unicode, 8)
             GLOBAL.is_blit = False
     elif GLOBAL.is_pause and event.key in keydown_pause_dict:
         keydown_pause_dict[event.key]()

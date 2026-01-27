@@ -29,8 +29,12 @@ def get_datetime() -> tuple:
     return datetime.datetime.now().strftime('%Y-%m-%d'), datetime.datetime.now().strftime('%H-%M-%S')
 
 
-def replace_illegal_char(name: str) -> str:
-    return re.sub(r'[!<>:"/\\|?*]', '_', name)
+def replace_illegal_char(string: str) -> str:
+    return re.sub(r'[!<>:"/\\|?*]', '_', string)
+
+
+def turncate_string(string: str, length: int) -> str:
+    return string if len(string) <= length else string[:length]
 
 
 def reset_add_add(reset_variable: int, add_variable1: int, add_variable2: int, reset: int, add1: int, add2: int) -> tuple:

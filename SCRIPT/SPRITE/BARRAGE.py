@@ -16,8 +16,8 @@ class Barrage(pygame.sprite.Sprite):
         f"C_BA_{(255, 128, 0)}": barrage_image.subsurface((0, 0, 9, 9)),
         f"C_BA_{(251, 234, 18)}": barrage_image.subsurface((18, 0, 9, 9)),
         f"C_BA_{(255, 255, 255)}": barrage_image.subsurface((27, 0, 9, 9)),
-        f"T_BA_{(0, 255, 0)}": barrage_image.subsurface((9, 0, 9, 9)),
-        f"T_BA_{(255, 255, 255)}": barrage_image.subsurface((36, 0, 9, 9))
+        f"T_BA_{(0, 255, 0)}": barrage_image.subsurface((9, 1, 9, 8)),
+        f"T_BA_{(255, 255, 255)}": barrage_image.subsurface((36, 1, 9, 8))
     }
 
     def __init__(th, type: str, speed: float, color: tuple, angle: float, pos: tuple):
