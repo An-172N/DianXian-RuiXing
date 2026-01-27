@@ -1,6 +1,7 @@
 # Copyright (c) 2026 An_172N
 # 此代码根据 GPLv3.0 许可证授权
 
+
 import random
 import math
 
@@ -75,11 +76,11 @@ def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> 
     return None
 
 
-def line_brick(group: pygame.sprite.Group, color: tuple, target_color: tuple, *spawn_pos: tuple) -> None:
+def line_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
     for _ in range(12):
         current_angle = random.randint(0, 360)
 
-        sprite = Line((2, random.randint(64, 256)), 0, 6, current_angle, spawn_pos[3], color, target_color)
+        sprite = Line((2, random.randint(64, 256)), 0, 6, current_angle, spawn_pos, (45, 194, 229), (128, 0, 128))
         sprite.update()
 
         group.add(sprite)

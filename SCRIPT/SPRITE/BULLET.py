@@ -58,11 +58,11 @@ class Bullet(pygame.sprite.Sprite):
         th.rect.center = (th.x, th.y)
 
 
-def circle_brick(group: pygame.sprite.Group, *spawn_pos: tuple) -> None:
+def circle_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
     rands = random.randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 15):
-        sprite = Bullet("bullet", 16, i, 4, spawn_pos[3])
+        sprite = Bullet("bullet", 16, i, 4, spawn_pos)
         sprite.update()
 
         group.add(sprite)

@@ -61,9 +61,7 @@ class Hro(pygame.sprite.Sprite):
             for bullet_info in bullet_type:
                 start_pos = (292 + bullet_info['dx1'], 100 - bullet_info['dx2'])
                 end_pos = (292 - bullet_info['dy1'], 100 + bullet_info['dy2'])
-                vector = Tool.vector(start_pos, end_pos, th.bullet_counter * 25)
-                current_pos = vector[0]
-                delta_vec = vector[1]
+                current_pos, delta_vec = Tool.vector(start_pos, end_pos, th.bullet_counter * 25)
                 
                 for j in range(45, 136, 90):
                     atan = math.atan2(-delta_vec.x, -delta_vec.y)

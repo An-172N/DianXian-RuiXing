@@ -49,119 +49,125 @@ def item_collide() -> None:
             GLOBAL.main_char.color
         )
 
-    collide3 = pygame.sprite.spritecollide(GLOBAL.main_char, GLOBAL.item_group, False)
+    collide = pygame.sprite.spritecollide(GLOBAL.main_char, GLOBAL.item_group, False)
 
-    for item in collide3:
-        GLOBAL.combo_timer = 120
-        GLOBAL.shoot_counter = int(LOGIC.FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
+    if collide:
+        for item in collide:
+            GLOBAL.combo_timer = 120
+            GLOBAL.shoot_counter = int(LOGIC.FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
-        if item.type == "power":
-            GLOBAL.power = int(LOGIC.FUNC.clamp(GLOBAL.power + 1, 0, 32))
-            GLOBAL.combo += 1
-        elif item.type == "flash":
-            GLOBAL.flash += 1
-            GLOBAL.combo += 1
+            if item.type == "power":
+                GLOBAL.power = int(LOGIC.FUNC.clamp(GLOBAL.power + 1, 0, 32))
+                GLOBAL.combo += 1
+            elif item.type == "flash":
+                GLOBAL.flash += 1
+                GLOBAL.combo += 1
 
-        if item.type in ['flash', 'power']:
-            GLOBAL.total_power += 1
-            GLOBAL.stage_total_power += 1
+            if item.type in ['flash', 'power']:
+                GLOBAL.total_power += 1
+                GLOBAL.stage_total_power += 1
 
-        item.kill()
+            item.kill()
 
 
 def barrage_collide(position) -> None:
-    collide1 = pygame.sprite.spritecollide(GLOBAL.decision_point, GLOBAL.barrage_group, False, pygame.sprite.collide_mask)
+    if GLOBAL.is_collide or GLOBAL.is_s_divide:
+        return
 
-    for barrage in collide1:
-        if barrage.color != (255, 255, 255) and not (GLOBAL.is_collide or GLOBAL.is_s_divide):
-            GLOBAL.is_collide = True
-            SPRITE.Particle.spawn_particles(
-                GLOBAL.particle_group,
-                (9, 9),
-                position,
-                (10, 16),
-                GLOBAL.color_dict[5],
-                (255, 255, 255)
-            )
+    collide = pygame.sprite.spritecollide(GLOBAL.decision_point, GLOBAL.barrage_group, False, pygame.sprite.collide_mask)
 
-            GLOBAL.no_flash = 0
-            GLOBAL.flash -= 1
-            GLOBAL.use_flash += 1
+    if collide:
+        for barrage in collide:
+            if barrage.color != (255, 255, 255) and not (GLOBAL.is_collide or GLOBAL.is_s_divide):
+                GLOBAL.is_collide = True
+                SPRITE.Particle.spawn_particles(
+                    GLOBAL.particle_group,
+                    (9, 9),
+                    position,
+                    (10, 16),
+                    GLOBAL.color_dict[5],
+                    (255, 255, 255)
+                )
 
-            if GLOBAL.flash == 0:
-                GLOBAL.is_save = True
-                GLOBAL.is_blit = False
+                GLOBAL.no_flash = 0
+                GLOBAL.flash -= 1
+                GLOBAL.use_flash += 1
 
-            barrage.kill()
+                if GLOBAL.flash == 0:
+                    GLOBAL.is_save = True
+                    GLOBAL.is_blit = False
+
+                barrage.kill()
 
 
 def bullet_collide() -> None:
-    collide2 = pygame.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
+    collide = pygame.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
 
-    for bullet, hit_bricks in collide2.items():
-        for brick in hit_bricks:
-            brick.hp -= bullet.damage
-            GLOBAL.score += 64
+    if collide:
+        for bullet, hit_bricks in collide.items():
+            for brick in hit_bricks:
+                brick.hp -= bullet.damage
+                GLOBAL.score += 64
 
-            if brick.hp <= 0:
-                if bullet.type in ("bullet", "line", "bomb") and brick.is_die:
-                    bullet.kill()
-                    break
+                if brick.hp <= 0:
+                    if bullet.type in ("bullet", "line", "bomb") and brick.is_die:
+                        bullet.kill()
+                        break
 
-                brick.is_die = True
-                SPRITE.Particle.spawn_particles(
-                    GLOBAL.particle_group,
-                    (2, 2),
-                    brick.rect.center,
-                    (4, 8),
-                    brick.color,
-                    (255, 255, 255)
-                )
-                if hasattr(brick, "free"):
-                    GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = boss_lose(
-                        GLOBAL.text_part,
-                        GLOBAL.text_number,
-                        GLOBAL.is_talk,
-                        GLOBAL.is_blit
-                    )
-                else:
-                    spawn_barrage(
-                        GLOBAL.stage,
-                        GLOBAL.barrage_group,
-                        GLOBAL.fibonacci_list,
-                        brick.type,
-                        [brick.color, (255, 255, 255), GLOBAL.color_dict[3]],
+                    brick.is_die = True
+                    SPRITE.Particle.spawn_particles(
+                        GLOBAL.particle_group,
+                        (2, 2),
                         brick.rect.center,
-                        GLOBAL.main_char.rect.center
+                        (4, 8),
+                        brick.color,
+                        (255, 255, 255)
                     )
-                SPRITE.Item.item_spawn(
-                    GLOBAL.item_group,
-                    brick.have_power,
-                    brick.rect.center,
-                    2.5,
-                    GLOBAL.color_dict[5],
-                    "power"
-                )
-                SPRITE.Item.item_spawn(
-                    GLOBAL.item_group,
-                    brick.have_flash,
-                    brick.rect.center,
-                    2.5,
-                    GLOBAL.color_dict[2],
-                    "flash"
-                )
-                brick_blast(
-                    GLOBAL.bullet_group,
-                    GLOBAL.stage,
-                    [brick.color, GLOBAL.color_dict[5], GLOBAL.color_dict[3]],
-                    brick.rect.midleft,
-                    brick.rect.midright,
-                    brick.rect.midbottom,
-                    brick.rect.center
-                )
-                brick.kill()
-            if bullet.type in ("bullet", "bomb"):
-                bullet.kill()
+                    if hasattr(brick, "free"):
+                        GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = boss_lose(
+                            GLOBAL.text_part,
+                            GLOBAL.text_number,
+                            GLOBAL.is_talk,
+                            GLOBAL.is_blit
+                        )
+                    else:
+                        spawn_barrage(
+                            GLOBAL.stage,
+                            GLOBAL.barrage_group,
+                            GLOBAL.fibonacci_list,
+                            brick.type,
+                            [brick.color, (255, 255, 255), GLOBAL.color_dict[3]],
+                            brick.rect.center,
+                            GLOBAL.main_char.rect.center
+                        )
+                    SPRITE.Item.item_spawn(
+                        GLOBAL.item_group,
+                        brick.have_power,
+                        brick.rect.center,
+                        2.5,
+                        GLOBAL.color_dict[5],
+                        "power"
+                    )
+                    SPRITE.Item.item_spawn(
+                        GLOBAL.item_group,
+                        brick.have_flash,
+                        brick.rect.center,
+                        2.5,
+                        GLOBAL.color_dict[2],
+                        "flash"
+                    )
+                    brick_blast(
+                        GLOBAL.bullet_group,
+                        GLOBAL.stage,
+                        [brick.color, GLOBAL.color_dict[5], GLOBAL.color_dict[3]],
+                        brick.rect.midleft,
+                        brick.rect.midright,
+                        brick.rect.midbottom,
+                        brick.rect.center
+                    )
+                    brick.kill()
+                if bullet.type in ("bullet", "bomb"):
+                    bullet.kill()
 
 
 def choose_brick(group: pygame.sprite.Group, stage_level: tuple, basic_power: int, basic_flash: int) -> None:
@@ -211,10 +217,10 @@ def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos:
             4: SPRITE.Bullet.point_brick
         }
 
-        if stage in [1, 2]:
-            return process_dict.get(stage)(group, *spawn_pos)
-        elif stage == 3:
-            return process_dict.get(stage)(group, color[1], color[2], *spawn_pos)
+        if stage == 2:
+            return process_dict.get(stage)(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
+        elif stage in [1, 3]:
+            return process_dict.get(stage)(group, spawn_pos[3])
         else:
             return process_dict.get(stage)(group)
 
@@ -263,20 +269,17 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
     while True:
         if GLOBAL.is_run and not GLOBAL.is_save and not GLOBAL.is_pause:
             if not GLOBAL.is_summary and not GLOBAL.is_talk and GLOBAL.is_level_load:
-                main_char = GLOBAL.main_char
-                decision_point = GLOBAL.decision_point
-
                 if GLOBAL.is_s_divide:
-                    main_char.free()
+                    GLOBAL.main_char.free()
 
                 GLOBAL.main_char.image = LOGIC.Plane.turn_side(
-                    main_char.original_image.subsurface((0, 0, 12, 26)),
-                    main_char.original_image.subsurface((12, 0, 12, 26)),
+                    GLOBAL.main_char.original_image.subsurface((0, 0, 12, 26)),
+                    GLOBAL.main_char.original_image.subsurface((12, 0, 12, 26)),
                     GLOBAL.is_move_right,
                     GLOBAL.is_move_left
                 )
-                main_char.rect.x, main_char.rect.centery = LOGIC.Plane.move_plane(
-                    (main_char.rect.x, main_char.rect.centery),
+                GLOBAL.main_char.rect.x, GLOBAL.main_char.rect.centery = LOGIC.Plane.move_plane(
+                    (GLOBAL.main_char.rect.x, GLOBAL.main_char.rect.centery),
                     (4, 8),
                     (331, 332),
                     GLOBAL.is_move_left,
@@ -286,13 +289,15 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 keep_position = LOGIC.Plane.keep_position(
                     GLOBAL.window.left,
                     GLOBAL.window.right,
-                    main_char.rect.center
+                    GLOBAL.main_char.rect.center
                 )
-                main_char.rect.center = keep_position
-                decision_point.rect.center = keep_position
+                GLOBAL.main_char.rect.center = keep_position
+                GLOBAL.decision_point.rect.center = keep_position
 
                 if hasattr(GLOBAL.char, "target_pos"):
                     GLOBAL.char.target_pos = GLOBAL.main_char.rect.center
+
+                barrage_collide(GLOBAL.main_char.rect.center)
                 GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = LOGIC.Plane.invinc(
                     GLOBAL.is_s_divide,
                     GLOBAL.is_collide,
@@ -300,9 +305,9 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                     GLOBAL.cooldown_timer,
                     180,
                     6,
-                    main_char.reset_bullet
+                    GLOBAL.main_char.reset_bullet
                 )
-
+                
                 GLOBAL.item_spawn_timer = SPRITE.Item.item_spawn(
                     GLOBAL.item_group,
                     GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0,
@@ -331,7 +336,6 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 remove_sprite(GLOBAL.item_group, GLOBAL.effective)
                 remove_sprite(GLOBAL.particle_group, GLOBAL.window)
 
-                barrage_collide(GLOBAL.main_char.rect.center)
                 bullet_collide()
                 item_collide()
 
