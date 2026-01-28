@@ -85,7 +85,7 @@
 **本项目采用 GNU GPLv3.0 授权**  
 **本项目包含 GNU Unifont 字体**  
 **本项目使用的第三方库为 Pygame**  
-**本项目使用 Nuitka 打包** *（可不要忘了 UPX*  
+**本项目使用 Nuitka 打包**  
 **本项目网址：https://github.com/An-172N/DianXian-RuiXing**  
 
 ---
