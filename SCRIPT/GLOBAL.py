@@ -27,8 +27,8 @@ color_dict = {
 fibonacci_list = [FUNC.fibonacci(0, 1, i) / 100 for i in range(4, 8)]
 
 
-window = pygame.Rect((120, 15, 345, 330))
-effective = pygame.Rect(105, -50, 375, 410)
+window = pygame.Rect(120, 15, 345, 330)
+effective = pygame.Rect(70, -50, 410, 410)
 
 
 is_run = False
@@ -108,7 +108,7 @@ barrage_group = pygame.sprite.Group()
 particle_group = pygame.sprite.Group()
 
 
-main_char = HUMAN.Kli(bullet_group)
+main_char = HUMAN.Kli(bullet_group, particle_group)
 decision_point = Rect.Rect((2, 2), 0, (128, 128, 128))
 
 

@@ -106,8 +106,9 @@ def bullet_collide() -> None:
     if collide:
         for bullet, hit_bricks in collide.items():
             for brick in hit_bricks:
+                if brick.hp > 0:
+                    GLOBAL.score += 64
                 brick.hp -= bullet.damage
-                GLOBAL.score += 64
 
                 if brick.hp <= 0:
                     if bullet.type in ("bullet", "line", "bomb") and brick.is_die:
@@ -258,9 +259,9 @@ def chs_shhm() -> HUMAN.Ono | HUMAN.Hro | HUMAN.Nre | HUMAN.Qdi:
     }
 
     if GLOBAL.stage in [2, 3, 4]:
-        return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group, GLOBAL.main_char.rect.center)
+        return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group, GLOBAL.particle_group, GLOBAL.main_char.rect.center)
     else:
-        return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group)
+        return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group, GLOBAL.particle_group)
 
 
 def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
@@ -334,7 +335,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 remove_sprite(GLOBAL.bullet_group, GLOBAL.effective)
                 remove_sprite(GLOBAL.barrage_group, GLOBAL.effective)
                 remove_sprite(GLOBAL.item_group, GLOBAL.effective)
-                remove_sprite(GLOBAL.particle_group, GLOBAL.window)
+                remove_sprite(GLOBAL.particle_group, GLOBAL.effective)
 
                 bullet_collide()
                 item_collide()

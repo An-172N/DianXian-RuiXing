@@ -12,11 +12,12 @@ from LOGIC import FUNC
 
 
 class Qdi(pygame.sprite.Sprite):
-    def __init__(th, group: pygame.sprite.Group, target_pos: tuple):
+    def __init__(th, group: pygame.sprite.Group, particle_group: pygame.sprite.Group, target_pos: tuple):
         super().__init__()
 
         th.group = group
         th.target_pos = target_pos
+        th.particle_group = particle_group
 
         th.hp = 96
         th.color = (251, 234, 18)
@@ -29,6 +30,7 @@ class Qdi(pygame.sprite.Sprite):
         th.is_die = False
         th.have_power = True
         th.have_flash = False
+        th.can_shoot = False
         th.choice = None
 
         th.target_x = 292
@@ -36,6 +38,7 @@ class Qdi(pygame.sprite.Sprite):
         th.timer = 0
         th.bullet_counter = 0
         th.bullet_timer = 0
+        th.particle_counter = 0
 
     def free(th) -> None:
         th.bullet_timer += 1
@@ -74,11 +77,29 @@ class Qdi(pygame.sprite.Sprite):
             th.target_x = random.randint(150, 435)
             th.target_y = random.randint(48, 96)
             th.bullet_counter = 0
+            th.particle_counter = 0
+            th.can_shoot = True
             th.is_free = not th.is_free
             th.choice = random.choice([th.fire, th.free])
-        if th.timer % 150 >= 145:
-            th.rect.centerx += random.choice([-4, 4])
+        if th.timer % 150 >= 125:
+            if th.timer % 150 >= 145:
+                th.rect.centerx += random.choice([-4, 4])
+            if th.particle_counter <= 0:
+                for _ in range(12):
+                    pos = (random.randint(th.rect.centerx - 64, th.rect.centerx + 64), random.randint(th.rect.centery - 64, th.rect.centery + 64))
+                    two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
+                    atan2 = math.atan2(-two_point[0], -two_point[1])
+                    current_angle = math.degrees(atan2)
+                
+                    particle = SPRITE.Barrage.Barrage(2, 4, (255, 255, 255), current_angle, pos)
+
+                    th.particle_group.add(particle)
+
+                th.particle_counter += 1
         else:
             th.rect.center = (th.target_x, th.target_y)
 
-        th.fire() if not th.is_free else th.choice()
+        if th.can_shoot:
+            th.fire() if not th.is_free else th.choice()
+
+        pygame.sprite.spritecollide(th, th.particle_group, True)

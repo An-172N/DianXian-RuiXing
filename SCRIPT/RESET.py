@@ -22,7 +22,7 @@ def mode_one() -> None:
     GLOBAL.is_collide = False
     GLOBAL.is_s_divide = False
     GLOBAL.cooldown_timer = 0
-    GLOBAL.main_char = HUMAN.Kli(GLOBAL.bullet_group)
+    GLOBAL.main_char = HUMAN.Kli(GLOBAL.bullet_group, GLOBAL.particle_group)
     GLOBAL.total_power = 0
 
     GLOBAL.shoot_counter = 0
