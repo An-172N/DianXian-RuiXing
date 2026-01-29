@@ -46,14 +46,11 @@ class Bullet(pygame.sprite.Sprite):
             th.image = pygame.transform.rotate(th.original_image, th.current_angle)
             th.rect = th.image.get_rect(center=th.rect.center)
 
-            th.x = getattr(th, 'x', th.rect.centerx)
-            th.y = getattr(th, 'y', th.rect.centery)
-
+            th.x, th.y = getattr(th, 'x', th.rect.centerx), getattr(th, 'y', th.rect.centery)
             th.is_rotated = True
 
         rad = math.radians(th.current_angle)
-        sin = math.sin(rad)
-        cos = math.cos(rad)
+        sin, cos = math.sin(rad), math.cos(rad)
         th.x, th.y = FUNC.add((th.x, th.y), (-(sin * th.speed), -(cos * th.speed)))
         th.rect.center = (th.x, th.y)
 

@@ -33,8 +33,7 @@ class Ono(pygame.sprite.Sprite):
         th.choice = None
 
         th.rect.center = (292, 60)
-        th.target_x = 292
-        th.target_y = 60
+        th.target_x, th.target_y = 292, 60
         th.timer = 0
         th.bullet_counter = 0
         th.bullet_timer = 0
@@ -51,9 +50,8 @@ class Ono(pygame.sprite.Sprite):
                 range(0 + th.bullet_delay, 360 + th.bullet_delay, 180),
                 range(0 + th.bullet_delay, 360 + th.bullet_delay, 90)
             ):
-                x = th.rect.centerx + 32 * math.cos(math.radians(i))
-                y = th.rect.centery + 32 * math.sin(math.radians(i))
-                sprite = SPRITE.Barrage.Barrage(2, 3.5, th.color, j, (x, y))
+                pos = (th.rect.centerx + 32 * math.cos(math.radians(i)),th.rect.centery + 32 * math.sin(math.radians(i)))
+                sprite = SPRITE.Barrage.Barrage(2, 3.5, th.color, j, pos)
                 sprite.update()
 
                 th.group.add(sprite)
@@ -75,8 +73,7 @@ class Ono(pygame.sprite.Sprite):
 
         if th.timer % 120 == 0:
             rands = random.randint(0, 360)
-            th.target_x = 292 + 50 * math.cos(math.radians(rands))
-            th.target_y = 110 + 50 * math.sin(math.radians(rands))
+            th.target_x, th.target_y = 292 + 50 * math.cos(math.radians(rands)), 110 + 50 * math.sin(math.radians(rands))
 
             th.bullet_counter = 0
             th.bullet_delay = 0
@@ -86,9 +83,7 @@ class Ono(pygame.sprite.Sprite):
             th.choice = random.choice([th.fire, th.free])
         if th.timer % 120 >= 99 and th.particle_counter <= 0:
             for i in range(0, 360, 15):
-                x = th.rect.centerx + 64 * math.cos(math.radians(i))
-                y = th.rect.centery + 64 * math.sin(math.radians(i))
-                pos = (x, y)
+                pos = (th.rect.centerx + 64 * math.cos(math.radians(i)), th.rect.centery + 64 * math.sin(math.radians(i)))
                 two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                 atan2 = math.atan2(-two_point[0], -two_point[1])
                 current_angle = math.degrees(atan2)

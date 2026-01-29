@@ -33,8 +33,7 @@ class Hro(pygame.sprite.Sprite):
         th.choice = None
 
         th.rect.center = (292, 60)
-        th.target_x = 292
-        th.target_y = 60
+        th.target_x, th.target_y = 292, 60
         th.timer = 0
         th.bullet_counter = 0
         th.bullet_timer = 0
@@ -100,8 +99,7 @@ class Hro(pygame.sprite.Sprite):
         th.timer += 1
 
         if th.timer % 110 == 0:
-            th.target_x = random.choice((150, 220, 292, 365))
-            th.target_y = random.choice((60, 120, 180, 240))
+            th.target_x, th.target_y = random.choice((150, 220, 292, 365)), random.choice((60, 120, 180, 240))
 
             th.bullet_counter = 0
             th.bullet_delay = 0
@@ -113,9 +111,7 @@ class Hro(pygame.sprite.Sprite):
         if th.timer % 110 >= 91:
             if th.particle_counter <= 0:
                 for i in range(0, 360, random.choice([90, 120])):
-                    x = th.rect.centerx + 64 * math.cos(math.radians(i))
-                    y = th.rect.centery + 64 * math.sin(math.radians(i))
-                    pos = (x, y)
+                    pos = (th.rect.centerx + 64 * math.cos(math.radians(i)), th.rect.centery + 64 * math.sin(math.radians(i)))
                     two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)

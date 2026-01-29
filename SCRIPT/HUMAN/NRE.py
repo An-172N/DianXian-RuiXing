@@ -33,8 +33,7 @@ class Nre(pygame.sprite.Sprite):
         th.choice = None
 
         th.rect.center = (292, 60)
-        th.target_x = 292
-        th.target_y = 60
+        th.target_x, th.target_y = 292, 60
         th.timer = 0
         th.bullet_timer = 0
         th.bullet_counter = 0
@@ -53,7 +52,7 @@ class Nre(pygame.sprite.Sprite):
             sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
             current_angle = math.degrees(math.atan2(-delta_pos[0], -delta_pos[1]))
 
-            sprite = SPRITE.Line.Line((3, distance), 0, 0,current_angle, sprite_pos, (255, 255, 255), (128, 0, 128))
+            sprite = SPRITE.Line.Line((3, distance), 0,current_angle, sprite_pos, (255, 255, 255), (128, 0, 128))
             sprite.update()
 
             th.group.add(sprite)
@@ -70,7 +69,7 @@ class Nre(pygame.sprite.Sprite):
                 distance = math.hypot(delta_pos[0], delta_pos[1])
                 sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
-                sprite = SPRITE.Line.Line((3, distance), 0, 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
+                sprite = SPRITE.Line.Line((3, distance), 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
                 sprite.update()
                 
                 th.group.add(sprite)

@@ -33,8 +33,7 @@ class Qdi(pygame.sprite.Sprite):
         th.can_shoot = False
         th.choice = None
 
-        th.target_x = 292
-        th.target_y = 60
+        th.target_x, th.target_y = 292, 60
         th.timer = 0
         th.bullet_counter = 0
         th.bullet_timer = 0
@@ -74,8 +73,7 @@ class Qdi(pygame.sprite.Sprite):
         th.timer += 1
 
         if th.timer % 150 == 0:
-            th.target_x = random.randint(150, 435)
-            th.target_y = random.randint(48, 96)
+            th.target_x, th.target_y = random.randint(150, 435), random.randint(48, 96)
             th.bullet_counter = 0
             th.particle_counter = 0
             th.can_shoot = True
