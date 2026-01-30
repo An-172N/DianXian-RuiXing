@@ -3,6 +3,7 @@
 
 
 import itertools
+import random
 import math
 
 import pygame
@@ -34,24 +35,15 @@ class Kli(pygame.sprite.Sprite):
         th.bullet_timer += 1
 
         if th.bullet_timer % 30 >= 10 and th.particle_counter <= 0:
-            for i, j in itertools.product(
-                range(th.rect.centerx - 64, th.rect.centerx + 65, 32),
-                range(th.rect.centery - 64, th.rect.centery + 65, 32)
-            ):
-                pos = (i, j)
-                two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
-                atan2 = math.atan2(-two_point[0], -two_point[1])
-                current_angle = math.degrees(atan2)
+            for i in range(120, 466, 15):
+                pos = (i, random.randint(345, 360))
+                rands = random.randint(4, 12)
 
-                particle = SPRITE.Particle.Particle((9, 9), 4, current_angle, pos, (255, 255, 255))
+                particle = SPRITE.Particle.Particle((rands, rands), random.uniform(1, 2), 0, pos, (255, 255, 255), 'char')
 
                 th.particle_group.add(particle)
 
             th.particle_counter += 1
-            th.point = Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
-
-        if th.point:
-            pygame.sprite.spritecollide(th.point, th.particle_group, True)
 
         if th.bullet_timer >= 30 and th.bullet_timer % 1 == 0 and th.bullet_counter < 6:
             for i in range(120, 466, 15):

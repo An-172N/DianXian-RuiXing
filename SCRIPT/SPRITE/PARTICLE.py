@@ -11,13 +11,14 @@ from LOGIC import FUNC, Rect
 
 
 class Particle(pygame.sprite.Sprite):
-    def __init__(th, size: tuple, speed: float, angle: float, pos: tuple, color: tuple):
+    def __init__(th, size: tuple, speed: float, angle: float, pos: tuple, color: tuple, type: str='normal'):
         super().__init__()
 
         th.width, th.height = size
         th.speed = speed
         th.color = color
         th.current_angle = angle
+        th.type = type
 
         th.is_rotated = False
 
@@ -34,6 +35,11 @@ class Particle(pygame.sprite.Sprite):
 
             th.x, th.y = getattr(th, 'x', th.rect.centerx), getattr(th, 'y', th.rect.centery)
             th.is_rotated = True
+        if th.type != 'normal':
+            th.speed -= 0.1
+
+            if th.speed < -4:
+                th.speed = -4
 
         rad = math.radians(th.current_angle)
         sin, cos = math.sin(rad), math.cos(rad)

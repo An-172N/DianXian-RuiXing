@@ -25,8 +25,8 @@ class Hro(pygame.sprite.Sprite):
         th.image = char_image.subsurface((36, 0, 12, 26))
         th.rect = th.image.get_rect()
 
-        th.is_free = False
         th.is_die = False
+        th.is_choose = False
         th.can_shoot = False
         th.have_power = False
         th.have_flash = True
@@ -102,33 +102,31 @@ class Hro(pygame.sprite.Sprite):
 
         if th.timer % 110 == 0:
             th.target_x, th.target_y = random.choice((150, 220, 292, 365)), random.choice((60, 120, 180, 240))
-
             th.bullet_counter = 0
             th.bullet_delay = 0
             th.particle_counter = 0
-            th.is_free = not th.is_free
-            th.is_choice = False
+            th.is_choose = False
             th.can_shoot = True
-            th.choice = random.choice([th.fire, th.free])
-        if th.timer % 110 >= 91:
-            if th.particle_counter <= 0:
-                for i in range(0, 360, random.choice([90, 120])):
-                    pos = (th.rect.centerx + 64 * math.cos(math.radians(i)), th.rect.centery + 64 * math.sin(math.radians(i)))
-                    two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
-                    atan2 = math.atan2(-two_point[0], -two_point[1])
-                    current_angle = math.degrees(atan2)
+        if th.timer % 110 >= 91 and th.particle_counter <= 0:
+            if not th.is_choose:
+                th.choice = random.choice([th.fire, th.fire, th.free])
+                th.is_choose = True
+            for i in range(0, 360, 120 if th.choice == th.fire else 90):
+                pos = (th.rect.centerx + 64 * math.cos(math.radians(i)), th.rect.centery + 64 * math.sin(math.radians(i)))
+                two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
+                atan2 = math.atan2(-two_point[0], -two_point[1])
+                current_angle = math.degrees(atan2)
 
-                    particle = SPRITE.Barrage.Barrage(0, 4, (255, 255, 255), current_angle, pos)
+                particle = SPRITE.Barrage.Barrage(0, 4, (255, 255, 255), current_angle, pos)
 
-                    th.particle_group.add(particle)
+                th.particle_group.add(particle)
 
-                th.particle_counter += 1
-                th.point = Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
-
+            th.particle_counter += 1
+            th.point = Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)
 
         th.rect.center = Tool.vector(th.rect.center, (th.target_x, th.target_y), 5)[0]
 
-        if th.can_shoot:
-            th.fire() if not th.is_free else th.choice()
+        if th.can_shoot and not th.is_choose:
+            th.choice()
