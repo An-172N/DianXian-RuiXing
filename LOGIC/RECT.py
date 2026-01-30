@@ -6,7 +6,7 @@ import pygame
 
 
 class Rect(pygame.sprite.Sprite):
-    def __init__(th, size: tuple, border: float, color: tuple):
+    def __init__(th, size: tuple, border: float, color: tuple, pos: tuple=(0, 0)):
         super().__init__()
 
         th.width = size[0]
@@ -17,6 +17,8 @@ class Rect(pygame.sprite.Sprite):
         th.image = th.get_surface()
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)
+
+        th.rect.center = pos
 
     def get_surface(th) -> pygame.Surface:
         surface = pygame.Surface((th.width, th.height), pygame.SRCALPHA)

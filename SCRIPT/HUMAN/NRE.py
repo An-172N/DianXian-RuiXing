@@ -8,7 +8,7 @@ import math
 import pygame
 
 from SCRIPT import SPRITE, char_image
-from LOGIC import FUNC, Tool
+from LOGIC import FUNC, Tool, Rect
 
 
 class Nre(pygame.sprite.Sprite):
@@ -30,6 +30,8 @@ class Nre(pygame.sprite.Sprite):
         th.can_shoot = False
         th.have_power = True
         th.have_flash = False
+
+        th.point = None
         th.choice = None
 
         th.rect.center = (292, 60)
@@ -100,10 +102,12 @@ class Nre(pygame.sprite.Sprite):
                 th.particle_group.add(particle)
 
             th.particle_counter += 1
+            th.point = Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
+
+        if th.point:
+            pygame.sprite.spritecollide(th.point, th.particle_group, True)
 
         th.rect.center = Tool.vector(th.rect.center, (th.target_x, th.target_y), 6)[0]
 
         if th.can_shoot:
             th.fire() if not th.is_free else th.choice()
-
-        pygame.sprite.spritecollide(th, th.particle_group, True)

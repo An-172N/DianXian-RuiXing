@@ -176,5 +176,5 @@ def keydown(event: pygame.event.Event) -> None:
         keydown_talk_dict[event.key]()
     elif GLOBAL.is_summary and event.key in keydown_summary_dict:
         keydown_summary_dict[event.key]()
-    elif not GLOBAL.is_summary and GLOBAL.is_level_load and event.key in keydown_game_dict:
+    elif not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and event.key in keydown_game_dict:
         keydown_game_dict[event.key]()
