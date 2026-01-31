@@ -19,6 +19,7 @@ import SCRIPT.KEY as KEY
 import SCRIPT.RESET as RESET
 import SCRIPT.HUMAN as HUMAN
 import SCRIPT.SPRITE as SPRITE
+import SCRIPT.COLLIDE as COLLIDE
 
 
 update = KERNEL.update

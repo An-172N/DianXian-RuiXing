@@ -60,3 +60,24 @@ def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tu
             group.add(brick)
 
     return None
+
+
+def choose_brick(group: pygame.sprite.Group, stage_level: tuple, basic_power: int, basic_flash: int) -> None:
+    brick_list = list(group)
+    choose_power = random.sample(range(len(brick_list)), basic_power + stage_level[0] + stage_level[1])
+    choose_flash = random.sample(range(len(brick_list)), basic_flash)
+    
+    for i in choose_power:
+        brick_list[i].have_power = True
+    for j in choose_flash:
+        brick_list[j].have_flash = True
+
+
+def boss_lose(part: int, number: int, is_talk: bool, is_blit: bool) -> tuple:
+    part += 1
+    number = 0
+
+    is_talk = True
+    is_blit = False
+
+    return part, number, is_talk, is_blit

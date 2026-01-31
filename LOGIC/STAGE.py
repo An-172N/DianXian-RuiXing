@@ -9,11 +9,11 @@ def score_summary(power: int, unflash: int, combo: int, collection: tuple) -> in
     return power * collection[0] + unflash * collection[1] + collection[2] ** combo + combo * collection[3]
 
 
-def close_summary(summary: bool, stage_level: tuple, score: int, add_score: int, final_stage: tuple, end: object, not_end: object) -> tuple:
+def close_summary(summary: bool, stage_level: tuple, score: int, add_score: int, final_stage: tuple, end: object, next: object) -> tuple:
     summary = False
     score += add_score
 
-    end() if stage_level[0] >= final_stage[0] and stage_level[1] == final_stage[1] else not_end()
+    end() if stage_level[0] >= final_stage[0] and stage_level[1] == final_stage[1] else next()
 
     return summary, score
 
@@ -25,16 +25,16 @@ def change_background(picture: pygame.Surface, alpha: int) -> pygame.Surface:
     return background
 
 
-def level_load(timer: int, is_level_load: bool, end: int, load: object) -> tuple:
+def level_load(timer: int, level_load: bool, end: int, load: object) -> tuple:
     if timer <= end:
         timer += 1
     else:
         load()
 
         timer = 0
-        is_level_load = True
+        level_load = True
 
-    return timer, is_level_load
+    return timer, level_load
 
 
 def level_logic(stage_level: tuple, end: int) -> tuple:

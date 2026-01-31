@@ -4,12 +4,10 @@
 
 import itertools
 import random
-import math
 
 import pygame
 
 from SCRIPT import SPRITE, char_image
-from LOGIC import FUNC, Rect
 
 
 class Kli(pygame.sprite.Sprite):
