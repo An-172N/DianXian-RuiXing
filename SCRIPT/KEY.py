@@ -91,7 +91,7 @@ def save_file() -> None:
     dump_content = {
         '助记者': GLOBAL.name,
         '分数': GLOBAL.score,
-        '最远到达的地方': f"{GLOBAL.stage} - {GLOBAL.level}",
+        '最远到达的地方': f"{GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'} - {GLOBAL.level}",
         '拾形点率': LOGIC.Item.calculate_item_rate(GLOBAL.stage_total_power, GLOBAL.stage <= 3, (153, 61)),
         '形闪次数': GLOBAL.use_flash,
         '记录日期': date_time[0]

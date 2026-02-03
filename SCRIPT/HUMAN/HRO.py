@@ -8,7 +8,7 @@ import math
 import pygame
 
 from SCRIPT import SPRITE, char_image
-from LOGIC import FUNC, Tool, Rect
+from LOGIC import FUNC, Tool
 
 
 class Hro(pygame.sprite.Sprite):
@@ -122,7 +122,7 @@ class Hro(pygame.sprite.Sprite):
                 th.particle_group.add(particle)
 
             th.particle_counter += 1
-            th.point = Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
+            th.point = SPRITE.Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)
 

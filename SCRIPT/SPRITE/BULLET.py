@@ -7,13 +7,13 @@ import math
 
 import pygame
 
-from LOGIC import FUNC, Rect
+from LOGIC import FUNC, Tool
 
 
 class Bullet(pygame.sprite.Sprite):
     bullet_image = {
-        "KLI_BULLET": Rect.Rect((2, 15), 0, (45, 194, 229)).image,
-        "KLI_BOMB": Rect.Rect((15, 15), 0, (45, 194, 229)).image
+        "KLI_BULLET": Tool.draw_rectangle((2, 15), 0, (45, 194, 229)),
+        "KLI_BOMB": Tool.draw_rectangle((15, 15), 0, (45, 194, 229))
     }
 
     def __init__(th, type: str, speed: float, angle: float, damage: int, pos: tuple):

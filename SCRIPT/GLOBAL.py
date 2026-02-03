@@ -6,8 +6,8 @@ import os
 
 import pygame
 
-from SCRIPT import HUMAN
-from LOGIC import FUNC, Rect
+from SCRIPT import HUMAN, SPRITE
+from LOGIC import FUNC, Tool
 
 
 asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
@@ -80,15 +80,13 @@ level = 0
 
 
 picture = {
-    key: pygame.image.load(file).convert_alpha() for key, file in [
-        (1, os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')),
-        (2, os.path.join(asset_path, 'IMAGE\IMG_STAGE2BG.png')),
-        (3, os.path.join(asset_path, 'IMAGE\IMG_STAGE3BG.png')),
-        (4, os.path.join(asset_path, 'IMAGE\IMG_STAGE4BG.png')),
-        ("GAME_BG", os.path.join(asset_path, 'IMAGE\IMG_GAMEBG.png')),
-    ]
+    1: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')).convert_alpha(),
+    2: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE2BG.png')).convert_alpha(),
+    3: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE3BG.png')).convert_alpha(),
+    4: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE4BG.png')).convert_alpha(),
+    "GAME_BG": pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_GAMEBG.png')).convert_alpha(),
+    "MENU_BG": Tool.draw_rectangle((345, 330), 0, (0, 0, 0))
 }
-picture["MENU_BG"] = Rect.Rect((345, 330), 0, (0, 0, 0)).image
 
 
 background = picture["GAME_BG"]
@@ -109,7 +107,7 @@ particle_group = pygame.sprite.Group()
 
 
 main_char = HUMAN.Kli(bullet_group, particle_group)
-decision_point = Rect.Rect((2, 2), 0, (128, 128, 128))
+decision_point = SPRITE.Rect.Rect((2, 2), 0, (128, 128, 128))
 
 
 last_time = pygame.time.get_ticks()

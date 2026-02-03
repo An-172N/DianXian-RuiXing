@@ -11,17 +11,14 @@ from SCRIPT import GLOBAL
 
 
 def show_situation(screen: pygame.Surface, font: pygame.font.Font, clock: pygame.time.Clock) -> None:
-    current_time = pygame.time.get_ticks()
-    if current_time - GLOBAL.last_time >= 500:
-        GLOBAL.fps_text = f"{clock.get_fps():.1f} FPS"
-        GLOBAL.last_time = current_time
+    GLOBAL.fps_text, GLOBAL.last_time = LOGIC.Tool.show_fps(GLOBAL.fps_text, GLOBAL.last_time, 0, 500, clock)
 
-    score = f"分　{GLOBAL.score:9d}"
-    power = f"形　{GLOBAL.power:02d} , {GLOBAL.total_power:02d}"
-    flash = f"闪　{GLOBAL.flash:02d}"
-    combo = f"连　{GLOBAL.combo:02d} , {GLOBAL.shoot_counter:02d}"
-
-    text = [score, power, flash, combo]
+    text = [
+        f"分　{GLOBAL.score:9d}",
+        f"形　{GLOBAL.power:02d} , {GLOBAL.total_power:02d}",
+        f"闪　{GLOBAL.flash:02d}",
+        f"连　{GLOBAL.combo:02d} , {GLOBAL.shoot_counter:02d}"
+    ]
 
     situation(screen, font, text, GLOBAL.fps_text)
 
@@ -43,30 +40,26 @@ def load_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 
 
 def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
-    human = ''
-    text = ['', '']
-
     try:
         human = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["human"]
-        info = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info"]
-        info2 = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
+        text = [
+            GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info"],
+            GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
+        ]
 
-        text = [info, info2]
+        half_menu(screen, font, human, text)
     except KeyError:
         GLOBAL.is_talk = False
 
-    half_menu(screen, font, human, text)
-
 
 def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
-    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'
     combo = 2 ** GLOBAL.combo + GLOBAL.combo * 2
 
-    stage = f"Stage {stage_text} - {GLOBAL.level} Cleaer!（Z 下一关"
-    point = f"得点 {GLOBAL.total_power} * 512 + {combo} = {GLOBAL.total_power * 512 + combo}"
-    hurt = f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"
-
-    text = [point, hurt]
+    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!（Z 下一关"
+    text = [
+        f"得点 {GLOBAL.total_power} * 512 + {combo} = {GLOBAL.total_power * 512 + combo}",
+        f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"
+    ]
 
     half_menu(screen, font, stage, text)
 
@@ -82,17 +75,15 @@ def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 
 
 def save_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
-    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
-
     title = "抚形日志"
-    tm = f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}"
-    score = f"得到了 {GLOBAL.score} 分"
-    stage = f"最远到达的地方是 {stage_text} - {GLOBAL.level} 站"
-    s_power = f"拾形点率为 {LOGIC.Item.calculate_item_rate(GLOBAL.stage_total_power, GLOBAL.stage <= 3, (153, 61))}"
-    s_flash = f"使用了 {GLOBAL.use_flash} 次形闪"
     name = f"由 {GLOBAL.name} 助记"
-
-    text = [tm, score, stage, s_power, s_flash]
+    text = [
+        f"今天是：{datetime.datetime.now().strftime('%Y-%m-%d')}",
+        f"得到了 {GLOBAL.score} 分",
+        f"最远到达的地方是 {GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'} - {GLOBAL.level} 站",
+        f"拾形点率为 {LOGIC.Item.calculate_item_rate(GLOBAL.stage_total_power, GLOBAL.stage <= 3, (153, 61))}",
+        f"使用了 {GLOBAL.use_flash} 次形闪"
+    ]
     key = ["（Ent 记录", "（ESC 不了"]
 
     full_menu(screen, font, title, text, key, name)
@@ -152,7 +143,7 @@ def situation(surface: pygame.Surface, font: pygame.font.Font, text: list, fps: 
         {"text": text[1], "pos": (8, 270)},
         {"text": text[2], "pos": (8, 295)},
         {"text": text[3], "pos": (8, 320)},
-        {"text": fps, "pos": (395, 343)}
+        {"text": fps, "pos": (405, 343)}
     ]
     
     for text_info in text_type:

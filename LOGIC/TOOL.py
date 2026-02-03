@@ -25,6 +25,31 @@ def vector(sprite_pos: tuple, target_pos: tuple, speed: float) -> pygame.Vector2
         return current + dir * speed, delta_vec
     
 
+def show_fps(fps: object, timer: int, bit: int, interval: int, clock: pygame.time.Clock) -> tuple:
+    current_time = pygame.time.get_ticks()
+    if current_time - timer >= interval:
+        fps = f"{clock.get_fps():.{bit}f} FPS"
+        timer = current_time
+
+    return fps, timer
+
+
+def draw_rectangle(size: tuple, border: float, color: tuple) -> pygame.Surface:
+    surface = pygame.Surface((size[0], size[1]), pygame.SRCALPHA)
+
+    pygame.draw.rect(surface, color, surface.get_rect(), border)
+            
+    return surface
+
+
+def draw_circle(xy_size: tuple, border: float, color: tuple) -> pygame.Surface:
+    surface = pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA)
+
+    pygame.draw.ellipse(surface, color, xy_size, border)
+
+    return surface
+    
+
 def get_datetime() -> tuple:
     return datetime.datetime.now().strftime('%Y-%m-%d'), datetime.datetime.now().strftime('%H-%M-%S')
 

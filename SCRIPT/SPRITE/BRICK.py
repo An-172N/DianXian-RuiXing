@@ -8,7 +8,7 @@ import os
 import pygame
 
 from SCRIPT import brick_image
-from LOGIC import Rect
+from LOGIC import Tool
 
 
 class Brick(pygame.sprite.Sprite):
@@ -16,11 +16,11 @@ class Brick(pygame.sprite.Sprite):
     brick_dict = {
         f"C_BR_{(255, 128, 0)}": brick_image.subsurface((0, 0, 15, 15)),
         f"C_BR_{(251, 234, 18)}": brick_image.subsurface((45, 0, 15, 15)),
-        f"C_BR_{(255, 255, 255)}": brick_image.subsurface((60, 0, 15, 15)),
+        f"C_BR_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)),
         f"T_BR_{(0, 255, 0)}": brick_image.subsurface((15, 0, 15, 15)),
-        f"T_BR_{(255, 255, 255)}": brick_image.subsurface((75, 0, 15, 15)),
+        f"T_BR_{(255, 255, 255)}": brick_image.subsurface((60, 0, 15, 15)),
         f"R_BR_{(128, 0, 128)}": brick_image.subsurface((30, 0, 15, 15)),
-        f"R_BR_{(255, 255, 255)}": Rect.Rect((15, 15), 2, (255, 255, 255)).image
+        f"R_BR_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255))
     }
 
     def __init__(th, type: str, hp: int, color: tuple, pos: tuple):

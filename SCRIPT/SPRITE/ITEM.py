@@ -4,14 +4,14 @@
 
 import pygame
 
-from LOGIC import Rect
+from LOGIC import Tool
 
 
 class Item(pygame.sprite.Sprite):
     item_image = {
-        f"R_IT_{(0, 255, 0)}": Rect.Rect((9, 9), 2, (0, 255, 0)).image,
-        f"R_IT_{(45, 194, 229)}": Rect.Rect((9, 9), 2, (45, 194, 229)).image,
-        f"R_IT_{(255, 255, 255)}": Rect.Rect((9, 9), 2, (255, 255, 255)).image
+        f"R_IT_{(0, 255, 0)}": Tool.draw_rectangle((9, 9), 2, (0, 255, 0)),
+        f"R_IT_{(45, 194, 229)}": Tool.draw_rectangle((9, 9), 2, (45, 194, 229)),
+        f"R_IT_{(255, 255, 255)}": Tool.draw_rectangle((9, 9), 2, (255, 255, 255))
     }
 
     def __init__(th, type: str, speed: float, color: tuple, pos: tuple):

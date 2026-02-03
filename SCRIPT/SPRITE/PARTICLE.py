@@ -7,7 +7,7 @@ import math
 
 import pygame
 
-from LOGIC import FUNC, Rect
+from LOGIC import FUNC, Tool
 
 
 class Particle(pygame.sprite.Sprite):
@@ -22,7 +22,7 @@ class Particle(pygame.sprite.Sprite):
 
         th.is_rotated = False
 
-        th.original_image = Rect.Rect((th.width, th.height), 0, th.color).image
+        th.original_image = Tool.draw_rectangle((th.width, th.height), 0, th.color)
         th.image = th.original_image
         th.rect = th.image.get_rect()
 

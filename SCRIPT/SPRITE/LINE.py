@@ -7,7 +7,7 @@ import math
 
 import pygame
 
-from LOGIC import FUNC, Rect
+from LOGIC import FUNC, Tool
 
 
 class Line(pygame.sprite.Sprite):
@@ -24,7 +24,7 @@ class Line(pygame.sprite.Sprite):
         th.timer = 0
         th.is_rotated = False
 
-        th.original_image = Rect.Rect((th.width, th.height), 0, th.color).image
+        th.original_image = Tool.draw_rectangle((th.width, th.height), 0, th.color)
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)
