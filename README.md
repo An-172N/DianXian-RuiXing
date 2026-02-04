@@ -95,7 +95,6 @@
   - 程序代码采用 GNU GPLv3.0 协议
     - 详细请看 /LICENSE
   - 所有角色工程文件（.kra）、对话文件（.json）、关卡文件（.stg）和图片文件（.png）保留所有权利
-  - 
 - ### 本项目使用以下第三方资源
   - 字体 GNU Unifont
   - Python 第三方库 Pygame
