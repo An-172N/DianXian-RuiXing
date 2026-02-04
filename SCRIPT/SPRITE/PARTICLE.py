@@ -48,11 +48,13 @@ class Particle(pygame.sprite.Sprite):
 
 
 def spawn_particles(group: pygame.sprite.Group, size: tuple, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):
-    rands = random.randint(0, 45)
+    randint = random.randint
+    choice = random.choice
+    rands = randint(0, 45)
     
     for i in range(0 + rands, 360 + rands, 45):
-        color = color1 if color2 is None else random.choice([color1, color2])
+        color = color1 if color2 is None else choice([color1, color2])
 
-        sprite = Particle((size[0], size[1]), random.randint(speed[0], speed[1]), i, pos, color)
+        sprite = Particle((size[0], size[1]), randint(speed[0], speed[1]), i, pos, color)
         
         group.add(sprite)

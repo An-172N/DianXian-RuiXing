@@ -71,8 +71,6 @@ def circle_barrage(type: int, color: list, spawn_pos: tuple, target_pos: tuple, 
 
     group.add(sprite)
 
-    return None
-
 
 def polygon_barrage(type: int, color: list, spawn_pos: tuple, target_pos: tuple, group: pygame.sprite.Group) -> None:
     for i in range(target_pos[0] - 32, target_pos[0] + 33, 64):
@@ -85,12 +83,12 @@ def polygon_barrage(type: int, color: list, spawn_pos: tuple, target_pos: tuple,
 
         group.add(sprite)
 
-    return None
-
 
 def point_barrage(type: int, color: list, target_pos: tuple, group: pygame.sprite.Group) -> None:
+    randint = random.randint
+
     for _ in range(3):
-        sprite_pos = (random.randint(120, 465), random.randint(15, 225))
+        sprite_pos = (randint(120, 465), randint(15, 225))
         two_point = FUNC.add((target_pos[0], target_pos[1]), (-sprite_pos[0], -sprite_pos[1]))
         atan2 = math.atan2(-two_point[0], -two_point[1])
         current_angle = math.degrees(atan2)
@@ -99,5 +97,3 @@ def point_barrage(type: int, color: list, target_pos: tuple, group: pygame.sprit
         sprite.update()
 
         group.add(sprite)
-
-    return None

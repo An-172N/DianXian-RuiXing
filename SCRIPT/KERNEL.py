@@ -27,8 +27,7 @@ def option() -> None:
     GLOBAL.level = int(LOGIC.FUNC.clamp(args.level, 0, 5))
     GLOBAL.flash = int(LOGIC.FUNC.clamp(args.flash, 0, 96))
     GLOBAL.power = int(LOGIC.FUNC.clamp(args.power, 0, 32))
-    GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
-    GLOBAL.second_background.set_alpha(128)
+    GLOBAL.second_background = LOGIC.Tool.change_background(GLOBAL.picture[GLOBAL.stage], 128)
 
 
 def sprite_loader() -> None:
@@ -69,42 +68,51 @@ def chs_shhm() -> HUMAN.Ono | HUMAN.Hro | HUMAN.Nre | HUMAN.Qdi:
         return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group, GLOBAL.particle_group)
 
 
-def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
+def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
     option()
+
+    plane = LOGIC.Plane
+    stage = LOGIC.Stage
+    window = GLOBAL.window
+    item = LOGIC.Item
+    sprite_item = SPRITE.Item
 
     while True:
         if GLOBAL.is_run and not GLOBAL.is_save and not GLOBAL.is_pause:
             if not GLOBAL.is_summary and not GLOBAL.is_talk and GLOBAL.is_level_load:
-                if GLOBAL.is_s_divide:
-                    GLOBAL.main_char.free()
+                main_char = GLOBAL.main_char
+                decision_point = GLOBAL.decision_point
 
-                GLOBAL.main_char.image = LOGIC.Plane.turn_side(
-                    GLOBAL.main_char.original_image.subsurface((0, 0, 12, 26)),
-                    GLOBAL.main_char.original_image.subsurface((12, 0, 12, 26)),
+                if GLOBAL.is_s_divide:
+                    main_char.free()
+
+                main_char.image = plane.turn_side(
+                    main_char.original_image.subsurface((0, 0, 12, 26)),
+                    main_char.original_image.subsurface((12, 0, 12, 26)),
                     GLOBAL.is_move_right,
                     GLOBAL.is_move_left
                 )
-                GLOBAL.main_char.rect.x, GLOBAL.main_char.rect.centery = LOGIC.Plane.move_plane(
-                    (GLOBAL.main_char.rect.x, GLOBAL.main_char.rect.centery),
+                main_char.rect.x, main_char.rect.centery = plane.move_plane(
+                    (main_char.rect.x, main_char.rect.centery),
                     (4, 8),
                     (331, 332),
                     GLOBAL.is_move_left,
                     GLOBAL.is_move_right,
                     GLOBAL.is_fast
                 )
-                keep_position = LOGIC.Plane.keep_position(
-                    GLOBAL.window.left,
-                    GLOBAL.window.right,
-                    GLOBAL.main_char.rect.center
+                keep_position = plane.keep_position(
+                    window.left,
+                    window.right,
+                    main_char.rect.center
                 )
-                GLOBAL.main_char.rect.center = keep_position
-                GLOBAL.decision_point.rect.center = keep_position
+                main_char.rect.center = keep_position
+                decision_point.rect.center = keep_position
 
                 if hasattr(GLOBAL.char, "target_pos"):
-                    GLOBAL.char.target_pos = GLOBAL.main_char.rect.center
+                    GLOBAL.char.target_pos = main_char.rect.center
 
-                COLLIDE.barrage_collide(GLOBAL.main_char.rect.center)
-                GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = LOGIC.Plane.invinc(
+                COLLIDE.barrage_collide(main_char.rect.center)
+                GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = plane.invinc(
                     GLOBAL.is_s_divide,
                     GLOBAL.is_collide,
                     GLOBAL.is_visitable,
@@ -114,7 +122,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                     GLOBAL.main_char.reset_bullet
                 )
                 
-                GLOBAL.item_spawn_timer = SPRITE.Item.item_spawn(
+                GLOBAL.item_spawn_timer = sprite_item.item_spawn(
                     GLOBAL.item_group,
                     GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0,
                     (random.randint(120, 465), 10),
@@ -123,7 +131,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                     "fire",
                     GLOBAL.item_spawn_timer
                 )
-                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = LOGIC.Item.combo_counter(
+                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = item.combo_counter(
                     GLOBAL.combo_timer,
                     GLOBAL.combo,
                     GLOBAL.score,
@@ -146,7 +154,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
                 COLLIDE.item_collide()
 
             if not GLOBAL.is_level_load:
-                GLOBAL.wait_level_load_timer, GLOBAL.is_level_load =LOGIC.Stage.level_load(
+                GLOBAL.wait_level_load_timer, GLOBAL.is_level_load = stage.level_load(
                     GLOBAL.wait_level_load_timer,
                     GLOBAL.is_level_load,
                     60,
@@ -160,7 +168,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, _: None) -> None:
 
         GUI.window_display(screen)
         GUI.menu_display(screen)
-        GUI.font_display(screen, clock)
+        GUI.front_display(screen, clock)
 
         pygame.display.flip()
         clock.tick(60)

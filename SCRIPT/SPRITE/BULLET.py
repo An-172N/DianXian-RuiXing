@@ -64,21 +64,20 @@ def circle_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
 
         group.add(sprite)
 
-    return None
-
 
 def polygon_brick(group: pygame.sprite.Group, *spawn_pos: tuple) -> None:
+    choice = random.choice
     bullet_index = [
         {
-            'angle': random.choice([-30, -210]),
+            'angle': choice([-30, -210]),
             'pos': spawn_pos[0]
         },
         {
-            'angle': random.choice([30, 210]),
+            'angle': choice([30, 210]),
             'pos': spawn_pos[1]
         },
         {
-            'angle': random.choice([90, 270]),
+            'angle': choice([90, 270]),
             'pos': spawn_pos[2]
         }
     ]
@@ -89,17 +88,15 @@ def polygon_brick(group: pygame.sprite.Group, *spawn_pos: tuple) -> None:
 
         group.add(sprite)
 
-    return None
-
 
 def point_brick(group: pygame.sprite.Group) -> None:
+    randint = random.randint
+
     for _ in range(24):
-        sprite_pos = (random.randint(120, 465), random.randint(15, 345))
-        current_angle = random.randint(0, 360)
+        sprite_pos = (randint(120, 465), randint(15, 345))
+        current_angle = randint(0, 360)
 
         sprite = Bullet("bullet", 16, current_angle, 4, sprite_pos)
         sprite.update()
 
         group.add(sprite)
-
-    return None

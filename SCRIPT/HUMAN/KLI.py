@@ -30,22 +30,25 @@ class Kli(pygame.sprite.Sprite):
         th.point = None
 
     def free(th) -> None:
+        randint = random.randint
+        particle = SPRITE.Particle.Particle
+        bullet = SPRITE.Bullet.Bullet
         th.bullet_timer += 1
 
         if th.bullet_timer % 30 >= 10 and th.particle_counter <= 0:
             for i in range(120, 466, 15):
-                pos = (i, random.randint(345, 360))
-                rands = random.randint(4, 12)
+                pos = (i, randint(345, 360))
+                rands = randint(4, 12)
 
-                particle = SPRITE.Particle.Particle((rands, rands), random.uniform(1, 2), 0, pos, (255, 255, 255), 'char')
+                sprite = particle((rands, rands), random.uniform(1, 2), 0, pos, (255, 255, 255), 'char')
 
-                th.particle_group.add(particle)
+                th.particle_group.add(sprite)
 
             th.particle_counter += 1
 
         if th.bullet_timer >= 30 and th.bullet_timer % 1 == 0 and th.bullet_counter < 6:
             for i in range(120, 466, 15):
-                sprite = SPRITE.Bullet.Bullet("bomb", -24, 0, 6, (i, 0))
+                sprite = bullet("bomb", -24, 0, 6, (i, 0))
                 sprite.update()
 
                 th.group.add(sprite)
@@ -53,6 +56,7 @@ class Kli(pygame.sprite.Sprite):
             th.bullet_counter += 1
 
     def fire(th, power: int) -> None:
+        bullet = SPRITE.Bullet.Bullet
         p = 2 ** (power // 32)
         q = 2 ** (power // 16)
     
@@ -73,7 +77,7 @@ class Kli(pygame.sprite.Sprite):
             ]
 
             for bullet_info in bullet_type:
-                sprite = SPRITE.Bullet.Bullet("bullet", 16, bullet_info['angle'], 4, (bullet_info['x'], bullet_info['y']))
+                sprite = bullet("bullet", 16, bullet_info['angle'], 4, (bullet_info['x'], bullet_info['y']))
                 sprite.update()
 
                 th.group.add(sprite)

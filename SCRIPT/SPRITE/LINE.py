@@ -65,16 +65,14 @@ def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> 
     
     group.add(sprite)
 
-    return None
-
 
 def line_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
-    for _ in range(12):
-        current_angle = random.randint(0, 360)
+    randint = random.randint
 
-        sprite = Line((2, random.randint(64, 256)), 6, current_angle, spawn_pos, (45, 194, 229), (128, 0, 128))
+    for _ in range(12):
+        current_angle = randint(0, 360)
+
+        sprite = Line((2, randint(64, 256)), 6, current_angle, spawn_pos, (45, 194, 229), (128, 0, 128))
         sprite.update()
 
         group.add(sprite)
-
-    return None

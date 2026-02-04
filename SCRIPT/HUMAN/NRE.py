@@ -42,11 +42,13 @@ class Nre(pygame.sprite.Sprite):
         th.particle_counter = 0
 
     def free(th) -> None:
+        randint = random.randint
+        line = SPRITE.Line.Line
         th.bullet_timer += 1
 
         if th.bullet_timer % 1 == 0 and th.bullet_counter < 12:
-            start_pos = (random.randint(80, 500), 0)
-            end_pos = (-random.randint(100, 490), -360)
+            start_pos = (randint(80, 500), 0)
+            end_pos = (-randint(100, 490), -360)
 
             delta_pos = FUNC.add(end_pos, start_pos)
             distance = math.hypot(delta_pos[0], delta_pos[1])
@@ -54,7 +56,7 @@ class Nre(pygame.sprite.Sprite):
             sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
             current_angle = math.degrees(math.atan2(-delta_pos[0], -delta_pos[1]))
 
-            sprite = SPRITE.Line.Line((3, distance), 0,current_angle, sprite_pos, (255, 255, 255), (128, 0, 128))
+            sprite = line((3, distance), 0, current_angle, sprite_pos, (255, 255, 255), (128, 0, 128))
             sprite.update()
 
             th.group.add(sprite)
@@ -62,6 +64,8 @@ class Nre(pygame.sprite.Sprite):
             th.bullet_counter += 1
 
     def fire(th) -> None:
+        line = SPRITE.Line.Line
+
         if th.bullet_counter < 1:
             for i in range(th.target_pos[0] - 30, th.target_pos[0] + 31, 20):
                 start_pos = (i, 0)
@@ -71,7 +75,7 @@ class Nre(pygame.sprite.Sprite):
                 distance = math.hypot(delta_pos[0], delta_pos[1])
                 sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
-                sprite = SPRITE.Line.Line((3, distance), 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
+                sprite = line((3, distance), 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
                 sprite.update()
                 
                 th.group.add(sprite)
@@ -79,17 +83,19 @@ class Nre(pygame.sprite.Sprite):
             th.bullet_counter += 1
 
     def update(th) -> None:
+        choice = random.choice
+        particle = SPRITE.Particle.Particle
         th.timer += 1
 
         if th.timer % 100 == 0:
-            th.target_x = random.choice((150, 220, 292, 365, 435))
+            th.target_x = choice((150, 220, 292, 365, 435))
 
             th.bullet_counter = 0
             th.bullet_timer = 0
             th.particle_counter = 0
             th.can_shoot = True
             th.is_free = not th.is_free
-            th.choice = random.choice([th.fire, th.free])
+            th.choice = choice([th.fire, th.free])
         if th.timer % 100 >= 82 and th.particle_counter <= 0:
             for _ in range(8):
                 pos = (random.randint(th.rect.centerx - 64, th.rect.centerx + 64), th.rect.centery)
@@ -97,9 +103,9 @@ class Nre(pygame.sprite.Sprite):
                 atan2 = math.atan2(-two_point[0], -two_point[1])
                 current_angle = math.degrees(atan2)
 
-                particle = SPRITE.Particle.Particle((9, 9), 4, current_angle, pos, (255, 255, 255))
+                sprite = particle((9, 9), 4, current_angle, pos, (255, 255, 255))
 
-                th.particle_group.add(particle)
+                th.particle_group.add(sprite)
 
             th.particle_counter += 1
             th.point = SPRITE.Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)

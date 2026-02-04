@@ -24,7 +24,7 @@ color_dict = {
 }
 
 
-fibonacci_list = [FUNC.fibonacci(0, 1, i) / 100 for i in range(4, 8)]
+barrage_rate = [0.17 + (FUNC.fibonacci(0, 1, i) / 100) for i in range(4, 8)]
 
 
 window = pygame.Rect(120, 15, 345, 330)
@@ -90,8 +90,7 @@ picture = {
 
 
 background = picture["GAME_BG"]
-second_background = picture[stage]
-second_background.set_alpha(128)
+second_background = Tool.change_background(picture[stage], 128)
 
 
 char = None

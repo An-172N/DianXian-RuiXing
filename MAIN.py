@@ -8,16 +8,17 @@ import sys
 def main() -> int:
     import pygame
 
+    clock = pygame.time.Clock()
+
     pygame.display.init()
+    pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain')
     pygame.font.init()
 
-    clock = pygame.time.Clock()
     screen = pygame.display.set_mode((480, 360), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN|pygame.SCALED, vsync=1)
-    title = pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain')
 
     import SCRIPT
 
-    SCRIPT.update(clock, screen, title)
+    SCRIPT.update(clock, screen)
 
     return 0
 

@@ -11,12 +11,15 @@ from SCRIPT import GLOBAL, SPRITE
 
 
 def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, target_pos: tuple) -> None:
-    if random.random() <= 0.17 + fib[stage - 1]:
+    barrage = SPRITE.Barrage
+    line = SPRITE.Line
+    
+    if random.random() <= fib[stage - 1]:
         barrage_dict = {
-            1: SPRITE.Barrage.circle_barrage,
-            2: SPRITE.Barrage.polygon_barrage,
-            3: SPRITE.Line.line_barrage,
-            4: SPRITE.Barrage.point_barrage
+            1: barrage.circle_barrage,
+            2: barrage.polygon_barrage,
+            3: line.line_barrage,
+            4: barrage.point_barrage
         }
 
         if stage in [1, 2]:
@@ -28,12 +31,15 @@ def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, 
         
 
 def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos: tuple) -> None:
+    bullet = SPRITE.Bullet
+    line = SPRITE.Line
+
     if color[0] == (255, 255, 255):
         process_dict = {
-            1: SPRITE.Bullet.circle_brick,
-            2: SPRITE.Bullet.polygon_brick,
-            3: SPRITE.Line.line_brick,
-            4: SPRITE.Bullet.point_brick
+            1: bullet.circle_brick,
+            2: bullet.polygon_brick,
+            3: line.line_brick,
+            4: bullet.point_brick
         }
 
         if stage == 2:
@@ -51,6 +57,8 @@ def remove_sprite(sprite_group: pygame.sprite.Group, effective_range: pygame.Rec
 
 
 def item_collide() -> None:
+    func = LOGIC.FUNC
+
     if GLOBAL.is_shoot and GLOBAL.shoot_counter > 0:
         GLOBAL.main_char.fire(GLOBAL.power)
         GLOBAL.shoot_counter -= 1
@@ -67,10 +75,10 @@ def item_collide() -> None:
     if collide:
         for item in collide:
             GLOBAL.combo_timer = 120
-            GLOBAL.shoot_counter = int(LOGIC.FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
+            GLOBAL.shoot_counter = int(func.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
             if item.type == "power":
-                GLOBAL.power = int(LOGIC.FUNC.clamp(GLOBAL.power + 1, 0, 32))
+                GLOBAL.power = int(func.clamp(GLOBAL.power + 1, 0, 32))
                 GLOBAL.combo += 1
             elif item.type == "flash":
                 GLOBAL.flash += 1
@@ -148,7 +156,7 @@ def bullet_collide() -> None:
                         spawn_barrage(
                             GLOBAL.stage,
                             GLOBAL.barrage_group,
-                            GLOBAL.fibonacci_list,
+                            GLOBAL.barrage_rate,
                             brick.type,
                             [brick.color, (255, 255, 255), GLOBAL.color_dict[3]],
                             brick.rect.center,

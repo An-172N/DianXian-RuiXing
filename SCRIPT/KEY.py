@@ -143,7 +143,7 @@ def close_summary():
         next_logic1,
         next_logic2
     )
-    GLOBAL.second_background = LOGIC.Stage.change_background(GLOBAL.picture[GLOBAL.stage], 128)
+    GLOBAL.second_background = LOGIC.Tool.change_background(GLOBAL.picture[GLOBAL.stage], 128)
 
 
 def key_event() -> None:

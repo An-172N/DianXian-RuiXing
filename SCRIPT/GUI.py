@@ -11,7 +11,7 @@ from SCRIPT import GLOBAL
 
 
 def show_situation(screen: pygame.Surface, font: pygame.font.Font, clock: pygame.time.Clock) -> None:
-    GLOBAL.fps_text, GLOBAL.last_time = LOGIC.Tool.show_fps(GLOBAL.fps_text, GLOBAL.last_time, 0, 500, clock)
+    GLOBAL.fps_text, GLOBAL.last_time = LOGIC.Tool.update_fps(GLOBAL.fps_text, GLOBAL.last_time, 0, 500, clock)
 
     text = [
         f"分　{GLOBAL.score:9d}",
@@ -68,7 +68,7 @@ def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "Copyright (c) 2026 An_172N"
 
-    text = ['Ver 1.0.3', '', '', '', '']
+    text = ['Ver 1.0.4', '', '', '', '']
     key = ["（Z 开始", "（Q 退出"]
 
     full_menu(screen, font, title, text, key, other)
@@ -179,6 +179,6 @@ def window_display(screen: pygame.Surface) -> None:
     GLOBAL.barrage_group.draw(screen)
 
 
-def font_display(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
+def front_display(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
     screen.blit(GLOBAL.background, (0, 0))
     show_situation(screen, GLOBAL.font, clock)

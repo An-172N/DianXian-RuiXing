@@ -8,7 +8,7 @@ import re
 import pygame
 
 
-def vector(sprite_pos: tuple, target_pos: tuple, speed: float) -> pygame.Vector2:
+def vector(sprite_pos: tuple, target_pos: tuple, speed: float) -> tuple:
     dir = pygame.math.Vector2(target_pos[0] - sprite_pos[0], target_pos[1] - sprite_pos[1])
     current = pygame.math.Vector2(sprite_pos[0], sprite_pos[1])
     target = pygame.math.Vector2(target_pos[0], target_pos[1])
@@ -25,13 +25,21 @@ def vector(sprite_pos: tuple, target_pos: tuple, speed: float) -> pygame.Vector2
         return current + dir * speed, delta_vec
     
 
-def show_fps(fps: object, timer: int, bit: int, interval: int, clock: pygame.time.Clock) -> tuple:
+def update_fps(fps: object, timer: int, bit: int, interval: int, clock: pygame.time.Clock) -> tuple:
     current_time = pygame.time.get_ticks()
+
     if current_time - timer >= interval:
         fps = f"{clock.get_fps():.{bit}f} FPS"
         timer = current_time
 
     return fps, timer
+
+
+def change_background(picture: pygame.Surface, alpha: int) -> pygame.Surface:
+    background = picture
+    background.set_alpha(alpha)
+
+    return background
 
 
 def draw_rectangle(size: tuple, border: float, color: tuple) -> pygame.Surface:
