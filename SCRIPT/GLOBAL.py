@@ -80,17 +80,17 @@ level = 0
 
 
 picture = {
-    1: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')).convert_alpha(),
-    2: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE2BG.png')).convert_alpha(),
-    3: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE3BG.png')).convert_alpha(),
-    4: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE4BG.png')).convert_alpha(),
+    1: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')).convert(),
+    2: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE2BG.png')).convert(),
+    3: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE3BG.png')).convert(),
+    4: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE4BG.png')).convert(),
     "GAME_BG": pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_GAMEBG.png')).convert_alpha(),
-    "MENU_BG": Tool.draw_rectangle((345, 330), 0, (0, 0, 0))
+    "MENU_BG": Tool.draw_rectangle((345, 330), 0, (0, 0, 0)).convert()
 }
 
 
 background = picture["GAME_BG"]
-second_background = Tool.change_background(picture[stage], 128)
+second_background = picture[stage]
 
 
 char = None

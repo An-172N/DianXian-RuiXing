@@ -167,7 +167,6 @@ def menu_display(screen: pygame.Surface) -> None:
 
 
 def window_display(screen: pygame.Surface) -> None:
-    screen.fill((0, 0, 0, 0))
     screen.blit(GLOBAL.second_background, (120, 15))
 
     GLOBAL.bullet_group.draw(screen)

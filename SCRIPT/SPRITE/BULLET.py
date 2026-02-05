@@ -12,8 +12,8 @@ from LOGIC import FUNC, Tool
 
 class Bullet(pygame.sprite.Sprite):
     bullet_image = {
-        "KLI_BULLET": Tool.draw_rectangle((2, 15), 0, (45, 194, 229)),
-        "KLI_BOMB": Tool.draw_rectangle((15, 15), 0, (45, 194, 229))
+        "KLI_BULLET": Tool.draw_rectangle((2, 15), 0, (45, 194, 229)).convert_alpha(),
+        "KLI_BOMB": Tool.draw_rectangle((15, 15), 0, (45, 194, 229)).convert()
     }
 
     def __init__(th, type: str, speed: float, angle: float, damage: int, pos: tuple):

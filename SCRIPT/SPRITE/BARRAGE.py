@@ -13,9 +13,9 @@ from LOGIC import FUNC, Tool
 
 class Barrage(pygame.sprite.Sprite):
     barrage_dict = {
-        f"C_BA_{(255, 128, 0)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 128, 0)),
-        f"C_BA_{(251, 234, 18)}": Tool.draw_circle((0, 0, 9, 9), 0, (251, 234, 18)),
-        f"C_BA_{(255, 255, 255)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 255, 255)),
+        f"C_BA_{(255, 128, 0)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 128, 0)).convert_alpha(),
+        f"C_BA_{(251, 234, 18)}": Tool.draw_circle((0, 0, 9, 9), 0, (251, 234, 18)).convert_alpha(),
+        f"C_BA_{(255, 255, 255)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 255, 255)).convert_alpha(),
         f"T_BA_{(0, 255, 0)}": barrage_image.subsurface((0, 0, 9, 8)),
         f"T_BA_{(255, 255, 255)}": barrage_image.subsurface((9, 0, 9, 8))
     }

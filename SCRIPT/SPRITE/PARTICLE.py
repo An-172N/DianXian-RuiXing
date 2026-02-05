@@ -14,15 +14,13 @@ class Particle(pygame.sprite.Sprite):
     def __init__(th, size: tuple, speed: float, angle: float, pos: tuple, color: tuple, type: str='normal'):
         super().__init__()
 
-        th.width, th.height = size
         th.speed = speed
-        th.color = color
         th.current_angle = angle
         th.type = type
 
         th.is_rotated = False
 
-        th.original_image = Tool.draw_rectangle((th.width, th.height), 0, th.color)
+        th.original_image = Tool.draw_rectangle((size[0], size[1]), 0, color).convert_alpha()
         th.image = th.original_image
         th.rect = th.image.get_rect()
 

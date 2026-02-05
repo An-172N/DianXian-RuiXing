@@ -27,7 +27,7 @@ def option() -> None:
     GLOBAL.level = int(LOGIC.FUNC.clamp(args.level, 0, 5))
     GLOBAL.flash = int(LOGIC.FUNC.clamp(args.flash, 0, 96))
     GLOBAL.power = int(LOGIC.FUNC.clamp(args.power, 0, 32))
-    GLOBAL.second_background = LOGIC.Tool.change_background(GLOBAL.picture[GLOBAL.stage], 128)
+    GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
 
 
 def sprite_loader() -> None:

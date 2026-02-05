@@ -35,13 +35,6 @@ def update_fps(fps: object, timer: int, bit: int, interval: int, clock: pygame.t
     return fps, timer
 
 
-def change_background(picture: pygame.Surface, alpha: int) -> pygame.Surface:
-    background = picture
-    background.set_alpha(alpha)
-
-    return background
-
-
 def draw_rectangle(size: tuple, border: float, color: tuple) -> pygame.Surface:
     surface = pygame.Surface((size[0], size[1]), pygame.SRCALPHA)
 

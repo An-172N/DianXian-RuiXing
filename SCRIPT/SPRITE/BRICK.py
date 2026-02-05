@@ -16,11 +16,11 @@ class Brick(pygame.sprite.Sprite):
     brick_dict = {
         f"C_BR_{(255, 128, 0)}": brick_image.subsurface((0, 0, 15, 15)),
         f"C_BR_{(251, 234, 18)}": brick_image.subsurface((45, 0, 15, 15)),
-        f"C_BR_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)),
+        f"C_BR_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)).convert_alpha(),
         f"T_BR_{(0, 255, 0)}": brick_image.subsurface((15, 0, 15, 15)),
         f"T_BR_{(255, 255, 255)}": brick_image.subsurface((60, 0, 15, 15)),
         f"R_BR_{(128, 0, 128)}": brick_image.subsurface((30, 0, 15, 15)),
-        f"R_BR_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255))
+        f"R_BR_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255)).convert_alpha()
     }
 
     def __init__(th, type: str, hp: int, color: tuple, pos: tuple):
@@ -34,10 +34,10 @@ class Brick(pygame.sprite.Sprite):
         th.have_flash = False
         th.is_die = False
 
-        th.original_image = th.get_type(type)
-        th.image = th.original_image
+        th.image = th.get_type(type)
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)
+
         th.rect.center = pos
 
     def get_type(th, type: int) -> pygame.Surface:

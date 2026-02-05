@@ -9,9 +9,9 @@ from LOGIC import Tool
 
 class Item(pygame.sprite.Sprite):
     item_image = {
-        f"R_IT_{(0, 255, 0)}": Tool.draw_rectangle((9, 9), 2, (0, 255, 0)),
-        f"R_IT_{(45, 194, 229)}": Tool.draw_rectangle((9, 9), 2, (45, 194, 229)),
-        f"R_IT_{(255, 255, 255)}": Tool.draw_rectangle((9, 9), 2, (255, 255, 255))
+        f"R_IT_{(0, 255, 0)}": Tool.draw_rectangle((9, 9), 2, (0, 255, 0)).convert_alpha(),
+        f"R_IT_{(45, 194, 229)}": Tool.draw_rectangle((9, 9), 2, (45, 194, 229)).convert_alpha(),
+        f"R_IT_{(255, 255, 255)}": Tool.draw_rectangle((9, 9), 2, (255, 255, 255)).convert_alpha()
     }
 
     def __init__(th, type: str, speed: float, color: tuple, pos: tuple):
@@ -19,22 +19,20 @@ class Item(pygame.sprite.Sprite):
 
         th.type = type
         th.speed = speed
-        th.color = color
 
         th.current_angle = 0
         th.is_rotated = False
 
-        th.original_image = th.get_type(type)
-        th.image = th.original_image
+        th.image = th.get_type(type, color)
         th.rect = th.image.get_rect()
 
         th.rect.center = pos
 
-    def get_type(th, type: str) -> pygame.Surface:
+    def get_type(th, type: str, color: tuple) -> pygame.Surface:
         item_dict = {
-            "power": lambda: Item.item_image[f"R_IT_{th.color}"],
-            "flash": lambda: Item.item_image[f"R_IT_{th.color}"],
-            "fire": lambda: Item.item_image[f"R_IT_{th.color}"]
+            "power": lambda: Item.item_image[f"R_IT_{color}"],
+            "flash": lambda: Item.item_image[f"R_IT_{color}"],
+            "fire": lambda: Item.item_image[f"R_IT_{color}"]
         }
 
         return item_dict.get(type)()

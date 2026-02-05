@@ -41,7 +41,7 @@ def mode_two() -> None:
     GLOBAL.level = 0
     GLOBAL.char = None
 
-    GLOBAL.second_background = Tool.change_background(GLOBAL.picture[GLOBAL.stage], 128)
+    GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
 
     GLOBAL.no_flash = 0
     GLOBAL.flash = 3

@@ -14,7 +14,6 @@ class Line(pygame.sprite.Sprite):
     def __init__(th, size: tuple, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple):
         super().__init__()
 
-        th.width, th.height = size
         th.damage = damage
         th.current_angle = angle
         th.color = color
@@ -24,7 +23,7 @@ class Line(pygame.sprite.Sprite):
         th.timer = 0
         th.is_rotated = False
 
-        th.original_image = Tool.draw_rectangle((th.width, th.height), 0, th.color)
+        th.original_image = Tool.draw_rectangle((size[0], size[1]), 0, th.color).convert_alpha()
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)
