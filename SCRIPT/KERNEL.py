@@ -14,6 +14,7 @@ from SCRIPT import HUMAN, SPRITE, GLOBAL, GUI, KEY, COLLIDE
 
 
 def option() -> None:
+    clamp = LOGIC.FUNC.clamp
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--stage', type=int, default=1)
@@ -23,10 +24,10 @@ def option() -> None:
 
     args = parser.parse_args()
 
-    GLOBAL.stage = int(LOGIC.FUNC.clamp(args.stage, 1, 4))
-    GLOBAL.level = int(LOGIC.FUNC.clamp(args.level, 0, 5))
-    GLOBAL.flash = int(LOGIC.FUNC.clamp(args.flash, 0, 96))
-    GLOBAL.power = int(LOGIC.FUNC.clamp(args.power, 0, 32))
+    GLOBAL.stage = int(clamp(args.stage, 1, 4))
+    GLOBAL.level = int(clamp(args.level, 0, 5))
+    GLOBAL.flash = int(clamp(args.flash, 0, 96))
+    GLOBAL.power = int(clamp(args.power, 0, 32))
     GLOBAL.second_background = GLOBAL.picture[GLOBAL.stage]
 
 
@@ -73,9 +74,10 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
 
     plane = LOGIC.Plane
     stage = LOGIC.Stage
-    window = GLOBAL.window
     item = LOGIC.Item
     sprite_item = SPRITE.Item
+    remove_sprite = COLLIDE.remove_sprite
+    window = GLOBAL.window
 
     while True:
         if GLOBAL.is_run and not GLOBAL.is_save and not GLOBAL.is_pause:
@@ -119,7 +121,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                     GLOBAL.cooldown_timer,
                     180,
                     6,
-                    GLOBAL.main_char.reset_bullet
+                    main_char.reset_bullet
                 )
                 
                 GLOBAL.item_spawn_timer = sprite_item.item_spawn(
@@ -145,10 +147,10 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                 GLOBAL.particle_group.update()
                 GLOBAL.brick_group.update()
 
-                COLLIDE.remove_sprite(GLOBAL.bullet_group, GLOBAL.effective)
-                COLLIDE.remove_sprite(GLOBAL.barrage_group, GLOBAL.effective)
-                COLLIDE.remove_sprite(GLOBAL.item_group, GLOBAL.effective)
-                COLLIDE.remove_sprite(GLOBAL.particle_group, GLOBAL.effective)
+                remove_sprite(GLOBAL.bullet_group, GLOBAL.effective)
+                remove_sprite(GLOBAL.barrage_group, GLOBAL.effective)
+                remove_sprite(GLOBAL.item_group, GLOBAL.effective)
+                remove_sprite(GLOBAL.particle_group, GLOBAL.effective)
 
                 COLLIDE.bullet_collide()
                 COLLIDE.item_collide()
