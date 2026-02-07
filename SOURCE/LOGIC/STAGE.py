@@ -1,0 +1,39 @@
+# Copyright (c) 2026 An_172N
+# 此代码根据 GPLv3.0 许可证授权
+
+
+def score_summary(power: int, unflash: int, combo: int, collection: tuple) -> int:
+    return power * collection[0] + unflash * collection[1] + collection[2] ** combo + combo * collection[3]
+
+
+def close_summary(summary: bool, stage_level: tuple, score: int, add_score: int, final_stage: tuple, end: object, next: object) -> tuple:
+    summary = False
+    score += add_score
+
+    end() if stage_level[0] >= final_stage[0] and stage_level[1] == final_stage[1] else next()
+
+    return summary, score
+
+
+def level_load(timer: int, level_load: bool, end: int, load: object) -> tuple:
+    if timer <= end:
+        timer += 1
+    else:
+        load()
+
+        timer = 0
+        level_load = True
+
+    return timer, level_load
+
+
+def level_logic(stage_level: tuple, end: int) -> tuple:
+    stage, level = stage_level
+
+    if level >= end:
+        stage += 1
+        level = 1
+    else:
+        level += 1
+
+    return stage, level
