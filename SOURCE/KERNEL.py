@@ -1,4 +1,4 @@
-# Copyright (c) 2026 An_172N
+# (C)opyright 2026 An_172N
 # 此代码根据 GPLv3.0 许可证授权
 
 
@@ -40,16 +40,7 @@ def sprite_loader() -> None:
 
         GLOBAL.brick_group.add(GLOBAL.char)
     else:
-        LOGIC.File.read_level(
-            os.path.join(PRELOAD.asset_path, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg"),
-            SPRITE.Brick.load_brick,
-            PRELOAD.color_dict[GLOBAL.stage],
-            4,
-            0.031,
-            (127, 22),
-            (15, 15),
-            GLOBAL.brick_group
-        )
+        LOGIC.File.read_level(os.path.join(PRELOAD.asset_path, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg"), SPRITE.Brick.load_brick, PRELOAD.color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
 
         SPRITE.Brick.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
 
@@ -87,25 +78,9 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                 if GLOBAL.is_s_divide:
                     main_char.free()
 
-                main_char.image = plane.turn_side(
-                    main_char.original_image.subsurface((0, 0, 12, 26)),
-                    main_char.original_image.subsurface((12, 0, 12, 26)),
-                    GLOBAL.is_move_right,
-                    GLOBAL.is_move_left
-                )
-                main_char.rect.x, main_char.rect.centery = plane.move_plane(
-                    (main_char.rect.x, main_char.rect.centery),
-                    (4, 8),
-                    (331, 332),
-                    GLOBAL.is_move_left,
-                    GLOBAL.is_move_right,
-                    GLOBAL.is_fast
-                )
-                keep_position = plane.keep_position(
-                    window.left,
-                    window.right,
-                    main_char.rect.center
-                )
+                main_char.image = plane.turn_side(main_char.original_image.subsurface((0, 0, 12, 26)), main_char.original_image.subsurface((12, 0, 12, 26)), GLOBAL.is_move_right, GLOBAL.is_move_left)
+                main_char.rect.x, main_char.rect.centery = plane.move_plane((main_char.rect.x, main_char.rect.centery), (4, 8), (331, 332), GLOBAL.is_move_left, GLOBAL.is_move_right, GLOBAL.is_fast)
+                keep_position = plane.keep_position(window.left, window.right, main_char.rect.center)
                 main_char.rect.center = keep_position
                 decision_point.rect.center = keep_position
 
@@ -113,32 +88,10 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                     GLOBAL.char.target_pos = main_char.rect.center
 
                 COLLIDE.barrage_collide(main_char.rect.center)
-                GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = plane.invinc(
-                    GLOBAL.is_s_divide,
-                    GLOBAL.is_collide,
-                    GLOBAL.is_visitable,
-                    GLOBAL.cooldown_timer,
-                    180,
-                    6,
-                    main_char.reset_bullet
-                )
+                GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = plane.invinc(GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer, 180, 6, main_char.reset_bullet)
                 
-                GLOBAL.item_spawn_timer = sprite_item.item_spawn(
-                    GLOBAL.item_group,
-                    GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0,
-                    (random.randint(120, 465), 10),
-                    -2,
-                    (255, 255, 255),
-                    "fire",
-                    GLOBAL.item_spawn_timer
-                )
-                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = item.combo_counter(
-                    GLOBAL.combo_timer,
-                    GLOBAL.combo,
-                    GLOBAL.score,
-                    2 ** GLOBAL.combo,
-                    120
-                )
+                GLOBAL.item_spawn_timer = sprite_item.item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, (random.randint(120, 465), 10), -2, (255, 255, 255), "fire", GLOBAL.item_spawn_timer)
+                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = item.combo_counter(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
             
                 GLOBAL.bullet_group.update()
                 GLOBAL.barrage_group.update()
@@ -155,12 +108,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                 COLLIDE.item_collide()
 
             if not GLOBAL.is_level_load:
-                GLOBAL.wait_level_load_timer, GLOBAL.is_level_load = stage.level_load(
-                    GLOBAL.wait_level_load_timer,
-                    GLOBAL.is_level_load,
-                    60,
-                    sprite_loader
-                )
+                GLOBAL.wait_level_load_timer, GLOBAL.is_level_load = stage.load_level(GLOBAL.wait_level_load_timer, GLOBAL.is_level_load, 60, sprite_loader)
             elif len(GLOBAL.brick_group) == 0 and len(GLOBAL.item_group) == 0 and not GLOBAL.is_talk:
                 GLOBAL.is_summary = True
                 GLOBAL.is_blit = False

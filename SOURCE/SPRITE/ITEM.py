@@ -1,4 +1,4 @@
-# Copyright (c) 2026 An_172N
+# (C)opyright 2026 An_172N
 # 此代码根据 GPLv3.0 许可证授权
 
 
@@ -20,7 +20,6 @@ class Item(pygame.sprite.Sprite):
         th.type = type
         th.speed = speed
 
-        th.current_angle = 0
         th.is_rotated = False
 
         th.image = th.get_type(type, color)

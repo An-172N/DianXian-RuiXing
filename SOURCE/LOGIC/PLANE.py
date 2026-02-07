@@ -1,70 +1,70 @@
-# Copyright (c) 2026 An_172N
+# (C)opyright 2026 An_172N
 # 此代码根据 GPLv3.0 许可证授权
 
 
 import pygame
 
 
-def move_plane(pos: tuple, speed: tuple, up_down: tuple, move_left: bool, move_right: bool, change_speed: bool) -> tuple:
+def move_plane(pos: tuple, speed: tuple, swing: tuple, left: bool, right: bool, variable: bool) -> tuple:
     x, y = pos
     
-    if move_left:
-        x -= speed[1] if change_speed else speed[0]
-    if move_right:
-        x += speed[1] if change_speed else speed[0]
+    if left:
+        x -= speed[1] if variable else speed[0]
+    if right:
+        x += speed[1] if variable else speed[0]
 
-    y = up_down[0] if change_speed else up_down[1]
+    y = swing[0] if variable else swing[1]
     
     return x, y
 
 
-def keep_position(range_left: float, range_right: float, char_pos: float) -> tuple:
-    x = char_pos[0]
+def keep_position(left: float, right: float, pos: float) -> tuple:
+    x = pos[0]
 
-    if x < range_left:
-        x = range_left
-    elif x > range_right:
-        x = range_right
+    if x < left:
+        x = left
+    elif x > right:
+        x = right
 
-    return x, char_pos[1]
+    return x, pos[1]
 
 
-def turn_side(original_image: pygame.Surface, turn_side_image: pygame.Surface, flip: bool, turn_side: bool) -> pygame.Surface:
-    turn_side_image = turn_side_image
-    flipped_image = pygame.transform.flip(turn_side_image, True, False)
+def turn_side(original_image: pygame.Surface, turn_image: pygame.Surface, flip: bool, turn: bool) -> pygame.Surface:
+    turn_image = turn_image
+    flip_image = pygame.transform.flip(turn_image, True, False)
 
     if flip:
-        return flipped_image
-    elif turn_side:
-        return turn_side_image
+        return flip_image
+    elif turn:
+        return turn_image
     else:
         return original_image
 
 
-def invinc(condition1: bool, condition2: bool, visitable: bool, timer: int, end: int, interval: int, reset: object) -> tuple:
-    if condition1 or condition2:
+def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int, interval: int, reset: object) -> tuple:
+    if use_bomb or collided:
         timer += 1
 
         if timer >= end:
-            if condition1:
-                condition1 = False
+            if use_bomb:
+                use_bomb = False
                 timer = 0
 
                 reset()
 
-            condition2 = False
+            collided = False
         else:
             visitable = (timer // interval) % 2
     else:
         timer = 0
         visitable = True
 
-    return condition1, condition2, visitable, timer
+    return use_bomb, collided, visitable, timer
 
 
-def single_bomb(use_bomb: bool, power: int, critical: int) -> tuple:
-    if not use_bomb and power >= critical:
+def single_bomb(use: bool, power: int, critical: int) -> tuple:
+    if not use and power >= critical:
         power -= critical
-        use_bomb = True
+        use = True
 
-    return use_bomb, power
+    return use, power

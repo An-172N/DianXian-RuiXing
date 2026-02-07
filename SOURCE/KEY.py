@@ -1,4 +1,4 @@
-# Copyright (c) 2026 An_172N
+# (C)opyright 2026 An_172N
 # 此代码根据 GPLv3.0 许可证授权
 
 
@@ -16,64 +16,33 @@ keydown_game_dict = {
     pygame.K_x: lambda: setattr(GLOBAL, "is_fast", True),
     pygame.K_z: lambda: setattr(GLOBAL, "is_shoot", False),
     pygame.K_SPACE: lambda: single_bomb(),
-    pygame.K_ESCAPE: lambda: (
-        setattr(GLOBAL, "is_pause", True),
-        setattr(GLOBAL, "is_blit", False)
-    )
+    pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", True), setattr(GLOBAL, "is_blit", False))
 }
 
 keydown_talk_dict = {
-    pygame.K_z: lambda: (
-        setattr(GLOBAL, "text_number", GLOBAL.text_number + 1),
-        setattr(GLOBAL, "is_blit", False)
-    ),
+    pygame.K_z: lambda: (setattr(GLOBAL, "text_number", GLOBAL.text_number + 1),setattr(GLOBAL, "is_blit", False)),
     pygame.K_x: lambda: setattr(GLOBAL, "is_talk", False)
 }
 
 keydown_pause_dict = {
-    pygame.K_ESCAPE: lambda: (
-        setattr(GLOBAL, "is_pause", False),
-        setattr(GLOBAL, 'is_blit', False)    
-    ),
-    pygame.K_q: lambda: (
-        RESET.mode_one(),
-        RESET.mode_two(),
-        setattr(GLOBAL, "is_blit", False)
-    )
+    pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", False), setattr(GLOBAL, 'is_blit', False)),
+    pygame.K_q: lambda: (RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False))
 }
 
 keydown_start_dict = {
-    pygame.K_z: lambda: (
-        setattr(GLOBAL, "is_run", True),
-        setattr(GLOBAL, "is_blit", False),
-        next_level(),
-        level_logic()
-    ),
+    pygame.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "is_blit", False), next_level(), level_logic()),
     pygame.K_q: lambda: sys.exit()
 }
 
 keydown_over_dict = {
-    pygame.K_RETURN: lambda: (
-        save_file(),
-        RESET.mode_one(),
-        RESET.mode_two(),
-        setattr(GLOBAL, "is_blit", False)
-    ),
-    pygame.K_ESCAPE: lambda: (
-        RESET.mode_one(),
-        RESET.mode_two(),
-        setattr(GLOBAL, "is_blit", False)
-    ),
-    pygame.K_BACKSPACE: lambda: (
-        setattr(GLOBAL, "name", GLOBAL.name[:-1]),
-        setattr(GLOBAL, "is_blit", False)
-    )
+    pygame.K_RETURN: lambda: (save_file(), RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False)),
+    pygame.K_ESCAPE: lambda: (RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False)),
+    pygame.K_BACKSPACE: lambda: (setattr(GLOBAL, "name", GLOBAL.name[:-1]), setattr(GLOBAL, "is_blit", False))
 }
 
 keydown_summary_dict = {
     pygame.K_z: lambda: close_summary()
 }
-
 
 keyup_game_dict = {
     pygame.K_RIGHT: lambda: setattr(GLOBAL, "is_move_right", False),
@@ -96,14 +65,7 @@ def save_file() -> None:
         '记录日期': date_time[0]
     }
 
-    LOGIC.File.dump_file(
-        LOGIC.File.return_file_with_makedir(
-            f'{os.environ["USERPROFILE"]}/Saved Games/DX00',
-            f'{name}_{date_time[0]}_{date_time[1]}.json'
-        ),
-        "锐山抚形日志",
-        dump_content
-    )
+    LOGIC.File.dump_file(LOGIC.File.return_file_with_makedir(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json'), "锐山抚形日志", dump_content)
 
 
 def single_bomb() -> None:
@@ -133,15 +95,7 @@ def close_summary():
         next_level()
         level_logic()
 
-    GLOBAL.is_summary, GLOBAL.score = LOGIC.Stage.close_summary(
-        GLOBAL.is_summary,
-        (GLOBAL.stage, GLOBAL.level),
-        GLOBAL.score,
-        LOGIC.Stage.score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2, 2)),
-        (3, 6),
-        next_logic1,
-        next_logic2
-    )
+    GLOBAL.is_summary, GLOBAL.score = LOGIC.Stage.close_summary(GLOBAL.is_summary, (GLOBAL.stage, GLOBAL.level), GLOBAL.score, LOGIC.Stage.score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2, 2)), (3, 6), next_logic1, next_logic2)
     GLOBAL.second_background = PRELOAD.picture[GLOBAL.stage]
 
 

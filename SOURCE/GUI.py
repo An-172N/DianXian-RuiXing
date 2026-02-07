@@ -1,4 +1,4 @@
-# Copyright (c) 2026 An_172N
+# (C)opyright 2026 An_172N
 # 此代码根据 GPLv3.0 许可证授权
 
 
@@ -65,7 +65,7 @@ def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 
 def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     title = "锐行 ~ Thunder Out of the Mountain"
-    other = "Copyright (c) 2026 An_172N"
+    other = "(C)opyright 2026 An_172N"
 
     text = ['Ver 1.0.5', '', '', '', '']
     key = ["（Z 开始", "（Q 退出"]

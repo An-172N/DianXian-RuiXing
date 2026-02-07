@@ -1,4 +1,4 @@
-# Copyright (c) 2026 An_172N
+# (C)opyright 2026 An_172N
 # 此代码根据 GPLv3.0 许可证授权
 
 
@@ -62,13 +62,7 @@ def item_collide() -> None:
     if GLOBAL.is_shoot and GLOBAL.shoot_counter > 0:
         GLOBAL.main_char.fire(GLOBAL.power)
         GLOBAL.shoot_counter -= 1
-        sprite_particle.spawn_particles(
-            GLOBAL.particle_group,
-            (2, 2),
-            GLOBAL.main_char.rect.center,
-            (4, 8),
-            GLOBAL.main_char.color
-        )
+        sprite_particle.spawn_particles(GLOBAL.particle_group, (2, 2), GLOBAL.main_char.rect.center, (4, 8), GLOBAL.main_char.color)
 
     collide = pygame.sprite.spritecollide(GLOBAL.main_char, GLOBAL.item_group, False)
 
@@ -102,14 +96,7 @@ def barrage_collide(position) -> None:
         for barrage in collide:
             if barrage.color != (255, 255, 255) and not (GLOBAL.is_collide or GLOBAL.is_s_divide):
                 GLOBAL.is_collide = True
-                sprite_particle.spawn_particles(
-                    GLOBAL.particle_group,
-                    (9, 9),
-                    position,
-                    (10, 16),
-                    PRELOAD.color_dict[5],
-                    (255, 255, 255)
-                )
+                sprite_particle.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), PRELOAD.color_dict[5], (255, 255, 255))
 
                 GLOBAL.no_flash = 0
                 GLOBAL.flash -= 1
@@ -136,56 +123,14 @@ def bullet_collide() -> None:
                     brick.hp -= bullet.damage
                 if brick.hp <= 0:
                     if not brick.is_die:
-                        sprite_particle.spawn_particles(
-                            GLOBAL.particle_group,
-                            (2, 2),
-                            brick.rect.center,
-                            (4, 8),
-                            brick.color,
-                            (255, 255, 255)
-                        )
+                        sprite_particle.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, (255, 255, 255))
                         if hasattr(brick, "free"):
-                            GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = sprite_brick.boss_lose(
-                                GLOBAL.text_part,
-                                GLOBAL.text_number,
-                                GLOBAL.is_talk,
-                                GLOBAL.is_blit
-                            )
+                            GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = sprite_brick.boss_lose(GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit)
                         else:
-                            spawn_barrage(
-                                GLOBAL.stage,
-                                GLOBAL.barrage_group,
-                                PRELOAD.barrage_rate,
-                                brick.type,
-                                [brick.color, (255, 255, 255), PRELOAD.color_dict[3]],
-                                brick.rect.center,
-                                GLOBAL.main_char.rect.center
-                            )
-                        sprite_item.item_spawn(
-                            GLOBAL.item_group,
-                            brick.have_power,
-                            brick.rect.center,
-                            2.5,
-                            PRELOAD.color_dict[5],
-                            "power"
-                        )
-                        sprite_item.item_spawn(
-                            GLOBAL.item_group,
-                            brick.have_flash,
-                            brick.rect.center,
-                            2.5,
-                            PRELOAD.color_dict[2],
-                            "flash"
-                        )
-                        brick_blast(
-                            GLOBAL.bullet_group,
-                            GLOBAL.stage,
-                            [brick.color, PRELOAD.color_dict[5], PRELOAD.color_dict[3]],
-                            brick.rect.midleft,
-                            brick.rect.midright,
-                            brick.rect.midbottom,
-                            brick.rect.center
-                        )
+                            spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, PRELOAD.barrage_rate, brick.type, [brick.color, (255, 255, 255), PRELOAD.color_dict[3]], brick.rect.center, GLOBAL.main_char.rect.center)
+                        sprite_item.item_spawn(GLOBAL.item_group, brick.have_power, brick.rect.center, 2.5, PRELOAD.color_dict[5], "power")
+                        sprite_item.item_spawn(GLOBAL.item_group, brick.have_flash, brick.rect.center, 2.5, PRELOAD.color_dict[2], "flash")
+                        brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, PRELOAD.color_dict[5], PRELOAD.color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
                         brick.kill()
 
                     brick.is_die = True
