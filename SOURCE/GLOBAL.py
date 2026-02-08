@@ -59,7 +59,7 @@ stage = 1
 level = 0
 
 
-background = PRELOAD.picture["GAME_BG"]
+background = PRELOAD.picture[6]
 second_background = PRELOAD.picture[stage]
 
 

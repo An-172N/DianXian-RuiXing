@@ -101,7 +101,7 @@ def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
         {"text": other, "pos": (8, 305)}
     ]
 
-    menu_surface = PRELOAD.picture["MENU_BG"]
+    menu_surface = PRELOAD.picture[5]
 
     if not GLOBAL.is_blit:
         menu_surface.fill((0, 0, 0))
@@ -122,7 +122,7 @@ def half_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
         {"text": text[1], "pos": (8, 58)}
     ]
 
-    menu_surface = PRELOAD.picture["MENU_BG"].subsurface((0, 0, 345, 85))
+    menu_surface = PRELOAD.picture[5].subsurface((0, 0, 345, 85))
 
     if not GLOBAL.is_blit:
         menu_surface.fill((0, 0, 0))

@@ -14,13 +14,13 @@ from LOGIC import Tool
 class Brick(pygame.sprite.Sprite):
     asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\..\ASSET')
     brick_dict = {
-        f"C_BR_{(255, 128, 0)}": PRELOAD.brick_image.subsurface((0, 0, 15, 15)),
-        f"C_BR_{(251, 234, 18)}": PRELOAD.brick_image.subsurface((45, 0, 15, 15)),
-        f"C_BR_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)).convert_alpha(),
-        f"T_BR_{(0, 255, 0)}": PRELOAD.brick_image.subsurface((15, 0, 15, 15)),
-        f"T_BR_{(255, 255, 255)}": PRELOAD.brick_image.subsurface((60, 0, 15, 15)),
-        f"R_BR_{(128, 0, 128)}": PRELOAD.brick_image.subsurface((30, 0, 15, 15)),
-        f"R_BR_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255)).convert_alpha()
+        f"C_{(255, 128, 0)}": PRELOAD.brick_image.subsurface((0, 0, 15, 15)),
+        f"C_{(251, 234, 18)}": PRELOAD.brick_image.subsurface((45, 0, 15, 15)),
+        f"C_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)).convert_alpha(),
+        f"T_{(0, 255, 0)}": PRELOAD.brick_image.subsurface((15, 0, 15, 15)),
+        f"T_{(255, 255, 255)}": PRELOAD.brick_image.subsurface((60, 0, 15, 15)),
+        f"R_{(128, 0, 128)}": PRELOAD.brick_image.subsurface((30, 0, 15, 15)),
+        f"R_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255)).convert_alpha()
     }
 
     def __init__(th, type: str, hp: int, color: tuple, pos: tuple):
@@ -41,9 +41,9 @@ class Brick(pygame.sprite.Sprite):
 
     def get_type(th, type: int) -> pygame.Surface:
         brick_dict = {
-            0: lambda: Brick.brick_dict[f"T_BR_{th.color}"],
-            1: lambda: Brick.brick_dict[f"R_BR_{th.color}"],
-            2: lambda: Brick.brick_dict[f"C_BR_{th.color}"]
+            0: lambda: Brick.brick_dict[f"T_{th.color}"],
+            1: lambda: Brick.brick_dict[f"R_{th.color}"],
+            2: lambda: Brick.brick_dict[f"C_{th.color}"]
         }
 
         return brick_dict.get(type)()

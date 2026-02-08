@@ -96,11 +96,10 @@
     - 详细请看 /LICENSE
   - 所有角色工程文件（.krz）、对话文件（.json）、关卡文件（.stg）和图片文件（.png）均保留所有权利
 - ### 本项目使用以下第三方资源
-  - 字体 GNU Unifont（需要下载安装哦
-    - 贴一下：https://www.unifoundry.com/unifont/index.html
-  - 游戏库 Pygame（这个也是
+  - 游戏库 Pygame（需要下载安装哦
     - ```cmd
       pip install pygame
+  - 字体 GNU Unifont
   - 打包工具 Zipapp if Ver >= 1.0.5 else Nuitka
   - 绘画软件 Krita
 
