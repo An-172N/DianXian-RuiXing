@@ -4,7 +4,7 @@
 
 import pygame
 
-from LOGIC import Tool
+from SOURCE.LOGIC import Tool
 
 
 class Item(pygame.sprite.Sprite):

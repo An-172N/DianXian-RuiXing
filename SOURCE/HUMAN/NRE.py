@@ -7,8 +7,8 @@ import math
 
 import pygame
 
-import SPRITE, PRELOAD
-from LOGIC import FUNC, Tool
+from SOURCE import SPRITE, PRELOAD
+from SOURCE.LOGIC import FUNC, Tool
 
 
 class Nre(pygame.sprite.Sprite):

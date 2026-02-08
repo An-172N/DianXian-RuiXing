@@ -2,7 +2,7 @@
 # 此代码根据 GPLv3.0 许可证授权
 
 
-import HUMAN, GLOBAL, PRELOAD
+from SOURCE import HUMAN, GLOBAL, PRELOAD
 
 
 def mode_one() -> None:

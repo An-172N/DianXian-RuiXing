@@ -4,7 +4,7 @@
 
 import pygame
 
-import HUMAN, SPRITE, PRELOAD
+from SOURCE import HUMAN, SPRITE, PRELOAD
 
 
 window = pygame.Rect(120, 15, 345, 330)

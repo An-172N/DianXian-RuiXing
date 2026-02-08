@@ -7,7 +7,7 @@ import random
 
 import pygame
 
-import SPRITE, PRELOAD
+from SOURCE import SPRITE, PRELOAD
 
 
 class Kli(pygame.sprite.Sprite):

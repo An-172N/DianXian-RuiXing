@@ -9,7 +9,7 @@ import os
 
 import pygame
 
-import HUMAN, SPRITE, GLOBAL, GUI, KEY, COLLIDE, LOGIC, PRELOAD
+from SOURCE import HUMAN, SPRITE, GLOBAL, GUI, KEY, COLLIDE, LOGIC, PRELOAD
 
 
 def option() -> None:
@@ -33,14 +33,14 @@ def option() -> None:
 def sprite_loader() -> None:
     if GLOBAL.level == 6:
         GLOBAL.char = chs_shhm()
-        with open(os.path.join(PRELOAD.asset_path, f"JSON\TALK_{GLOBAL.stage}.json"), 'r', encoding="utf-8") as f:
+        with open(os.path.join(PRELOAD.asset, f"JSON\TALK_{GLOBAL.stage}.json"), 'r', encoding="utf-8") as f:
             GLOBAL.text = json.load(f)
         GLOBAL.is_talk = True
         GLOBAL.is_blit = False
 
         GLOBAL.brick_group.add(GLOBAL.char)
     else:
-        LOGIC.File.read_level(os.path.join(PRELOAD.asset_path, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg"), SPRITE.Brick.load_brick, PRELOAD.color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
+        LOGIC.File.read_level(os.path.join(PRELOAD.asset, f"STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg"), SPRITE.Brick.load_brick, PRELOAD.color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
 
         SPRITE.Brick.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
 

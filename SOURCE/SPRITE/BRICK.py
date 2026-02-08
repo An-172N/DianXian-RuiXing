@@ -7,12 +7,11 @@ import os
 
 import pygame
 
-import PRELOAD
-from LOGIC import Tool
+from SOURCE import PRELOAD
+from SOURCE.LOGIC import Tool
 
 
 class Brick(pygame.sprite.Sprite):
-    asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\..\ASSET')
     brick_dict = {
         f"C_{(255, 128, 0)}": PRELOAD.brick_image.subsurface((0, 0, 15, 15)),
         f"C_{(251, 234, 18)}": PRELOAD.brick_image.subsurface((45, 0, 15, 15)),

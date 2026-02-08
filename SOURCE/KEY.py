@@ -7,7 +7,7 @@ import os
 
 import pygame
 
-import GLOBAL, RESET, LOGIC, PRELOAD
+from SOURCE import GLOBAL, RESET, LOGIC, PRELOAD
 
 
 keydown_game_dict = {

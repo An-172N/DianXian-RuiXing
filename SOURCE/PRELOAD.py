@@ -6,24 +6,24 @@ import os
 
 import pygame
 
-import LOGIC
+from SOURCE import LOGIC
 
 
-asset_path = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
-font = pygame.font.Font(os.path.join(asset_path, 'FONT\FONT_UNIFONT.otf'), 15)
-icon = pygame.display.set_icon(pygame.image.load(os.path.join(asset_path, '..\ICON.ico')))
+asset = os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ASSET')
+font = pygame.font.Font(os.path.join(asset, 'FONT\FONT_UNIFONT.otf'), 15)
+icon = pygame.display.set_icon(pygame.image.load(os.path.join(asset, '..\ICON.ico')))
 
 
-char_image = pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_CHAR.png')).convert_alpha()
-brick_image = pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_BRICK.png')).convert_alpha()
-barrage_image = pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_BARRAGE.png')).convert_alpha()
+char_image = pygame.image.load(os.path.join(asset, 'IMAGE\IMG_CHAR.png')).convert_alpha()
+brick_image = pygame.image.load(os.path.join(asset, 'IMAGE\IMG_BRICK.png')).convert_alpha()
+barrage_image = pygame.image.load(os.path.join(asset, 'IMAGE\IMG_BARRAGE.png')).convert_alpha()
 picture = {
-    1: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE1BG.png')).convert(),
-    2: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE2BG.png')).convert(),
-    3: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE3BG.png')).convert(),
-    4: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_STAGE4BG.png')).convert(),
+    1: pygame.image.load(os.path.join(asset, 'IMAGE\IMG_STAGE1BG.png')).convert(),
+    2: pygame.image.load(os.path.join(asset, 'IMAGE\IMG_STAGE2BG.png')).convert(),
+    3: pygame.image.load(os.path.join(asset, 'IMAGE\IMG_STAGE3BG.png')).convert(),
+    4: pygame.image.load(os.path.join(asset, 'IMAGE\IMG_STAGE4BG.png')).convert(),
     5: LOGIC.Tool.draw_rectangle((345, 330), 0, (0, 0, 0)).convert(),
-    6: pygame.image.load(os.path.join(asset_path, 'IMAGE\IMG_GAMEBG.png')).convert_alpha()
+    6: pygame.image.load(os.path.join(asset, 'IMAGE\IMG_GAMEBG.png')).convert_alpha()
 }
 
 

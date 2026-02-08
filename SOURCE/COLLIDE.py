@@ -6,7 +6,7 @@ import random
 
 import pygame
 
-import GLOBAL, SPRITE, LOGIC, PRELOAD
+from SOURCE import GLOBAL, SPRITE, LOGIC, PRELOAD
 
 
 def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, target_pos: tuple) -> None:

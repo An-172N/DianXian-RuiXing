@@ -94,13 +94,11 @@
 - ### 本项目版权声明
   - 程序代码采用 GNU GPLv3.0 协议
     - 详细请看 /LICENSE
-  - 所有角色工程文件（.krz）、对话文件（.json）、关卡文件（.stg）和图片文件（.png）均保留所有权利
+  - 所有角色工程文件（.krz, .kra）、对话文件（.json）、关卡文件（.stg）和图片文件（.png）均保留所有权利
 - ### 本项目使用以下第三方资源
-  - 游戏库 Pygame（需要下载安装哦
-    - ```cmd
-      pip install pygame
+  - 游戏库 Pygame
   - 字体 GNU Unifont
-  - 打包工具 Zipapp if Ver >= 1.0.5 else Nuitka
+  - 打包工具 Nuitka
   - 绘画软件 Krita
 
 **本项目网址：https://github.com/An-172N/DianXian-RuiXing**  

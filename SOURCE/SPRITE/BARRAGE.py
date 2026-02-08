@@ -7,8 +7,8 @@ import math
 
 import pygame
 
-import PRELOAD
-from LOGIC import FUNC, Tool
+from SOURCE import PRELOAD
+from SOURCE.LOGIC import FUNC, Tool
 
 
 class Barrage(pygame.sprite.Sprite):

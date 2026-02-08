@@ -7,7 +7,7 @@ import math
 
 import pygame
 
-from LOGIC import FUNC, Tool
+from SOURCE.LOGIC import FUNC, Tool
 
 
 class Bullet(pygame.sprite.Sprite):

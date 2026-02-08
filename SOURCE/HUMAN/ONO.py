@@ -8,8 +8,8 @@ import math
 
 import pygame
 
-import SPRITE, PRELOAD
-from LOGIC import Tool, FUNC
+from SOURCE import SPRITE, PRELOAD
+from SOURCE.LOGIC import Tool, FUNC
 
 
 class Ono(pygame.sprite.Sprite):

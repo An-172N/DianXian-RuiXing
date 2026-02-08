@@ -6,7 +6,7 @@ import datetime
 
 import pygame
 
-import GLOBAL, LOGIC, PRELOAD
+from SOURCE import GLOBAL, LOGIC, PRELOAD
 
 
 def show_situation(screen: pygame.Surface, font: pygame.font.Font, clock: pygame.time.Clock) -> None:
