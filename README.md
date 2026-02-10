@@ -97,11 +97,11 @@
   - 所有资产文件如 .krz 等均保留所有权利（字体文件除外
 - ### 本项目使用以下第三方资源
   - 编程语言 Python（需要安装哦
-    - https://www.python.org/
+    - 贴一下地址：https://www.python.org/
   - 游戏库 Pygame（这个也是
-    - ```cmd
-      pip install pygame
+    - 在命令提示符输入 pip install pygame 回车
   - 字体 GNU Unifont（子集化后的，我称它为Uni3500
+    - 基于 SIL OFL 1.1 授权
   - 打包工具 Zipapp if Ver >= 1.0.5 else Nuitka
   - 绘画软件 Krita
 
