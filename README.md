@@ -97,6 +97,7 @@
   - 所有资产文件如 .krz 等均保留所有权利（字体文件除外
 - ### 本项目使用以下第三方资源
   - 编程语言 Python（需要安装哦
+    - https://www.python.org/
   - 游戏库 Pygame（这个也是
     - ```cmd
       pip install pygame
