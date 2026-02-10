@@ -101,7 +101,7 @@
   - 游戏库 Pygame（这个也是
     - 在命令提示符输入 pip install pygame 回车
   - 字体 GNU Unifont（子集化后的，我称它为Uni3500
-    - 基于 SIL OFL 1.1 授权
+    - 基于 SIL OFL 1.1 授权，可见 /SOURCE/ASSET/FONT/LICENSE
   - 打包工具 Zipapp if Ver >= 1.0.5 else Nuitka
   - 绘画软件 Krita
 
