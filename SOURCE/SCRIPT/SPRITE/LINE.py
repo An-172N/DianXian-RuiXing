@@ -7,18 +7,11 @@ import math
 
 import pygame
 
-from LOGIC import FUNC, Tool
+import PRELOAD
+from LOGIC import FUNC
 
 
 class Line(pygame.sprite.Sprite):
-    line_cache = {
-        32: Tool.draw_rectangle((2, 32), 0, (45, 194, 229)).convert_alpha(),
-        64: Tool.draw_rectangle((2, 64), 0, (45, 194, 229)).convert_alpha(),
-        128: Tool.draw_rectangle((2, 128), 0, (45, 194, 229)).convert_alpha(),
-        256: Tool.draw_rectangle((2, 256), 0, (45, 194, 229)).convert_alpha(),
-        500: Tool.draw_rectangle((3, 499), 0, (255, 255, 255)).convert_alpha()
-    }
-
     def __init__(th, size: tuple, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple):
         super().__init__()
 
@@ -31,7 +24,7 @@ class Line(pygame.sprite.Sprite):
         th.timer = 0
         th.is_rotated = False
 
-        th.original_image = Line.line_cache[size[1]]
+        th.original_image = PRELOAD.line_cache[size[1]]
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)

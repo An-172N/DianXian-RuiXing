@@ -7,17 +7,11 @@ import math
 
 import pygame
 
-from LOGIC import FUNC, Tool
+import PRELOAD
+from LOGIC import FUNC
 
 
 class Bullet(pygame.sprite.Sprite):
-    bullet = Tool.draw_rectangle((2, 15), 0, (45, 194, 229)).convert_alpha()
-    bullet_cache = {
-        "bullet": bullet,
-        "bullet-cross": bullet,
-        "bomb": Tool.draw_rectangle((15, 15), 0, (45, 194, 229)).convert()
-    }
-
     def __init__(th, type: str, speed: float, angle: float, damage: int, pos: tuple):
         super().__init__()
 
@@ -28,7 +22,7 @@ class Bullet(pygame.sprite.Sprite):
 
         th.is_rotated = False
 
-        th.original_image = Bullet.bullet_cache[th.type]
+        th.original_image = PRELOAD.bullet_cache[th.type]
         th.image = th.original_image
         th.rect = th.image.get_rect()
 

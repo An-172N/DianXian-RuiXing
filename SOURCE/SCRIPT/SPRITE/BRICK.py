@@ -7,20 +7,9 @@ import random
 import pygame
 
 import PRELOAD
-from LOGIC import Tool
 
 
 class Brick(pygame.sprite.Sprite):
-    brick_cache = {
-        f"{2}_{(255, 128, 0)}": PRELOAD.brick_image.subsurface((0, 0, 15, 15)),
-        f"{2}_{(251, 234, 18)}": PRELOAD.brick_image.subsurface((45, 0, 15, 15)),
-        f"{2}_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)).convert_alpha(),
-        f"{0}_{(0, 255, 0)}": PRELOAD.brick_image.subsurface((15, 0, 15, 15)),
-        f"{0}_{(255, 255, 255)}": PRELOAD.brick_image.subsurface((60, 0, 15, 15)),
-        f"{1}_{(128, 0, 128)}": PRELOAD.brick_image.subsurface((30, 0, 15, 15)),
-        f"{1}_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255)).convert_alpha()
-    }
-
     def __init__(th, type: str, hp: int, color: tuple, pos: tuple):
         super().__init__()
 
@@ -32,7 +21,7 @@ class Brick(pygame.sprite.Sprite):
         th.have_flash = False
         th.is_die = False
 
-        th.image = Brick.brick_cache[f"{th.type}_{th.color}"]
+        th.image = PRELOAD.brick_cache[f"{th.type}_{th.color}"]
         th.rect = th.image.get_rect()
 
         th.rect.center = pos

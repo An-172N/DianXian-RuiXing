@@ -4,16 +4,10 @@
 
 import pygame
 
-from LOGIC import Tool
+import PRELOAD
 
 
 class Item(pygame.sprite.Sprite):
-    item_cache = {
-        "flash": Tool.draw_rectangle((9, 9), 2, (0, 255, 0)).convert_alpha(),
-        "power": Tool.draw_rectangle((9, 9), 2, (45, 194, 229)).convert_alpha(),
-        "fire": Tool.draw_rectangle((9, 9), 2, (255, 255, 255)).convert_alpha()
-    }
-
     def __init__(th, type: str, speed: float, pos: tuple):
         super().__init__()
 
@@ -22,7 +16,7 @@ class Item(pygame.sprite.Sprite):
 
         th.is_rotated = False
 
-        th.image = Item.item_cache[th.type]
+        th.image = PRELOAD.item_cache[th.type]
         th.rect = th.image.get_rect()
 
         th.rect.center = pos
