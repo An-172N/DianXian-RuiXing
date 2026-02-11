@@ -38,6 +38,8 @@ class Item(pygame.sprite.Sprite):
     
     def update(th) -> None:
         if not th.is_rotated:
+            th.rect = th.image.get_rect(center=th.rect.center)
+            
             th.x, th.y = getattr(th, 'x', th.rect.centerx), getattr(th, 'y', th.rect.centery)
 
             th.is_rotated = True

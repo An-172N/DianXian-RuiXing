@@ -49,6 +49,7 @@ class Barrage(pygame.sprite.Sprite):
         if not th.is_rotated:
             th.image = pygame.transform.rotate(th.original_image, th.current_angle)
             th.mask = pygame.mask.from_surface(th.image)
+            th.rect = th.image.get_rect(center=th.rect.center)
 
             th.x, th.y = getattr(th, 'x', th.rect.centerx), getattr(th, 'y', th.rect.centery)
 
