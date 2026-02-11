@@ -129,8 +129,8 @@ def bullet_collide() -> None:
                             GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = sprite_brick.boss_lose(GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit)
                         else:
                             spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, PRELOAD.barrage_rate, brick.type, [brick.color, (255, 255, 255), PRELOAD.color_dict[3]], brick.rect.center, GLOBAL.main_char.rect.center)
-                        sprite_item.item_spawn(GLOBAL.item_group, brick.have_power, brick.rect.center, 2.5, PRELOAD.color_dict[5], "power")
-                        sprite_item.item_spawn(GLOBAL.item_group, brick.have_flash, brick.rect.center, 2.5, PRELOAD.color_dict[2], "flash")
+                        sprite_item.item_spawn(GLOBAL.item_group, brick.have_power, brick.rect.center, 2.5, "power")
+                        sprite_item.item_spawn(GLOBAL.item_group, brick.have_flash, brick.rect.center, 2.5, "flash")
                         brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, PRELOAD.color_dict[5], PRELOAD.color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
                         brick.kill()
 

@@ -69,7 +69,7 @@ def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
 
-    text = ['Ver 1.0.5', '', '', '', '']
+    text = ['Ver 1.0.6', '', '', '', '']
     key = ["（Z 开始", "（Q 退出"]
 
     full_menu(screen, font, title, text, key, other)

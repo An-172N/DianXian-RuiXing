@@ -11,14 +11,14 @@ from LOGIC import Tool
 
 
 class Brick(pygame.sprite.Sprite):
-    brick_dict = {
-        f"C_{(255, 128, 0)}": PRELOAD.brick_image.subsurface((0, 0, 15, 15)),
-        f"C_{(251, 234, 18)}": PRELOAD.brick_image.subsurface((45, 0, 15, 15)),
-        f"C_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)).convert_alpha(),
-        f"T_{(0, 255, 0)}": PRELOAD.brick_image.subsurface((15, 0, 15, 15)),
-        f"T_{(255, 255, 255)}": PRELOAD.brick_image.subsurface((60, 0, 15, 15)),
-        f"R_{(128, 0, 128)}": PRELOAD.brick_image.subsurface((30, 0, 15, 15)),
-        f"R_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255)).convert_alpha()
+    brick_cache = {
+        f"{2}_{(255, 128, 0)}": PRELOAD.brick_image.subsurface((0, 0, 15, 15)),
+        f"{2}_{(251, 234, 18)}": PRELOAD.brick_image.subsurface((45, 0, 15, 15)),
+        f"{2}_{(255, 255, 255)}": Tool.draw_circle((0, 0, 15, 15), 2, (255, 255, 255)).convert_alpha(),
+        f"{0}_{(0, 255, 0)}": PRELOAD.brick_image.subsurface((15, 0, 15, 15)),
+        f"{0}_{(255, 255, 255)}": PRELOAD.brick_image.subsurface((60, 0, 15, 15)),
+        f"{1}_{(128, 0, 128)}": PRELOAD.brick_image.subsurface((30, 0, 15, 15)),
+        f"{1}_{(255, 255, 255)}": Tool.draw_rectangle((15, 15), 2, (255, 255, 255)).convert_alpha()
     }
 
     def __init__(th, type: str, hp: int, color: tuple, pos: tuple):
@@ -32,19 +32,10 @@ class Brick(pygame.sprite.Sprite):
         th.have_flash = False
         th.is_die = False
 
-        th.image = th.get_type(type)
+        th.image = Brick.brick_cache[f"{th.type}_{th.color}"]
         th.rect = th.image.get_rect()
 
         th.rect.center = pos
-
-    def get_type(th, type: int) -> pygame.Surface:
-        brick_dict = {
-            0: lambda: Brick.brick_dict[f"T_{th.color}"],
-            1: lambda: Brick.brick_dict[f"R_{th.color}"],
-            2: lambda: Brick.brick_dict[f"C_{th.color}"]
-        }
-
-        return brick_dict.get(type)()
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple, group: pygame.sprite.Group) -> None:

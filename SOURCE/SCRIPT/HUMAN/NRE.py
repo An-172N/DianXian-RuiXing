@@ -52,12 +52,10 @@ class Nre(pygame.sprite.Sprite):
             end_pos = (-randint(100, 490), -360)
 
             delta_pos = FUNC.add(end_pos, start_pos)
-            distance = math.hypot(delta_pos[0], delta_pos[1])
-
             sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
             current_angle = math.degrees(math.atan2(-delta_pos[0], -delta_pos[1]))
 
-            sprite = line((3, distance), 0, current_angle, sprite_pos, (255, 255, 255), (128, 0, 128))
+            sprite = line((3, 500), 0, current_angle, sprite_pos, (255, 255, 255), (128, 0, 128))
             sprite.update()
 
             th.group.add(sprite)
@@ -73,10 +71,9 @@ class Nre(pygame.sprite.Sprite):
                 end_pos = (-i, -360)
 
                 delta_pos = FUNC.add(end_pos, start_pos)
-                distance = math.hypot(delta_pos[0], delta_pos[1])
                 sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
-                sprite = line((3, distance), 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
+                sprite = line((3, 500), 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
                 sprite.update()
 
                 th.group.add(sprite)

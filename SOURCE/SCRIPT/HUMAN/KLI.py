@@ -32,6 +32,8 @@ class Kli(pygame.sprite.Sprite):
 
     def free(th) -> None:
         randint = random.randint
+        choice = random.choice
+        uniform = random.uniform
         particle = SPRITE.Particle.Particle
         bullet = SPRITE.Bullet.Bullet
         th.bullet_timer += 1
@@ -39,9 +41,9 @@ class Kli(pygame.sprite.Sprite):
         if th.bullet_timer % 30 >= 10 and th.particle_counter <= 0:
             for i in range(120, 466, 15):
                 pos = (i, randint(345, 360))
-                rands = randint(4, 12)
+                rands = choice([4, 6, 8, 10, 12])
 
-                sprite = particle((rands, rands), random.uniform(1, 2), 0, pos, (255, 255, 255), 'char')
+                sprite = particle((rands, rands), uniform(1, 2), 0, pos, (255, 255, 255), 'char')
 
                 th.particle_group.add(sprite)
 

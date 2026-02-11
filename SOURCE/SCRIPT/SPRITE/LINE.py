@@ -11,6 +11,14 @@ from LOGIC import FUNC, Tool
 
 
 class Line(pygame.sprite.Sprite):
+    line_cache = {
+        32: Tool.draw_rectangle((2, 32), 0, (45, 194, 229)).convert_alpha(),
+        64: Tool.draw_rectangle((2, 64), 0, (45, 194, 229)).convert_alpha(),
+        128: Tool.draw_rectangle((2, 128), 0, (45, 194, 229)).convert_alpha(),
+        256: Tool.draw_rectangle((2, 256), 0, (45, 194, 229)).convert_alpha(),
+        500: Tool.draw_rectangle((3, 499), 0, (255, 255, 255)).convert_alpha()
+    }
+
     def __init__(th, size: tuple, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple):
         super().__init__()
 
@@ -23,7 +31,7 @@ class Line(pygame.sprite.Sprite):
         th.timer = 0
         th.is_rotated = False
 
-        th.original_image = Tool.draw_rectangle((size[0], size[1]), 0, th.color).convert_alpha()
+        th.original_image = Line.line_cache[size[1]]
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)
@@ -53,13 +61,12 @@ def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> 
     end_pos = (-target_pos[0], -target_pos[1])
 
     delta_pos = FUNC.add(end_pos, start_pos)
-    distance = math.hypot(delta_pos[0], delta_pos[1])
 
     sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
     atan2 = math.atan2(-delta_pos[0], -delta_pos[1])
     current_angle = math.degrees(atan2)
 
-    sprite = Line((3, distance), 0, current_angle, sprite_pos, color[1], color[2])
+    sprite = Line((3, 500), 0, current_angle, sprite_pos, color[1], color[2])
     sprite.update()
 
     group.add(sprite)
@@ -67,11 +74,12 @@ def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> 
 
 def line_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
     randint = random.randint
+    choice = random.choice
 
     for _ in range(12):
         current_angle = randint(0, 360)
 
-        sprite = Line((2, randint(32, 256)), 6, current_angle, spawn_pos, (45, 194, 229), (128, 0, 128))
+        sprite = Line((2, choice([32, 64, 128, 256])), 6, current_angle, spawn_pos, (45, 194, 229), (128, 0, 128))
         sprite.update()
 
         group.add(sprite)

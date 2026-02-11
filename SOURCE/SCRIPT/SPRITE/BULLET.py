@@ -11,9 +11,11 @@ from LOGIC import FUNC, Tool
 
 
 class Bullet(pygame.sprite.Sprite):
-    bullet_image = {
-        "KLI_BULLET": Tool.draw_rectangle((2, 15), 0, (45, 194, 229)).convert_alpha(),
-        "KLI_BOMB": Tool.draw_rectangle((15, 15), 0, (45, 194, 229)).convert()
+    bullet = Tool.draw_rectangle((2, 15), 0, (45, 194, 229)).convert_alpha()
+    bullet_cache = {
+        "bullet": bullet,
+        "bullet-cross": bullet,
+        "bomb": Tool.draw_rectangle((15, 15), 0, (45, 194, 229)).convert()
     }
 
     def __init__(th, type: str, speed: float, angle: float, damage: int, pos: tuple):
@@ -26,20 +28,11 @@ class Bullet(pygame.sprite.Sprite):
 
         th.is_rotated = False
 
-        th.original_image = th.get_type(type)
+        th.original_image = Bullet.bullet_cache[th.type]
         th.image = th.original_image
         th.rect = th.image.get_rect()
 
         th.rect.center = pos
-
-    def get_type(th, type: str) -> pygame.Surface:
-        bullet_dict = {
-            "bomb": lambda: Bullet.bullet_image[f"KLI_BOMB"],
-            "bullet": lambda: Bullet.bullet_image[f"KLI_BULLET"],
-            "bullet-cross": lambda: Bullet.bullet_image[f"KLI_BULLET"],
-        }
-
-        return bullet_dict.get(type)()
 
     def update(th) -> None:
         if not th.is_rotated:

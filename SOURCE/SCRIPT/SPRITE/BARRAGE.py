@@ -12,12 +12,12 @@ from LOGIC import FUNC, Tool
 
 
 class Barrage(pygame.sprite.Sprite):
-    barrage_dict = {
-        f"C_{(255, 128, 0)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 128, 0)).convert_alpha(),
-        f"C_{(251, 234, 18)}": Tool.draw_circle((0, 0, 9, 9), 0, (251, 234, 18)).convert_alpha(),
-        f"C_{(255, 255, 255)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 255, 255)).convert_alpha(),
-        f"T_{(0, 255, 0)}": PRELOAD.barrage_image.subsurface((0, 0, 9, 8)),
-        f"T_{(255, 255, 255)}": PRELOAD.barrage_image.subsurface((9, 0, 9, 8))
+    barrage_cache = {
+        f"{2}_{(255, 128, 0)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 128, 0)).convert_alpha(),
+        f"{2}_{(251, 234, 18)}": Tool.draw_circle((0, 0, 9, 9), 0, (251, 234, 18)).convert_alpha(),
+        f"{2}_{(255, 255, 255)}": Tool.draw_circle((0, 0, 9, 9), 0, (255, 255, 255)).convert_alpha(),
+        f"{0}_{(0, 255, 0)}": PRELOAD.barrage_image.subsurface((0, 0, 9, 8)),
+        f"{0}_{(255, 255, 255)}": PRELOAD.barrage_image.subsurface((9, 0, 9, 8))
     }
 
     def __init__(th, type: str, speed: float, color: tuple, angle: float, pos: tuple):
@@ -30,20 +30,12 @@ class Barrage(pygame.sprite.Sprite):
 
         th.is_rotated = False
 
-        th.original_image = th.get_type(type)
+        th.original_image = Barrage.barrage_cache[f"{th.type}_{th.color}"]
         th.image = th.original_image
         th.rect = th.image.get_rect()
         th.mask = pygame.mask.from_surface(th.image)
 
         th.rect.center = pos
-
-    def get_type(th, type: int) -> pygame.Surface:
-        bullet_dict = {
-            0: lambda: Barrage.barrage_dict[f"T_{th.color}"],
-            2: lambda: Barrage.barrage_dict[f"C_{th.color}"]
-        }
-
-        return bullet_dict.get(type)()
 
     def update(th) -> None:
         if not th.is_rotated:

@@ -33,7 +33,7 @@ def option() -> None:
 
 def sprite_loader() -> None:
     if GLOBAL.level == 6:
-        GLOBAL.char = chs_shhm()
+        GLOBAL.char = choose_human()
         GLOBAL.text = json.loads(PRELOAD.asset(f"ASSET\JSON\TALK_{GLOBAL.stage}.json").decode('utf-8'))
         GLOBAL.is_talk = True
         GLOBAL.is_blit = False
@@ -45,12 +45,12 @@ def sprite_loader() -> None:
         SPRITE.Brick.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
 
 
-def chs_shhm() -> HUMAN.Ono | HUMAN.Hro | HUMAN.Nre | HUMAN.Qdi:
+def choose_human() -> HUMAN.Ono | HUMAN.Hro | HUMAN.Nre | HUMAN.Qdi:
     char_dict = {
         1: HUMAN.Ono,
         2: HUMAN.Hro,
         3: HUMAN.Nre,
-        4: HUMAN.Qdi,
+        4: HUMAN.Qdi
     }
 
     if GLOBAL.stage in [2, 3, 4]:
@@ -87,7 +87,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                 COLLIDE.barrage_collide(main_char.rect.center)
                 GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = Plane.invinc(GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer, 180, 6, main_char.reset_bullet)
 
-                GLOBAL.item_spawn_timer = sprite_item.item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, (random.randint(120, 465), 10), -2, (255, 255, 255), "fire", GLOBAL.item_spawn_timer)
+                GLOBAL.item_spawn_timer = sprite_item.item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, (random.randint(120, 465), 10), -2, "fire", GLOBAL.item_spawn_timer)
                 GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = Item.combo_counter(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.bullet_group.update()

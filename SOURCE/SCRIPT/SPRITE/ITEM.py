@@ -8,13 +8,13 @@ from LOGIC import Tool
 
 
 class Item(pygame.sprite.Sprite):
-    item_image = {
-        f"R_{(0, 255, 0)}": Tool.draw_rectangle((9, 9), 2, (0, 255, 0)).convert_alpha(),
-        f"R_{(45, 194, 229)}": Tool.draw_rectangle((9, 9), 2, (45, 194, 229)).convert_alpha(),
-        f"R_{(255, 255, 255)}": Tool.draw_rectangle((9, 9), 2, (255, 255, 255)).convert_alpha()
+    item_cache = {
+        "flash": Tool.draw_rectangle((9, 9), 2, (0, 255, 0)).convert_alpha(),
+        "power": Tool.draw_rectangle((9, 9), 2, (45, 194, 229)).convert_alpha(),
+        "fire": Tool.draw_rectangle((9, 9), 2, (255, 255, 255)).convert_alpha()
     }
 
-    def __init__(th, type: str, speed: float, color: tuple, pos: tuple):
+    def __init__(th, type: str, speed: float, pos: tuple):
         super().__init__()
 
         th.type = type
@@ -22,19 +22,10 @@ class Item(pygame.sprite.Sprite):
 
         th.is_rotated = False
 
-        th.image = th.get_type(type, color)
+        th.image = Item.item_cache[th.type]
         th.rect = th.image.get_rect()
 
         th.rect.center = pos
-
-    def get_type(th, type: str, color: tuple) -> pygame.Surface:
-        item_dict = {
-            "power": lambda: Item.item_image[f"R_{color}"],
-            "flash": lambda: Item.item_image[f"R_{color}"],
-            "fire": lambda: Item.item_image[f"R_{color}"]
-        }
-
-        return item_dict.get(type)()
     
     def update(th) -> None:
         if not th.is_rotated:
@@ -55,11 +46,11 @@ class Item(pygame.sprite.Sprite):
         th.rect.center = (th.x, th.y)
 
 
-def item_spawn(group: pygame.sprite.Group, condition: bool, pos: tuple, speed: float, color: tuple, type: str, timer: int=0) -> int:
+def item_spawn(group: pygame.sprite.Group, condition: bool, pos: tuple, speed: float, type: str, timer: int=0) -> int:
     timer += 1
 
     if condition:
-        sprite = Item(type, speed, color, pos)
+        sprite = Item(type, speed, pos)
 
         group.add(sprite)
 
