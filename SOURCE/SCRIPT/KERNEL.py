@@ -17,10 +17,10 @@ def option() -> None:
     clamp = FUNC.clamp
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--stage', type=int, default=1)
-    parser.add_argument('--level', type=int, default=0)
-    parser.add_argument('--flash', type=int, default=3)
-    parser.add_argument('--power', type=int, default=0)
+    parser.add_argument('-stage', type=int, default=1)
+    parser.add_argument('-level', type=int, default=0)
+    parser.add_argument('-flash', type=int, default=3)
+    parser.add_argument('-power', type=int, default=0)
 
     args = parser.parse_args()
 
