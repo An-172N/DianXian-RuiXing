@@ -19,6 +19,7 @@ def mode_one() -> None:
     GLOBAL.bullet_group.empty()
     GLOBAL.particle_group.empty()
     GLOBAL.barrage_group.empty()
+    GLOBAL.text_group.empty()
 
     GLOBAL.is_collide = False
     GLOBAL.is_s_divide = False

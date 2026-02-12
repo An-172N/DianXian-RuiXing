@@ -9,3 +9,4 @@ import SCRIPT.SPRITE.ITEM as Item
 import SCRIPT.SPRITE.LINE as Line
 import SCRIPT.SPRITE.PARTICLE as Particle
 import SCRIPT.SPRITE.RECT as Rect
+import SCRIPT.SPRITE.TEXT as Text

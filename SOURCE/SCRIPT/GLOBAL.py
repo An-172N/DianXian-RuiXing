@@ -74,6 +74,7 @@ brick_group = pygame.sprite.Group()
 item_group = pygame.sprite.Group()
 barrage_group = pygame.sprite.Group()
 particle_group = pygame.sprite.Group()
+text_group = pygame.sprite.Group()
 
 
 main_char = HUMAN.Kli(bullet_group, particle_group)

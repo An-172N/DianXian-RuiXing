@@ -109,7 +109,7 @@ def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+            text = font.render(f"{text_info['text']}", False, (255, 255, 255)).convert_alpha()
             menu_surface.blit(text, text_info["pos"])
 
         GLOBAL.is_blit = True
@@ -130,7 +130,7 @@ def half_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
         menu_surface.fill((0, 0, 0))
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+            text = font.render(f"{text_info['text']}", False, (255, 255, 255)).convert_alpha()
             menu_surface.blit(text, text_info["pos"])
 
         GLOBAL.is_blit = True
@@ -162,6 +162,7 @@ def display(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
     GLOBAL.item_group.draw(screen)
     GLOBAL.particle_group.draw(screen)
     GLOBAL.barrage_group.draw(screen)
+    GLOBAL.text_group.draw(screen)
 
     if not GLOBAL.is_run:
         start_menu(screen, PRELOAD.font)

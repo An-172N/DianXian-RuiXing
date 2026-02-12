@@ -89,6 +89,14 @@ particle_cache = {
 }
 
 
+text_cache = {
+    f"power_{(255, 255, 255)}": font.render("P + 1", False, (255, 255, 255)).convert_alpha(),
+    f"flash_{(255, 255, 255)}": font.render("F + 1", False, (255, 255, 255)).convert_alpha(),
+    f"power_{(45, 194, 229)}": font.render("P + 1", False, (45, 194, 229)).convert_alpha(),
+    f"flash_{(0, 255, 0)}": font.render("F + 1", False, (0, 255, 0)).convert_alpha()
+}
+
+
 color_dict = {
     1: (255, 128, 0),
     2: (0, 255, 0),

@@ -88,6 +88,9 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                 GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = Plane.invinc(GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer, 180, 6, main_char.reset_bullet)
 
                 GLOBAL.item_spawn_timer = sprite_item.item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, (random.randint(120, 465), 10), -2, "fire", GLOBAL.item_spawn_timer)
+                if GLOBAL.combo_timer <= 1 and GLOBAL.combo > 0:
+                    sprite = SPRITE.Text.Text(f"S + {2 ** GLOBAL.combo}", main_char.rect.midtop, (128, 128, 128))
+                    GLOBAL.text_group.add(sprite)
                 GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = Item.combo_counter(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.bullet_group.update()
@@ -95,6 +98,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                 GLOBAL.item_group.update()
                 GLOBAL.particle_group.update()
                 GLOBAL.brick_group.update()
+                GLOBAL.text_group.update()
 
                 remove_sprite(GLOBAL.bullet_group, GLOBAL.effective)
                 remove_sprite(GLOBAL.barrage_group, GLOBAL.effective)
