@@ -75,14 +75,11 @@ def item_collide() -> None:
             if item.type == "power":
                 GLOBAL.power = int(FUNC.clamp(GLOBAL.power + 1, 0, 32))
                 GLOBAL.combo += 1
-                
-                sprite = SPRITE.Text.Text(item.type, GLOBAL.main_char.rect.midtop, (45, 194, 229))
-                GLOBAL.text_group.add(sprite)
             elif item.type == "flash":
                 GLOBAL.flash += 1
                 GLOBAL.combo += 1
 
-                sprite = SPRITE.Text.Text(item.type, GLOBAL.main_char.rect.midtop, (0, 255, 0))
+                sprite = SPRITE.Text.Text("extend", GLOBAL.main_char.rect.midtop, (0, 255, 0))
                 GLOBAL.text_group.add(sprite)
 
             if item.type in ['flash', 'power']:

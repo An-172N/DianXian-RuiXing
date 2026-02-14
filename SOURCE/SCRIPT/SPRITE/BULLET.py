@@ -32,7 +32,6 @@ class Bullet(pygame.sprite.Sprite):
         if not th.is_rotated:
             th.image = pygame.transform.rotate(th.original_image, th.current_angle)
             th.rect = th.image.get_rect(center=th.rect.center)
-
             th.x, th.y = getattr(th, 'x', th.rect.centerx), getattr(th, 'y', th.rect.centery)
             th.is_rotated = True
 
@@ -47,8 +46,8 @@ def circle_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
 
     for i in range(0 + rands, 360 + rands, 15):
         sprite = Bullet("bullet", 16, i, 4, spawn_pos)
-        sprite.update()
 
+        sprite.update()
         group.add(sprite)
 
 
@@ -71,8 +70,8 @@ def polygon_brick(group: pygame.sprite.Group, *spawn_pos: tuple) -> None:
 
     for bullet_info in bullet_index:
         sprite = Bullet("bullet-cross", 16, bullet_info['angle'], 4, bullet_info['pos'])
-        sprite.update()
 
+        sprite.update()
         group.add(sprite)
 
 
@@ -82,8 +81,7 @@ def point_brick(group: pygame.sprite.Group) -> None:
     for _ in range(24):
         sprite_pos = (randint(120, 465), randint(15, 345))
         current_angle = randint(0, 360)
-
         sprite = Bullet("bullet", 16, current_angle, 4, sprite_pos)
-        sprite.update()
 
+        sprite.update()
         group.add(sprite)

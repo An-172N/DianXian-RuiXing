@@ -2,6 +2,8 @@
 # 此代码根据 GPLv3.0 许可证授权
 
 
+import gc
+
 import PRELOAD
 from SCRIPT import HUMAN, GLOBAL
 
@@ -36,6 +38,8 @@ def mode_one() -> None:
 
     GLOBAL.text_part = 0
     GLOBAL.text_number = 0
+
+    gc.collect()
 
 def mode_two() -> None:
     GLOBAL.stage = 1

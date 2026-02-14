@@ -54,7 +54,7 @@ def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 
 
 def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
-    combo = 2 ** GLOBAL.combo + GLOBAL.combo * 2
+    combo = 2 ** GLOBAL.combo
 
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!（Z 下一关"
     text = [
@@ -68,7 +68,6 @@ def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
-
     text = ['Ver 1.0.6', '', '', '', '']
     key = ["（Z 开始", "（Q 退出"]
 

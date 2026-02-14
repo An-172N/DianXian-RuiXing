@@ -2,6 +2,7 @@
 # 此代码根据 GPLv3.0 许可证授权
 
 
+import itertools
 import random
 import math
 
@@ -39,6 +40,7 @@ class Hro(pygame.sprite.Sprite):
         th.target_x, th.target_y = 292, 60
         th.timer = 0
         th.bullet_counter = 0
+        th.bullet_speed = 6
         th.bullet_timer = 0
         th.bullet_delay = 0
         th.particle_counter = 0
@@ -81,6 +83,24 @@ class Hro(pygame.sprite.Sprite):
         
             th.bullet_counter += 1
 
+    def extend(th) -> None:
+        barrage = SPRITE.Barrage.Barrage
+
+        if th.bullet_counter < 1:
+            for _ in range(6):
+                for j, k in itertools.product((150, 185, 220, 255, 292, 327, 365, 400, 435), range(1, 4)):
+                    sprite_pos = (j, 60)
+                    two_point = FUNC.add((th.target_pos[0], th.target_pos[1] - 120), (-sprite_pos[0], -sprite_pos[1]))
+                    atan = math.atan2(-two_point[0], -two_point[1])
+                    current_angle = math.degrees(atan) * k
+                    sprite = barrage(0, th.bullet_speed, th.color, current_angle, sprite_pos)
+
+                    sprite.update()
+                    th.group.add(sprite)
+
+                th.bullet_speed -= 0.5
+            th.bullet_counter += 1
+
     def fire(th) -> None:
         barrage = SPRITE.Barrage.Barrage
         th.bullet_timer += 1
@@ -102,6 +122,7 @@ class Hro(pygame.sprite.Sprite):
 
     def update(th) -> None:
         choice = random.choice
+        barrage = SPRITE.Barrage.Barrage
         radians = math.radians
         th.timer += 1
 
@@ -109,12 +130,13 @@ class Hro(pygame.sprite.Sprite):
             th.target_x, th.target_y = choice((150, 220, 292, 365)), choice((60, 120, 180, 240))
             th.bullet_counter = 0
             th.bullet_delay = 0
+            th.bullet_speed = 6
             th.particle_counter = 0
             th.is_choose = False
             th.can_shoot = True
         if th.timer % 110 >= 91 and th.particle_counter <= 0:
             if not th.is_choose:
-                th.choice = choice([th.fire, th.fire, th.free])
+                th.choice = choice([th.fire] * 2 + [th.free, th.extend])
                 th.is_choose = True
             for i in range(0, 360, 120 if th.choice == th.fire else 90):
                 pos = (th.rect.centerx + 64 * math.cos(radians(i)), th.rect.centery + 64 * math.sin(radians(i)))
@@ -122,12 +144,12 @@ class Hro(pygame.sprite.Sprite):
                 atan2 = math.atan2(-two_point[0], -two_point[1])
                 current_angle = math.degrees(atan2)
 
-                particle = SPRITE.Barrage.Barrage(0, 4, (255, 255, 255), current_angle, pos)
+                particle = barrage(0, 4, (255, 255, 255), current_angle, pos, False)
 
                 th.particle_group.add(particle)
 
             th.particle_counter += 1
-            th.point = SPRITE.Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
+            th.point = SPRITE.Rect.Rect((2, 2), (0, 0, 0), th.rect.center)
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)
 

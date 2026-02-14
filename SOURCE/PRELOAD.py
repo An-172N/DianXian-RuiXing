@@ -68,7 +68,7 @@ line_cache = {
     64: LOGIC.Tool.draw_rectangle((2, 64), 0, (45, 194, 229)).convert_alpha(),
     128: LOGIC.Tool.draw_rectangle((2, 128), 0, (45, 194, 229)).convert_alpha(),
     256: LOGIC.Tool.draw_rectangle((2, 256), 0, (45, 194, 229)).convert_alpha(),
-    500: LOGIC.Tool.draw_rectangle((3, 499), 0, (255, 255, 255)).convert_alpha()
+    500: LOGIC.Tool.draw_rectangle((3, 495), 0, (255, 255, 255)).convert_alpha()
 }
 
 
@@ -88,13 +88,11 @@ particle_cache = {
     f"{(12, 12)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((12, 12), 0, (255, 255, 255)).convert_alpha()
 }
 
-
-text_cache = {
-    f"power_{(255, 255, 255)}": font.render("P + 1", False, (255, 255, 255)).convert_alpha(),
-    f"flash_{(255, 255, 255)}": font.render("F + 1", False, (255, 255, 255)).convert_alpha(),
-    f"power_{(45, 194, 229)}": font.render("P + 1", False, (45, 194, 229)).convert_alpha(),
-    f"flash_{(0, 255, 0)}": font.render("F + 1", False, (0, 255, 0)).convert_alpha()
+text_cache_extend = {
+    f"extend_{(255, 255, 255)}": font.render("Extend", False, (255, 255, 255)).convert_alpha(),
+    f"extend_{(0, 255, 0)}": font.render("Extend", False, (0, 255, 0)).convert_alpha()
 }
+text_cache = {**{f"{2 ** i}_{(255, 255, 255)}": font.render(f"+ {2 ** i}", False, (255, 255, 255)).convert_alpha() for i in range(16)}, **{f"{2 ** i}_{128, 128, 128}": font.render(f"+ {2 ** i}", False, (128, 128, 128)).convert_alpha() for i in range(16)}}
 
 
 color_dict = {

@@ -97,7 +97,7 @@ def close_summary():
         next_level()
         level_logic()
 
-    GLOBAL.is_summary, GLOBAL.score = Stage.close_summary(GLOBAL.is_summary, (GLOBAL.stage, GLOBAL.level), GLOBAL.score, Stage.score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2, 2)), (3, 6), next_logic1, next_logic2)
+    GLOBAL.is_summary, GLOBAL.score = Stage.close_summary(GLOBAL.is_summary, ((GLOBAL.stage, GLOBAL.level), (3, 6)), GLOBAL.score, Stage.score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2, 2)), next_logic1, next_logic2)
     GLOBAL.second_background = PRELOAD.picture[GLOBAL.stage]
 
 

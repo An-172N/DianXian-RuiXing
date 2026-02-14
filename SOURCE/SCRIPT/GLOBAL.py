@@ -78,7 +78,7 @@ text_group = pygame.sprite.Group()
 
 
 main_char = HUMAN.Kli(bullet_group, particle_group)
-decision_point = SPRITE.Rect.Rect((2, 2), 0, (128, 128, 128))
+decision_point = SPRITE.Rect.Rect((2, 2), (128, 128, 128), mask=True)
 
 
 last_time = pygame.time.get_ticks()

@@ -52,7 +52,6 @@ def choose_brick(group: pygame.sprite.Group, stage_level: tuple, basic_power: in
 def boss_lose(part: int, number: int, is_talk: bool, is_blit: bool) -> tuple:
     part += 1
     number = 0
-
     is_talk = True
     is_blit = False
 

@@ -53,10 +53,7 @@ def choose_human() -> HUMAN.Ono | HUMAN.Hro | HUMAN.Nre | HUMAN.Qdi:
         4: HUMAN.Qdi
     }
 
-    if GLOBAL.stage in [2, 3, 4]:
-        return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group, GLOBAL.particle_group, GLOBAL.main_char.rect.center)
-    else:
-        return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group, GLOBAL.particle_group)
+    return char_dict.get(GLOBAL.stage)(GLOBAL.barrage_group, GLOBAL.particle_group, GLOBAL.main_char.rect.center)
 
 
 def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
@@ -89,7 +86,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
 
                 GLOBAL.item_spawn_timer = sprite_item.item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, (random.randint(120, 465), 10), -2, "fire", GLOBAL.item_spawn_timer)
                 if GLOBAL.combo_timer <= 1 and GLOBAL.combo > 0:
-                    sprite = SPRITE.Text.Text(f"S + {2 ** GLOBAL.combo}", main_char.rect.midtop, (128, 128, 128))
+                    sprite = SPRITE.Text.Text(2 ** GLOBAL.combo, main_char.rect.midtop, (128, 128, 128))
                     GLOBAL.text_group.add(sprite)
                 GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = Item.combo_counter(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 

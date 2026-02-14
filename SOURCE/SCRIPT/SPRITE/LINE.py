@@ -36,7 +36,6 @@ class Line(pygame.sprite.Sprite):
             th.image = pygame.transform.rotate(th.original_image, th.current_angle)
             th.mask = pygame.mask.from_surface(th.image)
             th.rect = th.image.get_rect(center=th.rect.center)
-
             th.is_rotated = True
 
         th.timer += 1

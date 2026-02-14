@@ -8,11 +8,12 @@ from LOGIC import Tool
 
 
 class Rect(pygame.sprite.Sprite):
-    def __init__(th, size: tuple, border: float, color: tuple, pos: tuple=(0, 0)):
+    def __init__(th, size: tuple, color: tuple, pos: tuple=(0, 0), mask: bool=False):
         super().__init__()
 
-        th.image = Tool.draw_rectangle((size[0], size[1]), border, color).convert()
+        th.image = Tool.draw_rectangle((size[0], size[1]), 0, color).convert()
         th.rect = th.image.get_rect()
-        th.mask = pygame.mask.from_surface(th.image)
+        if mask:
+            th.mask = pygame.mask.from_surface(th.image)
 
         th.rect.center = pos

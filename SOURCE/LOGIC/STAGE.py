@@ -3,14 +3,14 @@
 
 
 def score_summary(power: int, unflash: int, combo: int, collection: tuple) -> int:
-    return power * collection[0] + unflash * collection[1] + collection[2] ** combo + combo * collection[3]
+    return power * collection[0] + unflash * collection[1] + collection[2] ** combo
 
 
-def close_summary(summary: bool, numbers: tuple, score: int, bonus: int, last: tuple, end: object, next: object) -> tuple:
+def close_summary(summary: bool, numbers: tuple, score: int, bonus: int, end: object, next: object) -> tuple:
     summary = False
     score += bonus
 
-    end() if numbers[0] >= last[0] and numbers[1] == last[1] else next()
+    end() if numbers[0][0] >= numbers[1][0] and numbers[0][1] == numbers[1][1] else next()
 
     return summary, score
 

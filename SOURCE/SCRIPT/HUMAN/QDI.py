@@ -59,6 +59,21 @@ class Qdi(pygame.sprite.Sprite):
 
             th.bullet_counter += 1
 
+    def extend(th) -> None:
+        randint = random.randint
+        barrage = SPRITE.Barrage.Barrage
+
+        if th.bullet_counter < 1:
+            for _ in range(8):
+                sprite_pos = (randint(120, 465), randint(15, 205))
+                for j in range(0, 360, 30):
+                    sprite = barrage(2, randint(2, 6), th.color, j, sprite_pos)
+
+                    sprite.update()
+                    th.group.add(sprite)
+            
+            th.bullet_counter += 1
+
     def fire(th) -> None:
         randint = random.randint
         barrage = SPRITE.Barrage.Barrage
@@ -88,7 +103,7 @@ class Qdi(pygame.sprite.Sprite):
             th.particle_counter = 0
             th.can_shoot = True
             th.is_free = not th.is_free
-            th.choice = choice([th.fire, th.free])
+            th.choice = choice([th.fire] * 3 + [th.free] * 2 + [th.extend])
         if th.timer % 150 >= 125:
             if th.timer % 150 >= 145:
                 th.rect.centerx += choice([-4, 4])
@@ -99,12 +114,12 @@ class Qdi(pygame.sprite.Sprite):
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)
 
-                    particle = barrage(2, 4, (255, 255, 255), current_angle, pos)
+                    particle = barrage(2, 4, (255, 255, 255), current_angle, pos, False)
 
                     th.particle_group.add(particle)
 
                 th.particle_counter += 1
-                th.point = SPRITE.Rect.Rect((2, 2), 0, (0, 0, 0), th.rect.center)
+                th.point = SPRITE.Rect.Rect((2, 2), (0, 0, 0), th.rect.center)
         else:
             th.rect.center = (th.target_x, th.target_y)
 
