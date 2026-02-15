@@ -59,5 +59,17 @@ def replace_illegal_char(string: str) -> str:
     return re.sub(r'[!<>:"/\\|?*]', '_', string)
 
 
-def turncate_string(string: str, length: int) -> str:
-    return string if len(string) <= length else string[:length]
+def truncate(string: str, length: int, extra: str='') -> str:
+    return string if len(string) <= length else (string[:max(0, length - len(extra))] + extra)[:abs(length)]
+
+
+def add(*tuples: tuple) -> tuple:
+    return tuple(map(sum, zip(*tuples)))
+
+
+def fibonacci(former: int, latter: int, frequency: int) -> int:
+    return former if frequency <= 0 else fibonacci(latter, former + latter, frequency - 1)
+
+
+def clamp(value: float, minimum: float, maximum: float) -> float:
+    return max(min(value, max(minimum, maximum)), min(minimum, maximum))

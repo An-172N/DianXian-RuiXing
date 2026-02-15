@@ -8,7 +8,7 @@ import math
 import pygame
 
 import PRELOAD
-from LOGIC import FUNC
+from LOGIC import Tool
 
 
 class Particle(pygame.sprite.Sprite):
@@ -40,7 +40,7 @@ class Particle(pygame.sprite.Sprite):
 
         rad = math.radians(th.current_angle)
         sin, cos = math.sin(rad), math.cos(rad)
-        th.x, th.y = FUNC.add((th.x, th.y), (-(sin * th.speed), -(cos * th.speed)))
+        th.x, th.y = Tool.add((th.x, th.y), (-(sin * th.speed), -(cos * th.speed)))
         th.rect.center = (th.x, th.y)
 
 

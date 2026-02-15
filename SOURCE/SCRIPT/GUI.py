@@ -56,7 +56,7 @@ def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     combo = 2 ** GLOBAL.combo
 
-    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!（Z 下一关"
+    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!Hit Z Key."
     text = [
         f"得点 {GLOBAL.total_power} * 512 + {combo} = {GLOBAL.total_power * 512 + combo}",
         f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"
@@ -69,7 +69,7 @@ def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ['Ver 1.0.6', '', '', '', '']
-    key = ["（Z 开始", "（Q 退出"]
+    key = ["Z 开始", "Q 退出"]
 
     full_menu(screen, font, title, text, key, other)
 
@@ -84,7 +84,7 @@ def save_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
         f"拾形点率为 {Item.calculate_item_rate(GLOBAL.stage_total_power, GLOBAL.stage <= 3, (153, 61))}",
         f"使用了 {GLOBAL.use_flash} 次形闪"
     ]
-    key = ["（Ent 记录", "（ESC 不了"]
+    key = ["Ent 记录", "ESC 不了"]
 
     full_menu(screen, font, title, text, key, name)
 
@@ -97,8 +97,8 @@ def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
         {"text": text[2], "pos": (8, 110)},
         {"text": text[3], "pos": (8, 135)},
         {"text": text[4], "pos": (8, 160)},
-        {"text": key[0], "pos": (260, 220)},
-        {"text": key[1], "pos": (260, 270)},
+        {"text": key[0], "pos": (270, 220)},
+        {"text": key[1], "pos": (270, 270)},
         {"text": other, "pos": (8, 305)}
     ]
 

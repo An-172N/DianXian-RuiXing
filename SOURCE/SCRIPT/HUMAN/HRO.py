@@ -10,7 +10,7 @@ import pygame
 
 import PRELOAD
 from SCRIPT import SPRITE
-from LOGIC import FUNC, Tool
+from LOGIC import Tool
 
 
 class Hro(pygame.sprite.Sprite):
@@ -40,7 +40,6 @@ class Hro(pygame.sprite.Sprite):
         th.target_x, th.target_y = 292, 60
         th.timer = 0
         th.bullet_counter = 0
-        th.bullet_speed = 6
         th.bullet_timer = 0
         th.bullet_delay = 0
         th.particle_counter = 0
@@ -85,20 +84,21 @@ class Hro(pygame.sprite.Sprite):
 
     def extend(th) -> None:
         barrage = SPRITE.Barrage.Barrage
+        speed = 6
 
         if th.bullet_counter < 1:
             for _ in range(6):
                 for j, k in itertools.product((150, 185, 220, 255, 292, 327, 365, 400, 435), range(1, 4)):
                     sprite_pos = (j, 60)
-                    two_point = FUNC.add((th.target_pos[0], th.target_pos[1] - 120), (-sprite_pos[0], -sprite_pos[1]))
+                    two_point = Tool.add((th.target_pos[0], th.target_pos[1] - 120), (-sprite_pos[0], -sprite_pos[1]))
                     atan = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan) * k
-                    sprite = barrage(0, th.bullet_speed, th.color, current_angle, sprite_pos)
+                    sprite = barrage(0, speed, th.color, current_angle, sprite_pos)
 
                     sprite.update()
                     th.group.add(sprite)
 
-                th.bullet_speed -= 0.5
+                speed -= 0.6
             th.bullet_counter += 1
 
     def fire(th) -> None:
@@ -109,7 +109,7 @@ class Hro(pygame.sprite.Sprite):
             pos = th.rect.center
 
             for i in range(-30, 31, 30):
-                two_point = FUNC.add((th.target_pos[0], th.target_pos[1]), (-pos[0], -pos[1]))
+                two_point = Tool.add((th.target_pos[0], th.target_pos[1]), (-pos[0], -pos[1]))
                 atan = math.atan2(-two_point[0], -two_point[1])
                 current_angle = math.degrees(atan) + i
 
@@ -130,7 +130,6 @@ class Hro(pygame.sprite.Sprite):
             th.target_x, th.target_y = choice((150, 220, 292, 365)), choice((60, 120, 180, 240))
             th.bullet_counter = 0
             th.bullet_delay = 0
-            th.bullet_speed = 6
             th.particle_counter = 0
             th.is_choose = False
             th.can_shoot = True
@@ -140,7 +139,7 @@ class Hro(pygame.sprite.Sprite):
                 th.is_choose = True
             for i in range(0, 360, 120 if th.choice == th.fire else 90):
                 pos = (th.rect.centerx + 64 * math.cos(radians(i)), th.rect.centery + 64 * math.sin(radians(i)))
-                two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
+                two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                 atan2 = math.atan2(-two_point[0], -two_point[1])
                 current_angle = math.degrees(atan2)
 

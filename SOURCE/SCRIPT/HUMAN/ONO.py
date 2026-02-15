@@ -10,7 +10,7 @@ import pygame
 
 import PRELOAD
 from SCRIPT import SPRITE
-from LOGIC import Tool, FUNC
+from LOGIC import Tool
 
 
 class Ono(pygame.sprite.Sprite):
@@ -40,7 +40,6 @@ class Ono(pygame.sprite.Sprite):
         th.target_x, th.target_y = 292, 60
         th.timer = 0
         th.bullet_counter = 0
-        th.bullet_speed = 5
         th.bullet_timer = 0
         th.bullet_delay = 0
         th.particle_counter = 0
@@ -68,22 +67,23 @@ class Ono(pygame.sprite.Sprite):
     def extend(th) -> None:
         pos = th.rect.center
         barrage = SPRITE.Barrage.Barrage
+        speed = 5
 
         if th.bullet_counter <= 0:
             for _ in range(8):
                 for j in range(-30, 31, 30):
                     th.bullet_delay += 20
                     for k in (j - 180, j, 180 - th.bullet_delay):
-                        two_point = FUNC.add((th.target_pos[0], th.target_pos[1]), (-pos[0], -pos[1]))
+                        two_point = Tool.add((th.target_pos[0], th.target_pos[1]), (-pos[0], -pos[1]))
                         atan = math.atan2(-two_point[0], -two_point[1])
                         current_angle = math.degrees(atan) + k
 
-                        sprite = barrage(2, th.bullet_speed, th.color, current_angle, pos)
+                        sprite = barrage(2, speed, th.color, current_angle, pos)
                         sprite.update()
 
                         th.group.add(sprite)
 
-                th.bullet_speed -= 0.5
+                speed -= 0.5
             th.bullet_counter += 1
 
     def fire(th) -> None:
@@ -111,7 +111,6 @@ class Ono(pygame.sprite.Sprite):
 
             th.bullet_counter = 0
             th.bullet_delay = 0
-            th.bullet_speed = 5
             th.particle_counter = 0
             th.can_shoot = True
             th.is_free = not th.is_free
@@ -119,7 +118,7 @@ class Ono(pygame.sprite.Sprite):
         if th.timer % 120 >= 99 and th.particle_counter <= 0:
             for i in range(0, 360, 15):
                 pos = (th.rect.centerx + 64 * cos(radians(i)), th.rect.centery + 64 * sin(radians(i)))
-                two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
+                two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                 atan2 = math.atan2(-two_point[0], -two_point[1])
                 current_angle = math.degrees(atan2)
 

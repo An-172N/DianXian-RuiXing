@@ -9,7 +9,7 @@ import pygame
 
 import PRELOAD
 from SCRIPT import SPRITE
-from LOGIC import FUNC
+from LOGIC import Tool
 
 
 class Qdi(pygame.sprite.Sprite):
@@ -81,7 +81,7 @@ class Qdi(pygame.sprite.Sprite):
 
         if th.bullet_counter < 6 and th.bullet_timer % 2 == 0:
             sprite_pos = (randint(120, 465), randint(15, 230))
-            two_point = FUNC.add((th.target_pos[0], th.target_pos[1]), (-sprite_pos[0], -sprite_pos[1]))
+            two_point = Tool.add((th.target_pos[0], th.target_pos[1]), (-sprite_pos[0], -sprite_pos[1]))
             current_angle = math.degrees(math.atan2(-two_point[0], -two_point[1]))
 
             sprite = barrage(2, 3.5, th.color, current_angle, sprite_pos)
@@ -110,7 +110,7 @@ class Qdi(pygame.sprite.Sprite):
             if th.particle_counter <= 0:
                 for _ in range(12):
                     pos = (randint(th.rect.centerx - 64, th.rect.centerx + 64), randint(th.rect.centery - 64, th.rect.centery + 64))
-                    two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
+                    two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)
 

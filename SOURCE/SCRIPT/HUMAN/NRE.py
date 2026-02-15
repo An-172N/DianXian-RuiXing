@@ -9,7 +9,7 @@ import pygame
 
 import PRELOAD
 from SCRIPT import SPRITE
-from LOGIC import FUNC, Tool
+from LOGIC import Tool
 
 
 class Nre(pygame.sprite.Sprite):
@@ -19,6 +19,7 @@ class Nre(pygame.sprite.Sprite):
         th.group = group
         th.target_pos = target_pos
         th.particle_group = particle_group
+        th.interval_target_pos = th.target_pos
 
         th.hp = 256
         th.color = (128, 0, 128)
@@ -51,7 +52,7 @@ class Nre(pygame.sprite.Sprite):
             start_pos = (randint(80, 500), 0)
             end_pos = (-randint(100, 490), -360)
 
-            delta_pos = FUNC.add(end_pos, start_pos)
+            delta_pos = Tool.add(end_pos, start_pos)
             sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
             current_angle = math.degrees(math.atan2(-delta_pos[0], -delta_pos[1]))
 
@@ -68,15 +69,27 @@ class Nre(pygame.sprite.Sprite):
 
         if th.bullet_counter < 8 and th.bullet_timer % 3 == 0:
             for j in (1, -1):
-                start_pos = (th.target_pos[0] + th.bullet_counter * j * 24, 0)
-                end_pos = (-(th.target_pos[0] + th.bullet_counter * j * 24), -360)
+                start_pos = (th.interval_target_pos[0] + th.bullet_counter * j * 24, 0)
+                end_pos = (-(th.interval_target_pos[0] + th.bullet_counter * j * 24), -360)
 
-                delta_pos = FUNC.add(end_pos, start_pos)
+                delta_pos = Tool.add(end_pos, start_pos)
                 sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
                 sprite = line((3, 500), 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
                 sprite.update()
 
+                th.group.add(sprite)
+
+            for k in range(8):
+                start_pos = (120, (th.target_pos[1] - 13) - k * 24)
+                end_pos = (-465, -((th.target_pos[1] - 13) - k * 24))
+
+                delta_pos = Tool.add(end_pos, start_pos)
+                sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
+                current_angle = math.degrees(math.atan2(-delta_pos[0], -delta_pos[1]))
+                sprite = line((3, 500), 0, current_angle, sprite_pos, (255, 255, 255), (128, 0, 128))
+
+                sprite.update()
                 th.group.add(sprite)
             th.bullet_counter += 1
 
@@ -88,7 +101,7 @@ class Nre(pygame.sprite.Sprite):
                 start_pos = (i, 0)
                 end_pos = (-i, -360)
 
-                delta_pos = FUNC.add(end_pos, start_pos)
+                delta_pos = Tool.add(end_pos, start_pos)
                 sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
                 sprite = line((3, 500), 0, 0, sprite_pos, (255, 255, 255), (128, 0, 128))
@@ -109,13 +122,14 @@ class Nre(pygame.sprite.Sprite):
             th.bullet_counter = 0
             th.bullet_timer = 0
             th.particle_counter = 0
+            th.interval_target_pos = th.target_pos
             th.can_shoot = True
             th.is_free = not th.is_free
             th.choice = choice([th.fire] + [th.free] * 2 + [th.extend] * 2)
         if th.timer % 100 >= 82 and th.particle_counter <= 0:
             for _ in range(8):
                 pos = (random.randint(th.rect.centerx - 64, th.rect.centerx + 64), th.rect.centery)
-                two_point = FUNC.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
+                two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                 atan2 = math.atan2(-two_point[0], -two_point[1])
                 current_angle = math.degrees(atan2)
 

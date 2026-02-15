@@ -7,7 +7,7 @@ import random
 import pygame
 
 import PRELOAD
-from LOGIC import FUNC
+from LOGIC import Tool
 from SCRIPT import GLOBAL, SPRITE
 
 
@@ -70,10 +70,10 @@ def item_collide() -> None:
     if collide:
         for item in collide:
             GLOBAL.combo_timer = 120
-            GLOBAL.shoot_counter = int(FUNC.clamp(GLOBAL.shoot_counter + 1, 0, 6))
+            GLOBAL.shoot_counter = int(Tool.clamp(GLOBAL.shoot_counter + 1, 0, 6))
 
             if item.type == "power":
-                GLOBAL.power = int(FUNC.clamp(GLOBAL.power + 1, 0, 32))
+                GLOBAL.power = int(Tool.clamp(GLOBAL.power + 1, 0, 32))
                 GLOBAL.combo += 1
             elif item.type == "flash":
                 GLOBAL.flash += 1

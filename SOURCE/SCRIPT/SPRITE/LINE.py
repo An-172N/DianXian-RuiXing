@@ -8,7 +8,7 @@ import math
 import pygame
 
 import PRELOAD
-from LOGIC import FUNC
+from LOGIC import Tool
 
 
 class Line(pygame.sprite.Sprite):
@@ -52,7 +52,7 @@ def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> 
     start_pos = (random.randint(100, 480), 0)
     end_pos = (-target_pos[0], -target_pos[1])
 
-    delta_pos = FUNC.add(end_pos, start_pos)
+    delta_pos = Tool.add(end_pos, start_pos)
 
     sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
     atan2 = math.atan2(-delta_pos[0], -delta_pos[1])

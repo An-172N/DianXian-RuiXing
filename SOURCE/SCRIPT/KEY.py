@@ -123,7 +123,7 @@ def keydown(event: pygame.event.Event) -> None:
         if event.key in keydown_over_dict:
             keydown_over_dict[event.key]()
         else:
-            GLOBAL.name = Tool.turncate_string(GLOBAL.name + event.unicode, 8)
+            GLOBAL.name = Tool.truncate(GLOBAL.name + event.unicode, 8)
             GLOBAL.is_blit = False
     elif GLOBAL.is_pause and event.key in keydown_pause_dict:
         keydown_pause_dict[event.key]()

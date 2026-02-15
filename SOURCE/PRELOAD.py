@@ -92,7 +92,10 @@ text_cache_extend = {
     f"extend_{(255, 255, 255)}": font.render("Extend", False, (255, 255, 255)).convert_alpha(),
     f"extend_{(0, 255, 0)}": font.render("Extend", False, (0, 255, 0)).convert_alpha()
 }
-text_cache = {**{f"{2 ** i}_{(255, 255, 255)}": font.render(f"+ {2 ** i}", False, (255, 255, 255)).convert_alpha() for i in range(16)}, **{f"{2 ** i}_{128, 128, 128}": font.render(f"+ {2 ** i}", False, (128, 128, 128)).convert_alpha() for i in range(16)}}
+text_cache = {
+    **{f"{2 ** i}_{(255, 255, 255)}": font.render(f"+ {2 ** i}", False, (255, 255, 255)).convert_alpha() for i in range(16)},
+    **{f"{2 ** i}_{128, 128, 128}": font.render(f"+ {2 ** i}", False, (128, 128, 128)).convert_alpha() for i in range(16)}
+}
 
 
 color_dict = {
@@ -104,4 +107,4 @@ color_dict = {
 }
 
 
-barrage_rate = [0.17 + (LOGIC.FUNC.fibonacci(0, 1, i) / 100) for i in range(4, 8)]
+barrage_rate = [0.17 + (LOGIC.Tool.fibonacci(0, 1, i) / 100) for i in range(4, 8)]

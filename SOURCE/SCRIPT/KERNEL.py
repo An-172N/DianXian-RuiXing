@@ -9,12 +9,12 @@ import random
 import pygame
 
 import PRELOAD
-from LOGIC import FUNC, Plane, Stage, Item, File
+from LOGIC import Tool, Plane, Stage, Item, File
 from SCRIPT import HUMAN, SPRITE, GLOBAL, GUI, KEY, COLLIDE
 
 
 def option() -> None:
-    clamp = FUNC.clamp
+    clamp = Tool.clamp
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-stage', type=int, default=1)
