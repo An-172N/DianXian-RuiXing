@@ -42,7 +42,6 @@ class Hro(pygame.sprite.Sprite):
         th.bullet_counter = 0
         th.bullet_timer = 0
         th.bullet_delay = 0
-        th.particle_counter = 0
 
     def free(th) -> None:
         barrage = SPRITE.Barrage.Barrage
@@ -130,24 +129,23 @@ class Hro(pygame.sprite.Sprite):
             th.target_x, th.target_y = choice((150, 220, 292, 365)), choice((60, 120, 180, 240))
             th.bullet_counter = 0
             th.bullet_delay = 0
-            th.particle_counter = 0
+            th.timer = 0
             th.is_choose = False
             th.can_shoot = True
-        if th.timer % 110 >= 91 and th.particle_counter <= 0:
+        if th.timer % 110 >= 91:
             if not th.is_choose:
                 th.choice = choice([th.fire] * 2 + [th.free, th.extend])
                 th.is_choose = True
-            for i in range(0, 360, 120 if th.choice == th.fire else 90):
-                pos = (th.rect.centerx + 64 * math.cos(radians(i)), th.rect.centery + 64 * math.sin(radians(i)))
-                two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
-                atan2 = math.atan2(-two_point[0], -two_point[1])
-                current_angle = math.degrees(atan2)
+            if th.timer % 91 == 0:
+                for i in range(0, 360, 120 if th.choice == th.fire else 90):
+                    pos = (th.rect.centerx + 64 * math.cos(radians(i)), th.rect.centery + 64 * math.sin(radians(i)))
+                    two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
+                    atan2 = math.atan2(-two_point[0], -two_point[1])
+                    current_angle = math.degrees(atan2)
+                    particle = barrage(0, 4, (255, 255, 255), current_angle, pos, False)
 
-                particle = barrage(0, 4, (255, 255, 255), current_angle, pos, False)
+                    th.particle_group.add(particle)
 
-                th.particle_group.add(particle)
-
-            th.particle_counter += 1
             th.point = SPRITE.Rect.Rect((2, 2), (0, 0, 0), th.rect.center)
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)

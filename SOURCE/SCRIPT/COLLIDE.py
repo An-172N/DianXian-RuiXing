@@ -18,17 +18,15 @@ def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, 
     if random.random() <= fib[stage - 1]:
         barrage_dict = {
             1: barrage.circle_barrage,
-            2: barrage.polygon_barrage,
-            3: line.line_barrage,
-            4: barrage.point_barrage
+            2: barrage.polygon_barrage
         }
 
         if stage in [1, 2]:
             return barrage_dict.get(stage)(type, color, spawn_pos, target_pos, group)
         elif stage == 3:
-            return barrage_dict.get(stage)(color, target_pos, group)
+            return line.line_barrage(color, target_pos, group)
         else:
-            return barrage_dict.get(stage)(type, color, target_pos, group)
+            return barrage.point_barrage(type, color, target_pos, group)
 
 
 def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos: tuple) -> None:
@@ -38,17 +36,15 @@ def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos:
     if color[0] == (255, 255, 255):
         process_dict = {
             1: bullet.circle_brick,
-            2: bullet.polygon_brick,
-            3: line.line_brick,
-            4: bullet.point_brick
+            3: line.line_brick
         }
 
         if stage == 2:
-            return process_dict.get(stage)(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
+            return bullet.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
         elif stage in [1, 3]:
             return process_dict.get(stage)(group, spawn_pos[3])
         else:
-            return process_dict.get(stage)(group)
+            return bullet.point_brick(group)
 
 
 def remove_sprite(sprite_group: pygame.sprite.Group, effective_range: pygame.Rect) -> None:

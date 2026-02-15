@@ -26,8 +26,6 @@ class Barrage(pygame.sprite.Sprite):
         th.original_image = PRELOAD.barrage_cache[f"{th.type}_{th.color}"]
         th.image = th.original_image
         th.rect = th.image.get_rect()
-        if th.is_mask:
-            th.mask = pygame.mask.from_surface(th.image)
 
         th.rect.center = pos
 

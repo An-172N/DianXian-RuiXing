@@ -27,7 +27,6 @@ class Line(pygame.sprite.Sprite):
         th.original_image = PRELOAD.line_cache[size[1]]
         th.image = th.original_image
         th.rect = th.image.get_rect()
-        th.mask = pygame.mask.from_surface(th.image)
 
         th.rect.center = pos
 

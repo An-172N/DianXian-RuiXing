@@ -40,7 +40,6 @@ class Qdi(pygame.sprite.Sprite):
         th.timer = 0
         th.bullet_counter = 0
         th.bullet_timer = 0
-        th.particle_counter = 0
 
     def free(th) -> None:
         randint = random.randint
@@ -100,25 +99,23 @@ class Qdi(pygame.sprite.Sprite):
         if th.timer % 150 == 0:
             th.target_x, th.target_y = randint(150, 435), randint(48, 96)
             th.bullet_counter = 0
-            th.particle_counter = 0
+            th.timer = 0
             th.can_shoot = True
             th.is_free = not th.is_free
             th.choice = choice([th.fire] * 3 + [th.free] * 2 + [th.extend])
         if th.timer % 150 >= 125:
             if th.timer % 150 >= 145:
                 th.rect.centerx += choice([-4, 4])
-            if th.particle_counter <= 0:
+            if th.timer % 125 == 0:
                 for _ in range(12):
                     pos = (randint(th.rect.centerx - 64, th.rect.centerx + 64), randint(th.rect.centery - 64, th.rect.centery + 64))
                     two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)
-
                     particle = barrage(2, 4, (255, 255, 255), current_angle, pos, False)
 
                     th.particle_group.add(particle)
 
-                th.particle_counter += 1
                 th.point = SPRITE.Rect.Rect((2, 2), (0, 0, 0), th.rect.center)
         else:
             th.rect.center = (th.target_x, th.target_y)

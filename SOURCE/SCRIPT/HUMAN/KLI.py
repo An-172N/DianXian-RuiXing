@@ -41,7 +41,7 @@ class Kli(pygame.sprite.Sprite):
         if th.bullet_timer % 30 >= 10 and th.particle_counter <= 0:
             for i in range(120, 466, 15):
                 pos = (i, randint(345, 360))
-                rands = choice([4, 6, 8, 10, 12])
+                rands = choice([4, 6, 9, 10, 12])
 
                 sprite = particle((rands, rands), uniform(1, 2), 0, pos, (255, 255, 255), 'char')
 

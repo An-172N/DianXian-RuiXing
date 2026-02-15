@@ -81,20 +81,18 @@ particle_cache = {
     f"{(2, 2)}_{(0, 255, 0)}": LOGIC.Tool.draw_rectangle((2, 2), 0, (0, 255, 0)).convert_alpha(),
     f"{(2, 2)}_{(128, 0, 128)}": LOGIC.Tool.draw_rectangle((2, 2), 0, (128, 0, 128)).convert_alpha(),
     f"{(2, 2)}_{(251, 234, 18)}": LOGIC.Tool.draw_rectangle((2, 2), 0, (251, 234, 18)).convert_alpha(),
-    f"{(4, 4)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((4, 4), 0, (255, 255, 255)).convert_alpha(),
-    f"{(6, 6)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((6, 6), 0, (255, 255, 255)).convert_alpha(),
-    f"{(8, 8)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((8, 8), 0, (255, 255, 255)).convert_alpha(),
-    f"{(10, 10)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((10, 10), 0, (255, 255, 255)).convert_alpha(),
-    f"{(12, 12)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((12, 12), 0, (255, 255, 255)).convert_alpha()
+    f"{(4, 4)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((4, 4), 0, (255, 255, 255)).convert(),
+    f"{(6, 6)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((6, 6), 0, (255, 255, 255)).convert(),
+    f"{(10, 10)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((10, 10), 0, (255, 255, 255)).convert(),
+    f"{(12, 12)}_{(255, 255, 255)}": LOGIC.Tool.draw_rectangle((12, 12), 0, (255, 255, 255)).convert()
 }
 
-text_cache_extend = {
-    f"extend_{(255, 255, 255)}": font.render("Extend", False, (255, 255, 255)).convert_alpha(),
-    f"extend_{(0, 255, 0)}": font.render("Extend", False, (0, 255, 0)).convert_alpha()
-}
+
 text_cache = {
     **{f"{2 ** i}_{(255, 255, 255)}": font.render(f"+ {2 ** i}", False, (255, 255, 255)).convert_alpha() for i in range(16)},
-    **{f"{2 ** i}_{128, 128, 128}": font.render(f"+ {2 ** i}", False, (128, 128, 128)).convert_alpha() for i in range(16)}
+    **{f"{2 ** i}_{128, 128, 128}": font.render(f"+ {2 ** i}", False, (128, 128, 128)).convert_alpha() for i in range(16)},
+    f"extend_{(255, 255, 255)}": font.render("Extend", False, (255, 255, 255)).convert_alpha(),
+    f"extend_{(0, 255, 0)}": font.render("Extend", False, (0, 255, 0)).convert_alpha()
 }
 
 
