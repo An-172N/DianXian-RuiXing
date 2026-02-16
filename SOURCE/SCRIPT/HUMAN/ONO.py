@@ -126,7 +126,6 @@ class Ono(pygame.sprite.Sprite):
 
                     th.particle_group.add(sprite)
 
-            th.particle_counter += 1
             th.point = SPRITE.Rect.Rect((2, 2), (0, 0, 0), th.rect.center)
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)
