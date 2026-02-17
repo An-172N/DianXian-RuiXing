@@ -12,9 +12,10 @@ from LOGIC import Tool
 
 
 class Particle(pygame.sprite.Sprite):
-    def __init__(th, size: tuple, speed: float, angle: float, pos: tuple, color: tuple, type: str='normal'):
+    def __init__(th, effective: pygame.Rect, size: tuple, speed: float, angle: float, pos: tuple, color: tuple, type: str='normal'):
         super().__init__()
 
+        th.effective = effective
         th.speed = speed
         th.current_angle = angle
         th.type = type
@@ -43,6 +44,9 @@ class Particle(pygame.sprite.Sprite):
         th.x, th.y = Tool.add((th.x, th.y), (-(sin * th.speed), -(cos * th.speed)))
         th.rect.center = (th.x, th.y)
 
+        if not th.effective.collidepoint(th.rect.center):
+            th.kill()
+
 
 def spawn_particles(group: pygame.sprite.Group, size: tuple, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):
     randint = random.randint
@@ -51,6 +55,6 @@ def spawn_particles(group: pygame.sprite.Group, size: tuple, pos: tuple, speed: 
 
     for i in range(0 + rands, 360 + rands, 45):
         color = color1 if color2 is None else choice([color1, color2])
-        sprite = Particle((size[0], size[1]), randint(speed[0], speed[1]), i, pos, color)
+        sprite = Particle(PRELOAD.effective, (size[0], size[1]), randint(speed[0], speed[1]), i, pos, color)
 
         group.add(sprite)

@@ -12,9 +12,10 @@ from LOGIC import Tool
 
 
 class Barrage(pygame.sprite.Sprite):
-    def __init__(th, type: str, speed: float, color: tuple, angle: float, pos: tuple, mask: bool=True):
+    def __init__(th, effective: pygame.Rect, type: str, speed: float, color: tuple, angle: float, pos: tuple, mask: bool=True):
         super().__init__()
 
+        th.effective = effective
         th.type = type
         th.speed = speed
         th.color = color
@@ -43,12 +44,15 @@ class Barrage(pygame.sprite.Sprite):
         th.x, th.y = Tool.add((th.x, th.y), (-(sin * th.speed), -(cos * th.speed)))
         th.rect.center = (th.x, th.y)
 
+        if not th.effective.collidepoint(th.rect.center):
+            th.kill()
+
 
 def circle_barrage(type: int, color: list, spawn_pos: tuple, target_pos: tuple, group: pygame.sprite.Group) -> None:
     two_point = Tool.add((target_pos[0], target_pos[1]), (-spawn_pos[0], -spawn_pos[1]))
     atan2 = math.atan2(-two_point[0], -two_point[1])
     current_angle = math.degrees(atan2)
-    sprite = Barrage(type, 3, color[0], current_angle, spawn_pos)
+    sprite = Barrage(PRELOAD.effective, type, 3, color[0], current_angle, spawn_pos)
 
     sprite.update()
     group.add(sprite)
@@ -59,7 +63,7 @@ def polygon_barrage(type: int, color: list, spawn_pos: tuple, target_pos: tuple,
         two_point = Tool.add((i, target_pos[1]), (-spawn_pos[0], -spawn_pos[1]))
         atan2 = math.atan2(-two_point[0], -two_point[1])
         current_angle = math.degrees(atan2)
-        sprite = Barrage(type, 3, color[0], current_angle, spawn_pos)
+        sprite = Barrage(PRELOAD.effective, type, 3, color[0], current_angle, spawn_pos)
 
         sprite.update()
         group.add(sprite)
@@ -73,7 +77,7 @@ def point_barrage(type: int, color: list, target_pos: tuple, group: pygame.sprit
         two_point = Tool.add((target_pos[0], target_pos[1]), (-sprite_pos[0], -sprite_pos[1]))
         atan2 = math.atan2(-two_point[0], -two_point[1])
         current_angle = math.degrees(atan2)
-        sprite = Barrage(type, 4, color[0], current_angle, sprite_pos)
+        sprite = Barrage(PRELOAD.effective, type, 4, color[0], current_angle, sprite_pos)
 
         sprite.update()
         group.add(sprite)

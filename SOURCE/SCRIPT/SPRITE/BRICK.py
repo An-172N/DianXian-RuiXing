@@ -31,7 +31,7 @@ def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tu
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
-            c = color if random.random() >= rate else (255, 255, 255)
+            c = color if random.random() >= rate else PRELOAD.color_dict[6]
             brick = Brick(shape, hp, c, (size[0] + i * interval[0], size[1] + row * interval[1]))
 
             group.add(brick)

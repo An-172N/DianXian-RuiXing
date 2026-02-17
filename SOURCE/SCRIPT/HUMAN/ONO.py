@@ -22,7 +22,7 @@ class Ono(pygame.sprite.Sprite):
         th.target_pos = target_pos
 
         th.hp = 192
-        th.color = (255, 128, 0)
+        th.color = PRELOAD.color_dict[1]
 
         th.image = PRELOAD.char_image.subsurface((24, 0, 12, 26))
         th.rect = th.image.get_rect()
@@ -56,7 +56,7 @@ class Ono(pygame.sprite.Sprite):
                 range(0 + th.bullet_delay, 360 + th.bullet_delay, 90)
             ):
                 pos = (th.rect.centerx + 32 * math.cos(radians(i)),th.rect.centery + 32 * math.sin(radians(i)))
-                sprite = barrage(2, 3.5, th.color, j, pos)
+                sprite = barrage(PRELOAD.effective, 2, 3.5, th.color, j, pos)
                 sprite.update()
 
                 th.group.add(sprite)
@@ -77,7 +77,7 @@ class Ono(pygame.sprite.Sprite):
                         atan = math.atan2(-two_point[0], -two_point[1])
                         current_angle = math.degrees(atan) + k
 
-                        sprite = barrage(2, speed, th.color, current_angle, pos)
+                        sprite = barrage(PRELOAD.effective, 2, speed, th.color, current_angle, pos)
                         sprite.update()
 
                         th.group.add(sprite)
@@ -90,7 +90,7 @@ class Ono(pygame.sprite.Sprite):
 
         if th.bullet_counter < 1:
             for i in range(0, 360, 15):
-                sprite = barrage(2, 4, th.color, i, th.rect.center)
+                sprite = barrage(PRELOAD.effective, 2, 4, th.color, i, th.rect.center)
                 sprite.update()
 
                 th.group.add(sprite)
@@ -122,11 +122,11 @@ class Ono(pygame.sprite.Sprite):
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)
 
-                    sprite = barrage(2, 4, (255, 255, 255), current_angle, pos, False)
+                    sprite = barrage(PRELOAD.effective, 2, 4, PRELOAD.color_dict[6], current_angle, pos, False)
 
                     th.particle_group.add(sprite)
 
-            th.point = SPRITE.Rect.Rect((2, 2), (0, 0, 0), th.rect.center)
+            th.point = SPRITE.Rect.Rect((2, 2), PRELOAD.color_dict[8], th.rect.center)
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)
 

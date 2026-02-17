@@ -18,7 +18,7 @@ class Kli(pygame.sprite.Sprite):
         th.group = group
         th.particle_group = particle_group
 
-        th.color = (45, 194, 229)
+        th.color = PRELOAD.color_dict[5]
 
         th.original_image = PRELOAD.char_image
         th.image = th.original_image.subsurface((0, 0, 12, 26))
@@ -43,7 +43,7 @@ class Kli(pygame.sprite.Sprite):
                 pos = (i, randint(345, 360))
                 rands = choice([4, 6, 9, 10, 12])
 
-                sprite = particle((rands, rands), uniform(1, 2), 0, pos, (255, 255, 255), 'char')
+                sprite = particle(PRELOAD.effective, (rands, rands), uniform(1, 2), 0, pos, PRELOAD.color_dict[6], 'char')
 
                 th.particle_group.add(sprite)
 
@@ -51,7 +51,7 @@ class Kli(pygame.sprite.Sprite):
 
         if th.bullet_timer >= 30 and th.bullet_timer % 1 == 0 and th.bullet_counter < 6:
             for i in range(120, 466, 15):
-                sprite = bullet("bomb", -24, 0, 6, (i, 0))
+                sprite = bullet(PRELOAD.effective, "bomb", -24, 0, 6, (i, 0))
                 sprite.update()
 
                 th.group.add(sprite)
@@ -80,7 +80,7 @@ class Kli(pygame.sprite.Sprite):
             ]
 
             for bullet_info in bullet_type:
-                sprite = bullet("bullet", 16, bullet_info['angle'], 4, (bullet_info['x'], bullet_info['y']))
+                sprite = bullet(PRELOAD.effective, "bullet", 16, bullet_info['angle'], 4, (bullet_info['x'], bullet_info['y']))
                 sprite.update()
 
                 th.group.add(sprite)

@@ -28,11 +28,16 @@ class Item(pygame.sprite.Sprite):
             th.is_rotated = True
 
         th.y -= th.speed
+
         if th.type in ["power", "flash"]:
             th.speed -= 0.1
             if th.speed < -2:
                 th.speed = -2
+
         th.rect.center = (th.x, th.y)
+
+        if th.rect.centery >= 360:
+            th.kill()
 
 
 def item_spawn(group: pygame.sprite.Group, condition: bool, pos: tuple, speed: float, type: str, timer: int=0) -> int:

@@ -21,7 +21,7 @@ class Qdi(pygame.sprite.Sprite):
         th.particle_group = particle_group
 
         th.hp = 96
-        th.color = (251, 234, 18)
+        th.color = PRELOAD.color_dict[4]
 
         th.image = PRELOAD.char_image.subsurface((60, 0, 12, 26))
         th.rect = th.image.get_rect()
@@ -51,7 +51,7 @@ class Qdi(pygame.sprite.Sprite):
                 current_angle = randint(0, 360)
                 sprite_pos = (randint(120, 465), randint(15, 225))
 
-                sprite = barrage(2, 4, th.color, current_angle, sprite_pos)
+                sprite = barrage(PRELOAD.effective, 2, 4, th.color, current_angle, sprite_pos)
                 sprite.update()
 
                 th.group.add(sprite)
@@ -66,7 +66,7 @@ class Qdi(pygame.sprite.Sprite):
             for _ in range(8):
                 sprite_pos = (randint(120, 465), randint(15, 205))
                 for j in range(0, 360, 30):
-                    sprite = barrage(2, randint(2, 6), th.color, j, sprite_pos)
+                    sprite = barrage(PRELOAD.effective, 2, randint(2, 6), th.color, j, sprite_pos)
 
                     sprite.update()
                     th.group.add(sprite)
@@ -83,7 +83,7 @@ class Qdi(pygame.sprite.Sprite):
             two_point = Tool.add((th.target_pos[0], th.target_pos[1]), (-sprite_pos[0], -sprite_pos[1]))
             current_angle = math.degrees(math.atan2(-two_point[0], -two_point[1]))
 
-            sprite = barrage(2, 3.5, th.color, current_angle, sprite_pos)
+            sprite = barrage(PRELOAD.effective, 2, 3.5, th.color, current_angle, sprite_pos)
             sprite.update()
 
             th.group.add(sprite)
@@ -112,11 +112,11 @@ class Qdi(pygame.sprite.Sprite):
                     two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)
-                    particle = barrage(2, 4, (255, 255, 255), current_angle, pos, False)
+                    particle = barrage(PRELOAD.effective, 2, 4, PRELOAD.color_dict[6], current_angle, pos, False)
 
                     th.particle_group.add(particle)
 
-                th.point = SPRITE.Rect.Rect((2, 2), (0, 0, 0), th.rect.center)
+                th.point = SPRITE.Rect.Rect((2, 2), PRELOAD.color_dict[8], th.rect.center)
         else:
             th.rect.center = (th.target_x, th.target_y)
 

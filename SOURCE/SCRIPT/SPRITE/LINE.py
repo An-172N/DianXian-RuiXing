@@ -48,7 +48,7 @@ class Line(pygame.sprite.Sprite):
 
 
 def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> None:
-    start_pos = (random.randint(100, 480), 0)
+    start_pos = (random.randint(105, 480), 15)
     end_pos = (-target_pos[0], -target_pos[1])
 
     delta_pos = Tool.add(end_pos, start_pos)
@@ -70,7 +70,7 @@ def line_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
     for _ in range(12):
         current_angle = randint(0, 360)
 
-        sprite = Line((2, choice([32, 64, 128, 256])), 6, current_angle, spawn_pos, (45, 194, 229), (128, 0, 128))
+        sprite = Line((2, choice([32, 64, 128, 256])), 6, current_angle, spawn_pos, PRELOAD.color_dict[5], PRELOAD.color_dict[3])
         sprite.update()
 
         group.add(sprite)

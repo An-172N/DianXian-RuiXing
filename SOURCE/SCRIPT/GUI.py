@@ -105,10 +105,10 @@ def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
     menu_surface = PRELOAD.picture[5]
 
     if not GLOBAL.is_blit:
-        menu_surface.fill((0, 0, 0))
+        menu_surface.fill(PRELOAD.color_dict[8])
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, (255, 255, 255)).convert_alpha()
+            text = font.render(f"{text_info['text']}", False, PRELOAD.color_dict[6]).convert_alpha()
             menu_surface.blit(text, text_info["pos"])
 
         GLOBAL.is_blit = True
@@ -126,10 +126,10 @@ def half_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
     menu_surface = PRELOAD.picture[5].subsurface((0, 0, 345, 85))
 
     if not GLOBAL.is_blit:
-        menu_surface.fill((0, 0, 0))
+        menu_surface.fill(PRELOAD.color_dict[8])
 
         for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, (255, 255, 255)).convert_alpha()
+            text = font.render(f"{text_info['text']}", False, PRELOAD.color_dict[6]).convert_alpha()
             menu_surface.blit(text, text_info["pos"])
 
         GLOBAL.is_blit = True
@@ -147,7 +147,7 @@ def situation(surface: pygame.Surface, font: pygame.font.Font, text: list, fps: 
     ]
     
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, (255, 255, 255))
+        text = font.render(f"{text_info['text']}", False, PRELOAD.color_dict[6])
         surface.blit(text, text_info["pos"])
 
 

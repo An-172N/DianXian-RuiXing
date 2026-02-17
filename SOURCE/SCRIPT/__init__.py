@@ -2,11 +2,11 @@
 # 此代码根据 GPLv3.0 许可证授权
 
 
-from SCRIPT import KERNEL
-from SCRIPT import GLOBAL
 from SCRIPT import GUI
 from SCRIPT import KEY
 from SCRIPT import RESET
 from SCRIPT import HUMAN
 from SCRIPT import SPRITE
 from SCRIPT import COLLIDE
+from SCRIPT import GLOBAL
+from SCRIPT import KERNEL

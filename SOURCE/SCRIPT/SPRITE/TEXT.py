@@ -13,7 +13,7 @@ class Text(pygame.sprite.Sprite):
 
         th.type = type
         th.target_color = target_color
-        th.color = (255, 255, 255)
+        th.color = PRELOAD.color_dict[6]
 
         th.image = PRELOAD.text_cache[f"{type}_{th.color}"]
         th.rect = th.image.get_rect()

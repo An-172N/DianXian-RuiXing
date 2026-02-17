@@ -12,9 +12,10 @@ from LOGIC import Tool
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(th, type: str, speed: float, angle: float, damage: int, pos: tuple):
+    def __init__(th, effective: pygame.Rect, type: str, speed: float, angle: float, damage: int, pos: tuple):
         super().__init__()
 
+        th.effective = effective
         th.type = type
         th.speed = speed
         th.current_angle = angle
@@ -40,12 +41,15 @@ class Bullet(pygame.sprite.Sprite):
         th.x, th.y = Tool.add((th.x, th.y), (-(sin * th.speed), -(cos * th.speed)))
         th.rect.center = (th.x, th.y)
 
+        if not th.effective.collidepoint(th.rect.center):
+            th.kill()
+
 
 def circle_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
     rands = random.randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 15):
-        sprite = Bullet("bullet", 16, i, 4, spawn_pos)
+        sprite = Bullet(PRELOAD.effective, "bullet", 16, i, 4, spawn_pos)
 
         sprite.update()
         group.add(sprite)
@@ -69,7 +73,7 @@ def polygon_brick(group: pygame.sprite.Group, *spawn_pos: tuple) -> None:
     ]
 
     for bullet_info in bullet_index:
-        sprite = Bullet("bullet-cross", 16, bullet_info['angle'], 4, bullet_info['pos'])
+        sprite = Bullet(PRELOAD.effective, "bullet-cross", 16, bullet_info['angle'], 4, bullet_info['pos'])
 
         sprite.update()
         group.add(sprite)
@@ -81,7 +85,7 @@ def point_brick(group: pygame.sprite.Group) -> None:
     for _ in range(24):
         sprite_pos = (randint(120, 465), randint(15, 345))
         current_angle = randint(0, 360)
-        sprite = Bullet("bullet", 16, current_angle, 4, sprite_pos)
+        sprite = Bullet(PRELOAD.effective, "bullet", 16, current_angle, 4, sprite_pos)
 
         sprite.update()
         group.add(sprite)

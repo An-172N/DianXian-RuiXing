@@ -34,14 +34,13 @@ def option() -> None:
 def sprite_loader() -> None:
     if GLOBAL.level == 6:
         GLOBAL.char = choose_human()
-        GLOBAL.text = json.loads(PRELOAD.asset(f"ASSET\JSON\TALK_{GLOBAL.stage}.json").decode('utf-8'))
+        GLOBAL.text = json.loads(PRELOAD.asset(rf"ASSET\JSON\TALK_{GLOBAL.stage}.json").decode('utf-8'))
         GLOBAL.is_talk = True
         GLOBAL.is_blit = False
 
         GLOBAL.brick_group.add(GLOBAL.char)
     else:
-        File.read_level(PRELOAD.asset(f"ASSET\STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg"), SPRITE.Brick.load_brick, PRELOAD.color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
-
+        File.read_level(PRELOAD.asset(rf"ASSET\STAGE\STG_{GLOBAL.stage}-{GLOBAL.level}.stg"), SPRITE.Brick.load_brick, PRELOAD.color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
         SPRITE.Brick.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
 
 
@@ -60,8 +59,7 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
     option()
 
     sprite_item = SPRITE.Item
-    remove_sprite = COLLIDE.remove_sprite
-    window = GLOBAL.window
+    window = PRELOAD.window
 
     while True:
         if GLOBAL.is_run and not GLOBAL.is_save and not GLOBAL.is_pause:
@@ -96,11 +94,6 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface) -> None:
                 GLOBAL.particle_group.update()
                 GLOBAL.brick_group.update()
                 GLOBAL.text_group.update()
-
-                remove_sprite(GLOBAL.bullet_group, GLOBAL.effective)
-                remove_sprite(GLOBAL.barrage_group, GLOBAL.effective)
-                remove_sprite(GLOBAL.item_group, GLOBAL.effective)
-                remove_sprite(GLOBAL.particle_group, GLOBAL.effective)
 
                 COLLIDE.bullet_collide()
                 COLLIDE.item_collide()
