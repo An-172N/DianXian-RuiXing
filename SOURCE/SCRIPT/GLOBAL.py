@@ -4,8 +4,8 @@
 
 import pygame
 
+
 import PRELOAD
-from SCRIPT import HUMAN, SPRITE
 
 
 is_run = False
@@ -62,6 +62,8 @@ second_background = PRELOAD.picture[stage]
 
 char = None
 text = None
+main_char = None
+decision_point = None
 
 
 plane_group = pygame.sprite.Group()
@@ -71,10 +73,6 @@ item_group = pygame.sprite.Group()
 barrage_group = pygame.sprite.Group()
 particle_group = pygame.sprite.Group()
 text_group = pygame.sprite.Group()
-
-
-main_char = HUMAN.Kli(bullet_group, particle_group)
-decision_point = SPRITE.Rect.Rect((2, 2), PRELOAD.color_dict[7], mask=True)
 
 
 last_time = pygame.time.get_ticks()

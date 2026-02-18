@@ -4,7 +4,9 @@
 
 import datetime
 
+
 import pygame
+
 
 import PRELOAD
 from LOGIC import Tool, Item
@@ -54,11 +56,9 @@ def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
 
 
 def summary_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
-    combo = 2 ** GLOBAL.combo
-
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!Hit Z Key."
     text = [
-        f"得点 {GLOBAL.total_power} * 512 + {combo} = {GLOBAL.total_power * 512 + combo}",
+        f"得点 {GLOBAL.total_power} * 512 + {2 ** GLOBAL.combo} = {GLOBAL.total_power * 512 + 2 ** GLOBAL.combo}",
         f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"
     ]
 
@@ -69,7 +69,7 @@ def start_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ['Ver 1.0.6', '', '', '', '']
-    key = ["Z 开始", "Q 退出"]
+    key = ["Z 开玩", "Q 退了"]
 
     full_menu(screen, font, title, text, key, other)
 

@@ -3,7 +3,7 @@
 
 
 import datetime
-import re
+
 
 import pygame
 
@@ -56,7 +56,7 @@ def get_datetime() -> tuple:
 
 
 def replace_illegal_char(string: str) -> str:
-    return re.sub(r'[!<>:"/\\|?*]', '_', string)
+    return string.translate(str.maketrans('!<>:"/\\|?*', '__________'))
 
 
 def truncate(string: str, length: int, extra: str='') -> str:

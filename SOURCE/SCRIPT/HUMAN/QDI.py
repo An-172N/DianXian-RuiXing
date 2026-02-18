@@ -5,7 +5,9 @@
 import random
 import math
 
+
 import pygame
+
 
 import PRELOAD
 from SCRIPT import SPRITE
@@ -36,37 +38,31 @@ class Qdi(pygame.sprite.Sprite):
         th.point = None
         th.choice = None
 
-        th.target_x, th.target_y = 292, 60
+        th.x, th.y = th.rect.center
         th.timer = 0
         th.bullet_counter = 0
         th.bullet_timer = 0
 
     def free(th) -> None:
-        randint = random.randint
-        barrage = SPRITE.Barrage.Barrage
         th.bullet_timer += 1
 
         if th.bullet_counter < 1:
             for _ in range(48):
-                current_angle = randint(0, 360)
-                sprite_pos = (randint(120, 465), randint(15, 225))
+                current_angle = random.randint(0, 360)
+                sprite_pos = (random.randint(120, 465), random.randint(15, 225))
+                sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, 4, th.color, current_angle, sprite_pos)
 
-                sprite = barrage(PRELOAD.effective, 2, 4, th.color, current_angle, sprite_pos)
                 sprite.update()
-
                 th.group.add(sprite)
 
             th.bullet_counter += 1
 
     def extend(th) -> None:
-        randint = random.randint
-        barrage = SPRITE.Barrage.Barrage
-
         if th.bullet_counter < 1:
             for _ in range(8):
-                sprite_pos = (randint(120, 465), randint(15, 205))
+                sprite_pos = (random.randint(120, 465), random.randint(15, 205))
                 for j in range(0, 360, 30):
-                    sprite = barrage(PRELOAD.effective, 2, randint(2, 6), th.color, j, sprite_pos)
+                    sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, random.randint(2, 6), th.color, j, sprite_pos)
 
                     sprite.update()
                     th.group.add(sprite)
@@ -74,16 +70,14 @@ class Qdi(pygame.sprite.Sprite):
             th.bullet_counter += 1
 
     def fire(th) -> None:
-        randint = random.randint
-        barrage = SPRITE.Barrage.Barrage
         th.bullet_timer += 1
 
         if th.bullet_counter < 6 and th.bullet_timer % 2 == 0:
-            sprite_pos = (randint(120, 465), randint(15, 230))
+            sprite_pos = (random.randint(120, 465), random.randint(15, 230))
             two_point = Tool.add((th.target_pos[0], th.target_pos[1]), (-sprite_pos[0], -sprite_pos[1]))
             current_angle = math.degrees(math.atan2(-two_point[0], -two_point[1]))
 
-            sprite = barrage(PRELOAD.effective, 2, 3.5, th.color, current_angle, sprite_pos)
+            sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, 3.5, th.color, current_angle, sprite_pos)
             sprite.update()
 
             th.group.add(sprite)
@@ -91,34 +85,31 @@ class Qdi(pygame.sprite.Sprite):
             th.bullet_counter += 1
 
     def update(th) -> None:
-        randint = random.randint
-        choice = random.choice
-        barrage = SPRITE.Barrage.Barrage
         th.timer += 1
 
         if th.timer % 150 == 0:
-            th.target_x, th.target_y = randint(150, 435), randint(48, 96)
+            th.x, th.y = random.randint(150, 435), random.randint(48, 96)
             th.bullet_counter = 0
             th.timer = 0
             th.can_shoot = True
             th.is_free = not th.is_free
-            th.choice = choice([th.fire] * 3 + [th.free] * 2 + [th.extend])
+            th.choice = random.choice([th.fire] * 3 + [th.free] * 2 + [th.extend])
         if th.timer % 150 >= 125:
             if th.timer % 150 >= 145:
-                th.rect.centerx += choice([-4, 4])
+                th.rect.centerx += random.choice([-4, 4])
             if th.timer % 125 == 0:
                 for _ in range(12):
-                    pos = (randint(th.rect.centerx - 64, th.rect.centerx + 64), randint(th.rect.centery - 64, th.rect.centery + 64))
+                    pos = (random.randint(th.rect.centerx - 64, th.rect.centerx + 64), random.randint(th.rect.centery - 64, th.rect.centery + 64))
                     two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)
-                    particle = barrage(PRELOAD.effective, 2, 4, PRELOAD.color_dict[6], current_angle, pos, False)
+                    particle = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, 4, PRELOAD.color_dict[6], current_angle, pos, False)
 
                     th.particle_group.add(particle)
 
                 th.point = SPRITE.Rect.Rect((2, 2), PRELOAD.color_dict[8], th.rect.center)
         else:
-            th.rect.center = (th.target_x, th.target_y)
+            th.rect.center = (th.x, th.y)
 
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)

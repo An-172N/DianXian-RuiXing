@@ -2,10 +2,8 @@
 # 此代码根据 GPLv3.0 许可证授权
 
 
-import gc
-
 import PRELOAD
-from SCRIPT import HUMAN, GLOBAL
+from SCRIPT import HUMAN, GLOBAL, SPRITE
 
 
 def mode_one() -> None:
@@ -27,6 +25,7 @@ def mode_one() -> None:
     GLOBAL.is_s_divide = False
     GLOBAL.cooldown_timer = 0
     GLOBAL.main_char = HUMAN.Kli(GLOBAL.bullet_group, GLOBAL.particle_group)
+    GLOBAL.decision_point = SPRITE.Rect.Rect((2, 2), PRELOAD.color_dict[7], (292, 332), True)
     GLOBAL.total_power = 0
 
     GLOBAL.shoot_counter = 0
@@ -39,7 +38,6 @@ def mode_one() -> None:
     GLOBAL.text_part = 0
     GLOBAL.text_number = 0
 
-    gc.collect()
 
 def mode_two() -> None:
     GLOBAL.stage = 1

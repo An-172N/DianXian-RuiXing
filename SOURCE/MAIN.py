@@ -2,15 +2,29 @@
 # 此代码根据 GPLv3.0 许可证授权
 
 
-import sys
-
-
-sys.dont_write_bytecode = True
-for module in ['numpy', 'timidity', 'pygame.examples']:
-    sys.modules[module] = None
-
-
 def main() -> int:
+    import sys
+
+    sys.dont_write_bytecode = True
+    for module in ['numpy', 'timidity', 'pygame.examples']:
+        sys.modules[module] = None
+
+    import argparse
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-stage', type=int, default=1)
+    parser.add_argument('-level', type=int, default=0)
+    parser.add_argument('-flash', type=int, default=3)
+    parser.add_argument('-power', type=int, default=0)
+
+    args = parser.parse_args()
+
+    stage = int(args.stage)
+    level = int(args.level)
+    flash = int(args.flash)
+    power = int(args.power)
+
     import pygame
 
     clock = pygame.time.Clock()
@@ -23,7 +37,7 @@ def main() -> int:
 
     import SCRIPT
 
-    SCRIPT.KERNEL.update(clock, screen)
+    SCRIPT.KERNEL.update(clock, screen, stage, level, flash, power)
 
     return 0
 

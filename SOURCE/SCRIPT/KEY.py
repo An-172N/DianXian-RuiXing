@@ -5,7 +5,9 @@
 import sys
 import os
 
+
 import pygame
+
 
 import PRELOAD
 from LOGIC import Tool, File, Stage, Plane, Item
@@ -21,20 +23,24 @@ keydown_game_dict = {
     pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", True), setattr(GLOBAL, "is_blit", False))
 }
 
+
 keydown_talk_dict = {
     pygame.K_z: lambda: (setattr(GLOBAL, "text_number", GLOBAL.text_number + 1),setattr(GLOBAL, "is_blit", False)),
     pygame.K_x: lambda: setattr(GLOBAL, "is_talk", False)
 }
+
 
 keydown_pause_dict = {
     pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", False), setattr(GLOBAL, 'is_blit', False)),
     pygame.K_q: lambda: (RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False))
 }
 
+
 keydown_start_dict = {
     pygame.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "is_blit", False), next_level(), level_logic()),
     pygame.K_q: lambda: sys.exit()
 }
+
 
 keydown_over_dict = {
     pygame.K_RETURN: lambda: (save_file(), RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False)),
@@ -42,9 +48,11 @@ keydown_over_dict = {
     pygame.K_BACKSPACE: lambda: (setattr(GLOBAL, "name", GLOBAL.name[:-1]), setattr(GLOBAL, "is_blit", False))
 }
 
+
 keydown_summary_dict = {
     pygame.K_z: lambda: close_summary()
 }
+
 
 keyup_game_dict = {
     pygame.K_RIGHT: lambda: setattr(GLOBAL, "is_move_right", False),
@@ -57,7 +65,6 @@ keyup_game_dict = {
 def save_file() -> None:
     name = Tool.replace_illegal_char(GLOBAL.name)
     date_time = Tool.get_datetime()
-
     dump_content = {
         '助记者': GLOBAL.name,
         '分数': GLOBAL.score,
@@ -84,8 +91,6 @@ def next_level() -> None:
     GLOBAL.no_flash += 1
     GLOBAL.plane_group.add(GLOBAL.main_char)
     GLOBAL.plane_group.add(GLOBAL.decision_point)
-    GLOBAL.main_char.rect.center = (292, 332)
-    GLOBAL.decision_point.rect.center = (292, 332)
 
 
 def close_summary():

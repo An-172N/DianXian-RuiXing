@@ -3,10 +3,11 @@
 
 
 import random
-import itertools
 import math
 
+
 import pygame
+
 
 import PRELOAD
 from SCRIPT import SPRITE
@@ -37,77 +38,64 @@ class Ono(pygame.sprite.Sprite):
         th.choice = None
 
         th.rect.center = (292, 60)
-        th.target_x, th.target_y = 292, 60
+        th.x, th.y = th.rect.center
         th.timer = 0
         th.bullet_counter = 0
         th.bullet_timer = 0
         th.bullet_delay = 0
 
     def free(th) -> None:
-        radians = math.radians
-        barrage = SPRITE.Barrage.Barrage
         th.bullet_timer += 1
 
-        if th.bullet_timer % 1 == 0 and th.bullet_counter < 8:
+        if th.bullet_counter < 8:
             th.bullet_delay += 6
 
-            for i, j in itertools.product(
-                range(0 + th.bullet_delay, 360 + th.bullet_delay, 180),
-                range(0 + th.bullet_delay, 360 + th.bullet_delay, 90)
-            ):
-                pos = (th.rect.centerx + 32 * math.cos(radians(i)),th.rect.centery + 32 * math.sin(radians(i)))
-                sprite = barrage(PRELOAD.effective, 2, 3.5, th.color, j, pos)
-                sprite.update()
+            for i in range(0 + th.bullet_delay, 360 + th.bullet_delay, 180):
+                for j in range(0 + th.bullet_delay, 360 + th.bullet_delay, 90):
+                    pos = (th.rect.centerx + 32 * math.cos(math.radians(i)),th.rect.centery + 32 * math.sin(math.radians(i)))
+                    sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, 3.5, th.color, j, pos)
 
-                th.group.add(sprite)
+                    sprite.update()
+                    th.group.add(sprite)
 
             th.bullet_counter += 1
 
     def extend(th) -> None:
-        pos = th.rect.center
-        barrage = SPRITE.Barrage.Barrage
         speed = 5
 
         if th.bullet_counter <= 0:
             for _ in range(8):
                 for j in range(-30, 31, 30):
                     th.bullet_delay += 20
+
                     for k in (j - 180, j, 180 - th.bullet_delay):
-                        two_point = Tool.add((th.target_pos[0], th.target_pos[1]), (-pos[0], -pos[1]))
+                        two_point = Tool.add((th.target_pos[0], th.target_pos[1]), (-th.rect.centerx, -th.rect.centery))
                         atan = math.atan2(-two_point[0], -two_point[1])
                         current_angle = math.degrees(atan) + k
+                        sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, speed, th.color, current_angle, th.rect.center)
 
-                        sprite = barrage(PRELOAD.effective, 2, speed, th.color, current_angle, pos)
                         sprite.update()
-
                         th.group.add(sprite)
 
                 speed -= 0.5
             th.bullet_counter += 1
 
     def fire(th) -> None:
-        barrage = SPRITE.Barrage.Barrage
-
         if th.bullet_counter < 1:
             for i in range(0, 360, 15):
-                sprite = barrage(PRELOAD.effective, 2, 4, th.color, i, th.rect.center)
-                sprite.update()
+                sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, 4, th.color, i, th.rect.center)
 
+                sprite.update()
                 th.group.add(sprite)
 
             th.bullet_counter += 1
 
     def update(th) -> None:
-        radians = math.radians
-        sin = math.sin
-        cos = math.cos
-        barrage = SPRITE.Barrage.Barrage
         th.timer += 1
 
         if th.timer % 120 == 0:
             rands = random.randint(0, 360)
-            th.target_x, th.target_y = 292 + 50 * cos(radians(rands)), 110 + 50 * sin(radians(rands))
-
+            th.x, th.y = 292 + 50 * math.cos(math.radians(rands)), 110 + 50 * math.sin(math.radians(rands))
             th.bullet_counter = 0
             th.bullet_delay = 0
             th.timer = 0
@@ -117,12 +105,11 @@ class Ono(pygame.sprite.Sprite):
         if th.timer % 120 >= 99:
             if th.timer % 99 == 0: 
                 for i in range(0, 360, 15):
-                    pos = (th.rect.centerx + 64 * cos(radians(i)), th.rect.centery + 64 * sin(radians(i)))
+                    pos = (th.rect.centerx + 64 * math.cos(math.radians(i)), th.rect.centery + 64 * math.sin(math.radians(i)))
                     two_point = Tool.add((th.rect.centerx, th.rect.centery), (-pos[0], -pos[1]))
                     atan2 = math.atan2(-two_point[0], -two_point[1])
                     current_angle = math.degrees(atan2)
-
-                    sprite = barrage(PRELOAD.effective, 2, 4, PRELOAD.color_dict[6], current_angle, pos, False)
+                    sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 2, 4, PRELOAD.color_dict[6], current_angle, pos, False)
 
                     th.particle_group.add(sprite)
 
@@ -130,7 +117,7 @@ class Ono(pygame.sprite.Sprite):
         if th.point:
             pygame.sprite.spritecollide(th.point, th.particle_group, True)
 
-        th.rect.center = Tool.vector(th.rect.center, (th.target_x, th.target_y), 4)[0]
+        th.rect.center = Tool.vector(th.rect.center, (th.x, th.y), 4)[0]
 
         if th.can_shoot:
             th.fire() if not th.is_free else th.choice()
