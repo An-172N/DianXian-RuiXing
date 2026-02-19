@@ -51,10 +51,10 @@ def choose_brick(group: pygame.sprite.Group, stage_level: tuple, basic_power: in
         brick_list[j].have_flash = True
 
 
-def boss_lose(part: int, number: int, is_talk: bool, is_blit: bool) -> tuple:
+def boss_lose(part: int) -> tuple:
     part += 1
     number = 0
     is_talk = True
-    is_blit = False
+    animate_timer = 0
 
-    return part, number, is_talk, is_blit
+    return part, number, is_talk, animate_timer

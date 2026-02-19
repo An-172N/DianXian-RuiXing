@@ -53,10 +53,9 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, *args: tuple) -> No
                 COLLIDE.item_collide()
 
             if not GLOBAL.is_level_load:
-                GLOBAL.wait_level_load_timer, GLOBAL.is_level_load = Stage.load_level(GLOBAL.wait_level_load_timer, GLOBAL.is_level_load, 60, PUBLIC.sprite_loader)
+                GLOBAL.wait_level_load_timer, GLOBAL.is_level_load = Stage.load_level(GLOBAL.wait_level_load_timer, GLOBAL.is_level_load, 90, PUBLIC.sprite_loader)
             elif len(GLOBAL.brick_group) == 0 and len(GLOBAL.item_group) == 0 and not GLOBAL.is_talk:
                 GLOBAL.is_summary = True
-                GLOBAL.is_blit = False
 
         KEY.key_event()
 

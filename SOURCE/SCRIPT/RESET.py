@@ -13,6 +13,8 @@ def mode_one() -> None:
     GLOBAL.is_save = False
     GLOBAL.is_level_load = False
 
+    GLOBAL.animate_timer = 0
+
     GLOBAL.item_group.empty()
     GLOBAL.brick_group.empty()
     GLOBAL.plane_group.empty()

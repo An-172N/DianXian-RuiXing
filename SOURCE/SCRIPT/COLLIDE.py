@@ -91,7 +91,6 @@ def barrage_collide(position) -> None:
 
                 if GLOBAL.flash == 0:
                     GLOBAL.is_save = True
-                    GLOBAL.is_blit = False
 
                 barrage.kill()
 
@@ -109,7 +108,7 @@ def bullet_collide() -> None:
                     if not brick.is_die:
                         SPRITE.Particle.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, PRELOAD.color_dict[6])
                         if hasattr(brick, "free"):
-                            GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit = SPRITE.Brick.boss_lose(GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.is_blit)
+                            GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.animate_timer = SPRITE.Brick.boss_lose(GLOBAL.text_part)
                         else:
                             spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, PRELOAD.barrage_rate, brick.type, [brick.color, PRELOAD.color_dict[6], PRELOAD.color_dict[3]], brick.rect.center, GLOBAL.main_char.rect.center)
                         SPRITE.Item.item_spawn(GLOBAL.item_group, brick.have_power, brick.rect.center, 2.5, "power")

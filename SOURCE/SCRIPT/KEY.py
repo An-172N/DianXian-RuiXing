@@ -20,32 +20,32 @@ keydown_game_dict = {
     pygame.K_x: lambda: setattr(GLOBAL, "is_fast", True),
     pygame.K_z: lambda: setattr(GLOBAL, "is_shoot", False),
     pygame.K_SPACE: lambda: single_bomb(),
-    pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", True), setattr(GLOBAL, "is_blit", False))
+    pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", True), setattr(GLOBAL, "animate_timer", 0))
 }
 
 
 keydown_talk_dict = {
-    pygame.K_z: lambda: (setattr(GLOBAL, "text_number", GLOBAL.text_number + 1),setattr(GLOBAL, "is_blit", False)),
+    pygame.K_z: lambda: (setattr(GLOBAL, "text_number", GLOBAL.text_number + 1), setattr(GLOBAL, "animate_timer", 0)),
     pygame.K_x: lambda: setattr(GLOBAL, "is_talk", False)
 }
 
 
 keydown_pause_dict = {
-    pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", False), setattr(GLOBAL, 'is_blit', False)),
-    pygame.K_q: lambda: (RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False))
+    pygame.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", False), setattr(GLOBAL, "animate_timer", 0)),
+    pygame.K_q: lambda: (RESET.mode_one(), RESET.mode_two())
 }
 
 
 keydown_start_dict = {
-    pygame.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "is_blit", False), next_level(), level_logic()),
+    pygame.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "animate_timer", 0), next_level(), level_logic()),
     pygame.K_q: lambda: sys.exit()
 }
 
 
 keydown_over_dict = {
-    pygame.K_RETURN: lambda: (save_file(), RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False)),
-    pygame.K_ESCAPE: lambda: (RESET.mode_one(), RESET.mode_two(), setattr(GLOBAL, "is_blit", False)),
-    pygame.K_BACKSPACE: lambda: (setattr(GLOBAL, "name", GLOBAL.name[:-1]), setattr(GLOBAL, "is_blit", False))
+    pygame.K_RETURN: lambda: (save_file(), RESET.mode_one(), RESET.mode_two()),
+    pygame.K_ESCAPE: lambda: (RESET.mode_one(), RESET.mode_two()),
+    pygame.K_BACKSPACE: lambda: (setattr(GLOBAL, "name", GLOBAL.name[:-1]))
 }
 
 
@@ -96,7 +96,6 @@ def next_level() -> None:
 def close_summary():
     def next_logic1():
         GLOBAL.is_save = True
-        GLOBAL.is_blit = False
 
     def next_logic2():
         next_level()
@@ -129,7 +128,6 @@ def keydown(event: pygame.event.Event) -> None:
             keydown_over_dict[event.key]()
         else:
             GLOBAL.name = Tool.truncate(GLOBAL.name + event.unicode, 8)
-            GLOBAL.is_blit = False
     elif GLOBAL.is_pause and event.key in keydown_pause_dict:
         keydown_pause_dict[event.key]()
     elif GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict:

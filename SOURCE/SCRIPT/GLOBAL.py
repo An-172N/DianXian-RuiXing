@@ -14,7 +14,10 @@ is_summary = False
 is_talk = False
 is_save = False
 is_level_load = False
-is_blit = False
+
+
+
+animate_timer = 0
 
 
 name = ''

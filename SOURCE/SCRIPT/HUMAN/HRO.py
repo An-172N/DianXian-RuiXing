@@ -73,10 +73,9 @@ class Hro(pygame.sprite.Sprite):
                     atan = math.atan2(-delta_vec.x, -delta_vec.y)
                     current_angle = math.degrees(atan) + j + th.bullet_delay
                     sprite_pos = (current_pos.x, current_pos.y)
-
                     sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 0, 4, th.color, current_angle, sprite_pos)
-                    sprite.update()
 
+                    sprite.update()
                     th.group.add(sprite)
         
             th.bullet_counter += 1
@@ -89,7 +88,7 @@ class Hro(pygame.sprite.Sprite):
                 for j in (150, 185, 220, 255, 292, 327, 365, 400, 435):
                     for k in range(1, 4):
                         sprite_pos = (j, 60)
-                        two_point = Tool.add((th.target_pos[0], th.target_pos[1] - 120), (-sprite_pos[0], -sprite_pos[1]))
+                        two_point = Tool.add((th.target_pos[0], th.target_pos[1] - 96), (-sprite_pos[0], -sprite_pos[1]))
                         atan = math.atan2(-two_point[0], -two_point[1])
                         current_angle = math.degrees(atan) * k
                         sprite = SPRITE.Barrage.Barrage(PRELOAD.effective, 0, speed, th.color, current_angle, sprite_pos)

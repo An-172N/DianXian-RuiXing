@@ -50,7 +50,7 @@ def talk_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
             GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["info2"]
         ]
 
-        half_menu(screen, font, human, text)
+        half_menu(screen, font, human, text, (0, 6, 12))
     except KeyError:
         GLOBAL.is_talk = False
 
@@ -89,51 +89,71 @@ def save_menu(screen: pygame.Surface, font: pygame.font.Font) -> None:
     full_menu(screen, font, title, text, key, name)
 
 
-def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text: list, key: list, other: str) -> None:
-    text_type = [
-        {"text": title, "pos": (8, 10)},
-        {"text": text[0], "pos": (8, 60)},
-        {"text": text[1], "pos": (8, 85)},
-        {"text": text[2], "pos": (8, 110)},
-        {"text": text[3], "pos": (8, 135)},
-        {"text": text[4], "pos": (8, 160)},
-        {"text": key[0], "pos": (270, 220)},
-        {"text": key[1], "pos": (270, 270)},
-        {"text": other, "pos": (8, 305)}
+def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)) -> None:
+    groups = [
+        [
+            {"text": title, "pos": (8, 10)},
+            {"text": other, "pos": (8, 305)}
+        ],
+        [
+            {"text": text[0], "pos": (8, 60)},
+            {"text": text[1], "pos": (8, 85)},
+            {"text": text[2], "pos": (8, 110)},
+            {"text": text[3], "pos": (8, 135)},
+            {"text": text[4], "pos": (8, 160)}
+        ],
+        [
+            {"text": key[0], "pos": (270, 220)},
+            {"text": key[1], "pos": (270, 270)}
+        ]
     ]
 
     menu_surface = PRELOAD.picture[5]
+    menu_surface.fill(PRELOAD.color_dict[8])
 
-    if not GLOBAL.is_blit:
-        menu_surface.fill(PRELOAD.color_dict[8])
-
-        for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, PRELOAD.color_dict[6]).convert_alpha()
-            menu_surface.blit(text, text_info["pos"])
-
-        GLOBAL.is_blit = True
+    if GLOBAL.animate_timer < interval[2]:
+        GLOBAL.animate_timer += 1
+    if GLOBAL.animate_timer >= interval[0]:
+        for i in groups[0]:
+            text_surf = font.render(i["text"], False, PRELOAD.color_dict[6]).convert_alpha()
+            menu_surface.blit(text_surf, i["pos"])
+    if GLOBAL.animate_timer >= interval[1]:
+        for i in groups[1]:
+            text_surf = font.render(i["text"], False, PRELOAD.color_dict[6]).convert_alpha()
+            menu_surface.blit(text_surf, i["pos"])
+    if GLOBAL.animate_timer >= interval[2]:
+        for i in groups[2]:
+            text_surf = font.render(i["text"], False, PRELOAD.color_dict[6]).convert_alpha()
+            menu_surface.blit(text_surf, i["pos"])
 
     surface.blit(menu_surface, (120, 15))
 
 
-def half_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text: list) -> None:
-    text_type = [
-        {"text": title, "pos": (8, 8)},
-        {"text": text[0], "pos": (8, 33)},
-        {"text": text[1], "pos": (8, 58)}
+def half_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text: list, interval: tuple=(0, 30, 60)) -> None:
+    groups = [
+        [{"text": title, "pos": (8, 8)}],
+        [{"text": text[0], "pos": (8, 33)}],
+        [{"text": text[1], "pos": (8, 58)}]
     ]
-
+    
     menu_surface = PRELOAD.picture[5].subsurface((0, 0, 345, 85))
+    menu_surface.fill(PRELOAD.color_dict[8])
 
-    if not GLOBAL.is_blit:
-        menu_surface.fill(PRELOAD.color_dict[8])
-
-        for text_info in text_type:
-            text = font.render(f"{text_info['text']}", False, PRELOAD.color_dict[6]).convert_alpha()
-            menu_surface.blit(text, text_info["pos"])
-
-        GLOBAL.is_blit = True
-
+    if GLOBAL.animate_timer < interval[2]:
+        GLOBAL.animate_timer += 1
+    if GLOBAL.animate_timer >= interval[0]:
+        for i in groups[0]:
+            text_surf = font.render(i["text"], False, PRELOAD.color_dict[6]).convert_alpha()
+            menu_surface.blit(text_surf, i["pos"])
+    if GLOBAL.animate_timer >= interval[1]:
+        for i in groups[1]:
+            text_surf = font.render(i["text"], False, PRELOAD.color_dict[6]).convert_alpha()
+            menu_surface.blit(text_surf, i["pos"])
+    if GLOBAL.animate_timer >= interval[2]:
+        for i in groups[2]:
+            text_surf = font.render(i["text"], False, PRELOAD.color_dict[6]).convert_alpha()
+            menu_surface.blit(text_surf, i["pos"])
+    
     surface.blit(menu_surface, (120, 15))
 
 

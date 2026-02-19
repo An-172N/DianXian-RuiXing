@@ -17,6 +17,7 @@ def main() -> int:
     parser.add_argument('-level', type=int, default=0)
     parser.add_argument('-flash', type=int, default=3)
     parser.add_argument('-power', type=int, default=0)
+    parser.add_argument('-seed', type=int, default=None)
 
     args = parser.parse_args()
 
@@ -24,6 +25,10 @@ def main() -> int:
     level = int(args.level)
     flash = int(args.flash)
     power = int(args.power)
+
+    import random
+
+    random.seed(args.seed)
 
     import pygame
 
