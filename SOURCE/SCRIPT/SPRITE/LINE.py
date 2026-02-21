@@ -10,26 +10,22 @@ import pygame
 
 
 from PRELOAD import line_cache, color_dict
-from LOGIC.TOOL import add, round_angle
+from LOGIC.CALCULATE import add, round_angle
+from LOGIC.SPRITE import Base
 
 
-class Line(pygame.sprite.Sprite):
-    def __init__(th, size: tuple, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple):
-        super().__init__()
+class Line(Base):
+    __slots__ = ('size', 'damage', 'color', 'target_color', 'timer')
+
+    def __init__(th, size: tuple, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple, mask: bool):
+        super().__init__("line", line_cache[(size[1], angle, color)], angle, pos=pos, mask=mask)
 
         th.size = size
         th.damage = damage
-        th.current_angle = angle
         th.color = color
         th.target_color = target_color
 
-        th.type = "line"
         th.timer = 0
-
-        th.image = line_cache[(th.size[1], angle, color)]
-        th.rect = th.image.get_rect(center=pos)
-
-        th.rect.center = pos
 
     def update(th) -> None:
         th.timer += 1
@@ -38,17 +34,17 @@ class Line(pygame.sprite.Sprite):
             th.kill()
         elif th.timer >= 45 and th.color != th.target_color:
             th.color = th.target_color
-            th.image = line_cache[(th.size[1], th.current_angle, th.color)]
+            th.image = line_cache[(th.size[1], th.angle, th.color)]
 
 
-def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> None:
+def line_barrage(color: list, locate: tuple, group: pygame.sprite.Group) -> None:
     start_pos = (randint(120, 465), 15)
-    end_pos = (-target_pos[0], -target_pos[1])
+    end_pos = (-locate[0], -locate[1])
     delta_pos = add(end_pos, start_pos)
     sprite_pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
     atan2_ = atan2(-delta_pos[0], -delta_pos[1])
-    current_angle = degrees(atan2_)
-    sprite = Line((3, 500), 0, round_angle(current_angle), sprite_pos, color[1], color[2])
+    current_angle = round_angle(degrees(atan2_))
+    sprite = Line((3, 500), 0, current_angle, sprite_pos, color[1], color[2], True)
 
     sprite.update()
     group.add(sprite)
@@ -56,8 +52,8 @@ def line_barrage(color: list, target_pos: tuple, group: pygame.sprite.Group) -> 
 
 def line_brick(group: pygame.sprite.Group, spawn_pos: tuple) -> None:
     for _ in range(12):
-        current_angle = randint(0, 360)
-        sprite = Line((2, choice([48, 96, 192])), 6, round_angle(current_angle), spawn_pos, color_dict[5], color_dict[9])
+        current_angle = round_angle(randint(0, 360))
+        sprite = Line((2, choice([48, 96, 192])), 6, current_angle, spawn_pos, color_dict[5], color_dict[9], False)
 
         sprite.update()
         group.add(sprite)

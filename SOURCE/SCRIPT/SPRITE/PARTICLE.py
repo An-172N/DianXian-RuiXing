@@ -9,7 +9,7 @@ import pygame
 
 
 from PRELOAD import particle_cache, effective
-from LOGIC.SPRITE import Barrage
+from SCRIPT.SPRITE import Barrage
 
 
 def spawn_particles(group: pygame.sprite.Group, size: tuple, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):
@@ -17,6 +17,6 @@ def spawn_particles(group: pygame.sprite.Group, size: tuple, pos: tuple, speed: 
 
     for i in range(0 + rands, 360 + rands, 45):
         color = color1 if color2 is None else choice([color1, color2])
-        sprite = Barrage(effective, None, randint(speed[0], speed[1]), color, i, pos, particle_cache[f"{size}_{color}"], False, False)
+        sprite = Barrage.Barrage(effective, None, randint(speed[0], speed[1]), color, i, pos, particle_cache[f"{size}_{color}"], False, False)
 
         group.add(sprite)

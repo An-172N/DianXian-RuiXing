@@ -9,7 +9,30 @@ import pygame
 
 
 from PRELOAD import brick_cache, color_dict
-from LOGIC.SPRITE import Brick
+from LOGIC.SPRITE import Base
+
+
+class Brick(Base):
+    __slots__ = ('color', 'hp', 'have_power', 'have_flash', 'is_die')
+
+    def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pygame.Surface):
+        super().__init__(form, image, pos=pos)
+
+        th.color = color
+        th.hp = hp
+
+        th.have_power = False
+        th.have_flash = False
+        th.is_die = False
+
+    def add_power(th) -> None:
+        th.have_power = True
+
+    def add_flash(th) -> None:
+        th.have_flash = True
+
+    def death(th) -> None:
+        th.is_die = True
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple, group: pygame.sprite.Group) -> None:

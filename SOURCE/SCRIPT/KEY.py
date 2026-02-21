@@ -11,7 +11,6 @@ import pygame
 
 
 from PRELOAD import picture
-from LOGIC.TOOL import replace_illegal_char
 from LOGIC.ITEM import calculate_item_rate
 from LOGIC.FILE import dump_file, return_file_with_makedir
 from LOGIC.PLANE import single_bomb
@@ -69,7 +68,7 @@ keyup_game_dict = {
 
 
 def save_file() -> None:
-    name = replace_illegal_char(GLOBAL.name)
+    name = GLOBAL.name.translate(str.maketrans('!<>:"/\\|?*', '__________'))
     date_time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
     dump_content = {
         '助记者': GLOBAL.name,

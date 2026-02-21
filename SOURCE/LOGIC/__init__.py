@@ -6,5 +6,6 @@ import LOGIC.PLANE as Plane
 import LOGIC.ITEM as Item
 import LOGIC.STAGE as Stage
 import LOGIC.FILE as File
-import LOGIC.TOOL as Tool
+import LOGIC.DRAW as Draw
+import LOGIC.CALCULATE as Calculate
 import LOGIC.SPRITE as Sprite

@@ -9,14 +9,13 @@ import pygame
 
 
 from PRELOAD import color_dict, barrage_rate, text_cache
-from LOGIC.TOOL import clamp
-from LOGIC.SPRITE import Text
+from LOGIC.CALCULATE import clamp
 from LOGIC.ITEM import item_spawn
 from SCRIPT import GLOBAL
 from SCRIPT.SPRITE import Barrage, Line, Bullet, Particle, Item, Brick
 
 
-def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, target_pos: tuple) -> None:
+def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple) -> None:
     if random() <= fib[stage - 1]:
         barrage_dict = {
             1: Barrage.circle_barrage,
@@ -24,11 +23,11 @@ def spawn_barrage(stage: int, group: pygame.sprite.Group, fib: list, type: int, 
         }
 
         if stage in [1, 2]:
-            return barrage_dict.get(stage)(type, color, spawn_pos, target_pos, group)
+            return barrage_dict.get(stage)(type, color, spawn_pos, locate, group)
         elif stage == 3:
-            return Line.line_barrage(color, target_pos, group)
+            return Line.line_barrage(color, locate, group)
         else:
-            return Barrage.point_barrage(type, color, target_pos, group)
+            return Barrage.point_barrage(type, color, locate, group)
 
 
 def brick_blast(group: pygame.sprite.Group, stage: int, color: list, *spawn_pos: tuple) -> None:
@@ -66,7 +65,7 @@ def item_collide() -> None:
                 GLOBAL.flash += 1
                 GLOBAL.combo += 1
 
-                GLOBAL.text_group.add(Text(GLOBAL.main_char.rect.midtop, (45, 60), 0.5, text_cache[f"extend_{color_dict[6]}"], text_cache[f"extend_{color_dict[2]}"]))
+                GLOBAL.text_group.add(Barrage.Text(GLOBAL.main_char.rect.midtop, (45, 60), 0.5, text_cache[f"extend_{color_dict[6]}"], text_cache[f"extend_{color_dict[2]}"]))
 
             if item.type in ['flash', 'power']:
                 GLOBAL.total_power += 1
@@ -113,8 +112,10 @@ def bullet_collide() -> None:
                             GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.animate_timer = Brick.boss_lose(GLOBAL.text_part)
                         else:
                             spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, barrage_rate, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.main_char.rect.center)
-                        item_spawn(GLOBAL.item_group, brick.have_power, Item.Item, "power", 2.5, brick.rect.center)
-                        item_spawn(GLOBAL.item_group, brick.have_flash, Item.Item, "flash", 2.5, brick.rect.center)
+                        if hasattr(brick, "have_power"):
+                            item_spawn(GLOBAL.item_group, brick.have_power, Item.Item, "power", 2.5, brick.rect.center)
+                        if hasattr(brick, "have_flash"):
+                            item_spawn(GLOBAL.item_group, brick.have_flash, Item.Item, "flash", 2.5, brick.rect.center)
                         brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
                         brick.kill()
 

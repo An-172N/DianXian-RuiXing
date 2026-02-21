@@ -9,30 +9,26 @@ import pygame
 
 
 from PRELOAD import char_image, color_dict, effective, bullet_cache
-from LOGIC.SPRITE import Barrage
-from SCRIPT.SPRITE import Item
+from SCRIPT.SPRITE import Item, Bullet
+from LOGIC.SPRITE import Base
 
 
-class Kli(pygame.sprite.Sprite):
+class Kli(Base):
+    __slots__ = ('group', 'particle_group', 'color', 'bullet_counter', 'bullet_timer', 'particle_counter', 'point')
+
     def __init__(th, group: pygame.sprite.Group, particle_group: pygame.sprite.Group):
-        super().__init__()
+        super().__init__(None, char_image.subsurface((0, 0, 12, 26)), pos=(292, 332))
 
         th.group = group
         th.particle_group = particle_group
 
         th.color = color_dict[5]
 
-        th.original_image = char_image
-        th.image = th.original_image.subsurface((0, 0, 12, 26))
-        th.rect = th.image.get_rect()
-
         th.bullet_counter = 0
         th.bullet_timer = 0
         th.particle_counter = 0
 
         th.point = None
-
-        th.rect.center = (292, 332)
 
     def free(th) -> None:
         th.bullet_timer += 1
@@ -49,8 +45,7 @@ class Kli(pygame.sprite.Sprite):
 
         if th.bullet_timer >= 30 and th.bullet_counter < 6:
             for i in range(120, 466, 15):
-                sprite = Barrage(effective, "bomb", -24, th.color, 0, (i, 0), bullet_cache["bomb"], False)
-                sprite.damage = getattr(sprite, "damage", 6)
+                sprite = Bullet.Bullet(effective, "bomb", -24, th.color, 0, (i, 0), 6, bullet_cache["bomb"], False)
 
                 sprite.update()
                 th.group.add(sprite)
@@ -79,8 +74,7 @@ class Kli(pygame.sprite.Sprite):
                 ]
 
                 for bullet_info in bullet_type:
-                    sprite = Barrage(effective, "bullet", 16, th.color, bullet_info['angle'], (bullet_info['x'], bullet_info['y']), bullet_cache["bullet"], False)
-                    sprite.damage = getattr(sprite, "damage", 4)
+                    sprite = Bullet.Bullet(effective, "bullet", 16, th.color, bullet_info['angle'], (bullet_info['x'], bullet_info['y']), 4, bullet_cache["bullet"], False)
 
                     sprite.update()
                     th.group.add(sprite)

@@ -9,7 +9,7 @@ import pygame
 
 
 from PRELOAD import picture, color_dict, font
-from LOGIC.TOOL import update_fps, pop_text_animate
+from LOGIC.CALCULATE import update_fps
 from LOGIC.ITEM import calculate_item_rate
 from SCRIPT import GLOBAL
 
@@ -111,7 +111,7 @@ def full_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
 
     background = picture[5]
     background.fill((0, 0, 0))
-    menu, GLOBAL.animate_timer = pop_text_animate(background, font, group, GLOBAL.animate_timer, interval)
+    menu, GLOBAL.animate_timer = pop_animate(background, font, group, GLOBAL.animate_timer, interval)
 
     surface.blit(menu, (120, 15))
 
@@ -126,7 +126,7 @@ def half_menu(surface: pygame.Surface, font: pygame.font.Font, title: str, text:
     background = picture[5].subsurface((0, 0, 345, 85))
     background.fill((0, 0, 0))
     
-    menu, GLOBAL.animate_timer = pop_text_animate(background, font, group, GLOBAL.animate_timer, interval)
+    menu, GLOBAL.animate_timer = pop_animate(background, font, group, GLOBAL.animate_timer, interval)
 
     surface.blit(menu, (120, 15))
 
@@ -143,6 +143,23 @@ def situation(surface: pygame.Surface, font: pygame.font.Font, text: list, fps: 
     for text_info in text_type:
         text = font.render(f"{text_info['text']}", False, color_dict[6])
         surface.blit(text, text_info["pos"])
+
+
+def pop_animate(surface: pygame.Surface, font: pygame.font.Font, group: list, timer: int, interval: tuple, color: tuple=(255, 255, 255)) -> tuple:
+    def for_text(timer: int, interval: int, gather: list) -> None:
+        if timer >= interval:
+            for i in gather:
+                text = font.render(i["text"], False, color).convert_alpha()
+                surface.blit(text, i["pos"])
+
+    for_text(timer, interval[0], group[0])
+    for_text(timer, interval[1], group[1])
+    for_text(timer, interval[2], group[2])
+
+    if timer < interval[2]:
+        timer += 1
+
+    return surface, timer
 
 
 def display(screen: pygame.Surface, clock: pygame.time.Clock) -> None:

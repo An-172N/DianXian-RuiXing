@@ -23,7 +23,7 @@ def turn_side(original_image: pygame.Surface, turn_image: pygame.Surface, flip: 
         return original_image
 
 
-def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int, interval: int, reset: object) -> tuple:
+def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int, interval: int, reset_char: object) -> tuple:
     if use_bomb or collided:
         timer += 1
 
@@ -32,7 +32,7 @@ def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int
                 use_bomb = False
                 timer = 0
 
-                reset()
+                reset_char()
 
             collided = False
         else:
@@ -44,9 +44,25 @@ def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int
     return use_bomb, collided, visitable, timer
 
 
+def vector(present: tuple, target: tuple, speed: float) -> tuple:
+    dir = pygame.math.Vector2(target[0] - present[0], target[1] - present[1])
+    current = pygame.math.Vector2(present[0], present[1])
+    target = pygame.math.Vector2(target[0], target[1])
+
+    delta_vec = target - current
+    distance = delta_vec.length()
+
+    if distance < speed:
+        return target, delta_vec
+    else:
+        if distance > 0:
+            dir.normalize_ip()
+
+        return current + dir * speed, delta_vec
+
+
 def single_bomb(use: bool, power: int, critical: int) -> tuple:
     if not use and power >= critical:
-        power -= critical
-        use = True
+        return True, power - critical
 
     return use, power

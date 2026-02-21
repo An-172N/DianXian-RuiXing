@@ -7,12 +7,9 @@ def score_summary(power: int, unflash: int, combo: int, collection: tuple) -> in
 
 
 def close_summary(numbers: tuple, score: int, bonus: int, end: object, next: object) -> tuple:
-    summary = False
-    score += bonus
-
     end() if numbers[0][0] >= numbers[1][0] and numbers[0][1] == numbers[1][1] else next()
 
-    return summary, score
+    return False, score + bonus
 
 
 def load_level(timer: int, loaded: bool, end: int, load: object) -> tuple:

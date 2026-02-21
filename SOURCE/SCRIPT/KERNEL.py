@@ -9,11 +9,11 @@ from random import randint
 import pygame
 
 
-from PRELOAD import picture, window, asset, color_dict, text_cache
-from LOGIC.TOOL import clamp
+from PRELOAD import picture, window, asset, color_dict, text_cache, char_image
+from LOGIC.CALCULATE import clamp
 from LOGIC.PLANE import turn_side, move_plane, invinc
 from LOGIC.ITEM import item_spawn, combo_counter
-from LOGIC.SPRITE import Text
+from SCRIPT.SPRITE import Barrage
 from LOGIC.STAGE import load_level
 from LOGIC.FILE import read_level
 
@@ -59,22 +59,22 @@ def update(clock: pygame.time.Clock, screen: pygame.Surface, *args: tuple) -> No
                 if GLOBAL.is_s_divide:
                     GLOBAL.main_char.free()
 
-                GLOBAL.main_char.image = turn_side(GLOBAL.main_char.original_image.subsurface((0, 0, 12, 26)), GLOBAL.main_char.original_image.subsurface((12, 0, 12, 26)), GLOBAL.is_move_right, GLOBAL.is_move_left)
-                GLOBAL.main_char.rect.x = move_plane(GLOBAL.main_char.rect.x, (4, 8), GLOBAL.is_move_left, GLOBAL.is_move_right, GLOBAL.is_fast)
-                GLOBAL.main_char.rect.centery = 331 if GLOBAL.is_fast else 332
-                keep_x = clamp(GLOBAL.main_char.rect.centerx, window.left, window.right)
-                GLOBAL.main_char.rect.centerx = keep_x
-                GLOBAL.decision_point.rect.center = (keep_x, GLOBAL.main_char.rect.centery)
+                GLOBAL.main_char.image = turn_side(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), GLOBAL.is_move_right, GLOBAL.is_move_left)
+                GLOBAL.main_char.x = move_plane(GLOBAL.main_char.x, (4, 8), GLOBAL.is_move_left, GLOBAL.is_move_right, GLOBAL.is_fast)
+                GLOBAL.main_char.y = 331 if GLOBAL.is_fast else 332
+                keep_x = clamp(GLOBAL.main_char.x, window.left, window.right)
+                GLOBAL.main_char.x = keep_x
+                GLOBAL.decision_point.rect.center = (keep_x, GLOBAL.main_char.y)
 
-                if hasattr(GLOBAL.char, "target_pos"):
-                    GLOBAL.char.target_pos = GLOBAL.main_char.rect.center
+                if hasattr(GLOBAL.char, "locate"):
+                    GLOBAL.char.locate = GLOBAL.main_char.rect.center
 
                 COLLIDE.barrage_collide(GLOBAL.main_char.rect.center)
                 GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer = invinc(GLOBAL.is_s_divide, GLOBAL.is_collide, GLOBAL.is_visitable, GLOBAL.cooldown_timer, 180, 6, GLOBAL.main_char.reset_bullet)
 
                 GLOBAL.item_spawn_timer = item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, Item.Item, "fire", -2, (randint(120, 465), 10), timer=GLOBAL.item_spawn_timer)
                 if GLOBAL.combo_timer <= 1 and GLOBAL.combo > 0:
-                    GLOBAL.text_group.add(Text(GLOBAL.main_char.rect.midtop, (45, 60), 0.5, text_cache[f"{2 ** GLOBAL.combo}_{color_dict[6]}"], text_cache[f"{2 ** GLOBAL.combo}_{color_dict[7]}"]))
+                    GLOBAL.text_group.add(Barrage.Text(GLOBAL.main_char.rect.midtop, (45, 60), 0.5, text_cache[f"{2 ** GLOBAL.combo}_{color_dict[6]}"], text_cache[f"{2 ** GLOBAL.combo}_{color_dict[7]}"]))
                 GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = combo_counter(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.bullet_group.update()

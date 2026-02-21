@@ -3,8 +3,8 @@
 
 
 from PRELOAD import color_dict, picture
-from LOGIC.TOOL import draw_rectangle
-from LOGIC.SPRITE import Rect
+from LOGIC.DRAW import rectangle
+from SCRIPT.SPRITE import Barrage
 from SCRIPT.HUMAN import Kli
 from SCRIPT import GLOBAL
 
@@ -30,7 +30,7 @@ def mode_one() -> None:
     GLOBAL.is_s_divide = False
     GLOBAL.cooldown_timer = 0
     GLOBAL.main_char = Kli(GLOBAL.bullet_group, GLOBAL.particle_group)
-    GLOBAL.decision_point = Rect(draw_rectangle((2, 2), 0, color_dict[7]).convert(), (292, 332), True)
+    GLOBAL.decision_point = Barrage.Rect(rectangle((2, 2), 0, color_dict[7]).convert(), (292, 332), True)
     GLOBAL.total_power = 0
 
     GLOBAL.shoot_counter = 0
