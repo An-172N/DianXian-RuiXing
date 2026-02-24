@@ -68,7 +68,7 @@ keyup_game_dict = {
 }
 
 
-def save_file() -> None:
+def save_file():
     name = GLOBAL.name.translate(str.maketrans('!<>:"/\\|?*', '__________'))
     date_time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
     dump_content = {
@@ -83,8 +83,8 @@ def save_file() -> None:
     dump_file(return_file_with_makedir(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json'), "锐山抚形日志", dump_content)
 
 
-def next_level() -> None:
-    def stage_logic() -> None:
+def next_level():
+    def stage_logic():
         GLOBAL.stage, GLOBAL.level = level_logic((GLOBAL.stage, GLOBAL.level), 6)
 
     mode_one()
@@ -102,7 +102,7 @@ def summary():
     GLOBAL.second_backdrop = picture[GLOBAL.stage]
 
 
-def key_event() -> None:
+def key_event():
     for event in pg.event.get():
         if event.type == pg.QUIT:
             sys.exit()
@@ -112,12 +112,12 @@ def key_event() -> None:
             keydown(event)
 
 
-def keyup(event: pg.event.Event) -> None:
+def keyup(event: pg.event.Event):
     if GLOBAL.is_run and event.key in keyup_game_dict:
         keyup_game_dict[event.key]()
 
 
-def keydown(event: pg.event.Event) -> None:
+def keydown(event: pg.event.Event):
     if not GLOBAL.is_run and event.key in keydown_start_dict:
         keydown_start_dict[event.key]()
     elif GLOBAL.is_save:
@@ -135,7 +135,7 @@ def keydown(event: pg.event.Event) -> None:
         keydown_game_dict[event.key]()
 
 
-def mode_one() -> None:
+def mode_one():
     GLOBAL.is_pause = False
     GLOBAL.is_summary = False
     GLOBAL.is_talk = False
@@ -170,7 +170,7 @@ def mode_one() -> None:
     GLOBAL.text_number = 0
 
 
-def mode_two() -> None:
+def mode_two():
     GLOBAL.stage = 1
     GLOBAL.level = 0
     GLOBAL.char = None

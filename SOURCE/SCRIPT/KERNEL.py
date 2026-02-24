@@ -17,13 +17,13 @@ from LOGIC.STAGE import load_level
 from LOGIC.FILE import read_level
 
 
-def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple) -> None:
+def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     from SCRIPT import GUI, KEY, GLOBAL
     from SCRIPT.SPRITE import Item, Brick
     from SCRIPT.HUMAN import Ono, Hro, Nre, Qdi
     from SCRIPT.SPRITE import Barrage, Line, Bullet, Item, Brick
 
-    def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple) -> None:
+    def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
         barrage_dict = {
             1: Barrage.circle_barrage,
             2: Barrage.polygon_barrage
@@ -37,7 +37,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple) -> None:
             else:
                 return Barrage.point_barrage(type, color, locate, group)
 
-    def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple) -> None:
+    def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
         process_dict = {
             1: Bullet.circle_brick,
             3: Line.line_brick
@@ -51,7 +51,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple) -> None:
             else:
                 return Bullet.point_brick(group)
 
-    def item_collide() -> None:
+    def item_collide():
         if GLOBAL.is_shoot and GLOBAL.shoot_count > 0:
             GLOBAL.major.fire(GLOBAL.power)
             Barrage.spawn_particles(GLOBAL.particle_group, (2, 2), GLOBAL.major.rect.center, (4, 8), GLOBAL.major.color)
@@ -80,7 +80,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple) -> None:
 
                 item.kill()
 
-    def barrage_collide(position) -> None:
+    def barrage_collide(position):
         if GLOBAL.is_collide or GLOBAL.is_divide:
             return
 
@@ -100,7 +100,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple) -> None:
 
                     barrage.kill()
 
-    def bullet_collide() -> None:
+    def bullet_collide():
         collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
 
         if collide:
@@ -127,11 +127,11 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple) -> None:
                     if bullet.type in ("bullet", "bomb"):
                         bullet.kill()
 
-    def mask() -> None:
+    def mask():
         GLOBAL.backdrop.set_clip(window)
         GLOBAL.backdrop.fill((0, 0, 0, 0))
 
-    def sprite_loader() -> None:
+    def sprite_loader():
         if GLOBAL.level == 6:
             GLOBAL.char = choose_human()
             GLOBAL.text = json.loads(asset(rf"ASSET\JSON\{GLOBAL.stage}.json").decode('utf-8'))

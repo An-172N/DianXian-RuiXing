@@ -24,7 +24,7 @@ class Qdi(Basic):
 
         th.power = True
 
-    def free(th) -> None:
+    def free(th):
         if th.timer == 0:
             for _ in range(48):
                 angle = randint(0, 360)
@@ -32,7 +32,7 @@ class Qdi(Basic):
 
                 Barrage.Barrage(effective, 2, 4, th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
-    def final(th) -> None:
+    def final(th):
         if th.timer == 0:
             pos = (randint(120, 465), randint(15, 170))
 
@@ -42,7 +42,7 @@ class Qdi(Basic):
                 for i in range(0 + rands, 360 + rands, 30):
                     Barrage.Barrage(effective, 2, randint(2, 5), th.color, i, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
-    def extend(th) -> None:
+    def extend(th):
         if th.timer == 0:
             for _ in range(8):
                 pos = (randint(120, 465), randint(15, 200))
@@ -50,7 +50,7 @@ class Qdi(Basic):
                 for j in range(0, 360, 30):
                     Barrage.Barrage(effective, 2, randint(2, 5), th.color, j, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
-    def fire(th) -> None:
+    def fire(th):
         if th.torrent < 6 and th.timer % 2 == 0:
             pos = (randint(120, 465), randint(15, 230))
             two_point = add(th.locate, (-pos[0], -pos[1]))
@@ -60,7 +60,7 @@ class Qdi(Basic):
 
             th.torrent += 1
 
-    def update(th) -> None:
+    def update(th):
         th.timer += 1
 
         if th.timer % 150 == 0:

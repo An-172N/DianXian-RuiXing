@@ -25,7 +25,7 @@ class Ono(Basic):
 
         th.power = True
 
-    def free(th) -> None:
+    def free(th):
         if th.torrent < 8:
             for i in range(0 + th.timer * 6, 360 + th.timer * 6, 180):
                 for j in range(0 + th.timer * 6, 360 + th.timer * 6, 90):
@@ -35,7 +35,7 @@ class Ono(Basic):
 
             th.torrent += 1
 
-    def extend(th) -> None:
+    def extend(th):
         speed = 5
         delay = 0
 
@@ -53,7 +53,7 @@ class Ono(Basic):
 
                 speed -= 0.5
 
-    def final(th) -> None:
+    def final(th):
         if th.torrent < 32:
             two_point = add(th.locate, (-th.x, -th.y))
             atan2_ = atan2(-two_point[0], -two_point[1])
@@ -64,12 +64,12 @@ class Ono(Basic):
 
             th.torrent += 1
 
-    def fire(th) -> None:
+    def fire(th):
         if th.timer == 0:
             for i in range(0, 360, 15):
                 Barrage.Barrage(effective, 2, 4, th.color, i, (th.x, th.y), barrage_cache[(2, th.color)], th.group, True, False)
 
-    def update(th) -> None:
+    def update(th):
         th.timer += 1
 
         if th.timer % 120 == 0:

@@ -2,8 +2,8 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-from random import randint, choice
-from math import degrees, atan2
+from random import choice, randint
+from math import atan2, degrees
 
 
 import pygame as pg
@@ -24,10 +24,9 @@ class Line(Base):
         th.damage = damage
         th.color = color
         th.target_color = target_color
-
         th.timer = 0
 
-    def update(th) -> None:
+    def update(th):
         th.timer += 1
 
         if th.timer >= 68:
@@ -37,7 +36,7 @@ class Line(Base):
             th.image = line_cache[(th.size[1], th.angle, th.color)]
 
 
-def line_barrage(color: list, locate: tuple, group: pg.sprite.Group) -> None:
+def line_barrage(color: list, locate: tuple, group: pg.sprite.Group):
     start_pos = (randint(120, 465), 15)
     end_pos = (-locate[0], -locate[1])
     delta_pos = add(end_pos, start_pos)
@@ -48,7 +47,7 @@ def line_barrage(color: list, locate: tuple, group: pg.sprite.Group) -> None:
     Line((3, 500), 0, angle, pos, color[1], color[2], group, True)
 
 
-def line_brick(group: pg.sprite.Group, spawn_pos: tuple) -> None:
+def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = round_angle(randint(0, 360))
 

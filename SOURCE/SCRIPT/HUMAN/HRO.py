@@ -26,7 +26,7 @@ class Hro(Basic):
         th.is_choose = False
         th.flash = True
 
-    def free(th) -> None:
+    def free(th):
         bullet_type = [
             {
                 'dx1': 140,
@@ -57,7 +57,7 @@ class Hro(Basic):
 
             th.torrent += 1
 
-    def extend(th) -> None:
+    def extend(th):
         speed = 6
 
         if th.timer == 0:
@@ -73,7 +73,7 @@ class Hro(Basic):
 
                 speed -= 0.6
 
-    def fire(th) -> None:
+    def fire(th):
         if th.timer % 6 == 0 and th.torrent < 3:
             pos = (th.x, th.y)
 
@@ -86,7 +86,7 @@ class Hro(Basic):
 
             th.torrent += 1
 
-    def update(th) -> None:
+    def update(th):
         th.timer += 1
 
         if th.timer % 110 == 0:

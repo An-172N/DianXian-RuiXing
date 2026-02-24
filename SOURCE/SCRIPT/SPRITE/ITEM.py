@@ -17,7 +17,7 @@ class Item(Base):
 
         th.speed = speed
     
-    def update(th) -> None:
+    def update(th):
         th.y -= th.speed
 
         if th.type in ["power", "flash"]:

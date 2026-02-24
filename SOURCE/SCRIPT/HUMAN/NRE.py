@@ -25,7 +25,7 @@ class Nre(Basic):
 
         th.power = True
 
-    def free(th) -> None:
+    def free(th):
         if th.torrent < 12:
             start_pos = (randint(120, 465), 15)
             end_pos = (-randint(120, 465), -360)
@@ -37,7 +37,7 @@ class Nre(Basic):
 
             th.torrent += 1
 
-    def extend(th) -> None:
+    def extend(th):
         if th.torrent < 8 and th.timer % 3 == 0:
             for j in (1, -1):
                 start_pos = (th.interval_locate[0] + th.torrent * j * 24, 15)
@@ -59,7 +59,7 @@ class Nre(Basic):
 
             th.torrent += 1
 
-    def fire(th) -> None:
+    def fire(th):
         if th.timer == 0:
             for i in range(th.locate[0] - 30, th.locate[0] + 31, 20):
                 start_pos = (i, 15)
@@ -69,7 +69,7 @@ class Nre(Basic):
 
                 Line.Line((3, 500), 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
 
-    def update(th) -> None:
+    def update(th):
         th.timer += 1
 
         if th.timer % 100 == 0:

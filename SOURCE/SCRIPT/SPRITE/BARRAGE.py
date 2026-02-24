@@ -3,7 +3,7 @@
 
 
 from random import choice, randint
-from math import degrees, atan2, radians, sin, cos
+from math import radians, sin, cos, atan2, degrees
 
 
 import pygame as pg
@@ -24,7 +24,7 @@ class Barrage(Base):
         th.speed = speed
         th.color = color
 
-    def update(th) -> None:
+    def update(th):
         rad = radians(th.angle)
         sin_, cos_ = sin(rad), cos(rad)
         th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
@@ -59,7 +59,7 @@ class Rect(Base):
         super().__init__(None, image, *group, pos=pos, mask=mask)
 
 
-def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group) -> None:
+def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     two_point = add(locate, (-spawn_pos[0], -spawn_pos[1]))
     atan2_ = atan2(-two_point[0], -two_point[1])
     angle = degrees(atan2_)
@@ -67,7 +67,7 @@ def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, grou
     Barrage(effective, type, 3, color[0], angle, spawn_pos, barrage_cache[(type, color[0])], group, rotate=False)
 
 
-def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group) -> None:
+def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         two_point = add((i, locate[1]), (-spawn_pos[0], -spawn_pos[1]))
         atan2_ = atan2(-two_point[0], -two_point[1])
@@ -76,7 +76,7 @@ def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, gro
         Barrage(effective, type, 3, color[0], angle, spawn_pos, barrage_cache[(type, color[0])], group)
 
 
-def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group) -> None:
+def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group):
     for _ in range(3):
         pos = (randint(120, 465), randint(15, 225))
         two_point = add(locate, (-pos[0], -pos[1]))

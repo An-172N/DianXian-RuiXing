@@ -13,7 +13,7 @@ from LOGIC.CALCULATE import update_fps
 from SCRIPT import GLOBAL
 
 
-def situation(screen: pg.Surface, clock: pg.time.Clock) -> None:
+def situation(screen: pg.Surface, clock: pg.time.Clock):
     GLOBAL.fps_text, GLOBAL.last_time = update_fps(GLOBAL.fps_text, GLOBAL.last_time, 0, 500, clock)
 
     text = [
@@ -26,14 +26,14 @@ def situation(screen: pg.Surface, clock: pg.time.Clock) -> None:
     ui(screen, text, GLOBAL.fps_text)
 
 
-def pause(screen: pg.Surface) -> None:
+def pause(screen: pg.Surface):
     title = "休息ing"
     text = ["ESC 休息好了", "Q 不玩了"]
 
     return half_menu(screen, title, text)
 
 
-def load(screen: pg.Surface) -> None:
+def load(screen: pg.Surface):
     stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
     title = "这一关是————"
@@ -42,7 +42,7 @@ def load(screen: pg.Surface) -> None:
     return half_menu(screen, title, text, (0, 60, 120, 180))
 
 
-def talk(screen: pg.Surface) -> None:
+def talk(screen: pg.Surface):
     try:
         human = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["char"]
         text = [
@@ -55,7 +55,7 @@ def talk(screen: pg.Surface) -> None:
         GLOBAL.is_talk = False
 
 
-def summary(screen: pg.Surface) -> None:
+def summary(screen: pg.Surface):
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!Hit Z Key."
     text = [
         f"得点 {GLOBAL.total_power} * 512 = {GLOBAL.total_power * 512}",
@@ -65,7 +65,7 @@ def summary(screen: pg.Surface) -> None:
     return half_menu(screen, stage, text)
 
 
-def start(screen: pg.Surface) -> None:
+def start(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ['Ver 1.0.7', '', '', '', '']
@@ -74,7 +74,7 @@ def start(screen: pg.Surface) -> None:
     return full_menu(screen, title, text, key, other)
 
 
-def save(screen: pg.Surface) -> None:
+def save(screen: pg.Surface):
     title = "抚形日志"
     name = f"由 {GLOBAL.name} 助记"
     text = [
@@ -89,7 +89,7 @@ def save(screen: pg.Surface) -> None:
     return full_menu(screen, title, text, key, name)
 
 
-def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60, 60)) -> None:
+def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60, 60)):
     group = [
         [
             {"text": title, "pos": (8, 10)},
@@ -115,7 +115,7 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
     surface.blit(menu, (120, 15))
 
 
-def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60, 60)) -> None:
+def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60, 60)):
     group = [
         [{"text": title, "pos": (8, 8)}],
         [{"text": text[0], "pos": (8, 33)}],
@@ -129,7 +129,7 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
     surface.blit(menu, (120, 15))
 
 
-def ui(surface: pg.Surface, text: list, fps: str) -> None:
+def ui(surface: pg.Surface, text: list, fps: str):
     text_type = [
         {"text": text[0], "pos": (8, 25)},
         {"text": text[1], "pos": (8, 270)},
@@ -145,7 +145,7 @@ def ui(surface: pg.Surface, text: list, fps: str) -> None:
 
 
 def pop_animate(surface: pg.Surface, font: pg.font.Font, group: list, timer: int, interval: tuple, color: tuple=(255, 255, 255)) -> tuple:
-    def for_text(timer: int, interval: int, gather: list) -> None:
+    def for_text(timer: int, interval: int, gather: list):
         if timer >= interval:
             for i in gather:
                 text = font.render(i["text"], False, color).convert_alpha()
@@ -162,7 +162,7 @@ def pop_animate(surface: pg.Surface, font: pg.font.Font, group: list, timer: int
     return surface, timer
 
 
-def display(screen: pg.Surface, clock: pg.time.Clock) -> None:
+def display(screen: pg.Surface, clock: pg.time.Clock):
     screen.blit(GLOBAL.second_backdrop, (120, 15))
 
     GLOBAL.bullet_group.draw(screen)

@@ -24,14 +24,8 @@ class Brick(Base):
         th.flash = False
         th.is_die = False
 
-    def add_power(th) -> None:
-        th.power = True
 
-    def add_flash(th) -> None:
-        th.flash = True
-
-
-def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple, group: pg.sprite.Group) -> None:
+def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple, group: pg.sprite.Group):
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
@@ -40,15 +34,15 @@ def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tu
             Brick(shape, hp, c, (size[0] + i * interval[0], size[1] + row * interval[1]), brick_cache[(shape, c)], group)
 
 
-def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic_flash: int) -> None:
+def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic_flash: int):
     brick_list = list(group)
     choose_power = sample(range(len(brick_list)), basic_power + numbers[0] + numbers[1])
     choose_flash = sample(range(len(brick_list)), basic_flash)
 
     for i in choose_power:
-        brick_list[i].add_power()
+        brick_list[i].power = True
     for j in choose_flash:
-        brick_list[j].add_flash()
+        brick_list[j].flash = True
 
 
 def boss_lose(part: int) -> tuple:

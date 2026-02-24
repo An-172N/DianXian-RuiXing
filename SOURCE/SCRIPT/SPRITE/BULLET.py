@@ -2,7 +2,7 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-from random import randint, choice
+from random import choice, randint
 from math import radians, sin, cos
 
 
@@ -24,7 +24,7 @@ class Bullet(Base):
         th.color = color
         th.damage = damage
 
-    def update(th) -> None:
+    def update(th):
         rad = radians(th.angle)
         sin_, cos_ = sin(rad), cos(rad)
         th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
@@ -33,14 +33,14 @@ class Bullet(Base):
             th.kill()
 
 
-def circle_brick(group: pg.sprite.Group, spawn_pos: tuple) -> None:
+def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):
     rands = randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 15):
         Bullet(effective, "bullet", 16, 0, i, spawn_pos, 4, bullet_cache["bullet"], group, False).update()
 
 
-def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple) -> None:
+def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
     bullet_index = [
         {
             'angle': choice([-30, -210]),
@@ -60,7 +60,7 @@ def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple) -> None:
         Bullet(effective, "bullet-cross", 16, 0, bullet_info['angle'], bullet_info['pos'], 4, bullet_cache["bullet-cross"], group, False)
 
 
-def point_brick(group: pg.sprite.Group) -> None:
+def point_brick(group: pg.sprite.Group):
     for _ in range(24):
         pos = (randint(120, 465), randint(15, 345))
         angle = randint(0, 360)

@@ -26,7 +26,7 @@ class Kli(Base):
         th.bullet_timer = 0
         th.point = None
 
-    def free(th) -> None:
+    def free(th):
         th.bullet_timer += 1
 
         if th.bullet_timer == 10:
@@ -42,7 +42,7 @@ class Kli(Base):
 
             th.torrent += 1
 
-    def fire(th, power: int) -> None:
+    def fire(th, power: int):
         p = 2 ** (power // 32)
         q = 2 ** (power // 16)
 
@@ -66,6 +66,6 @@ class Kli(Base):
                 for bullet_info in bullet_type:
                     Bullet.Bullet(effective, "bullet", 16, th.color, bullet_info['angle'], (bullet_info['x'], bullet_info['y']), 4, bullet_cache["bullet"], th.group, mask=False)
 
-    def reset_bullet(th) -> None:
+    def reset_bullet(th):
         th.torrent = 0
         th.bullet_timer = 0

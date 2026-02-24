@@ -6,7 +6,7 @@ import json
 import os
 
 
-def dump_file(file: str, title: str, append: object) -> None:
+def dump_file(file: str, title: str, append: object):
     dump = [title]
     dump.append(append)
 
