@@ -409,7 +409,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
             GLOBAL.shoot_count -= 1
 
-        collide = pg.sprite.spritecollide(GLOBAL.major, GLOBAL.item_group, True)
+        collide = pg.sprite.spritecollide(GLOBAL.major, GLOBAL.item_group, False)
 
         if collide:
             for item in collide:
@@ -424,29 +424,32 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                     GLOBAL.combo += 1
 
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.text_group)
-
                 if item.type in ['flash', 'power']:
                     GLOBAL.total_power += 1
                     GLOBAL.game_total_power += 1
 
                     sound_cache["pick"].play()
 
+                item.kill()
+
     def barrage_collide(position):
-        collide = pg.sprite.spritecollide(GLOBAL.decision_point, GLOBAL.barrage_group, True, pg.sprite.collide_mask)
+        collide = pg.sprite.spritecollide(GLOBAL.decision_point, GLOBAL.barrage_group, False, pg.sprite.collide_mask)
 
         if collide:
             for barrage in collide:
-                if barrage.color != color_dict[6] and not (GLOBAL.is_collide or GLOBAL.is_divide):
-                    GLOBAL.is_collide = True
-                    Sprite.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), color_dict[5], color_dict[6])
+                if barrage.color != color_dict[6]:
+                    if not (GLOBAL.is_collide or GLOBAL.is_divide):
+                        GLOBAL.is_collide = True
+                        GLOBAL.no_flash = 0
+                        GLOBAL.flash -= 1
+                        GLOBAL.use_flash += 1
+                        if GLOBAL.flash == 0:
+                            GLOBAL.is_save = True
 
-                    GLOBAL.no_flash = 0
-                    GLOBAL.flash -= 1
-                    GLOBAL.use_flash += 1
-                    if GLOBAL.flash == 0:
-                        GLOBAL.is_save = True
+                        Sprite.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), color_dict[5], color_dict[6])
+                        sound_cache["fire"].play()
 
-                    sound_cache["fire"].play()
+                    barrage.kill()
 
     def bullet_collide():
         collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
