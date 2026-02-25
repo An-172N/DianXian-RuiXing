@@ -107,6 +107,6 @@
   - PNG 转 ICO：Pillow
   - 图像处理：Krita
 
-**本项目网址：https://github.com/An-172N/DianXian-RuiXing** *（喜欢的话就点个星吧~*  
+**本项目网址：https://github.com/An-172N/DianXian-RuiXing** *（感兴趣的话就点个星吧~*  
 
 **(C)opyright 2026 An_172N**  
