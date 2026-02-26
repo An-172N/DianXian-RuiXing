@@ -17,7 +17,7 @@ from LOGIC.CALCULATE import clamp, update_fps
 from LOGIC.PLANE import turn_side, move_plane, invinc, single_bomb
 from LOGIC.ITEM import item_spawn, combo_counter
 from LOGIC.STAGE import load_level, level_logic
-from LOGIC.FILE import read_level, dump_file, return_file_with_makedir
+from LOGIC.FILE import read_level, save_record
 from LOGIC.DRAW import rectangle
 from SCRIPT import GLOBAL
 from SCRIPT.HUMAN import Ono, Hro, Nre, Qdi, Kli
@@ -98,7 +98,7 @@ def load(screen: pg.Surface):
     title = "这一关是————"
     text = [f"Stage {stage_text} - {GLOBAL.level} !!", "START!!!!"]
 
-    return half_menu(screen, title, text, (0, 60, 120, 180))
+    return half_menu(screen, title, text)
 
 
 def talk(screen: pg.Surface):
@@ -109,7 +109,7 @@ def talk(screen: pg.Surface):
             GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["2"] if "2" in GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"] else ''
         ]
 
-        return half_menu(screen, human, text, (0, 6, 12, 12))
+        return half_menu(screen, human, text, (0, 6, 12))
     except KeyError:
         GLOBAL.is_talk = False
 
@@ -148,7 +148,7 @@ def save(screen: pg.Surface):
     return full_menu(screen, title, text, key, name)
 
 
-def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60, 60)):
+def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
     group = [
         [
             {"text": title, "pos": (8, 10)},
@@ -174,7 +174,7 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
     surface.blit(menu, (120, 15))
 
 
-def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60, 60)):
+def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
     group = [
         [{"text": title, "pos": (8, 8)}],
         [{"text": text[0], "pos": (8, 33)}],
@@ -215,8 +215,11 @@ def pop_animate(surface: pg.Surface, font: pg.font.Font, group: list, timer: int
     for_text(timer, interval[1], group[1])
     for_text(timer, interval[2], group[2])
 
-    if timer < interval[3]:
+    if timer < interval[2]:
         timer += 1
+
+        if timer == interval[2]:
+            sound_cache["pick"].play()
 
     return surface, timer
 
@@ -264,7 +267,7 @@ def save_file():
         '记录日期': date_time[0]
     }
 
-    dump_file(return_file_with_makedir(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json'), "锐山抚形日志", dump_content)
+    save_record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', "锐山抚形日志", dump_content)
 
 
 def next_level():
@@ -416,6 +419,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.combo_time = 120
                 GLOBAL.shoot_count = int(clamp(GLOBAL.shoot_count + 1, 0, 6))
 
+                sound_cache["charge"].play(maxtime=24)
+
                 if item.type == "power":
                     GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
                     GLOBAL.combo += 1
@@ -495,6 +500,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             read_level(asset(rf"ASSET\STAGE\{GLOBAL.stage}-{GLOBAL.level}.stg"), Sprite.load_brick, color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
             Sprite.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
 
+        GLOBAL.wait_load_time = 0
         GLOBAL.pop_time = 0
 
     def choose_human() -> Ono | Hro | Nre | Qdi:
@@ -553,7 +559,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
                 item_collide()
             if not GLOBAL.is_level_load:
-                GLOBAL.pop_time, GLOBAL.is_level_load = load_level(GLOBAL.pop_time, GLOBAL.is_level_load, 180, sprite_loader)
+                GLOBAL.wait_load_time, GLOBAL.is_level_load = load_level(GLOBAL.wait_load_time, GLOBAL.is_level_load, 90, sprite_loader)
 
         key_event()
         display(screen, clock)

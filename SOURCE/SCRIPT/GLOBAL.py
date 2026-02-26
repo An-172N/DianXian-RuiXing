@@ -17,6 +17,7 @@ is_level_load = False
 
 
 pop_time = 0
+wait_load_time = 0
 
 
 name = ''
