@@ -449,7 +449,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                     GLOBAL.combo += 1
 
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.text_group)
-                    sound_cache["charge"].play(maxtime=128)
                 if item.type in ['flash', 'power']:
                     GLOBAL.total_power += 1
                     GLOBAL.game_total_power += 1
@@ -562,7 +561,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.item_spawn_time = item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_time >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), timer=GLOBAL.item_spawn_time)
                 if GLOBAL.combo_time <= 1 and GLOBAL.combo > 0:
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.text_group)
-                    sound_cache["charge"].play(maxtime=128)
                 GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score = combo_counter(GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.bullet_group.update()

@@ -9,7 +9,7 @@ from math import radians, sin, cos, atan2, degrees
 import pygame as pg
 
 
-from PRELOAD import barrage_cache, effective, particle_cache, color_dict, brick_cache, bullet_cache, item_cache, line_cache
+from PRELOAD import barrage_cache, effective, particle_cache, color_dict, brick_cache, bullet_cache, item_cache, line_cache, sound_cache
 from LOGIC.CALCULATE import add, round_angle
 from LOGIC.SPRITE import Base
 
@@ -43,6 +43,8 @@ class Text(Base):
         th.kill_time = kill_time
         th.speed = speed
         th.timer = 0
+
+        sound_cache["charge"].play(maxtime=128)
 
     def update(th):
         th.timer += 1
