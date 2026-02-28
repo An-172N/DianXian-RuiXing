@@ -115,13 +115,27 @@ def talk(screen: pg.Surface):
 
 
 def summary(screen: pg.Surface):
-    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!Hit Z Key."
+    stage = (f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!Hit Z Key.") if GLOBAL.level <= 5 else (f"Stage {GLOBAL.stage} Clear!")
     text = [
         f"得点 {GLOBAL.total_power} * 512 = {GLOBAL.total_power * 512}",
         f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"
     ]
+    over = [
+        f"面数 {GLOBAL.stage} * 16384 = {GLOBAL.stage * 16384}",
+        f"形力 {GLOBAL.power} / 32 * 8192 = {int(GLOBAL.power / 32 * 8192)}",
+        ""
+    ]
+    title = {
+        1: "水边的秋霜店 ~ Sweet Reservoir",
+        2: "X 在树林 ~ Hypnotized",
+        3: "午夜行至最高峰 ~ Thunder Studio",
+        4: "享受禁饮 ~ Point's Back Room"
+    }
 
-    return half_menu(screen, stage, text)
+    if GLOBAL.level <= 5:
+        return half_menu(screen, stage, text)
+    else:
+        return full_menu(screen, stage, text + over, ["Z 继续", "W 木鱼"], title.get(GLOBAL.stage))
 
 
 def start(screen: pg.Surface):
@@ -282,13 +296,14 @@ def quit():
     pg.time.wait(int(sound_cache["pick"].get_length() * 8000))
     sys.exit()
 
+
 def summary_logic():
     def close_summary(numbers: tuple, score: int, bonus: int, end: object, next: object) -> tuple:
         end() if numbers[0][0] >= numbers[1][0] and numbers[0][1] == numbers[1][1] else next()
 
         return False, score + bonus
 
-    GLOBAL.is_summary, GLOBAL.score = close_summary(((GLOBAL.stage, GLOBAL.level), (3, 6)), GLOBAL.score, GLOBAL.score_summary(GLOBAL.total_power, GLOBAL.no_flash, GLOBAL.combo, (512, 4096, 2)), lambda: setattr(GLOBAL, 'is_save', True), next_level)
+    GLOBAL.is_summary, GLOBAL.score = close_summary(((GLOBAL.stage, GLOBAL.level), (3, 6)), GLOBAL.score, GLOBAL.score_summary(GLOBAL.total_power, GLOBAL.power, GLOBAL.no_flash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level)), lambda: setattr(GLOBAL, 'is_save', True), next_level)
     GLOBAL.pop_time = 0
     GLOBAL.second_backdrop = picture[GLOBAL.stage]
 
@@ -324,9 +339,12 @@ def keydown(event: pg.event.Event):
     elif GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict:
         keydown_talk_dict[event.key]()
         sound_cache["pick"].play()
-    elif GLOBAL.is_summary and event.key in keydown_summary_dict:
-        keydown_summary_dict[event.key]()
-        sound_cache["pick"].play()
+    elif GLOBAL.is_summary:
+        if event.key in keydown_summary_dict:
+            keydown_summary_dict[event.key]()
+            sound_cache["pick"].play()
+        elif event.key == pg.K_w and GLOBAL.level == 6:
+            sound_cache["pick"].play()
     elif not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and event.key in keydown_game_dict:
         keydown_game_dict[event.key]()
 
@@ -528,7 +546,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                     GLOBAL.major.free()
 
                 GLOBAL.major.image = turn_side(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), GLOBAL.is_move_right, GLOBAL.is_move_left)
-                GLOBAL.major.x = move_plane(GLOBAL.major.x, (4, 8), GLOBAL.is_move_left, GLOBAL.is_move_right, GLOBAL.is_fast)
+                GLOBAL.major.x = move_plane(GLOBAL.major.x, (3, 8), GLOBAL.is_move_left, GLOBAL.is_move_right, GLOBAL.is_fast)
                 GLOBAL.major.y = 331 if GLOBAL.is_fast else 332
                 keep_x = clamp(GLOBAL.major.x, window.left, window.right)
                 GLOBAL.major.x = keep_x

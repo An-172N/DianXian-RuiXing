@@ -63,6 +63,7 @@ def vector(present: tuple, target: tuple, speed: float) -> tuple:
 
 def single_bomb(condition: bool, power: int, critical: int) -> tuple:
     if not condition and power >= critical:
-        return True, power - critical
+        condition = True
+        power -= critical
 
-    return False, power
+    return condition, power
