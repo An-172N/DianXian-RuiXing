@@ -141,7 +141,7 @@ def summary(screen: pg.Surface):
 def start(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
-    text = ['Ver 1.0.7', '', '', '', '']
+    text = ['Ver 1.0.8', '', '', '', '']
     key = ["Z 开玩", "Q 退了"]
 
     return full_menu(screen, title, text, key, other)
@@ -442,16 +442,17 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 if item.type == "power":
                     GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
                     GLOBAL.combo += 1
+
+                    sound_cache["pick"].play()
                 elif item.type == "flash":
                     GLOBAL.flash += 1
                     GLOBAL.combo += 1
 
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.text_group)
+                    sound_cache["charge"].play(maxtime=128)
                 if item.type in ['flash', 'power']:
                     GLOBAL.total_power += 1
                     GLOBAL.game_total_power += 1
-
-                    sound_cache["pick"].play()
 
                 item.kill()
 
@@ -561,6 +562,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.item_spawn_time = item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_time >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), timer=GLOBAL.item_spawn_time)
                 if GLOBAL.combo_time <= 1 and GLOBAL.combo > 0:
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.text_group)
+                    sound_cache["charge"].play(maxtime=128)
                 GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score = combo_counter(GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.bullet_group.update()
