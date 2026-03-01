@@ -372,6 +372,19 @@ class Qdi(Basic):
 
     def final(th):
         if th.timer == 0:
+            target_pos = (randint(180, 405), randint(120, 180))
+
+            for _ in range(128):
+                pos = (randint(120, 465), randint(15, 300))
+                two_point = add(target_pos, (-pos[0], -pos[1]))
+                angle = degrees(atan2(-two_point[0], -two_point[1]))
+
+                Sprite.Barrage(effective, 2, uniform(4.0, 5.0), th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
+
+            sound_cache["fire"].play()
+
+    def last(th):
+        if th.timer == 0:
             pos = (randint(120, 465), randint(15, 170))
 
             for _ in range(10):
@@ -379,19 +392,6 @@ class Qdi(Basic):
 
                 for i in range(0 + rands, 360 + rands, 30):
                     Sprite.Barrage(effective, 2, randint(2, 5), th.color, i, pos, barrage_cache[(2, th.color)], th.group, True, False)
-
-            sound_cache["fire"].play()
-
-    def last(th):
-        if th.timer == 0:
-            pos = (randint(150, 435), randint(30, 90))
-            target_angle = randint(60, 301)
-
-            for _ in range(10):
-                rands = randint(0, 30)
-
-                for i in range(0 + rands, 360 + rands, 30):
-                    Sprite.Barrage(effective, 2, uniform(3.5, 4.5) if i <= target_angle + rands else uniform(1.5, 2.5), th.color, i, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
             sound_cache["fire"].play()
 
@@ -437,26 +437,6 @@ class Kli(Base):
         th.torrent = 0
         th.bullet_timer = 0
 
-    def free(th):
-        th.bullet_timer += 1
-
-        if th.bullet_timer == 10:
-            for i in range(120, 466, 15):
-                pos = (i, randint(345, 360))
-                rands = choice([3, 6, 9, 12])
-
-                Sprite.Item('char', uniform(1, 2), pos, th.particle_group, size=(rands, rands), color=color_dict[6])
-
-            sound_cache["charge"].play()
-
-        if th.bullet_timer >= 30 and th.torrent < 6:
-            for i in range(120, 466, 15):
-                Sprite.Bullet(effective, "bomb", -24, th.color, 0, (i, 0), 6, bullet_cache["bomb"], th.group, mask=False)
-
-            th.torrent += 1
-
-            sound_cache["fire"].play(maxtime=32)
-
     def fire(th, power: int):
         p = 2 ** (power // 32)
         q = 2 ** (power // 16)
@@ -482,6 +462,26 @@ class Kli(Base):
                     Sprite.Bullet(effective, "bullet", 16, th.color, bullet_info['angle'], (bullet_info['x'], bullet_info['y']), 4, bullet_cache["bullet"], th.group, mask=False)
 
         sound_cache["fire"].play(maxtime=32)
+
+    def free(th):
+        th.bullet_timer += 1
+
+        if th.bullet_timer == 10:
+            for i in range(120, 466, 15):
+                pos = (i, randint(345, 360))
+                rands = choice([3, 6, 9, 12])
+
+                Sprite.Item('char', uniform(1, 2), pos, th.particle_group, size=(rands, rands), color=color_dict[6])
+
+            sound_cache["charge"].play()
+
+        if th.bullet_timer >= 30 and th.torrent < 6:
+            for i in range(120, 466, 15):
+                Sprite.Bullet(effective, "bomb", -24, th.color, 0, (i, 0), 6, bullet_cache["bomb"], th.group, mask=False)
+
+            th.torrent += 1
+
+            sound_cache["fire"].play(maxtime=32)
 
     def reset_bullet(th):
         th.torrent = 0
