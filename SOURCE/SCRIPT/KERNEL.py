@@ -115,7 +115,7 @@ def talk(screen: pg.Surface):
 
 
 def summary(screen: pg.Surface):
-    stage = (f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!{"Hit Z Key." if GLOBAL.level <= 5 else ""}")
+    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!{'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
     text = [
         f"得点 {GLOBAL.total_power} * 512 = {GLOBAL.total_power * 512}",
         f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"
