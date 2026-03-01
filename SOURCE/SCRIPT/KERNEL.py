@@ -48,7 +48,7 @@ keydown_pause_dict = {
 
 keydown_start_dict = {
     pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_time", 0), next_level()),
-    pg.K_q: lambda: quit()
+    pg.K_q: lambda: (sound_cache["pick"].play(), pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit())
 }
 
 
@@ -129,7 +129,7 @@ def summary(screen: pg.Surface):
         1: "水边的秋霜店 ~ Sweet Reservoir",
         2: "X 在树林 ~ Hypnotized",
         3: "午夜行至最高峰 ~ Thunder Studio",
-        4: "享受禁饮 ~ Point's Back Room"
+        4: "享受禁饮 ~ Point's Hideaway"
     }
 
     if GLOBAL.level <= 5:
@@ -250,18 +250,18 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
     GLOBAL.barrage_group.draw(screen)
     GLOBAL.text_group.draw(screen)
 
-    if not GLOBAL.is_run:
-        start(screen)
-    elif GLOBAL.is_pause:
-        pause(screen)
-    elif not GLOBAL.is_level_load:
-        load(screen)
-    elif GLOBAL.is_talk:
-        talk(screen)
-    elif GLOBAL.is_summary:
-        summary(screen)
-    elif GLOBAL.is_save:
-        save(screen)
+    for condition, func in [
+        (lambda: not GLOBAL.is_run, start),
+        (lambda: GLOBAL.is_pause, pause),
+        (lambda: not GLOBAL.is_level_load, load),
+        (lambda: GLOBAL.is_talk, talk),
+        (lambda: GLOBAL.is_summary, summary),
+        (lambda: GLOBAL.is_save, save),
+    ]:
+        if condition():
+            func(screen)
+
+            break
 
     screen.blit(GLOBAL.backdrop, (0, 0))
     situation(screen, clock)
@@ -291,19 +291,12 @@ def next_level():
     GLOBAL.no_flash += 1
 
 
-def quit():
-    sound_cache["pick"].play()
-    pg.time.wait(int(sound_cache["pick"].get_length() * 8000))
-    sys.exit()
-
-
 def summary_logic():
-    def close_summary(numbers: tuple, score: int, bonus: int, end: object, next: object) -> tuple:
-        end() if numbers[0][0] >= numbers[1][0] and numbers[0][1] == numbers[1][1] else next()
+    GLOBAL.score += GLOBAL.score_summary(GLOBAL.total_power, GLOBAL.power, GLOBAL.no_flash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level))
+    GLOBAL.is_summary = False
 
-        return False, score + bonus
+    close_summary(((GLOBAL.stage, GLOBAL.level), (3, 6)), lambda: setattr(GLOBAL, 'is_save', True), next_level)
 
-    GLOBAL.is_summary, GLOBAL.score = close_summary(((GLOBAL.stage, GLOBAL.level), (3, 6)), GLOBAL.score, GLOBAL.score_summary(GLOBAL.total_power, GLOBAL.power, GLOBAL.no_flash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level)), lambda: setattr(GLOBAL, 'is_save', True), next_level)
     GLOBAL.pop_time = 0
     GLOBAL.second_backdrop = picture[GLOBAL.stage]
 
@@ -313,40 +306,39 @@ def key_event():
         if event.type == pg.QUIT:
             sys.exit()
         elif event.type == pg.KEYUP:
-            keyup(event)
+            if GLOBAL.is_run and event.key in keyup_game_dict:
+                keyup_game_dict[event.key]()
         elif event.type == pg.KEYDOWN:
-            keydown(event)
+            for condition, handler in [
+                (
+                    lambda: not GLOBAL.is_run and event.key in keydown_start_dict,
+                    lambda: (keydown_start_dict[event.key](), sound_cache["pick"].play())
+                ),
+                (
+                    lambda: GLOBAL.is_save,
+                    lambda: ((keydown_over_dict[event.key]() if event.key in keydown_over_dict else setattr(GLOBAL, 'name', (GLOBAL.name + event.unicode)[:8])), sound_cache["pick"].play())
+                ),
+                (
+                    lambda: GLOBAL.is_pause and event.key in keydown_pause_dict,
+                    lambda: (keydown_pause_dict[event.key](), sound_cache["pick"].play())
+                ),
+                (
+                    lambda: GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict,
+                    lambda: (keydown_talk_dict[event.key](), sound_cache["pick"].play())
+                ),
+                (
+                    lambda: GLOBAL.is_summary,
+                    lambda: (keydown_summary_dict[event.key]() or True) and sound_cache["pick"].play() if event.key in keydown_summary_dict else (sound_cache["pick"].play() if event.key == pg.K_w and GLOBAL.level == 6 else None)
+                ),
+                (
+                    lambda: not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_game_dict,
+                    lambda: keydown_game_dict[event.key]()
+                ),
+            ]:
+                if condition():
+                    handler()
 
-
-def keyup(event: pg.event.Event):
-    if GLOBAL.is_run and event.key in keyup_game_dict:
-        keyup_game_dict[event.key]()
-
-
-def keydown(event: pg.event.Event):
-    if not GLOBAL.is_run and event.key in keydown_start_dict:
-        keydown_start_dict[event.key]()
-        sound_cache["pick"].play()
-    elif GLOBAL.is_save:
-        if event.key in keydown_over_dict:
-            keydown_over_dict[event.key]()
-        else:
-            GLOBAL.name = (GLOBAL.name + event.unicode)[:8]
-        sound_cache["pick"].play()
-    elif GLOBAL.is_pause and event.key in keydown_pause_dict:
-        keydown_pause_dict[event.key]()
-        sound_cache["pick"].play()
-    elif GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict:
-        keydown_talk_dict[event.key]()
-        sound_cache["pick"].play()
-    elif GLOBAL.is_summary:
-        if event.key in keydown_summary_dict:
-            keydown_summary_dict[event.key]()
-            sound_cache["pick"].play()
-        elif event.key == pg.K_w and GLOBAL.level == 6:
-            sound_cache["pick"].play()
-    elif not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and event.key in keydown_game_dict:
-        keydown_game_dict[event.key]()
+                    break
 
 
 def mode_one():
