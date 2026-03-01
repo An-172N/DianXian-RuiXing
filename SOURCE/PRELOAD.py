@@ -9,8 +9,8 @@ from pkgutil import get_data
 import pygame as pg
 
 
-from LOGIC.DRAW import rectangle, circle
-from LOGIC.CALCULATE import fibonacci
+from LOGIC.DRAW import *
+from LOGIC.CALCULATE import *
 
 
 window = pg.Rect(120, 15, 345, 330)
@@ -91,7 +91,7 @@ particle_cache = {
 
 
 text_cache = {
-    **{(2 ** j, color_dict[i]): font.render(f"+ {2 ** j}", False, color_dict[6]).convert_alpha() for i in (6, 7) for j in range(1, 15)},
+    **{(2 ** j, color_dict[i]): font.render(f"{2 ** j}", False, color_dict[i]).convert_alpha() for i in (6, 7) for j in range(1, 15)},
     **{("extend", color_dict[i]): font.render("Extend", False, color_dict[i]).convert_alpha() for i in (2, 6)}
 }
 

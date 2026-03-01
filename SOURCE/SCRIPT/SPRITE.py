@@ -9,9 +9,9 @@ from math import radians, sin, cos, atan2, degrees
 import pygame as pg
 
 
-from PRELOAD import barrage_cache, effective, particle_cache, color_dict, brick_cache, bullet_cache, item_cache, line_cache, sound_cache
-from LOGIC.CALCULATE import add, round_angle
-from LOGIC.SPRITE import Base
+from PRELOAD import *
+from LOGIC.CALCULATE import *
+from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
@@ -114,7 +114,6 @@ class Item(Base):
             th.speed -= 0.1
             if th.speed < -4:
                 th.speed = -4
-
         if th.y >= 360:
             th.kill()
 
@@ -216,11 +215,8 @@ def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic
 
 def boss_lose(part: int) -> tuple:
     part += 1
-    number = 0
-    is_talk = True
-    pop_time = 0
 
-    return part, number, is_talk, pop_time
+    return part, 0, True, 0
 
 
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):

@@ -12,13 +12,13 @@ from random import randint, random
 import pygame as pg
 
 
-from PRELOAD import picture, window, asset, color_dict, text_cache, char_image, difficulty, sound_cache, font
-from LOGIC.CALCULATE import clamp, update_fps
-from LOGIC.PLANE import turn_side, move_plane, invinc, single_bomb
-from LOGIC.ITEM import item_spawn, combo_counter
-from LOGIC.STAGE import load_level, level_logic
-from LOGIC.FILE import read_level, save_record
-from LOGIC.DRAW import rectangle
+from PRELOAD import *
+from LOGIC.CALCULATE import *
+from LOGIC.PLANE import *
+from LOGIC.ITEM import *
+from LOGIC.STAGE import *
+from LOGIC.FILE import *
+from LOGIC.DRAW import *
 from SCRIPT import GLOBAL
 from SCRIPT.HUMAN import Ono, Hro, Nre, Qdi, Kli
 import SCRIPT.SPRITE as Sprite
@@ -55,7 +55,7 @@ keydown_start_dict = {
 keydown_over_dict = {
     pg.K_RETURN: lambda: (save_file(), mode_one(), mode_two()),
     pg.K_ESCAPE: lambda: (mode_one(), mode_two()),
-    pg.K_BACKSPACE: lambda: (setattr(GLOBAL, "name", GLOBAL.name[:-1]))
+    pg.K_BACKSPACE: lambda: setattr(GLOBAL, "name", GLOBAL.name[:-1])
 }
 
 
@@ -115,7 +115,7 @@ def talk(screen: pg.Surface):
 
 
 def summary(screen: pg.Surface):
-    stage = (f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!Hit Z Key.") if GLOBAL.level <= 5 else (f"Stage {GLOBAL.stage} Clear!")
+    stage = (f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!{"Hit Z Key." if GLOBAL.level <= 5 else ""}")
     text = [
         f"得点 {GLOBAL.total_power} * 512 = {GLOBAL.total_power * 512}",
         f"无闪 {GLOBAL.no_flash} * 4096 = {GLOBAL.no_flash * 4096}"

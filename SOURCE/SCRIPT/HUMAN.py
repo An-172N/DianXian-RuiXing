@@ -9,16 +9,16 @@ from math import radians, sin, cos, atan2, degrees
 import pygame as pg
 
 
-from PRELOAD import char_image, effective, color_dict, barrage_cache, sound_cache, bullet_cache, particle_cache
-from LOGIC.PLANE import vector
-from LOGIC.CALCULATE import add, round_angle
-from LOGIC.DRAW import rectangle
-from LOGIC.SPRITE import Base
+from PRELOAD import *
+from LOGIC.PLANE import *
+from LOGIC.CALCULATE import *
+from LOGIC.DRAW import *
+from LOGIC.SPRITE import *
 import SCRIPT.SPRITE as Sprite
 
 
 class Basic(Base):
-    __slots__ = ('group', 'particle_group', 'locate', 'hp', 'color', 'is_die', 'can_shoot', 'point', 'choice', 'timer', 'torrent', 'target_pos', '_x', '_y')
+    __slots__ = ('group', 'particle_group', 'locate', 'hp', 'color', 'is_die', 'can_shoot', 'point', 'choice', 'timer', 'torrent', 'target_pos')
 
     def __init__(th, image: pg.Surface, locate: tuple, hp: int, color: tuple, *group: pg.sprite.Group):
         super().__init__(None, image, pos=(292, 60))
@@ -35,25 +35,6 @@ class Basic(Base):
         th.timer = 0
         th.torrent = 0
         th.target_pos = (292, 60)
-        th._x, th._y = th.rect.center
-
-    @property
-    def x(th):
-        return th._x
-
-    @x.setter
-    def x(th, value):
-        th._x = value
-        th.rect.centerx = th._x
-
-    @property
-    def y(th):
-        return th._y
-
-    @y.setter
-    def y(th, value):
-        th._y = value
-        th.rect.centery = th._y
 
 
 class Ono(Basic):
@@ -432,7 +413,7 @@ class Qdi(Basic):
 
 
 class Kli(Base):
-    __slots__ = ('group', 'particle_group', 'color', 'torrent', 'bullet_timer', 'point')
+    __slots__ = ('group', 'particle_group', 'color', 'torrent', 'bullet_timer')
 
     def __init__(th, *group: pg.sprite.Group):
         super().__init__(None, char_image.subsurface((0, 0, 12, 26)), group[2], pos=(292, 332))
@@ -442,7 +423,6 @@ class Kli(Base):
         th.color = color_dict[5]
         th.torrent = 0
         th.bullet_timer = 0
-        th.point = None
 
     def free(th):
         th.bullet_timer += 1

@@ -5,7 +5,7 @@
 import pygame as pg
 
 
-from PRELOAD import picture
+from PRELOAD import *
 
 
 is_run = False
