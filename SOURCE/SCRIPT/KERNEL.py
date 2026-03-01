@@ -382,6 +382,7 @@ def mode_two():
     GLOBAL.score = 0
     GLOBAL.use_flash = 0
     GLOBAL.power = 0
+    GLOBAL.game_total_power = 0
     GLOBAL.is_shoot = False
     GLOBAL.is_run = False
 
