@@ -45,6 +45,13 @@ class Ono(Basic):
 
         th.power = True
 
+    def fire(th):
+        if th.timer == 0:
+            for i in range(0, 360, 15):
+                Sprite.Barrage(effective, 2, 4, th.color, i, (th.x, th.y), barrage_cache[(2, th.color)], th.group, True, False)
+
+            sound_cache["fire"].play()
+
     def free(th):
         if th.torrent < 8:
             for i in range(0 + th.timer * 6, 360 + th.timer * 6, 180):
@@ -92,13 +99,6 @@ class Ono(Basic):
             if th.torrent % 3 == 0:
                 sound_cache["fire"].play()
 
-    def fire(th):
-        if th.timer == 0:
-            for i in range(0, 360, 15):
-                Sprite.Barrage(effective, 2, 4, th.color, i, (th.x, th.y), barrage_cache[(2, th.color)], th.group, True, False)
-
-            sound_cache["fire"].play()
-
     def update(th):
         th.timer += 1
 
@@ -138,6 +138,20 @@ class Hro(Basic):
 
         th.is_choose = False
         th.flash = True
+
+    def fire(th):
+        if th.timer % 6 == 0 and th.torrent < 3:
+            pos = (th.x, th.y)
+
+            for i in range(-30, 31, 30):
+                two_point = add((th.locate[0], th.locate[1]), (-pos[0], -pos[1]))
+                atan2_ = atan2(-two_point[0], -two_point[1])
+                angle = degrees(atan2_) + i
+
+                Sprite.Barrage(effective, 0, 4, th.color, angle, pos, barrage_cache[(0, th.color)], th.group)
+
+            th.torrent += 1
+            sound_cache["fire"].play()
 
     def free(th):
         bullet_type = [
@@ -191,20 +205,6 @@ class Hro(Basic):
 
             sound_cache["fire"].play()
 
-    def fire(th):
-        if th.timer % 6 == 0 and th.torrent < 3:
-            pos = (th.x, th.y)
-
-            for i in range(-30, 31, 30):
-                two_point = add((th.locate[0], th.locate[1]), (-pos[0], -pos[1]))
-                atan2_ = atan2(-two_point[0], -two_point[1])
-                angle = degrees(atan2_) + i
-
-                Sprite.Barrage(effective, 0, 4, th.color, angle, pos, barrage_cache[(0, th.color)], th.group)
-
-            th.torrent += 1
-            sound_cache["fire"].play()
-
     def update(th):
         th.timer += 1
 
@@ -246,6 +246,18 @@ class Nre(Basic):
 
         th.power = True
 
+    def fire(th):
+        if th.timer == 0:
+            for i in range(th.locate[0] - 30, th.locate[0] + 31, 20):
+                start_pos = (i, 15)
+                end_pos = (-i, -360)
+                delta_pos = add(end_pos, start_pos)
+                pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
+
+                Sprite.Line((3, 500), 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
+
+            sound_cache["fire"].play()
+
     def free(th):
         if th.torrent < 12:
             start_pos = (randint(120, 465), 15)
@@ -286,18 +298,6 @@ class Nre(Basic):
             if th.torrent % 2 == 0:
                 sound_cache["fire"].play()
 
-    def fire(th):
-        if th.timer == 0:
-            for i in range(th.locate[0] - 30, th.locate[0] + 31, 20):
-                start_pos = (i, 15)
-                end_pos = (-i, -360)
-                delta_pos = add(end_pos, start_pos)
-                pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-
-                Sprite.Line((3, 500), 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
-
-            sound_cache["fire"].play()
-
     def update(th):
         th.timer += 1
 
@@ -337,6 +337,19 @@ class Qdi(Basic):
 
         th.power = True
 
+    def fire(th):
+        if th.torrent < 6 and th.timer % 2 == 0:
+            pos = (randint(120, 465), randint(15, 230))
+            two_point = add(th.locate, (-pos[0], -pos[1]))
+            angle = degrees(atan2(-two_point[0], -two_point[1]))
+
+            Sprite.Barrage(effective, 2, 3.5, th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
+
+            th.torrent += 1
+
+            if th.torrent % 3 == 0:
+                sound_cache["fire"].play()
+
     def free(th):
         if th.timer == 0:
             for _ in range(48):
@@ -344,6 +357,16 @@ class Qdi(Basic):
                 pos = (randint(120, 465), randint(15, 225))
 
                 Sprite.Barrage(effective, 2, 4, th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
+
+            sound_cache["fire"].play()
+
+    def extend(th):
+        if th.timer == 0:
+            for _ in range(8):
+                pos = (randint(120, 465), randint(15, 200))
+
+                for j in range(0, 360, 30):
+                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, j, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
             sound_cache["fire"].play()
 
@@ -359,28 +382,18 @@ class Qdi(Basic):
 
             sound_cache["fire"].play()
 
-    def extend(th):
+    def last(th):
         if th.timer == 0:
-            for _ in range(8):
-                pos = (randint(120, 465), randint(15, 200))
+            pos = (randint(150, 435), randint(30, 90))
+            target_angle = randint(60, 301)
 
-                for j in range(0, 360, 30):
-                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, j, pos, barrage_cache[(2, th.color)], th.group, True, False)
+            for _ in range(10):
+                rands = randint(0, 30)
+
+                for i in range(0 + rands, 360 + rands, 30):
+                    Sprite.Barrage(effective, 2, uniform(3.5, 4.5) if i <= target_angle + rands else uniform(1.5, 2.5), th.color, i, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
             sound_cache["fire"].play()
-
-    def fire(th):
-        if th.torrent < 6 and th.timer % 2 == 0:
-            pos = (randint(120, 465), randint(15, 230))
-            two_point = add(th.locate, (-pos[0], -pos[1]))
-            angle = degrees(atan2(-two_point[0], -two_point[1]))
-
-            Sprite.Barrage(effective, 2, 3.5, th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
-
-            th.torrent += 1
-
-            if th.torrent % 3 == 0:
-                sound_cache["fire"].play()
 
     def update(th):
         th.timer += 1
@@ -390,7 +403,7 @@ class Qdi(Basic):
             th.torrent = 0
             th.timer = 0
             th.can_shoot = True
-            th.choice = choice([th.fire] * 8 + [th.free] * 2 + [th.extend, th.final])
+            th.choice = choice([th.fire] * 10 + [th.free] * 2 + [th.extend, th.final, th.last])
         if th.timer % 150 >= 125:
             if th.timer % 150 >= 145:
                 th.x += choice([-4, 4])
