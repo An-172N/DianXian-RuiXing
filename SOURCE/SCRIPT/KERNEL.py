@@ -15,7 +15,6 @@ import pygame as pg
 from PRELOAD import *
 from LOGIC.CALCULATE import *
 from LOGIC.PLANE import *
-from LOGIC.ITEM import *
 from LOGIC.STAGE import *
 from LOGIC.FILE import *
 from LOGIC.DRAW import *
@@ -47,7 +46,7 @@ keydown_pause_dict = {
 
 
 keydown_start_dict = {
-    pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_time", 0), next_level()),
+    pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_time", 0), level_logic()),
     pg.K_q: lambda: (sound_cache["pick"].play(), pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit())
 }
 
@@ -284,10 +283,10 @@ def save_file():
     save_record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', "锐山抚形日志", dump_content)
 
 
-def next_level():
+def level_logic():
     mode_one()
 
-    GLOBAL.stage, GLOBAL.level = level_logic((GLOBAL.stage, GLOBAL.level), 6)
+    GLOBAL.stage, GLOBAL.level = next_level((GLOBAL.stage, GLOBAL.level), 6)
     GLOBAL.no_flash += 1
 
 
@@ -295,7 +294,7 @@ def summary_logic():
     GLOBAL.score += GLOBAL.score_summary(GLOBAL.total_power, GLOBAL.power, GLOBAL.no_flash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level))
     GLOBAL.is_summary = False
 
-    close_summary(((GLOBAL.stage, GLOBAL.level), (3, 6)), lambda: setattr(GLOBAL, 'is_save', True), next_level)
+    close_summary(((GLOBAL.stage, GLOBAL.level), (3, 6)), lambda: setattr(GLOBAL, 'is_save', True), level_logic)
 
     GLOBAL.pop_time = 0
 
@@ -376,6 +375,17 @@ def mode_two():
     GLOBAL.power = 0
     GLOBAL.game_total_power = 0
     GLOBAL.is_run = False
+
+
+def spawn_item(condition: bool, char: object, *args: tuple, timer: int=0) -> int:
+    timer += 1
+
+    if condition:
+        char(*args)
+
+        timer = 0
+
+    return timer
 
 
 def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
@@ -472,9 +482,9 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                             if sound_cache["fire"].get_num_channels() < 2:
                                 sound_cache["fire"].play()
                             if hasattr(brick, "power"):
-                                item_spawn(GLOBAL.item_group, brick.power, Sprite.Item, "power", 2.5, brick.rect.center)
+                                spawn_item(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
                             if hasattr(brick, "flash"):
-                                item_spawn(GLOBAL.item_group, brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center)
+                                spawn_item(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
                             brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
                             brick.kill()
 
@@ -523,10 +533,10 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 if hasattr(GLOBAL.char, "locate"):
                     GLOBAL.char.locate = GLOBAL.major.rect.center
                 GLOBAL.major.power = GLOBAL.power
-                GLOBAL.item_spawn_time = item_spawn(GLOBAL.item_group, GLOBAL.item_spawn_time >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), timer=GLOBAL.item_spawn_time)
+                GLOBAL.item_spawn_time = spawn_item(GLOBAL.item_spawn_time >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_time)
                 if GLOBAL.combo_time <= 1 and GLOBAL.combo > 0:
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.text_group)
-                GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score = combo_counter(GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
+                GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score = count_combo(GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.plane_group.update()
                 GLOBAL.bullet_group.update()

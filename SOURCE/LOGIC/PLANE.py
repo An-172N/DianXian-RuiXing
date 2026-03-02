@@ -5,7 +5,7 @@
 import pygame
 
 
-def move_plane(variable: float, speed: tuple, forward: bool, backward: bool, change: bool) -> float:
+def move(variable: float, speed: tuple, forward: bool, backward: bool, change: bool) -> float:
     if forward:
         variable -= speed[1] if change else speed[0]
     if backward:
@@ -67,3 +67,16 @@ def single_bomb(condition: bool, power: int, critical: int) -> tuple:
         power -= critical
 
     return condition, power
+
+
+def count_combo(timer: int, combo: int, score: int, bonus: int, end: int) -> tuple:
+    timer -= 1
+
+    if timer <= 0:
+        if combo > 0:
+            score += bonus
+
+        combo = 0
+        timer = end
+
+    return timer, combo, score

@@ -82,12 +82,12 @@ class Ono(Basic):
             sound_cache["fire"].play()
 
     def final(th):
-        if th.torrent < 32:
+        if th.torrent < 24:
             two_point = add(th.locate, (-th.x, -th.y))
             atan2_ = atan2(-two_point[0], -two_point[1])
             angle = degrees(atan2_) + 180
 
-            for i in (2, 1, -1):
+            for i in (2, 1, -1, -2):
                 Sprite.Barrage(effective, 2, 4, th.color, ((th.timer * 12) * i) + angle, (th.x, th.y), barrage_cache[(2, th.color)], th.group, True, False)
 
             th.torrent += 1
@@ -354,23 +354,24 @@ class Qdi(Basic):
         if th.timer == 0:
             for _ in range(8):
                 pos = (randint(120, 465), randint(15, 200))
+                rands = randint(0, 30)
 
-                for j in range(0, 360, 30):
+                for j in range(0 + rands, 360 + rands, 30):
                     Sprite.Barrage(effective, 2, randint(2, 5), th.color, j, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
             sound_cache["fire"].play()
 
     def final(th):
         if th.timer == 0:
-            pos_list = [(randint(140, 445), randint(90, 190)) for _ in range(randint(1, 5))]
+            pos_list = [(randint(140, 445), randint(90, 190)) for _ in range(randint(1, 4))]
 
-            for _ in range(80):
+            for _ in range(72):
                 target_pos = choice(pos_list)
                 pos = (randint(120, 465), randint(15, 300))
                 two_point = add(target_pos, (-pos[0], -pos[1]))
                 angle = degrees(atan2(-two_point[0], -two_point[1]))
 
-                Sprite.Barrage(effective, 2, uniform(3.5, 5.0), th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
+                Sprite.Barrage(effective, 2, uniform(4.0, 5.0), th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
             sound_cache["fire"].play()
 
@@ -485,7 +486,7 @@ class Kli(Base):
 
     def update(th):
         th.image = turn_side(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
-        th.x = move_plane(th.x, (3, 8), th.is_move_left, th.is_move_right, th.is_fast)
+        th.x = move(th.x, (3, 8), th.is_move_left, th.is_move_right, th.is_fast)
         th.y = 331 if th.is_fast else 332
         keep_x = clamp(th.x, window.left, window.right)
         th.x = keep_x

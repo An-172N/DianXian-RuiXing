@@ -14,7 +14,7 @@ def load_level(timer: int, loaded: bool, end: int, load: object, *args: tuple) -
     return timer, loaded
 
 
-def level_logic(numbers: tuple, end: int) -> tuple:
+def next_level(numbers: tuple, end: int) -> tuple:
     stage, level = numbers
 
     if level >= end:
