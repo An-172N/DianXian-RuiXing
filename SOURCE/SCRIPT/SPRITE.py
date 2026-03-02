@@ -15,8 +15,6 @@ from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
-    __slots__ = ('effective', 'speed', 'color')
-
     def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: pg.sprite.Group, mask: bool=True, rotate: bool=True):
         super().__init__(form, image, group, angle=angle, pos=pos, mask=mask, rotate=rotate)
 
@@ -34,8 +32,6 @@ class Barrage(Base):
 
 
 class Text(Base):
-    __slots__ = ('target_image', 'kill_time', 'speed', 'timer')
-
     def __init__(th, pos: tuple, kill_time: tuple, speed: float, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group):
         super().__init__(None, image, group, pos=pos)
 
@@ -62,8 +58,6 @@ class Rect(Base):
 
 
 class Brick(Base):
-    __slots__ = ('color', 'hp', 'power', 'flash', 'is_die')
-
     def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pg.Surface, group: pg.sprite.Group):
         super().__init__(form, image, group, pos=pos)
 
@@ -75,8 +69,6 @@ class Brick(Base):
 
 
 class Bullet(Base):
-    __slots__ = ('effective', 'speed', 'color', 'damage')
-
     def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, mask: bool=True, rotate: bool=True):
         super().__init__(form, image, group, angle=angle, pos=pos, mask=mask, rotate=rotate)
 
@@ -95,8 +87,6 @@ class Bullet(Base):
 
 
 class Item(Base):
-    __slots__ = ('speed')
-
     def __init__(th, type: str, speed: float, pos: tuple, *group: pg.sprite.Group, size: tuple=(0, 0), color: tuple=(0, 0, 0)):
         super().__init__(type, item_cache[type] if type != "char" else particle_cache[(size, color)], *group, pos=pos)
 
@@ -119,8 +109,6 @@ class Item(Base):
 
 
 class Line(Base):
-    __slots__ = ('size', 'damage', 'color', 'target_color', 'timer')
-
     def __init__(th, size: tuple, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple, group: pg.sprite.Group, mask: bool):
         super().__init__("line", line_cache[(size[1], angle, color)], group, angle=angle, pos=pos, mask=mask)
 

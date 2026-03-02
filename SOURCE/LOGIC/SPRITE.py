@@ -6,8 +6,6 @@ import pygame
 
 
 class Base(pygame.sprite.Sprite):
-    __slots__ = ('angle', 'type', 'image', 'rect', 'mask', '_x', '_y')
-
     def __init__(th, form: object, image: pygame.Surface, *group: pygame.sprite.Group, angle: float=0, pos: tuple=(0, 0), mask: bool=False, rotate: bool=False):
         super().__init__(*group)
 

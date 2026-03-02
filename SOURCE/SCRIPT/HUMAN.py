@@ -18,8 +18,6 @@ import SCRIPT.SPRITE as Sprite
 
 
 class Basic(Base):
-    __slots__ = ('group', 'particle_group', 'locate', 'hp', 'color', 'is_die', 'can_shoot', 'point', 'choice', 'timer', 'torrent', 'target_pos')
-
     def __init__(th, image: pg.Surface, locate: tuple, hp: int, color: tuple, *group: pg.sprite.Group):
         super().__init__(None, image, pos=(292, 60))
 
@@ -38,8 +36,6 @@ class Basic(Base):
 
 
 class Ono(Basic):
-    __slots__ = ('power')
-
     def __init__(th, locate: tuple, *group: pg.sprite.Group):
         super().__init__(char_image.subsurface((24, 0, 12, 26)), locate, 192, color_dict[1], *group)
 
@@ -131,8 +127,6 @@ class Ono(Basic):
 
 
 class Hro(Basic):
-    __slots__ = ('is_choose', 'flash')
-
     def __init__(th, locate: tuple, *group: pg.sprite.Group):
         super().__init__(char_image.subsurface((36, 0, 12, 26)), locate, 224, color_dict[2], *group)
 
@@ -239,8 +233,6 @@ class Hro(Basic):
 
 
 class Nre(Basic):
-    __slots__ = ('power')
-
     def __init__(th, locate: tuple, *group: pg.sprite.Group):
         super().__init__(char_image.subsurface((48, 0, 12, 26)), locate, 256, color_dict[3], *group)
 
@@ -330,8 +322,6 @@ class Nre(Basic):
 
 
 class Qdi(Basic):
-    __slots__ = ('power')
-
     def __init__(th, locate: tuple, *group: pg.sprite.Group):
         super().__init__(char_image.subsurface((60, 0, 12, 26)), locate, 96, color_dict[4], *group)
 
@@ -372,14 +362,15 @@ class Qdi(Basic):
 
     def final(th):
         if th.timer == 0:
-            target_pos = (randint(180, 405), randint(120, 180))
+            pos_list = [(randint(140, 445), randint(90, 190)) for _ in range(randint(1, 5))]
 
-            for _ in range(128):
+            for _ in range(80):
+                target_pos = choice(pos_list)
                 pos = (randint(120, 465), randint(15, 300))
                 two_point = add(target_pos, (-pos[0], -pos[1]))
                 angle = degrees(atan2(-two_point[0], -two_point[1]))
 
-                Sprite.Barrage(effective, 2, uniform(4.0, 5.0), th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
+                Sprite.Barrage(effective, 2, uniform(3.5, 5.0), th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
             sound_cache["fire"].play()
 
@@ -426,20 +417,29 @@ class Qdi(Basic):
 
 
 class Kli(Base):
-    __slots__ = ('group', 'particle_group', 'color', 'torrent', 'bullet_timer')
-
     def __init__(th, *group: pg.sprite.Group):
         super().__init__(None, char_image.subsurface((0, 0, 12, 26)), group[2], pos=(292, 332))
 
         th.group = group[0]
         th.particle_group = group[1]
         th.color = color_dict[5]
+        th.decision_point = Sprite.Rect(rectangle((2, 2), 0, color_dict[7]).convert(), group[2], pos=(292, 332), mask=True)
         th.torrent = 0
         th.bullet_timer = 0
+        th.cooldown_time = 0
+        th.shoot_count = 0
+        th.power = 0
+        th.is_shoot = True
+        th.is_move_right = False
+        th.is_move_left = False
+        th.is_fast = False
+        th.is_visitable = True
+        th.is_divide = False
+        th.is_collide = False
 
-    def fire(th, power: int):
-        p = 2 ** (power // 32)
-        q = 2 ** (power // 16)
+    def fire(th):
+        p = 2 ** (th.power // 32)
+        q = 2 ** (th.power // 16)
 
         for i in range(0, p):
             for j in range(-q, q + 1, q):
@@ -482,6 +482,23 @@ class Kli(Base):
             th.torrent += 1
 
             sound_cache["fire"].play(maxtime=32)
+
+    def update(th):
+        th.image = turn_side(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
+        th.x = move_plane(th.x, (3, 8), th.is_move_left, th.is_move_right, th.is_fast)
+        th.y = 331 if th.is_fast else 332
+        keep_x = clamp(th.x, window.left, window.right)
+        th.x = keep_x
+        th.decision_point.rect.center = (keep_x, th.y)
+        th.is_divide, th.is_collide, th.is_visitable, th.cooldown_time = invinc(th.is_divide, th.is_collide, th.is_visitable, th.cooldown_time, 180, 6, th.reset_bullet)
+
+        if th.is_divide:
+            th.free()
+        if th.is_shoot and th.shoot_count > 0:
+            th.fire()
+            Sprite.spawn_particles(th.particle_group, (2, 2), th.rect.center, (4, 8), th.color)
+
+            th.shoot_count -= 1
 
     def reset_bullet(th):
         th.torrent = 0

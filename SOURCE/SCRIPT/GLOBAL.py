@@ -5,9 +5,6 @@
 import pygame as pg
 
 
-from PRELOAD import *
-
-
 is_run = False
 is_pause = False
 is_summary = False
@@ -24,10 +21,6 @@ name = ''
 
 
 power = 0
-shoot_count = 0
-
-
-is_shoot = True
 
 
 item_spawn_time = 0
@@ -38,18 +31,9 @@ combo = 0
 flash = 3
 no_flash = 0
 score = 0
-cooldown_time = 0
 use_flash = 0
 total_power = 0
 game_total_power = 0
-
-
-is_move_right = False
-is_move_left = False
-is_fast = False
-is_visitable = True
-is_divide = False
-is_collide = True
 
 
 text_number = 0
@@ -58,14 +42,9 @@ stage = 1
 level = 1
 
 
-backdrop = picture[6]
-second_backdrop = picture[stage]
-
-
 char = None
 text = None
 major = None
-decision_point = None
 
 
 plane_group = pg.sprite.Group()
