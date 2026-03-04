@@ -5,13 +5,23 @@
 import pygame
 
 
-def round_angle(angle: int, limit: int=180, step: int=6) -> int:
+def round_angle(
+    angle: int | float,
+    limit: int | float=180,
+    step: int=6
+) -> int:
     rounded = round((angle % limit) / step) * step
 
     return 0 if rounded == limit else rounded
 
 
-def update_fps(fps: object, timer: int, bit: int, interval: int, clock: pygame.time.Clock) -> tuple:
+def update_fps(
+    fps: str,
+    timer: int,
+    bit: int,
+    interval: int,
+    clock: pygame.time.Clock
+) -> tuple:
     current_time = pygame.time.get_ticks()
 
     if current_time - timer >= interval:
@@ -21,13 +31,23 @@ def update_fps(fps: object, timer: int, bit: int, interval: int, clock: pygame.t
     return fps, timer
 
 
-def add(*tuples: tuple) -> tuple:
-    return tuple(map(sum, zip(*tuples)))
+def add(
+    *packs: tuple[int | float, ...] | list[int | float] | set[int | float]
+) -> tuple:
+    return tuple(map(sum, zip(*packs)))
 
 
-def fibonacci(former: int, latter: int, frequency: int) -> int:
+def fibonacci(
+    former: int | float,
+    latter: int | float,
+    frequency: int
+) -> int | float:
     return former if frequency <= 0 else fibonacci(latter, former + latter, frequency - 1)
 
 
-def clamp(value: float, minimum: float, maximum: float) -> float:
+def clamp(
+    value: int | float,
+    minimum: int | float,
+    maximum: int | float
+) -> int | float:
     return max(min(value, max(minimum, maximum)), min(minimum, maximum))

@@ -5,7 +5,11 @@
 import pygame
 
 
-def rectangle(size: tuple, border: float, color: tuple) -> pygame.Surface:
+def rectangle(
+    size: tuple[int | float, int | float],
+    border: float,
+    color: tuple[int, int, int]
+) -> pygame.Surface:
     surface = pygame.Surface((size[0], size[1]), pygame.SRCALPHA)
 
     pygame.draw.rect(surface, color, surface.get_rect(), border)
@@ -13,7 +17,11 @@ def rectangle(size: tuple, border: float, color: tuple) -> pygame.Surface:
     return surface
 
 
-def circle(xy_size: tuple, border: float, color: tuple) -> pygame.Surface:
+def circle(
+    xy_size: tuple[int | float, int | float, int | float, int | float],
+    border: float,
+    color: tuple[int, int, int]
+) -> pygame.Surface:
     surface = pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA)
 
     pygame.draw.ellipse(surface, color, xy_size, border)

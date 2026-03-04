@@ -2,6 +2,7 @@
 # 此代码遵循 GPLv3.0 协议
 
 
+import os
 from io import BytesIO
 from pkgutil import get_data
 
@@ -32,7 +33,7 @@ color_dict = {
 
 asset = lambda path: get_data(__name__, path)
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
-icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
+icon = pg.display.set_icon(pg.image.load(os.path.join(os.path.dirname(os.path.abspath((__file__))), '..\ICON.png')))
 
 
 sound_cache = {

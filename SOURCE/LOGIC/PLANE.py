@@ -5,7 +5,13 @@
 import pygame
 
 
-def move(variable: float, speed: tuple, forward: bool, backward: bool, change: bool) -> float:
+def move(
+    variable: int | float,
+    speed: tuple[int | float, int | float],
+    forward: bool,
+    backward: bool,
+    change: bool
+) -> float:
     if forward:
         variable -= speed[1] if change else speed[0]
     if backward:
@@ -14,7 +20,12 @@ def move(variable: float, speed: tuple, forward: bool, backward: bool, change: b
     return variable
 
 
-def turn_side(original_image: pygame.Surface, turn_image: pygame.Surface, flip: bool, turn: bool) -> pygame.Surface:
+def turn_side(
+    original_image: pygame.Surface,
+    turn_image: pygame.Surface,
+    flip: bool,
+    turn: bool
+) -> pygame.Surface:
     if flip:
         return pygame.transform.flip(turn_image, True, False)
     elif turn:
@@ -23,7 +34,16 @@ def turn_side(original_image: pygame.Surface, turn_image: pygame.Surface, flip: 
         return original_image
 
 
-def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int, interval: int, reset_char: object) -> tuple:
+def invinc(
+    use_bomb: bool,
+    collided: bool,
+    visitable: bool,
+    timer: int,
+    end: int,
+    interval: int,
+    reset: object,
+    *args
+) -> tuple[bool, bool, bool, int]:
     if use_bomb or collided:
         timer += 1
 
@@ -32,7 +52,7 @@ def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int
                 use_bomb = False
                 timer = 0
 
-                reset_char()
+                reset(*args)
 
             collided = False
         else:
@@ -44,7 +64,11 @@ def invinc(use_bomb: bool, collided: bool, visitable: bool, timer: int, end: int
     return use_bomb, collided, visitable, timer
 
 
-def vector(present: tuple, target: tuple, speed: float) -> tuple:
+def vector(
+    present: tuple[int | float, int | float],
+    target: tuple[int | float, int | float],
+    speed: float
+) -> tuple[tuple[int | float, int | float], tuple[int | float, int | float]]:
     dir = pygame.math.Vector2(target[0] - present[0], target[1] - present[1])
     current = pygame.math.Vector2(present[0], present[1])
     target = pygame.math.Vector2(target[0], target[1])
@@ -61,7 +85,11 @@ def vector(present: tuple, target: tuple, speed: float) -> tuple:
         return current + dir * speed, delta_vec
 
 
-def single_bomb(condition: bool, power: int, critical: int) -> tuple:
+def single_bomb(
+    condition: bool,
+    power: int,
+    critical: int
+) -> tuple[bool, int]:
     if not condition and power >= critical:
         condition = True
         power -= critical
@@ -69,7 +97,13 @@ def single_bomb(condition: bool, power: int, critical: int) -> tuple:
     return condition, power
 
 
-def count_combo(timer: int, combo: int, score: int, bonus: int, end: int) -> tuple:
+def count_combo(
+    timer: int,
+    combo: int,
+    score: int,
+    bonus: int,
+    end: int
+) -> tuple[int, int, int]:
     timer -= 1
 
     if timer <= 0:

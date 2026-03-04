@@ -17,6 +17,7 @@ from LOGIC.CALCULATE import *
 from LOGIC.PLANE import *
 from LOGIC.STAGE import *
 from LOGIC.FILE import *
+from LOGIC.SPRITE import *
 from LOGIC.DRAW import *
 from SCRIPT import GLOBAL
 from SCRIPT.HUMAN import Ono, Hro, Nre, Qdi, Kli
@@ -289,6 +290,9 @@ def summary_logic():
         GLOBAL.stage, GLOBAL.level = next_level((GLOBAL.stage, GLOBAL.level), 6)
         GLOBAL.no_flash += 1
 
+    def close_summary(numbers: tuple, final: object, proceed: object, *args):
+        return final(*args) if numbers[0][0] >= numbers[1][0] and numbers[0][1] == numbers[1][1] else proceed(*args)
+
     GLOBAL.score += GLOBAL.score_summary(GLOBAL.total_power, GLOBAL.power, GLOBAL.no_flash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level))
     GLOBAL.is_summary = False
 
@@ -374,145 +378,141 @@ def mode_two():
     GLOBAL.is_run = False
 
 
-def spawn_item(condition: bool, char: object, *args: tuple, timer: int=0) -> int:
-    timer += 1
+def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
+    barrage_dict = {
+        1: Sprite.circle_barrage,
+        2: Sprite.polygon_barrage
+    }
 
-    if condition:
-        char(*args)
+    if random() <= fib[stage - 1]:
+        if stage in [1, 2]:
+            return barrage_dict.get(stage)(type, color, spawn_pos, locate, group)
+        elif stage == 3:
+            return Sprite.line_barrage(color, locate, group)
+        else:
+            return Sprite.point_barrage(type, color, locate, group)
 
-        timer = 0
 
-    return timer
+def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
+    process_dict = {
+        1: Sprite.circle_brick,
+        3: Sprite.line_brick
+    }
+
+    if color[0] == color_dict[6]:
+        if stage == 2:
+            return Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
+        elif stage in [1, 3]:
+            return process_dict.get(stage)(group, spawn_pos[3])
+        else:
+            return Sprite.point_brick(group)
+
+
+def item_collide():
+    collide = pg.sprite.spritecollide(GLOBAL.major, GLOBAL.item_group, False)
+
+    if collide:
+        for item in collide:
+            GLOBAL.combo_time = 120
+            GLOBAL.major.shoot_count = int(clamp(GLOBAL.major.shoot_count + 1, 0, 6))
+
+            if item.type in ['flash', 'power']:
+                if item.type == "power":
+                    GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
+                    GLOBAL.combo += 1
+
+                    sound_cache["pick"].play()
+                elif item.type == "flash":
+                    GLOBAL.flash += 1
+                    GLOBAL.combo += 1
+
+                    Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.particle_group)
+
+                GLOBAL.total_power += 1
+                GLOBAL.game_total_power += 1
+
+            sound_cache["charge"].play(maxtime=24)
+            item.kill()
+
+
+def barrage_collide(position):
+    collide = pg.sprite.spritecollide(GLOBAL.major.decision_point, GLOBAL.barrage_group, False, pg.sprite.collide_mask)
+
+    if collide:
+        for barrage in collide:
+            if barrage.color != color_dict[6]:
+                if not (GLOBAL.major.is_collide or GLOBAL.major.is_divide):
+                    GLOBAL.major.is_collide = True
+                    GLOBAL.no_flash = 0
+                    GLOBAL.flash -= 1
+                    GLOBAL.use_flash += 1
+                    if GLOBAL.flash == 0:
+                        GLOBAL.is_save = True
+
+                    Sprite.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), color_dict[5], color_dict[6])
+                    sound_cache["fire"].play()
+
+                barrage.kill()
+
+
+def bullet_collide():
+    collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
+
+    if collide:
+        for bullet, hit_bricks in collide.items():
+            for brick in hit_bricks:
+                if brick.hp > 0:
+                    GLOBAL.score += 64
+                    brick.hp -= bullet.damage
+                if brick.hp <= 0:
+                    if not brick.is_die:
+                        Sprite.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, color_dict[6])
+                        if hasattr(brick, "free"):
+                            GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.pop_time = Sprite.boss_lose(GLOBAL.text_part)
+                        else:
+                            spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
+
+                        if sound_cache["fire"].get_num_channels() < 2:
+                            sound_cache["fire"].play()
+                        if hasattr(brick, "power"):
+                            spawn_sprite(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
+                        if hasattr(brick, "flash"):
+                            spawn_sprite(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
+                        brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
+                        brick.kill()
+
+                    brick.is_die = True
+                if bullet.type in ("bullet", "bomb"):
+                    bullet.kill()
+
+
+def sprite_loader():
+    if GLOBAL.level == 6:
+        GLOBAL.char = choose_human()
+        GLOBAL.text = json.loads(asset(rf"ASSET\JSON\{GLOBAL.stage}.json").decode('utf-8'))
+        GLOBAL.is_talk = True
+
+        GLOBAL.brick_group.add(GLOBAL.char)
+    else:
+        read_level(asset(rf"ASSET\STAGE\{GLOBAL.stage}-{GLOBAL.level}.stg"), Sprite.load_brick, color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
+        Sprite.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
+
+    GLOBAL.wait_load_time = 0
+    GLOBAL.pop_time = 0
+
+
+def choose_human() -> Ono | Hro | Nre | Qdi:
+    char_dict = {
+        1: Ono,
+        2: Hro,
+        3: Nre,
+        4: Qdi
+    }
+
+    return char_dict.get(GLOBAL.stage)(GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group)
 
 
 def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
-    def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
-        barrage_dict = {
-            1: Sprite.circle_barrage,
-            2: Sprite.polygon_barrage
-        }
-
-        if random() <= fib[stage - 1]:
-            if stage in [1, 2]:
-                return barrage_dict.get(stage)(type, color, spawn_pos, locate, group)
-            elif stage == 3:
-                return Sprite.line_barrage(color, locate, group)
-            else:
-                return Sprite.point_barrage(type, color, locate, group)
-
-    def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
-        process_dict = {
-            1: Sprite.circle_brick,
-            3: Sprite.line_brick
-        }
-
-        if color[0] == color_dict[6]:
-            if stage == 2:
-                return Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
-            elif stage in [1, 3]:
-                return process_dict.get(stage)(group, spawn_pos[3])
-            else:
-                return Sprite.point_brick(group)
-
-    def item_collide():
-        collide = pg.sprite.spritecollide(GLOBAL.major, GLOBAL.item_group, False)
-
-        if collide:
-            for item in collide:
-                GLOBAL.combo_time = 120
-                GLOBAL.major.shoot_count = int(clamp(GLOBAL.major.shoot_count + 1, 0, 6))
-
-                if item.type in ['flash', 'power']:
-                    if item.type == "power":
-                        GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
-                        GLOBAL.combo += 1
-
-                        sound_cache["pick"].play()
-                    elif item.type == "flash":
-                        GLOBAL.flash += 1
-                        GLOBAL.combo += 1
-
-                        Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.particle_group)
-
-                    GLOBAL.total_power += 1
-                    GLOBAL.game_total_power += 1
-
-                sound_cache["charge"].play(maxtime=24)
-                item.kill()
-
-    def barrage_collide(position):
-        collide = pg.sprite.spritecollide(GLOBAL.major.decision_point, GLOBAL.barrage_group, False, pg.sprite.collide_mask)
-
-        if collide:
-            for barrage in collide:
-                if barrage.color != color_dict[6]:
-                    if not (GLOBAL.major.is_collide or GLOBAL.major.is_divide):
-                        GLOBAL.major.is_collide = True
-                        GLOBAL.no_flash = 0
-                        GLOBAL.flash -= 1
-                        GLOBAL.use_flash += 1
-                        if GLOBAL.flash == 0:
-                            GLOBAL.is_save = True
-
-                        Sprite.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), color_dict[5], color_dict[6])
-                        sound_cache["fire"].play()
-
-                    barrage.kill()
-
-    def bullet_collide():
-        collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
-
-        if collide:
-            for bullet, hit_bricks in collide.items():
-                for brick in hit_bricks:
-                    if brick.hp > 0:
-                        GLOBAL.score += 64
-                        brick.hp -= bullet.damage
-                    if brick.hp <= 0:
-                        if not brick.is_die:
-                            Sprite.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, color_dict[6])
-                            if hasattr(brick, "free"):
-                                GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.pop_time = Sprite.boss_lose(GLOBAL.text_part)
-                            else:
-                                spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
-
-                            if sound_cache["fire"].get_num_channels() < 2:
-                                sound_cache["fire"].play()
-                            if hasattr(brick, "power"):
-                                spawn_item(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
-                            if hasattr(brick, "flash"):
-                                spawn_item(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
-                            brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
-                            brick.kill()
-
-                        brick.is_die = True
-                    if bullet.type in ("bullet", "bomb"):
-                        bullet.kill()
-
-    def sprite_loader():
-        if GLOBAL.level == 6:
-            GLOBAL.char = choose_human()
-            GLOBAL.text = json.loads(asset(rf"ASSET\JSON\{GLOBAL.stage}.json").decode('utf-8'))
-            GLOBAL.is_talk = True
-
-            GLOBAL.brick_group.add(GLOBAL.char)
-        else:
-            read_level(asset(rf"ASSET\STAGE\{GLOBAL.stage}-{GLOBAL.level}.stg"), Sprite.load_brick, color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
-            Sprite.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
-
-        GLOBAL.wait_load_time = 0
-        GLOBAL.pop_time = 0
-
-    def choose_human() -> Ono | Hro | Nre | Qdi:
-        char_dict = {
-            1: Ono,
-            2: Hro,
-            3: Nre,
-            4: Qdi
-        }
-
-        return char_dict.get(GLOBAL.stage)(GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group)
-
     GLOBAL.stage = clamp(args[0], 1, 4)
     GLOBAL.level = clamp(args[1], 1, 6)
     GLOBAL.flash = clamp(args[2], 1, 96)
@@ -527,7 +527,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 if hasattr(GLOBAL.char, "locate"):
                     GLOBAL.char.locate = GLOBAL.major.rect.center
                 GLOBAL.major.power = GLOBAL.power
-                GLOBAL.item_spawn_time = spawn_item(GLOBAL.item_spawn_time >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_time)
+                GLOBAL.item_spawn_time = spawn_sprite(GLOBAL.item_spawn_time >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_time)
                 if GLOBAL.combo_time <= 1 and GLOBAL.combo > 0:
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.particle_group)
                 GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score = count_combo(GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
