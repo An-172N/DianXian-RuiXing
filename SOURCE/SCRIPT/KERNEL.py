@@ -425,22 +425,22 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.combo_time = 120
                 GLOBAL.major.shoot_count = int(clamp(GLOBAL.major.shoot_count + 1, 0, 6))
 
-                sound_cache["charge"].play(maxtime=24)
-
-                if item.type == "power":
-                    GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
-                    GLOBAL.combo += 1
-
-                    sound_cache["pick"].play()
-                elif item.type == "flash":
-                    GLOBAL.flash += 1
-                    GLOBAL.combo += 1
-
-                    Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.text_group)
                 if item.type in ['flash', 'power']:
+                    if item.type == "power":
+                        GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
+                        GLOBAL.combo += 1
+
+                        sound_cache["pick"].play()
+                    elif item.type == "flash":
+                        GLOBAL.flash += 1
+                        GLOBAL.combo += 1
+
+                        Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.text_group)
+
                     GLOBAL.total_power += 1
                     GLOBAL.game_total_power += 1
 
+                sound_cache["charge"].play(maxtime=24)
                 item.kill()
 
     def barrage_collide(position):

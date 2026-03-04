@@ -202,9 +202,7 @@ def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic
 
 
 def boss_lose(part: int) -> tuple:
-    part += 1
-
-    return part, 0, True, 0
+    return part + 1, 0, True, 0
 
 
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
