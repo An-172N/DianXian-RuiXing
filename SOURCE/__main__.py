@@ -12,7 +12,7 @@ def main() -> int:
     import argparse
 
     parser = argparse.ArgumentParser()
-    for i, j in (('-stage', 1), ('-level', 0), ('-flash', 3), ('-power', 0), ('-seed', None)):
+    for i, j in (('-stage', 1), ('-level', 1), ('-flash', 3), ('-power', 0), ('-seed', None)):
         parser.add_argument(i, type=int, default=j)
 
     args = parser.parse_args()

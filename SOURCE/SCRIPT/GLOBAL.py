@@ -29,7 +29,7 @@ combo = 0
 
 
 flash = 3
-no_flash = 0
+no_flash = 1
 score = 0
 use_flash = 0
 total_power = 0
@@ -53,7 +53,6 @@ brick_group = pg.sprite.Group()
 item_group = pg.sprite.Group()
 barrage_group = pg.sprite.Group()
 particle_group = pg.sprite.Group()
-text_group = pg.sprite.Group()
 
 
 last_time = pg.time.get_ticks()

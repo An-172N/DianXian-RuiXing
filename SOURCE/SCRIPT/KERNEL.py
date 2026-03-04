@@ -46,7 +46,7 @@ keydown_pause_dict = {
 
 
 keydown_start_dict = {
-    pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_time", 0), level_logic()),
+    pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_time", 0), mode_one()),
     pg.K_q: lambda: (sound_cache["pick"].play(), pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit())
 }
 
@@ -247,7 +247,6 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
     GLOBAL.item_group.draw(screen)
     GLOBAL.particle_group.draw(screen)
     GLOBAL.barrage_group.draw(screen)
-    GLOBAL.text_group.draw(screen)
 
     for condition, func in [
         (lambda: not GLOBAL.is_run, start),
@@ -283,14 +282,13 @@ def save_file():
     save_record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', "锐山抚形日志", dump_content)
 
 
-def level_logic():
-    mode_one()
-
-    GLOBAL.stage, GLOBAL.level = next_level((GLOBAL.stage, GLOBAL.level), 6)
-    GLOBAL.no_flash += 1
-
-
 def summary_logic():
+    def level_logic():
+        mode_one()
+
+        GLOBAL.stage, GLOBAL.level = next_level((GLOBAL.stage, GLOBAL.level), 6)
+        GLOBAL.no_flash += 1
+
     GLOBAL.score += GLOBAL.score_summary(GLOBAL.total_power, GLOBAL.power, GLOBAL.no_flash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level))
     GLOBAL.is_summary = False
 
@@ -353,7 +351,6 @@ def mode_one():
     GLOBAL.bullet_group.empty()
     GLOBAL.particle_group.empty()
     GLOBAL.barrage_group.empty()
-    GLOBAL.text_group.empty()
 
     GLOBAL.major = Kli(GLOBAL.bullet_group, GLOBAL.particle_group, GLOBAL.plane_group)
     GLOBAL.total_power = 0
@@ -366,9 +363,9 @@ def mode_one():
 
 def mode_two():
     GLOBAL.stage = 1
-    GLOBAL.level = 0
+    GLOBAL.level = 1
     GLOBAL.char = None
-    GLOBAL.no_flash = 0
+    GLOBAL.no_flash = 1
     GLOBAL.flash = 3
     GLOBAL.score = 0
     GLOBAL.use_flash = 0
@@ -435,7 +432,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                         GLOBAL.flash += 1
                         GLOBAL.combo += 1
 
-                        Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.text_group)
+                        Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.particle_group)
 
                     GLOBAL.total_power += 1
                     GLOBAL.game_total_power += 1
@@ -492,10 +489,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                     if bullet.type in ("bullet", "bomb"):
                         bullet.kill()
 
-    def mask():
-        picture[6].set_clip(window)
-        picture[6].fill((0, 0, 0, 0))
-
     def sprite_loader():
         if GLOBAL.level == 6:
             GLOBAL.char = choose_human()
@@ -520,12 +513,13 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
         return char_dict.get(GLOBAL.stage)(GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group)
 
-    GLOBAL.stage = clamp(args[0], 0, 4)
-    GLOBAL.level = clamp(args[1], 0, 5)
+    GLOBAL.stage = clamp(args[0], 1, 4)
+    GLOBAL.level = clamp(args[1], 1, 6)
     GLOBAL.flash = clamp(args[2], 1, 96)
     GLOBAL.power = clamp(args[3], 0, 32)
 
-    mask()
+    picture[6].set_clip(window)
+    picture[6].fill((0, 0, 0, 0))
 
     while True:
         if GLOBAL.is_run and not GLOBAL.is_save and not GLOBAL.is_pause:
@@ -535,7 +529,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.major.power = GLOBAL.power
                 GLOBAL.item_spawn_time = spawn_item(GLOBAL.item_spawn_time >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_time)
                 if GLOBAL.combo_time <= 1 and GLOBAL.combo > 0:
-                    Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.text_group)
+                    Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.particle_group)
                 GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score = count_combo(GLOBAL.combo_time, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.plane_group.update()
@@ -544,7 +538,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.item_group.update()
                 GLOBAL.particle_group.update()
                 GLOBAL.brick_group.update()
-                GLOBAL.text_group.update()
 
                 barrage_collide(GLOBAL.major.rect.center)
                 bullet_collide()
