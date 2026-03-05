@@ -89,7 +89,7 @@ def pause(screen: pg.Surface):
     title = "休息ing"
     text = ["ESC 休息好了", "Q 不玩了"]
 
-    return half_menu(screen, title, text)
+    half_menu(screen, title, text)
 
 
 def load(screen: pg.Surface):
@@ -98,7 +98,7 @@ def load(screen: pg.Surface):
     title = "这一关是————"
     text = [f"Stage {stage_text} - {GLOBAL.level} !!", "START!!!!"]
 
-    return half_menu(screen, title, text)
+    half_menu(screen, title, text)
 
 
 def talk(screen: pg.Surface):
@@ -109,7 +109,7 @@ def talk(screen: pg.Surface):
             GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["2"] if "2" in GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"] else ''
         ]
 
-        return half_menu(screen, human, text, (0, 6, 12))
+        half_menu(screen, human, text, (0, 6, 12))
     except KeyError:
         GLOBAL.is_talk = False
 
@@ -133,9 +133,9 @@ def summary(screen: pg.Surface):
     }
 
     if GLOBAL.level <= 5:
-        return half_menu(screen, stage, text)
+        half_menu(screen, stage, text)
     else:
-        return full_menu(screen, stage, text + over, ["Z 继续", "W 木鱼"], title.get(GLOBAL.stage))
+        full_menu(screen, stage, text + over, ["Z 继续", "W 木鱼"], title.get(GLOBAL.stage))
 
 
 def start(screen: pg.Surface):
@@ -144,7 +144,7 @@ def start(screen: pg.Surface):
     text = ['Ver 1.0.9', '', '', '', '']
     key = ["Z 开玩", "Q 退了"]
 
-    return full_menu(screen, title, text, key, other)
+    full_menu(screen, title, text, key, other)
 
 
 def save(screen: pg.Surface):
@@ -159,7 +159,7 @@ def save(screen: pg.Surface):
     ]
     key = ["Ent 记录", "ESC 不了"]
 
-    return full_menu(screen, title, text, key, name)
+    full_menu(screen, title, text, key, name)
 
 
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
@@ -356,11 +356,11 @@ def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, colo
 
     if random() <= fib[stage - 1]:
         if stage in [1, 2]:
-            return barrage_dict.get(stage)(type, color, spawn_pos, locate, group)
+            barrage_dict.get(stage)(type, color, spawn_pos, locate, group)
         elif stage == 3:
-            return Sprite.line_barrage(color, locate, group)
+            Sprite.line_barrage(color, locate, group)
         else:
-            return Sprite.point_barrage(type, color, locate, group)
+            Sprite.point_barrage(type, color, locate, group)
 
 
 def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
@@ -371,11 +371,11 @@ def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tup
 
     if color[0] == color_dict[6]:
         if stage == 2:
-            return Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
+            Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
         elif stage in [1, 3]:
-            return process_dict.get(stage)(group, spawn_pos[3])
+            process_dict.get(stage)(group, spawn_pos[3])
         else:
-            return Sprite.point_brick(group)
+            Sprite.point_brick(group)
 
 
 def item_collide():
@@ -523,6 +523,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     picture[6].fill((0, 0, 0, 0))
 
     while True:
+        key_event()
+
         if GLOBAL.is_run and not GLOBAL.is_save and not GLOBAL.is_pause:
             if not GLOBAL.is_summary and not GLOBAL.is_talk and GLOBAL.is_level_load:
                 if hasattr(GLOBAL.char, "locate"):
@@ -550,7 +552,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             if not GLOBAL.is_level_load:
                 GLOBAL.wait_load_time, GLOBAL.is_level_load = load_level(GLOBAL.wait_load_time, GLOBAL.is_level_load, 90, sprite_loader)
 
-        key_event()
         display(screen, clock)
 
         clock.tick(60)
