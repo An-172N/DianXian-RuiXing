@@ -141,7 +141,7 @@ def summary(screen: pg.Surface):
 def start(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
-    text = ['Ver 1.0.8', '', '', '', '']
+    text = ['Ver 1.0.9', '', '', '', '']
     key = ["Z 开玩", "Q 退了"]
 
     return full_menu(screen, title, text, key, other)
@@ -236,36 +236,6 @@ def pop_animate(surface: pg.Surface, font: pg.font.Font, group: list, timer: int
             sound_cache["pick"].play()
 
     return surface, timer
-
-
-def display(screen: pg.Surface, clock: pg.time.Clock):
-    screen.blit(picture[GLOBAL.stage], (120, 15))
-
-    GLOBAL.bullet_group.draw(screen)
-    if GLOBAL.major is not None and GLOBAL.major.is_visitable:
-        GLOBAL.plane_group.draw(screen)
-    GLOBAL.brick_group.draw(screen)
-    GLOBAL.item_group.draw(screen)
-    GLOBAL.particle_group.draw(screen)
-    GLOBAL.barrage_group.draw(screen)
-
-    for condition, func in [
-        (lambda: not GLOBAL.is_run, start),
-        (lambda: GLOBAL.is_pause, pause),
-        (lambda: not GLOBAL.is_level_load, load),
-        (lambda: GLOBAL.is_talk, talk),
-        (lambda: GLOBAL.is_summary, summary),
-        (lambda: GLOBAL.is_save, save),
-    ]:
-        if condition():
-            func(screen)
-
-            break
-
-    screen.blit(picture[6], (0, 0))
-    situation(screen, clock)
-
-    pg.display.flip()
 
 
 def save_file():
@@ -510,6 +480,37 @@ def choose_human() -> Ono | Hro | Nre | Qdi:
     }
 
     return char_dict.get(GLOBAL.stage)(GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group)
+
+
+def display(screen: pg.Surface, clock: pg.time.Clock):
+    if GLOBAL.is_run:
+        screen.blit(picture[GLOBAL.stage], (120, 15))
+
+        GLOBAL.bullet_group.draw(screen)
+        if GLOBAL.major is not None and GLOBAL.major.is_visitable:
+            GLOBAL.plane_group.draw(screen)
+        GLOBAL.brick_group.draw(screen)
+        GLOBAL.item_group.draw(screen)
+        GLOBAL.particle_group.draw(screen)
+        GLOBAL.barrage_group.draw(screen)
+
+    for condition, func in [
+        (lambda: not GLOBAL.is_run, start),
+        (lambda: GLOBAL.is_pause, pause),
+        (lambda: not GLOBAL.is_level_load, load),
+        (lambda: GLOBAL.is_talk, talk),
+        (lambda: GLOBAL.is_summary, summary),
+        (lambda: GLOBAL.is_save, save),
+    ]:
+        if condition():
+            func(screen)
+
+            break
+
+    screen.blit(picture[6], (0, 0))
+    situation(screen, clock)
+
+    pg.display.flip()
 
 
 def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
