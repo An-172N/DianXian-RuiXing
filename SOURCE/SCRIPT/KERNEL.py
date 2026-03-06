@@ -158,7 +158,7 @@ def save(screen: pg.Surface):
 
 
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
-    group = [
+    group = (
         [
             {"text": title, "pos": (8, 10)},
             {"text": other, "pos": (8, 305)}
@@ -174,25 +174,25 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
             {"text": key[0], "pos": (270, 220)},
             {"text": key[1], "pos": (270, 270)}
         ]
-    ]
+    )
 
     (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
 
-    menu, GLOBAL.pop_timer = pop_animate(backdrop, font, group, GLOBAL.pop_timer, interval)
+    menu, GLOBAL.pop_timer = pop_animate(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
 
     surface.blit(menu, (120, 15))
 
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
-    group = [
+    group = (
         [{"text": title, "pos": (8, 8)}],
         [{"text": text[0], "pos": (8, 33)}],
         [{"text": text[1], "pos": (8, 58)}]
-    ]
+    )
 
     (backdrop := picture[5].subsurface((0, 0, 345, 85)), backdrop.fill(color_dict[8]))[0]
 
-    menu, GLOBAL.pop_timer = pop_animate(backdrop, font, group, GLOBAL.pop_timer, interval)
+    menu, GLOBAL.pop_timer = pop_animate(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
 
     surface.blit(menu, (120, 15))
 
@@ -210,27 +210,6 @@ def ui(surface: pg.Surface, text: list, fps: str):
         text = font.render(f"{text_info['text']}", False, color_dict[6])
 
         surface.blit(text, text_info["pos"])
-
-
-def pop_animate(surface: pg.Surface, font: pg.font.Font, group: list, timer: int, interval: tuple, color: tuple=(255, 255, 255)) -> tuple:
-    def for_text(timer: int, interval: int, gather: list):
-        if timer >= interval:
-            for i in gather:
-                text = font.render(i["text"], False, color).convert_alpha()
-
-                surface.blit(text, i["pos"])
-
-    for_text(timer, interval[0], group[0])
-    for_text(timer, interval[1], group[1])
-    for_text(timer, interval[2], group[2])
-
-    if timer < interval[2]:
-        timer += 1
-
-        if timer == interval[2]:
-            sound_cache["pick"].play()
-
-    return surface, timer
 
 
 def save_file():
