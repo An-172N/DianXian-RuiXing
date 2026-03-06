@@ -29,7 +29,7 @@ keydown_game_dict = {
     pg.K_LEFT: lambda: setattr(GLOBAL.major, "is_move_left", True),
     pg.K_x: lambda: setattr(GLOBAL.major, "is_fast", True),
     pg.K_z: lambda: setattr(GLOBAL.major, "is_shoot", False),
-    pg.K_SPACE: lambda: (lambda ret: (setattr(GLOBAL.major, 'is_divide', ret[0]), setattr(GLOBAL, 'power', ret[1])))(single_bomb(GLOBAL.major.is_divide, GLOBAL.power, 12)),
+    pg.K_SPACE: lambda: (lambda i: (setattr(GLOBAL.major, 'is_divide', i[0]), setattr(GLOBAL, 'power', i[1])))(single_bomb(GLOBAL.major.is_divide, GLOBAL.power, 12)),
     pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", True), setattr(GLOBAL, "pop_timer", 0), sound_cache["pick"].play())
 }
 
@@ -48,7 +48,7 @@ keydown_pause_dict = {
 
 keydown_start_dict = {
     pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_timer", 0), mode_one()),
-    pg.K_q: lambda: (sound_cache["pick"].play(), pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit())
+    pg.K_q: lambda: (pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit())
 }
 
 
@@ -250,13 +250,13 @@ def key_event():
         if event.type == pg.QUIT:
             sys.exit()
         elif event.type == pg.KEYUP:
-            if GLOBAL.is_run and event.key in keyup_game_dict:
+            if not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keyup_game_dict:
                 keyup_game_dict[event.key]()
         elif event.type == pg.KEYDOWN:
             for condition, handler in [
                 (
                     lambda: not GLOBAL.is_run and event.key in keydown_start_dict,
-                    lambda: (keydown_start_dict[event.key](), sound_cache["pick"].play())
+                    lambda: (sound_cache["pick"].play(), keydown_start_dict[event.key]())
                 ),
                 (
                     lambda: GLOBAL.is_save,
