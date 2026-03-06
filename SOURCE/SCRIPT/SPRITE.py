@@ -3,7 +3,7 @@
 
 
 from random import choice, randint, sample, random
-from math import radians, sin, cos, atan2, degrees
+from math import radians, sin, cos
 
 
 import pygame as pg
@@ -133,8 +133,7 @@ def line_barrage(color: list, locate: tuple, group: pg.sprite.Group):
     end_pos = (-locate[0], -locate[1])
     delta_pos = add(end_pos, start_pos)
     pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-    atan2_ = atan2(-delta_pos[0], -delta_pos[1])
-    angle = round_angle(degrees(atan2_))
+    angle = round_angle(bearing(-delta_pos[0], -delta_pos[1]))
 
     Line((3, 500), 0, angle, pos, color[1], color[2], group, True)
 
@@ -207,8 +206,7 @@ def boss_lose(part: int) -> tuple:
 
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     two_point = add(locate, (-spawn_pos[0], -spawn_pos[1]))
-    atan2_ = atan2(-two_point[0], -two_point[1])
-    angle = degrees(atan2_)
+    angle = bearing(-two_point[0], -two_point[1])
 
     Barrage(effective, type, 3, color[0], angle, spawn_pos, barrage_cache[(type, color[0])], group, rotate=False)
 
@@ -216,8 +214,7 @@ def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, grou
 def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         two_point = add((i, locate[1]), (-spawn_pos[0], -spawn_pos[1]))
-        atan2_ = atan2(-two_point[0], -two_point[1])
-        angle = degrees(atan2_)
+        angle = bearing(-two_point[0], -two_point[1])
 
         Barrage(effective, type, 3, color[0], angle, spawn_pos, barrage_cache[(type, color[0])], group)
 
@@ -226,8 +223,7 @@ def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group)
     for _ in range(3):
         pos = (randint(120, 465), randint(15, 225))
         two_point = add(locate, (-pos[0], -pos[1]))
-        atan2_ = atan2(-two_point[0], -two_point[1])
-        angle = degrees(atan2_)
+        angle = bearing(-two_point[0], -two_point[1])
 
         Barrage(effective, type, 4, color[0], angle, pos, barrage_cache[(type, color[0])], group, rotate=False)
 

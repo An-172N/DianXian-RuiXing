@@ -13,8 +13,8 @@ is_save = False
 is_level_load = False
 
 
-pop_time = 0
-wait_load_time = 0
+pop_timer = 0
+wait_load_timer = 0
 
 
 name = ''
@@ -23,17 +23,17 @@ name = ''
 power = 0
 
 
-item_spawn_time = 0
-combo_time = 120
+item_spawn_timer = 0
+combo_timer = 120
 combo = 0
 
 
 flash = 3
-no_flash = 1
+unflash = 1
 score = 0
-use_flash = 0
-total_power = 0
-game_total_power = 0
+flashed = 0
+total_point = 0
+game_total_point = 0
 
 
 text_number = 0
@@ -63,5 +63,5 @@ def calculate_item_rate(number: int, condition: bool, critical: tuple) -> str:
     return f"{(number / (critical[0] if condition else critical[1])) * 100:.2f} %"
 
 
-def score_summary(total_power: int, power: int, unflash: int, combo: int, numbers: tuple) -> int:
-    return total_power * 512 + unflash * 4096 + ((2 ** combo) if combo > 0 else 0) + ((numbers[0] * 16384) if numbers[1] == 6 else 0) + ((int(power / 32 * 8192)) if numbers[1] == 6 else 0)
+def score_summary(total_point: int, power: int, unflash: int, combo: int, numbers: tuple) -> int:
+    return total_point * 512 + unflash * 4096 + ((2 ** combo) if combo > 0 else 0) + ((numbers[0] * 16384) if numbers[1] == 6 else 0) + ((int(power / 32 * 8192)) if numbers[1] == 6 else 0)

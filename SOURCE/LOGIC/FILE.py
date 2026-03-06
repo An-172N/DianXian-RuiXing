@@ -4,15 +4,16 @@
 
 import json
 import os
+from typing import Callable, Any
 
 
 def save_record(
     folder: str,
     file: str,
     title: str,
-    append: object
-):
-    def return_file_with_makedir(
+    append: str
+) -> None:
+    def return_path_with_makedir(
         folder: str,
         file: str
     ) -> str:
@@ -24,14 +25,14 @@ def save_record(
     dump = [title]
     dump.append(append)
 
-    with open(return_file_with_makedir(folder, file), 'w', encoding='utf-8') as f:
+    with open(return_path_with_makedir(folder, file), 'w', encoding='utf-8') as f:
         return json.dump(dump, f, indent=4)
 
 
 def read_level(
     file: bytes,
-    load: object,
-    *args
+    load: Callable[..., Any],
+    *args: Any
 ) -> str:
     content = file.decode('ascii')
     lines = content.splitlines()

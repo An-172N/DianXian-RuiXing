@@ -3,7 +3,7 @@
 
 
 from random import choice, randint, uniform
-from math import radians, sin, cos, atan2, degrees
+from math import radians, sin, cos
 
 
 import pygame as pg
@@ -31,7 +31,7 @@ class Basic(Base):
         th.point = None
         th.choice = None
         th.timer = 0
-        th.torrent = 0
+        th.bullets = 0
         th.target_pos = (292, 60)
 
 
@@ -49,16 +49,16 @@ class Ono(Basic):
             sound_cache["fire"].play()
 
     def free(th):
-        if th.torrent < 8:
+        if th.bullets < 8:
             for i in range(0 + th.timer * 6, 360 + th.timer * 6, 180):
                 for j in range(0 + th.timer * 6, 360 + th.timer * 6, 90):
                     pos = (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i)))
 
                     Sprite.Barrage(effective, 2, 3.5, th.color, j, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
-            th.torrent += 1
+            th.bullets += 1
 
-            if th.torrent % 3 == 0:
+            if th.bullets % 3 == 0:
                 sound_cache["fire"].play()
 
     def extend(th):
@@ -72,8 +72,7 @@ class Ono(Basic):
 
                     for k in (j - 180, j, 180 - delay):
                         two_point = add(th.locate, (-th.x, -th.y))
-                        atan2_ = atan2(-two_point[0], -two_point[1])
-                        angle = degrees(atan2_) + k
+                        angle = bearing(-two_point[0], -two_point[1]) + k
 
                         Sprite.Barrage(effective, 2, speed, th.color, angle, (th.x, th.y), barrage_cache[(2, th.color)], th.group, True, False)
 
@@ -82,17 +81,16 @@ class Ono(Basic):
             sound_cache["fire"].play()
 
     def final(th):
-        if th.torrent < 24:
+        if th.bullets < 24:
             two_point = add(th.locate, (-th.x, -th.y))
-            atan2_ = atan2(-two_point[0], -two_point[1])
-            angle = degrees(atan2_) + 180
+            angle = bearing(-two_point[0], -two_point[1]) + 180
 
             for i in (2, 1, -1, -2):
                 Sprite.Barrage(effective, 2, 4, th.color, ((th.timer * 12) * i) + angle, (th.x, th.y), barrage_cache[(2, th.color)], th.group, True, False)
 
-            th.torrent += 1
+            th.bullets += 1
 
-            if th.torrent % 3 == 0:
+            if th.bullets % 3 == 0:
                 sound_cache["fire"].play()
 
     def update(th):
@@ -101,7 +99,7 @@ class Ono(Basic):
         if th.timer % 120 == 0:
             rands = randint(0, 360)
             th.target_pos = (292 + 50 * cos(radians(rands)), 110 + 50 * sin(radians(rands)))
-            th.torrent = 0
+            th.bullets = 0
             th.timer = 0
             th.can_shoot = True
             th.choice = choice([th.fire] * 5 + [th.free, th.extend, th.final])
@@ -110,8 +108,7 @@ class Ono(Basic):
                 for i in range(0, 360, 30):
                     pos = (th.x + 48 * cos(radians(i)), th.y + 48 * sin(radians(i)))
                     two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    atan2_ = atan2(-two_point[0], -two_point[1])
-                    angle = degrees(atan2_)
+                    angle = bearing(-two_point[0], -two_point[1])
 
                     Sprite.Barrage(effective, 2, 3, color_dict[6], angle, pos, barrage_cache[(2, color_dict[6])], th.particle_group, False, False)
 
@@ -134,17 +131,16 @@ class Hro(Basic):
         th.flash = True
 
     def fire(th):
-        if th.timer % 6 == 0 and th.torrent < 3:
+        if th.timer % 6 == 0 and th.bullets < 3:
             pos = (th.x, th.y)
 
             for i in range(-30, 31, 30):
                 two_point = add((th.locate[0], th.locate[1]), (-pos[0], -pos[1]))
-                atan2_ = atan2(-two_point[0], -two_point[1])
-                angle = degrees(atan2_) + i
+                angle = bearing(-two_point[0], -two_point[1]) + i
 
                 Sprite.Barrage(effective, 0, 4, th.color, angle, pos, barrage_cache[(0, th.color)], th.group)
 
-            th.torrent += 1
+            th.bullets += 1
             sound_cache["fire"].play()
 
     def free(th):
@@ -163,22 +159,21 @@ class Hro(Basic):
             }
         ]
 
-        if th.torrent < 18:
+        if th.bullets < 18:
             for bullet_info in bullet_type:
                 start_pos = (292 + bullet_info['dx1'], 100 - bullet_info['dx2'])
                 end_pos = (292 - bullet_info['dy1'], 100 + bullet_info['dy2'])
-                current_pos, delta_vec = vector(start_pos, end_pos, th.torrent * 25)
+                current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
 
                 for j in range(45, 136, 90):
-                    atan = atan2(-delta_vec.x, -delta_vec.y)
-                    angle = degrees(atan) + j + (th.timer * -6)
+                    angle = bearing(-delta_vec.x, -delta_vec.y) + j + (th.timer * -6)
                     pos = (current_pos.x, current_pos.y)
 
                     Sprite.Barrage(effective, 0, 4, th.color, angle, pos, barrage_cache[(0, th.color)], th.group)
 
-            th.torrent += 1
+            th.bullets += 1
 
-            if th.torrent % 3 == 0:
+            if th.bullets % 3 == 0:
                 sound_cache["fire"].play()
 
     def extend(th):
@@ -190,8 +185,7 @@ class Hro(Basic):
                     for k in range(1, 4):
                         pos = (j, 60)
                         two_point = add((th.locate[0], th.locate[1] - 96), (-pos[0], -pos[1]))
-                        atan2_ = atan2(-two_point[0], -two_point[1])
-                        angle = degrees(atan2_) * k
+                        angle = bearing(-two_point[0], -two_point[1]) * k
 
                         Sprite.Barrage(effective, 0, speed, th.color, angle, pos, barrage_cache[(0, th.color)], th.group)
 
@@ -204,7 +198,7 @@ class Hro(Basic):
 
         if th.timer % 110 == 0:
             th.target_pos = (choice((150, 220, 292, 365)), choice((60, 120, 180, 240)))
-            th.torrent = 0
+            th.bullets = 0
             th.timer = 0
             th.is_choose = False
             th.can_shoot = True
@@ -216,8 +210,7 @@ class Hro(Basic):
                 for i in range(0, 360, 120 if th.choice == th.fire else 90):
                     pos = (th.x + 45 * cos(radians(i)), th.y + 45 * sin(radians(i)))
                     two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    atan2_ = atan2(-two_point[0], -two_point[1])
-                    angle = degrees(atan2_)
+                    angle = bearing(-two_point[0], -two_point[1])
 
                     Sprite.Barrage(effective, 0, 3, color_dict[6], angle, pos, barrage_cache[(0, color_dict[6])], th.particle_group, mask=False)
 
@@ -251,43 +244,43 @@ class Nre(Basic):
             sound_cache["fire"].play()
 
     def free(th):
-        if th.torrent < 12:
+        if th.bullets < 12:
             start_pos = (randint(120, 465), 15)
             end_pos = (-randint(120, 465), -360)
             delta_pos = add(end_pos, start_pos)
             pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-            angle = round_angle(degrees(atan2(-delta_pos[0], -delta_pos[1])))
+            angle = round_angle(bearing(-delta_pos[0], -delta_pos[1]))
 
             Sprite.Line((3, 500), 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
 
-            th.torrent += 1
+            th.bullets += 1
 
-            if th.torrent % 3 == 0:
+            if th.bullets % 3 == 0:
                 sound_cache["fire"].play()
 
     def extend(th):
-        if th.torrent < 8 and th.timer % 3 == 0:
+        if th.bullets < 8 and th.timer % 3 == 0:
             for j in (1, -1):
-                start_pos = (th.interval_locate[0] + th.torrent * j * 24, 15)
-                end_pos = (-(th.interval_locate[0] + th.torrent * j * 24), -360)
+                start_pos = (th.interval_locate[0] + th.bullets * j * 24, 15)
+                end_pos = (-(th.interval_locate[0] + th.bullets * j * 24), -360)
                 delta_pos = add(end_pos, start_pos)
                 pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
                 Sprite.Line((3, 500), 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
 
-            if th.torrent < 1:
+            if th.bullets < 1:
                 for k in range(8):
                     start_pos = (120, (th.locate[1] - 13) - k * 24)
                     end_pos = (-465, -((th.locate[1] - 13) - k * 24))
                     delta_pos = add(end_pos, start_pos)
                     pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-                    angle = round_angle(degrees(atan2(-delta_pos[0], -delta_pos[1])))
+                    angle = round_angle(bearing(-delta_pos[0], -delta_pos[1]))
 
                     Sprite.Line((3, 500), 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
 
-            th.torrent += 1
+            th.bullets += 1
 
-            if th.torrent % 2 == 0:
+            if th.bullets % 2 == 0:
                 sound_cache["fire"].play()
 
     def update(th):
@@ -295,7 +288,7 @@ class Nre(Basic):
 
         if th.timer % 100 == 0:
             th.target_pos = (choice((150, 220, 292, 365, 435)), 60)
-            th.torrent = 0
+            th.bullets = 0
             th.timer = 0
             th.interval_locate = th.locate
             th.can_shoot = True
@@ -305,8 +298,7 @@ class Nre(Basic):
                 for _ in range(8):
                     pos = (int(uniform(th.x - 48, th.x + 48)), th.y)
                     two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    atan2_ = atan2(-two_point[0], -two_point[1])
-                    angle = degrees(atan2_)
+                    angle = bearing(-two_point[0], -two_point[1])
 
                     Sprite.Barrage(effective, None, 3, color_dict[6], angle, pos, particle_cache[((9, 9), color_dict[6])], th.particle_group, False)
 
@@ -328,16 +320,16 @@ class Qdi(Basic):
         th.power = True
 
     def fire(th):
-        if th.torrent < 6 and th.timer % 2 == 0:
+        if th.bullets < 6 and th.timer % 2 == 0:
             pos = (randint(120, 465), randint(15, 230))
             two_point = add(th.locate, (-pos[0], -pos[1]))
-            angle = degrees(atan2(-two_point[0], -two_point[1]))
+            angle = bearing(-two_point[0], -two_point[1])
 
             Sprite.Barrage(effective, 2, 3.5, th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
-            th.torrent += 1
+            th.bullets += 1
 
-            if th.torrent % 3 == 0:
+            if th.bullets % 3 == 0:
                 sound_cache["fire"].play()
 
     def free(th):
@@ -369,7 +361,7 @@ class Qdi(Basic):
                 target_pos = choice(pos_list)
                 pos = (randint(120, 465), randint(15, 300))
                 two_point = add(target_pos, (-pos[0], -pos[1]))
-                angle = degrees(atan2(-two_point[0], -two_point[1]))
+                angle = bearing(-two_point[0], -two_point[1])
 
                 Sprite.Barrage(effective, 2, uniform(4.0, 5.0), th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
@@ -392,7 +384,7 @@ class Qdi(Basic):
 
         if th.timer % 150 == 0:
             th.x, th.y = (randint(150, 435), randint(48, 96))
-            th.torrent = 0
+            th.bullets = 0
             th.timer = 0
             th.can_shoot = True
             th.choice = choice([th.fire] * 10 + [th.free] * 2 + [th.extend, th.final, th.last])
@@ -403,8 +395,7 @@ class Qdi(Basic):
                 for _ in range(12):
                     pos = (int(uniform(th.x - 48, th.x + 48)), int(uniform(th.y - 64, th.y + 64)))
                     two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    atan2_ = atan2(-two_point[0], -two_point[1])
-                    angle = degrees(atan2_)
+                    angle = bearing(-two_point[0], -two_point[1])
 
                     Sprite.Barrage(effective, 2, 3, color_dict[6], angle, pos, barrage_cache[(2, color_dict[6])], th.particle_group, False, False)
 
@@ -424,11 +415,11 @@ class Kli(Base):
         th.group = group[0]
         th.particle_group = group[1]
         th.color = color_dict[5]
-        th.decision_point = Sprite.Rect(rectangle((2, 2), 0, color_dict[7]).convert(), group[2], pos=(292, 332), mask=True)
-        th.torrent = 0
+        th.decision_box = Sprite.Rect(rectangle((2, 2), 0, color_dict[7]).convert(), group[2], pos=(292, 332), mask=True)
+        th.bomb_bullets = 0
         th.bullet_timer = 0
-        th.cooldown_time = 0
-        th.shoot_count = 0
+        th.cooldown_timer = 0
+        th.bullets = 0
         th.power = 0
         th.is_shoot = True
         th.is_move_right = False
@@ -476,31 +467,32 @@ class Kli(Base):
 
             sound_cache["charge"].play()
 
-        if th.bullet_timer >= 30 and th.torrent < 6:
+        if th.bullet_timer >= 30 and th.bomb_bullets < 6:
             for i in range(120, 466, 15):
                 Sprite.Bullet(effective, "bomb", -24, th.color, 0, (i, 0), 6, bullet_cache["bomb"], th.group, mask=False)
 
-            th.torrent += 1
+            th.bomb_bullets += 1
 
             sound_cache["fire"].play(maxtime=32)
 
     def update(th):
+        if th.is_divide:
+            th.free()
+
         th.image = turn_side(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
         th.x = move(th.x, (3, 8), th.is_move_left, th.is_move_right, th.is_fast)
         th.y = 331 if th.is_fast else 332
         keep_x = clamp(th.x, window.left, window.right)
         th.x = keep_x
-        th.decision_point.rect.center = (keep_x, th.y)
-        th.is_divide, th.is_collide, th.is_visitable, th.cooldown_time = invinc(th.is_divide, th.is_collide, th.is_visitable, th.cooldown_time, 180, 6, th.reset_bullet)
+        th.decision_box.rect.center = (keep_x, th.y)
+        th.is_divide, th.is_collide, th.is_visitable, th.cooldown_timer = invinc(th.is_divide, th.is_collide, th.is_visitable, th.cooldown_timer, 180, 6, th.reset_bullet)
 
-        if th.is_divide:
-            th.free()
-        if th.is_shoot and th.shoot_count > 0:
+        if th.is_shoot and th.bullets > 0:
             th.fire()
             Sprite.spawn_particles(th.particle_group, (2, 2), th.rect.center, (4, 8), th.color)
 
-            th.shoot_count -= 1
+            th.bullets -= 1
 
     def reset_bullet(th):
-        th.torrent = 0
+        th.bomb_bullets = 0
         th.bullet_timer = 0

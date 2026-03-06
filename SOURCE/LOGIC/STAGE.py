@@ -2,12 +2,15 @@
 # 此代码遵循 GPLv3.0 协议
 
 
+from typing import Callable, Any
+
+
 def load_level(
     timer: int,
     loaded: bool,
     end: int,
-    load: object,
-    *args
+    load: Callable[..., Any],
+    *args: Any
 ) -> tuple[int, bool]:
     if timer <= end:
         timer += 1
@@ -21,7 +24,7 @@ def load_level(
 
 
 def next_level(
-    numbers: tuple,
+    numbers: tuple[int, int],
     end: int
 ) -> tuple[int, int]:
     stage, level = numbers

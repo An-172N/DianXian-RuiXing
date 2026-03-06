@@ -2,6 +2,9 @@
 # 此代码遵循 GPLv3.0 协议
 
 
+from typing import Callable, Any
+
+
 import pygame
 
 
@@ -10,11 +13,11 @@ class Base(pygame.sprite.Sprite):
         form: int | str,
         image: pygame.Surface,
         *group: pygame.sprite.Group,
-        angle: int | float=0,
-        pos: tuple[int, int]=(0, 0),
-        mask: bool=False,
-        rotate: bool=False
-    ):
+        angle: int | float = 0,
+        pos: tuple[int, int] = (0, 0),
+        mask: bool = False,
+        rotate: bool = False
+    ) -> None:
         super().__init__(*group)
 
         th.image = pygame.transform.rotate(image, angle) if rotate else image
@@ -33,7 +36,7 @@ class Base(pygame.sprite.Sprite):
     @x.setter
     def x(th,
         value: int | float
-    ):
+    ) -> None:
         th._x = value
         th.rect.centerx = th._x
 
@@ -44,17 +47,17 @@ class Base(pygame.sprite.Sprite):
     @y.setter
     def y(th,
         value: int | float
-    ):
+    ) -> None:
         th._y = value
         th.rect.centery = th._y
 
 
 def spawn_sprite(
     condition: bool,
-    sprite: object,
-    *args,
-    group: pygame.sprite.Group=None,
-    timer: int=0
+    sprite: Callable[..., Any],
+    *args: Any,
+    group: pygame.sprite.Group = None,
+    timer: int = 0
 ) -> int:
     timer += 1
 
@@ -67,3 +70,24 @@ def spawn_sprite(
         timer = 0
 
     return timer
+
+
+def vector(
+    present: tuple[int | float, int | float],
+    target: tuple[int | float, int | float],
+    speed: float
+) -> tuple[pygame.Vector2, pygame.Vector2]:
+    dir = pygame.math.Vector2(target[0] - present[0], target[1] - present[1])
+    current = pygame.math.Vector2(present[0], present[1])
+    target = pygame.math.Vector2(target[0], target[1])
+
+    delta_vec = target - current
+    distance = delta_vec.length()
+
+    if distance < speed:
+        return target, delta_vec
+    else:
+        if distance > 0:
+            dir.normalize_ip()
+
+        return current + dir * speed, delta_vec
