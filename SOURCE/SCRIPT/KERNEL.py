@@ -98,13 +98,12 @@ def load(screen: pg.Surface):
 
 def talk(screen: pg.Surface):
     try:
-        human = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["char"]
-        text = [
-            GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["1"],
-            GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]["2"] if "2" in GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"] else ''
-        ]
+        text = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]
+        human = text["char"]
+        contest1 = text["1"]
+        contest2 = text["2"] if "2" in text else ''
 
-        half_menu(screen, human, text, (0, 6, 12))
+        half_menu(screen, human, [contest1, contest2], (0, 6, 12))
     except KeyError:
         GLOBAL.is_talk = False
 

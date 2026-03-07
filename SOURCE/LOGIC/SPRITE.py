@@ -75,7 +75,7 @@ def spawn_sprite(
 def vector(
     present: tuple[int | float, int | float],
     target: tuple[int | float, int | float],
-    speed: float
+    speed: int | float
 ) -> tuple[pygame.Vector2, pygame.Vector2]:
     dir = pygame.math.Vector2(target[0] - present[0], target[1] - present[1])
     current = pygame.math.Vector2(present[0], present[1])

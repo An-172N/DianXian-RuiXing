@@ -24,7 +24,7 @@ def update_fps(
     bit: int,
     interval: int,
     clock: pygame.time.Clock
-) -> tuple:
+) -> tuple[str, int]:
     current_time = pygame.time.get_ticks()
 
     if current_time - timer >= interval:
@@ -43,7 +43,7 @@ def bearing(
 
 def add(
     *packs: tuple[int | float, ...] | list[int | float] | set[int | float]
-) -> tuple:
+) -> tuple[int | float, ...]:
     return tuple(map(sum, zip(*packs)))
 
 
