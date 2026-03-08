@@ -62,7 +62,7 @@ keydown_over_dict = {
 
 keydown_check_dict = {
     pg.K_DELETE: lambda: (os.remove(GLOBAL.json_files[GLOBAL.index]), setattr(GLOBAL, "json_files", get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')), setattr(GLOBAL, "total_files", len(GLOBAL.json_files)), setattr(GLOBAL, "index", clamp(GLOBAL.index, 0, GLOBAL.total_files)), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None,
-    pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_check", False), setattr(GLOBAL, "pop_timer", 0)),
+    pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_check", False), setattr(GLOBAL, "index", 0), setattr(GLOBAL, "pop_timer", 0)),
     pg.K_LEFT: lambda: (setattr(GLOBAL, "index", clamp(GLOBAL.index - 1, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0)),
     pg.K_RIGHT: lambda: (setattr(GLOBAL, "index", clamp(GLOBAL.index + 1, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0))
 }
@@ -118,7 +118,7 @@ def talk(screen: pg.Surface):
 
 
 def summary(screen: pg.Surface):
-    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer!{'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
+    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Cleaer! {'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
     text = [
         f"得点 {GLOBAL.total_point} * 512 = {GLOBAL.total_point * 512}",
         f"无闪 {GLOBAL.unflash} * 4096 = {GLOBAL.unflash * 4096}"
@@ -395,79 +395,76 @@ def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tup
 def item_collide():
     collide = pg.sprite.spritecollide(GLOBAL.major, GLOBAL.item_group, False)
 
-    if collide:
-        for item in collide:
-            GLOBAL.combo_timer = 120
-            GLOBAL.major.bullets = int(clamp(GLOBAL.major.bullets + 1, 0, 6))
+    for item in collide:
+        GLOBAL.combo_timer = 120
+        GLOBAL.major.bullets = int(clamp(GLOBAL.major.bullets + 1, 0, 6))
 
-            if item.type in ['flash', 'power']:
-                if item.type == "power":
-                    GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
-                    GLOBAL.combo += 1
+        if item.type in ['flash', 'power']:
+            if item.type == "power":
+                GLOBAL.power = int(clamp(GLOBAL.power + 1, 0, 32))
+                GLOBAL.combo += 1
 
-                    sound_cache["pick"].play()
-                elif item.type == "flash":
-                    GLOBAL.flash += 1
-                    GLOBAL.combo += 1
+                sound_cache["pick"].play()
+            elif item.type == "flash":
+                GLOBAL.flash += 1
+                GLOBAL.combo += 1
 
-                    Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.particle_group)
+                Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.particle_group)
 
-                GLOBAL.total_point += 1
-                GLOBAL.game_total_point += 1
+            GLOBAL.total_point += 1
+            GLOBAL.game_total_point += 1
 
-            sound_cache["charge"].play(maxtime=24)
-            item.kill()
+        sound_cache["charge"].play(maxtime=24)
+        item.kill()
 
 
 def barrage_collide(position):
     collide = pg.sprite.spritecollide(GLOBAL.major.decision_box, GLOBAL.barrage_group, False, pg.sprite.collide_mask)
 
-    if collide:
-        for barrage in collide:
-            if barrage.color != color_dict[6]:
-                if not (GLOBAL.major.is_collide or GLOBAL.major.is_divide):
-                    GLOBAL.major.is_collide = True
-                    GLOBAL.unflash = 0
-                    GLOBAL.flash -= 1
-                    GLOBAL.flashed += 1
-                    if GLOBAL.flash == 0:
-                        GLOBAL.is_save = True
+    for barrage in collide:
+        if barrage.color != color_dict[6]:
+            if not (GLOBAL.major.is_collide or GLOBAL.major.is_divide):
+                GLOBAL.major.is_collide = True
+                GLOBAL.unflash = 0
+                GLOBAL.flash -= 1
+                GLOBAL.flashed += 1
+                if GLOBAL.flash == 0:
+                    GLOBAL.is_save = True
 
-                    Sprite.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), color_dict[5], color_dict[6])
-                    sound_cache["fire"].play()
+                Sprite.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), color_dict[5], color_dict[6])
+                sound_cache["fire"].play()
 
-                barrage.kill()
+            barrage.kill()
 
 
 def bullet_collide():
     collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
 
-    if collide:
-        for bullet, hit_bricks in collide.items():
-            for brick in hit_bricks:
-                if brick.hp > 0:
-                    GLOBAL.score += 64
-                    brick.hp -= bullet.damage
-                if brick.hp <= 0:
-                    if not brick.is_die:
-                        Sprite.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, color_dict[6])
-                        if hasattr(brick, "free"):
-                            GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.pop_timer = Sprite.boss_lose(GLOBAL.text_part)
-                        else:
-                            spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
+    for bullet, hit_bricks in collide.items():
+        for brick in hit_bricks:
+            if brick.hp > 0:
+                GLOBAL.score += 64
+                brick.hp -= bullet.damage
+            if brick.hp <= 0:
+                if not brick.is_die:
+                    Sprite.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, color_dict[6])
+                    if hasattr(brick, "free"):
+                        GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.pop_timer = Sprite.boss_lose(GLOBAL.text_part)
+                    else:
+                        spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
 
-                        if sound_cache["fire"].get_num_channels() < 2:
-                            sound_cache["fire"].play()
-                        if hasattr(brick, "power"):
-                            spawn_sprite(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
-                        if hasattr(brick, "flash"):
-                            spawn_sprite(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
-                        brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
-                        brick.kill()
+                    if sound_cache["fire"].get_num_channels() < 2:
+                        sound_cache["fire"].play()
+                    if hasattr(brick, "power"):
+                        spawn_sprite(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
+                    if hasattr(brick, "flash"):
+                        spawn_sprite(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
+                    brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
+                    brick.kill()
 
-                    brick.is_die = True
-                if bullet.type in ("bullet", "bomb"):
-                    bullet.kill()
+                brick.is_die = True
+            if bullet.type in ("bullet", "bomb"):
+                bullet.kill()
 
 
 def sprite_loader():

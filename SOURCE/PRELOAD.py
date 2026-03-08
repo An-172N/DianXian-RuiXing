@@ -72,7 +72,7 @@ bullet_cache = {
 }
 
 
-item_cache = {i: rectangle((9, 9), 2, color_dict[j]).convert_alpha() for i, j in [("flash", 2), ("power", 5), ("fire", 6)]}
+item_cache = {i: rectangle((9, 9), 2, color_dict[j]).convert() for i, j in [("flash", 2), ("power", 5), ("fire", 6)]}
 
 
 line_cache = {

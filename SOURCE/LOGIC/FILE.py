@@ -4,7 +4,10 @@
 
 import json
 import os
-from typing import Callable, Any
+from typing import Callable, Any, ParamSpec, Concatenate
+
+
+P = ParamSpec("P")
 
 
 def save_record(
@@ -31,7 +34,7 @@ def save_record(
 
 def read_level(
     file: bytes,
-    load: Callable[..., Any],
+    load: Callable[Concatenate[int, str, P], Any],
     *args: Any
 ) -> str:
     content = file.decode('ascii')
