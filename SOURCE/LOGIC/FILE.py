@@ -41,3 +41,27 @@ def read_level(
         load(row, line, *args)
 
     return content
+
+
+def get_files(
+    folder: str,
+    extension: str = '.json',
+    reverse: bool = True
+) -> list[str]:
+    files = []
+
+    try:
+        for file in os.listdir(folder):
+            if file.endswith(extension):
+                path = os.path.join(folder, file)
+
+                if os.path.isfile(path):
+                    time = os.path.getmtime(path)
+
+                    files.append((time, path))
+    except:
+        return []
+
+    files.sort(key=lambda x: x[0], reverse=reverse)
+
+    return [path for _, path in files]

@@ -2,7 +2,13 @@
 # 此代码遵循 GPLv3.0 协议
 
 
+import os
+
+
 import pygame as pg
+
+
+from LOGIC.FILE import *
 
 
 is_run = False
@@ -10,6 +16,7 @@ is_pause = False
 is_summary = False
 is_talk = False
 is_save = False
+is_check = False
 is_level_load = False
 
 
@@ -57,6 +64,11 @@ particle_group = pg.sprite.Group()
 
 last_time = pg.time.get_ticks()
 fps_text = last_time
+
+
+json_files = get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+index = 0
+total_files = len(json_files)
 
 
 def calculate_item_rate(number: int, condition: bool, critical: tuple) -> str:

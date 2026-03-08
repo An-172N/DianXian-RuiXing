@@ -48,7 +48,8 @@ keydown_pause_dict = {
 
 keydown_start_dict = {
     pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_timer", 0), mode_one()),
-    pg.K_q: lambda: (pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit())
+    pg.K_q: lambda: (pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit()),
+    pg.K_c: lambda: (setattr(GLOBAL, "is_check", True), setattr(GLOBAL, "pop_timer", 0))
 }
 
 
@@ -56,6 +57,14 @@ keydown_over_dict = {
     pg.K_RETURN: lambda: (save_file(), mode_one(), mode_two()),
     pg.K_ESCAPE: lambda: (mode_one(), mode_two()),
     pg.K_BACKSPACE: lambda: setattr(GLOBAL, "name", GLOBAL.name[:-1])
+}
+
+
+keydown_check_dict = {
+    pg.K_DELETE: lambda: (os.remove(GLOBAL.json_files[GLOBAL.index]), setattr(GLOBAL, "json_files", get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')), setattr(GLOBAL, "total_files", len(GLOBAL.json_files)), setattr(GLOBAL, "index", clamp(GLOBAL.index, 0, GLOBAL.total_files)), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None,
+    pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_check", False), setattr(GLOBAL, "pop_timer", 0)),
+    pg.K_LEFT: lambda: (setattr(GLOBAL, "index", clamp(GLOBAL.index - 1, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0)),
+    pg.K_RIGHT: lambda: (setattr(GLOBAL, "index", clamp(GLOBAL.index + 1, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0))
 }
 
 
@@ -129,14 +138,14 @@ def summary(screen: pg.Surface):
     if GLOBAL.level <= 5:
         half_menu(screen, stage, text)
     else:
-        full_menu(screen, stage, text + over, ["Z 继续", "W 木鱼"], title.get(GLOBAL.stage))
+        full_menu(screen, stage, text + over, ["Z 继续", "W 木鱼", "", ""], title.get(GLOBAL.stage))
 
 
 def start(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ['Ver 1.0.9', '', '', '', '']
-    key = ["Z 开玩", "Q 退了"]
+    key = ["Z 开玩", "Q 退了", "C 日志", ""]
 
     full_menu(screen, title, text, key, other)
 
@@ -145,15 +154,38 @@ def save(screen: pg.Surface):
     title = "抚形日志"
     name = f"由 {GLOBAL.name} 助记"
     text = [
-        f"今天是：{datetime.now().strftime('%Y-%m-%d')}",
+        f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {GLOBAL.score} 分",
         f"最远到达的地方是 {GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'} - {GLOBAL.level} 站",
         f"拾形点率为 {GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61))}",
         f"使用了 {GLOBAL.flashed} 次形闪"
     ]
-    key = ["Ent 记录", "ESC 不了"]
+    key = ["Ent 记录", "Esc 算了", "", ""]
 
     full_menu(screen, title, text, key, name)
+
+
+def check(screen: pg.Surface):
+    def load_json(filepath: str):
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return json.load(f)
+
+    try:
+        log = load_json(GLOBAL.json_files[GLOBAL.index])[1]
+    except:
+        log = json.loads(asset(r"ASSET\JSON\HRO.json").decode('utf-8'))[1]
+
+    title = "抚形日志"
+    text = [
+        f"今天是 {log['Date']}",
+        f"得到了 {log['Score']} 分",
+        f"最远到达的地方是 {log['Stage']} 站",
+        f"拾形点率为 {log['Rate']}",
+        f"使用了 {log['Flash']} 次形闪"
+    ]
+    key = ["Del 丢掉", "Esc 合上", "<- 上页", "-> 下页"]
+
+    full_menu(screen, title, text, key, f"由 {log['Name']} 助记")
 
 
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
@@ -171,7 +203,9 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
         ],
         [
             {"text": key[0], "pos": (270, 220)},
-            {"text": key[1], "pos": (270, 270)}
+            {"text": key[1], "pos": (270, 270)},
+            {"text": key[2], "pos": (270, 170)},
+            {"text": key[3], "pos": (270, 120)}
         ]
     )
 
@@ -215,12 +249,12 @@ def save_file():
     name = GLOBAL.name.translate(str.maketrans('!<>:"/\\|?*', '__________'))
     date_time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
     dump_content = {
-        '助记者': GLOBAL.name,
-        '分数': GLOBAL.score,
-        '最远到达的地方': f"{GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'} - {GLOBAL.level}",
-        '拾形点率': GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61)),
-        '形闪次数': GLOBAL.flashed,
-        '记录日期': date_time[0]
+        'Name': GLOBAL.name,
+        'Score': GLOBAL.score,
+        'Stage': f"{GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'} - {GLOBAL.level}",
+        'Rate': GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61)),
+        'Flash': GLOBAL.flashed,
+        'Date': date_time[0]
     }
 
     save_record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', "锐山抚形日志", dump_content)
@@ -254,7 +288,11 @@ def key_event():
         elif event.type == pg.KEYDOWN:
             for condition, handler in [
                 (
-                    lambda: not GLOBAL.is_run and event.key in keydown_start_dict,
+                    lambda: GLOBAL.is_check and event.key in keydown_check_dict,
+                    lambda: (keydown_check_dict[event.key](), sound_cache["pick"].play())
+                ),
+                (
+                    lambda: not GLOBAL.is_run and not GLOBAL.is_check and event.key in keydown_start_dict,
                     lambda: (sound_cache["pick"].play(), keydown_start_dict[event.key]())
                 ),
                 (
@@ -276,7 +314,7 @@ def key_event():
                 (
                     lambda: not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_game_dict,
                     lambda: keydown_game_dict[event.key]()
-                ),
+                )
             ]:
                 if condition():
                     handler()
@@ -319,6 +357,9 @@ def mode_two():
     GLOBAL.power = 0
     GLOBAL.game_total_point = 0
     GLOBAL.is_run = False
+    GLOBAL.json_files = get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+    GLOBAL.index = 0
+    GLOBAL.total_files = len(GLOBAL.json_files)
 
 
 def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
@@ -468,12 +509,13 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
         GLOBAL.barrage_group.draw(screen)
 
     for condition, func in [
+        (lambda: GLOBAL.is_check, check),
         (lambda: not GLOBAL.is_run, start),
         (lambda: GLOBAL.is_pause, pause),
         (lambda: not GLOBAL.is_level_load, load),
         (lambda: GLOBAL.is_talk, talk),
         (lambda: GLOBAL.is_summary, summary),
-        (lambda: GLOBAL.is_save, save),
+        (lambda: GLOBAL.is_save, save)
     ]:
         if condition():
             func(screen)
