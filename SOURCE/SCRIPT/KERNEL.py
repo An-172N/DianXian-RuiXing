@@ -42,7 +42,7 @@ keydown_talk_dict = {
 
 keydown_pause_dict = {
     pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", False), setattr(GLOBAL, "pop_timer", 0)),
-    pg.K_q: lambda: (mode_one(), mode_two())
+    pg.K_DELETE: lambda: (mode_one(), mode_two())
 }
 
 
@@ -91,7 +91,7 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
 
 def pause(screen: pg.Surface):
     title = "休息ing"
-    text = ["ESC 休息好了", "Q 不玩了"]
+    text = ["Esc 休息好了", "Del 不玩了"]
 
     half_menu(screen, title, text)
 
@@ -138,14 +138,14 @@ def summary(screen: pg.Surface):
     if GLOBAL.level <= 5:
         half_menu(screen, stage, text)
     else:
-        full_menu(screen, stage, text + over, ["Z 继续", "W 木鱼", "", ""], title.get(GLOBAL.stage))
+        full_menu(screen, stage, text + over, ["", "Z 继续", "", ""], title.get(GLOBAL.stage))
 
 
 def start(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ['Ver 1.0.9', '', '', '', '']
-    key = ["Z 开玩", "Q 退了", "C 日志", ""]
+    key = ["C 日志", "Q 退了", "Z 开玩", ""]
 
     full_menu(screen, title, text, key, other)
 
@@ -183,7 +183,7 @@ def check(screen: pg.Surface):
         f"拾形点率为 {log['Rate']}",
         f"使用了 {log['Flash']} 次形闪"
     ]
-    key = ["Del 丢掉", "Esc 合上", "<- 上页", "-> 下页"]
+    key = ["Del 丢掉", "Esc 合上", "<-- 上页", "--> 下页"]
 
     full_menu(screen, title, text, key, f"由 {log['Name']} 助记")
 
@@ -218,12 +218,12 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
     group = (
-        [{"text": title, "pos": (8, 8)}],
-        [{"text": text[0], "pos": (8, 33)}],
-        [{"text": text[1], "pos": (8, 58)}]
+        [{"text": title, "pos": (8, 10)}],
+        [{"text": text[0], "pos": (8, 60)}],
+        [{"text": text[1], "pos": (8, 85)}]
     )
 
-    (backdrop := picture[5].subsurface((0, 0, 345, 85)), backdrop.fill(color_dict[8]))[0]
+    (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
 
     menu, GLOBAL.pop_timer = pop_animate(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
 
@@ -309,7 +309,7 @@ def key_event():
                 ),
                 (
                     lambda: GLOBAL.is_summary,
-                    lambda: (summary_logic(), sound_cache["pick"].play()) if event.key == pg.K_z else (sound_cache["pick"].play() if event.key == pg.K_w and GLOBAL.level == 6 else None)
+                    lambda: (summary_logic(), sound_cache["pick"].play()) if event.key == pg.K_z else None
                 ),
                 (
                     lambda: not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_game_dict,
