@@ -191,21 +191,21 @@ def check(screen: pg.Surface):
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
     group = (
         [
-            {"text": title, "pos": (8, 10)},
-            {"text": other, "pos": (8, 305)}
+            {"text": title, "pos": (8, 9)},
+            {"text": other, "pos": (8, 304)}
         ],
         [
-            {"text": text[0], "pos": (8, 60)},
-            {"text": text[1], "pos": (8, 85)},
-            {"text": text[2], "pos": (8, 110)},
-            {"text": text[3], "pos": (8, 135)},
-            {"text": text[4], "pos": (8, 160)}
+            {"text": text[0], "pos": (8, 59)},
+            {"text": text[1], "pos": (8, 84)},
+            {"text": text[2], "pos": (8, 109)},
+            {"text": text[3], "pos": (8, 134)},
+            {"text": text[4], "pos": (8, 159)}
         ],
         [
-            {"text": key[0], "pos": (270, 220)},
-            {"text": key[1], "pos": (270, 270)},
-            {"text": key[2], "pos": (270, 170)},
-            {"text": key[3], "pos": (270, 120)}
+            {"text": key[0], "pos": (276, 219)},
+            {"text": key[1], "pos": (276, 269)},
+            {"text": key[2], "pos": (276, 169)},
+            {"text": key[3], "pos": (276, 119)}
         ]
     )
 
@@ -218,9 +218,9 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
     group = (
-        [{"text": title, "pos": (8, 10)}],
-        [{"text": text[0], "pos": (8, 60)}],
-        [{"text": text[1], "pos": (8, 85)}]
+        [{"text": title, "pos": (8, 9)}],
+        [{"text": text[0], "pos": (8, 59)}],
+        [{"text": text[1], "pos": (8, 84)}]
     )
 
     (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
