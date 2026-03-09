@@ -49,7 +49,7 @@ keydown_pause_dict = {
 keydown_start_dict = {
     pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_timer", 0), mode_one()),
     pg.K_q: lambda: (pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit()),
-    pg.K_c: lambda: (setattr(GLOBAL, "is_check", True), setattr(GLOBAL, "pop_timer", 0))
+    pg.K_c: lambda: (setattr(GLOBAL, "is_check", True), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None
 }
 
 
@@ -61,10 +61,10 @@ keydown_over_dict = {
 
 
 keydown_check_dict = {
-    pg.K_DELETE: lambda: (os.remove(GLOBAL.json_files[GLOBAL.index]), setattr(GLOBAL, "json_files", get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')), setattr(GLOBAL, "total_files", len(GLOBAL.json_files)), setattr(GLOBAL, "index", clamp(GLOBAL.index, 0, GLOBAL.total_files)), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None,
+    pg.K_DELETE: lambda: (os.remove(GLOBAL.json_files[GLOBAL.index]), setattr(GLOBAL, "json_files", get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')), setattr(GLOBAL, "total_files", len(GLOBAL.json_files)), setattr(GLOBAL, "index", clamp(GLOBAL.index, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None,
     pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_check", False), setattr(GLOBAL, "index", 0), setattr(GLOBAL, "pop_timer", 0)),
-    pg.K_LEFT: lambda: (setattr(GLOBAL, "index", clamp(GLOBAL.index - 1, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0)),
-    pg.K_RIGHT: lambda: (setattr(GLOBAL, "index", clamp(GLOBAL.index + 1, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0))
+    pg.K_LEFT: lambda: (setattr(GLOBAL, "index", GLOBAL.index - 1), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.index > 0 else None,
+    pg.K_RIGHT: lambda: (setattr(GLOBAL, "index", GLOBAL.index + 1), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.index < GLOBAL.total_files - 1 else None
 }
 
 
@@ -172,20 +172,20 @@ def check(screen: pg.Surface):
 
     try:
         log = load_json(GLOBAL.json_files[GLOBAL.index])[1]
+
+        title = "抚形日志"
+        text = [
+            f"今天是 {log['Date']}",
+            f"得到了 {log['Score']} 分",
+            f"最远到达的地方是 {log['Stage']} 站",
+            f"拾形点率为 {log['Rate']}",
+            f"使用了 {log['Flash']} 次形闪"
+        ]
+        key = ["Del 丢掉", "Esc 合上", "<-- 上页", "--> 下页"]
+
+        full_menu(screen, title, text, key, f"由 {log['Name']} 助记")
     except:
-        log = json.loads(asset(r"ASSET\JSON\HRO.json").decode('utf-8'))[1]
-
-    title = "抚形日志"
-    text = [
-        f"今天是 {log['Date']}",
-        f"得到了 {log['Score']} 分",
-        f"最远到达的地方是 {log['Stage']} 站",
-        f"拾形点率为 {log['Rate']}",
-        f"使用了 {log['Flash']} 次形闪"
-    ]
-    key = ["Del 丢掉", "Esc 合上", "<-- 上页", "--> 下页"]
-
-    full_menu(screen, title, text, key, f"由 {log['Name']} 助记")
+        GLOBAL.is_check = False
 
 
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
