@@ -379,6 +379,29 @@ class Qdi(Basic):
 
             sound_cache["fire"].play()
 
+    def count(th):
+        if th.timer == 0:
+            target_pos = th.interval_locate
+            pos = th.rect.center
+            two_point = add(target_pos, (-pos[0], -pos[1]))
+            angle = bearing(-two_point[0], -two_point[1])
+            end = randint(0 + int(angle), 360 + int(angle))
+
+            for i in range(0 + int(angle), 360 + int(angle), 360 // th.target_bullets):
+                fast_speed = uniform(6.0, 7.0)
+                slow_speed = uniform(3.0, 4.0)
+                fast_lose = uniform(0.2, 0.55)
+                slow_lose = uniform(0.15, 0.3)
+
+                for _ in range(8):
+                    fast_speed -= fast_lose
+                    slow_speed -= slow_lose
+                    speed = fast_speed if i <= end else slow_speed
+
+                    Sprite.Barrage(effective, 2, speed, th.color, i, pos, barrage_cache[(2, th.color)], th.group, True, False)
+
+            sound_cache["fire"].play()
+
     def update(th):
         th.timer += 1
 
@@ -386,8 +409,10 @@ class Qdi(Basic):
             th.x, th.y = (randint(150, 435), randint(48, 96))
             th.bullets = 0
             th.timer = 0
+            th.interval_locate = th.locate
+            th.target_bullets = choice([20, 24, 30, 40])
             th.can_shoot = True
-            th.choice = choice([th.fire] * 10 + [th.free] * 2 + [th.extend, th.final, th.last])
+            th.choice = choice([th.fire] * 12 + [th.free] * 2 + [th.extend, th.final, th.last, th.count])
         if th.timer % 150 >= 125:
             if th.timer % 150 >= 145:
                 th.x += choice([-4, 4])
