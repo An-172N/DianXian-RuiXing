@@ -144,7 +144,7 @@ def summary(screen: pg.Surface):
 def start(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
-    text = ['Ver 1.0.9', '', '', '', '']
+    text = ['Ver 1.1.0', '', '', '', '']
     key = ["C 日志", "Q 退了", "Z 开玩", ""]
 
     full_menu(screen, title, text, key, other)
@@ -522,8 +522,6 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
     screen.blit(picture[6], (0, 0))
     situation(screen, clock)
 
-    pg.display.flip()
-
 
 def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     GLOBAL.stage = clamp(args[0], 1, 4)
@@ -531,8 +529,66 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     GLOBAL.flash = clamp(args[2], 1, 96)
     GLOBAL.power = clamp(args[3], 0, 32)
 
+    ready = True
+    ready_timer = 0
+    color = 0
+    line_color = color_dict[6]
+    text1_y = 318
+    text2_y = 343
+    dx = 0
+
+    while ready:
+        ready_timer += 1
+
+        for event in pg.event.get():
+            if event.type in (pg.KEYDOWN, pg.KEYUP):
+                continue
+
+        screen.fill((0, 0, 0))
+
+        if 330 >= ready_timer >= 30:
+            text1_y -= 0.3
+            text2_y -= 0.3
+            dx -= 0.5
+
+            if ready_timer <= 90 and color < 255 and ready_timer % 30 == 0:
+                color += 85
+
+                sound_cache['charge'].play(maxtime=24)
+            if ready_timer >= 270 and color > 0 and ready_timer % 30 == 0:
+                color -= 85
+
+                sound_cache['charge'].play(maxtime=24)
+            if ready_timer >= 300 and line_color != color_dict[3]:
+                line_color = color_dict[3]
+
+            text1 = font.render("点线 Project", False, (color, color, color))
+            text2 = font.render("By An_172N", False, (color, color, color))
+            screen_width = screen.get_width()
+            text1_width = text1.get_width()
+            text2_width = text2.get_width()
+
+            for i in (line_cache[(500, 102, line_color)], line_cache[(500, 150, line_color)]):
+                i.set_alpha(color)
+                screen.blit(i, (0, -5))
+            screen.blit(text2, (screen_width - text2_width + dx - 8, text2_y))
+            screen.blit(text1, (screen_width - text1_width + dx - 8, text1_y))
+        if ready_timer >= 390:
+            ready = False
+
+        pg.display.flip()
+
+        clock.tick(60)
+
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
+
+    for i in line_cache.values():
+        i.set_alpha(255)
+
+    black_surface = pg.Surface(screen.get_size())
+    color = 255
+    GLOBAL.pop_timer = -30
 
     while True:
         key_event()
@@ -566,4 +622,13 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
         display(screen, clock)
 
+        if color > 0:
+            black_surface.set_alpha(color)
+            screen.blit(black_surface)
+
+            color -= 17
+            if color < 0:
+                del black_surface
+
+        pg.display.flip()
         clock.tick(60)
