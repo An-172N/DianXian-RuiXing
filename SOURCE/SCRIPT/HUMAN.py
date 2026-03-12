@@ -381,7 +381,7 @@ class Qdi(Basic):
 
     def count(th):
         if th.timer == 0:
-            target_pos = th.interval_locate
+            target_pos = (randint(120, 465), randint(15, 150))
             pos = th.rect.center
             two_point = add(target_pos, (-pos[0], -pos[1]))
             angle = bearing(-two_point[0], -two_point[1])

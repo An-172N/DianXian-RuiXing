@@ -536,6 +536,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     text1_y = 318
     text2_y = 343
     dx = 0
+    pos = [(randint(0, 480), randint(0, 360)) for _ in range(64)]
 
     while ready:
         ready_timer += 1
@@ -568,9 +569,15 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             text1_width = text1.get_width()
             text2_width = text2.get_width()
 
+            for i in pos:
+                point = particle_cache[((2, 2), color_dict[6])]
+
+                point.set_alpha(color)
+                screen.blit(point, i)
             for i in (line_cache[(500, 102, line_color)], line_cache[(500, 150, line_color)]):
                 i.set_alpha(color)
                 screen.blit(i, (0, -5))
+
             screen.blit(text2, (screen_width - text2_width + dx - 8, text2_y))
             screen.blit(text1, (screen_width - text1_width + dx - 8, text1_y))
         if ready_timer >= 390:
@@ -584,6 +591,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     picture[6].fill((0, 0, 0, 0))
 
     for i in line_cache.values():
+        i.set_alpha(255)
+    for i in particle_cache.values():
         i.set_alpha(255)
 
     black_surface = pg.Surface(screen.get_size())
