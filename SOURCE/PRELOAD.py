@@ -46,7 +46,8 @@ barrage_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BARRAGE.png'))).conver
 picture = {
     **{i: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE{i}BG.png'))).convert() for i in range(1, 5)},
     5: rectangle((345, 330), 0, color_dict[8]).convert(),
-    6: pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha()
+    6: pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
+    7: pg.Surface((480, 360))
 }
 
 

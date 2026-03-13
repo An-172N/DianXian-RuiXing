@@ -113,7 +113,9 @@
     - 在命令提示符输入 pip install pygame 或 pip install pygame-ce 回车
     - 推荐 Pygame-CE，特别是 Python π
   - 字体：GNU Unifont *（子集化后的，我称它为 Uni3500*
-    - 子集化用到：设计师字库.字体子集化、Fonttools
+    - 子集化用到的：
+      - 工具：设计师字库.字体子集化、Fonttools
+      - 仓库：https://gitee.com/feng_xingkai/chinese
     - 遵循 SIL OFL 1.1 协议，可见：https://www.unifoundry.com/OFL-1.1.txt
   - 打包：Zipapp if Ver >= 1.0.5 else Nuitka
   - 音频：P.M.D.、WaveShop

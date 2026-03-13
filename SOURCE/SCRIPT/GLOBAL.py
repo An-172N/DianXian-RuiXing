@@ -18,6 +18,7 @@ is_talk = False
 is_save = False
 is_check = False
 is_level_load = False
+is_exit = False
 
 
 pop_timer = 0

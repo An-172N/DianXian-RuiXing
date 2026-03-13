@@ -48,7 +48,7 @@ keydown_pause_dict = {
 
 keydown_start_dict = {
     pg.K_z: lambda: (setattr(GLOBAL, "is_run", True), setattr(GLOBAL, "pop_timer", 0), mode_one()),
-    pg.K_q: lambda: (pg.time.wait(int(sound_cache["pick"].get_length() * 8000)), sys.exit()),
+    pg.K_q: lambda: setattr(GLOBAL, "is_exit", True),
     pg.K_c: lambda: (setattr(GLOBAL, "is_check", True), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None
 }
 
@@ -316,7 +316,7 @@ def key_event():
                     lambda: keydown_game_dict[event.key]()
                 )
             ]:
-                if condition():
+                if condition() and not GLOBAL.is_exit:
                     handler()
 
                     break
@@ -497,13 +497,14 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
     if GLOBAL.is_run:
         screen.blit(picture[GLOBAL.stage], (120, 15))
 
-        GLOBAL.bullet_group.draw(screen)
-        if GLOBAL.major is not None and GLOBAL.major.is_visitable:
-            GLOBAL.plane_group.draw(screen)
-        GLOBAL.brick_group.draw(screen)
-        GLOBAL.item_group.draw(screen)
-        GLOBAL.particle_group.draw(screen)
-        GLOBAL.barrage_group.draw(screen)
+        if GLOBAL.is_level_load:
+            GLOBAL.bullet_group.draw(screen)
+            if GLOBAL.major is not None and GLOBAL.major.is_visitable:
+                GLOBAL.plane_group.draw(screen)
+            GLOBAL.brick_group.draw(screen)
+            GLOBAL.item_group.draw(screen)
+            GLOBAL.particle_group.draw(screen)
+            GLOBAL.barrage_group.draw(screen)
 
     for condition, func in [
         (lambda: GLOBAL.is_check, check),
@@ -514,7 +515,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
         (lambda: GLOBAL.is_summary, summary),
         (lambda: GLOBAL.is_save, save)
     ]:
-        if condition():
+        if condition() and not GLOBAL.is_exit:
             func(screen)
 
             break
@@ -530,16 +531,15 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     GLOBAL.power = clamp(args[3], 0, 32)
 
     ready = True
-    ready_timer = 0
+    timer = 0
     color = 0
     line_color = color_dict[6]
-    text1_y = 318
-    text2_y = 343
+    text1_y = 343
     dx = 0
     pos = [(randint(0, 480), randint(0, 360)) for _ in range(64)]
 
     while ready:
-        ready_timer += 1
+        timer += 1
 
         for event in pg.event.get():
             if event.type in (pg.KEYDOWN, pg.KEYUP):
@@ -547,27 +547,20 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
         screen.fill((0, 0, 0))
 
-        if 330 >= ready_timer >= 30:
+        if 360 >= timer >= 30:
             text1_y -= 0.3
-            text2_y -= 0.3
             dx -= 0.5
 
-            if ready_timer <= 90 and color < 255 and ready_timer % 30 == 0:
+            if timer <= 90 and color < 255 and timer % 30 == 0:
                 color += 85
-
-                sound_cache['charge'].play(maxtime=24)
-            if ready_timer >= 270 and color > 0 and ready_timer % 30 == 0:
+            if timer >= 300 and color > 0 and timer % 30 == 0:
                 color -= 85
-
-                sound_cache['charge'].play(maxtime=24)
-            if ready_timer >= 300 and line_color != color_dict[3]:
+            if timer >= 330 and line_color != color_dict[3]:
                 line_color = color_dict[3]
 
             text1 = font.render("点线 Project", False, (color, color, color))
-            text2 = font.render("By An_172N", False, (color, color, color))
             screen_width = screen.get_width()
             text1_width = text1.get_width()
-            text2_width = text2.get_width()
 
             for i in pos:
                 point = particle_cache[((2, 2), color_dict[6])]
@@ -578,9 +571,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 i.set_alpha(color)
                 screen.blit(i, (0, -5))
 
-            screen.blit(text2, (screen_width - text2_width + dx - 8, text2_y))
             screen.blit(text1, (screen_width - text1_width + dx - 8, text1_y))
-        if ready_timer >= 390:
+        if timer >= 420:
             ready = False
 
         pg.display.flip()
@@ -595,9 +587,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     for i in particle_cache.values():
         i.set_alpha(255)
 
-    black_surface = pg.Surface(screen.get_size())
     color = 255
-    GLOBAL.pop_timer = -30
+    timer = 0
 
     while True:
         key_event()
@@ -631,13 +622,31 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
         display(screen, clock)
 
-        if color > 0:
-            black_surface.set_alpha(color)
-            screen.blit(black_surface)
+        if GLOBAL.is_exit:
+            if color < 255:
+                if timer % 30 == 0:
+                    color += 85
+                if color >= 255:
+                    color = 255
 
-            color -= 17
+            timer -= 1
+
+            picture[7].set_alpha(color)
+            screen.blit(picture[7])
+
+            if timer <= -30:
+                sys.exit()
+        elif color > 0 and not GLOBAL.is_exit:
+            if timer % 30 == 0:
+                color -= 85
+
+            picture[7].set_alpha(color)
+            screen.blit(picture[7])
+
+            timer += 1
+
             if color < 0:
-                del black_surface
+                color = 0
 
         pg.display.flip()
         clock.tick(60)

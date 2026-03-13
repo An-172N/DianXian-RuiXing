@@ -59,7 +59,7 @@ def invinc(
 
             collided = False
         else:
-            visitable = (timer // interval) % 2
+            visitable = (timer // interval) % 2 == 1
     else:
         timer = 0
         visitable = True
