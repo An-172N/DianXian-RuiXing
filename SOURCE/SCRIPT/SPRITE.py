@@ -200,10 +200,6 @@ def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic
         brick_list[j].flash = True
 
 
-def boss_lose(part: int) -> tuple:
-    return part + 1, 0, True, 0
-
-
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     two_point = add(locate, (-spawn_pos[0], -spawn_pos[1]))
     angle = bearing(-two_point[0], -two_point[1])

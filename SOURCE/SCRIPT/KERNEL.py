@@ -449,7 +449,10 @@ def bullet_collide():
                 if not brick.is_die:
                     Sprite.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, color_dict[6])
                     if hasattr(brick, "free"):
-                        GLOBAL.text_part, GLOBAL.text_number, GLOBAL.is_talk, GLOBAL.pop_timer = Sprite.boss_lose(GLOBAL.text_part)
+                        GLOBAL.text_part += 1
+                        GLOBAL.text_number = 0
+                        GLOBAL.is_talk = True
+                        GLOBAL.pop_timer = 0
                     else:
                         spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
 
@@ -534,7 +537,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     timer = 0
     color = 0
     line_color = color_dict[6]
-    text1_y = 343
+    text_y = 343
     dx = 0
     pos = [(randint(0, 480), randint(0, 360)) for _ in range(64)]
 
@@ -548,7 +551,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
         screen.fill((0, 0, 0))
 
         if 360 >= timer >= 30:
-            text1_y -= 0.3
+            text_y -= 0.3
             dx -= 0.5
 
             if timer <= 90 and color < 255 and timer % 30 == 0:
@@ -558,9 +561,9 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             if timer >= 330 and line_color != color_dict[3]:
                 line_color = color_dict[3]
 
-            text1 = font.render("点线 Project", False, (color, color, color))
+            text = font.render("点线 Project", False, (color, color, color))
             screen_width = screen.get_width()
-            text1_width = text1.get_width()
+            text1_width = text.get_width()
 
             for i in pos:
                 point = particle_cache[((2, 2), color_dict[6])]
@@ -571,7 +574,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 i.set_alpha(color)
                 screen.blit(i, (0, -5))
 
-            screen.blit(text1, (screen_width - text1_width + dx - 8, text1_y))
+            screen.blit(text, (screen_width - text1_width + dx - 8, text_y))
         if timer >= 420:
             ready = False
 
