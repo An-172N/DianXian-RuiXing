@@ -107,19 +107,19 @@
     - 详细请看 /LICENSE
   - 所有资产文件如 .krz 等均保留所有权利 *（字体文件除外*
 - ### 本项目使用以下第三方资源
-  - 编程语言：Python *（需要安装哦*
-    - 贴一下地址，推荐 3.10 - π：https://www.python.org
-  - 游戏库：Pygame *（这个也是*
-    - 在命令提示符输入 pip install pygame 或 pip install pygame-ce 回车
+  - 编程语言：[Python](https://www.python.org) *（需要安装哦*
+    - 推荐 3.10 - π：
+  - 游戏库：[Pygame](https://github.com/pygame/pygame) or [Pygame-CE](https://github.com/pygame-community/pygame-ce) *（这个也是*
+    - 可以在命令提示符输入 pip install pygame 或 pip install pygame-ce 回车
     - 推荐 Pygame-CE，特别是 Python π
-  - 字体：GNU Unifont *（子集化后的，我称它为 Uni3500*
+  - 字体：[GNU Unifont](https://www.unifoundry.com/unifont) *（子集化后的，我称它为 Uni3500*
     - 子集化用到的：
-      - 工具：设计师字库.字体子集化、Fonttools
-      - 仓库：https://gitee.com/feng_xingkai/chinese
-    - 遵循 SIL OFL 1.1 协议，可见：https://www.unifoundry.com/OFL-1.1.txt
-  - 打包：Zipapp if Ver >= 1.0.5 else Nuitka
-  - 音频：P.M.D.、WaveShop
-  - 图像：Krita、Pillow
+      - 工具：[字体子集化](http://font.ssjjss.com/font-subset)、[Fonttools](https://github.com/fonttools/fonttools)
+      - 仓库：[常用汉字集](https://gitee.com/feng_xingkai/chinese)
+    - 遵循 [SIL OFL 1.1](https://www.unifoundry.com/OFL-1.1.txt) 协议
+  - 打包：[Zipapp](https://docs.python.org/3/library/zipapp.html) if Ver >= 1.0.5 else [Nuitka](https://nuitka.net)
+  - 音频：[PMD](http://www5.airnet.ne.jp/kajapon/tool.html)、[WaveShop](https://github.com/victimofleisure/WaveShop)
+  - 图像：[Krita](https://krita.org/zh-cn)、[Pillow](https://github.com/python-pillow/Pillow)
 
 **本项目网址：https://github.com/An-172N/DianXian-RuiXing** *（感兴趣的话就点个星吧~*  
 

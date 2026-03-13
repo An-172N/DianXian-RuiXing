@@ -539,7 +539,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     line_color = color_dict[6]
     text_y = 343
     dx = 0
-    pos = [(randint(0, 480), randint(0, 360)) for _ in range(64)]
+    pos = [(randint(0, 480), randint(0, 360)) for _ in range(128)]
 
     while ready:
         timer += 1
@@ -554,10 +554,11 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             text_y -= 0.3
             dx -= 0.5
 
-            if timer <= 90 and color < 255 and timer % 30 == 0:
-                color += 85
-            if timer >= 300 and color > 0 and timer % 30 == 0:
-                color -= 85
+            if timer % 30 == 0:
+                if timer <= 90 and color < 255:
+                    color += 85
+                if timer >= 300 and color > 0:
+                    color -= 85
             if timer >= 330 and line_color != color_dict[3]:
                 line_color = color_dict[3]
 
@@ -570,9 +571,11 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
                 point.set_alpha(color)
                 screen.blit(point, i)
-            for i in (line_cache[(500, 102, line_color)], line_cache[(500, 150, line_color)]):
-                i.set_alpha(color)
-                screen.blit(i, (0, -5))
+            for i in (102, 150, 120, 84):
+                line = line_cache[(500, i, line_color)]
+
+                line.set_alpha(color)
+                screen.blit(line, (0, -5))
 
             screen.blit(text, (screen_width - text1_width + dx - 8, text_y))
         if timer >= 420:
@@ -589,6 +592,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
         i.set_alpha(255)
     for i in particle_cache.values():
         i.set_alpha(255)
+
+    del ready, line_color, text_y, dx, pos
 
     color = 255
     timer = 0
@@ -626,11 +631,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
         display(screen, clock)
 
         if GLOBAL.is_exit:
-            if color < 255:
-                if timer % 30 == 0:
-                    color += 85
-                if color >= 255:
-                    color = 255
+            if timer % 30 == 0 and color < 255:
+                color += 85
 
             timer -= 1
 
@@ -640,16 +642,13 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             if timer <= -30:
                 sys.exit()
         elif color > 0 and not GLOBAL.is_exit:
-            if timer % 30 == 0:
+            if timer % 30 == 0 and color > 0:
                 color -= 85
 
             picture[7].set_alpha(color)
             screen.blit(picture[7])
 
             timer += 1
-
-            if color < 0:
-                color = 0
 
         pg.display.flip()
         clock.tick(60)

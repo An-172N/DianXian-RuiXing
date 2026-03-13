@@ -41,25 +41,24 @@ sound_cache = {
 
 
 char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alpha()
-brick_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BRICK.png'))).convert_alpha()
-barrage_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BARRAGE.png'))).convert_alpha()
+basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
 picture = {
     **{i: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE{i}BG.png'))).convert() for i in range(1, 5)},
-    5: rectangle((345, 330), 0, color_dict[8]).convert(),
+    5: pg.Surface((345, 330)).convert(),
     6: pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
-    7: pg.Surface((480, 360))
+    7: pg.Surface((480, 360)).convert()
 }
 
 
 barrage_cache = {
     **{(2, color_dict[i]): circle((0, 0, 9, 9), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
-    (0, color_dict[2]): (surface := barrage_image.copy(), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
-    (0, color_dict[6]): barrage_image
+    (0, color_dict[2]): (surface := basic_image.subsurface((75, 7, 9, 8)), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
+    (0, color_dict[6]): basic_image.subsurface((75, 7, 9, 8))
 }
 
 
 brick_cache = {
-    **{(i, color_dict[j]): brick_image.subsurface((k, 0, 15, 15)) for i, j, k in [(2, 1, 0), (0, 2, 15), (1, 3, 30), (2, 4, 45), (0, 6, 60)]},
+    **{(i, color_dict[j]): basic_image.subsurface((k, 0, 15, 15)) for i, j, k in [(2, 1, 0), (0, 2, 15), (1, 3, 30), (2, 4, 45), (0, 6, 60)]},
     (2, color_dict[6]): circle((0, 0, 15, 15), 2, color_dict[6]).convert_alpha(),
     (1, color_dict[6]): rectangle((15, 15), 2, color_dict[6]).convert_alpha()
 }
