@@ -544,9 +544,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     while ready:
         timer += 1
 
-        for event in pg.event.get():
-            if event.type in (pg.KEYDOWN, pg.KEYUP):
-                continue
+        for _ in pg.event.get():
+            continue
 
         screen.fill((0, 0, 0))
 
@@ -557,7 +556,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             if timer % 30 == 0:
                 if timer <= 90 and color < 255:
                     color += 85
-                if timer >= 300 and color > 0:
+                elif timer >= 300 and color > 0:
                     color -= 85
             if timer >= 330 and line_color != color_dict[3]:
                 line_color = color_dict[3]

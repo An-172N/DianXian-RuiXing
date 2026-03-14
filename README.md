@@ -36,11 +36,10 @@
   - 按 C 查看日志 *（没有日志的话就当木鱼吧*
   - 按 Q 不打了
 - ### 游戏ing
-  - 长按 ←→ 左右移动
-  - 长按 Z 蓄力
-    - 松开后会根据蓄力点释放常形力 *（就是发射子弹* 
-  - 长按 X 为悬浮态 *（就是快移动*
-  - 按 Space 释放形分 *（也就是 Bomb*
+  - 按 ←→ 左右移动
+  - 按 Z 手动攻击
+  - 按 X 切换形态 *（特殊状态*
+  - 按 Space 释放形分 *（Bomb*
   - 在对话中按 Z 下一则对话
     - 也可以按 X 跳过
   - 按 Esc 休息一下
@@ -50,7 +49,7 @@
 - ### 存日志
   - 按 Esc 不存
   - 按 Enter 存 *（存在用户目录的“保存的游戏”文件夹里*
-  - 可以打些字 *（最多 8 个字符*
+  - 可以打名称上去 *（最多 8 个字符*
 - ### 看日志
   - 按 Esc 合上
   - 按 Del 扔掉
@@ -62,64 +61,70 @@
 - ### K.璃
   - 形点
     - 白色为蓄力点
-      - 会根据是否蓄力而释放常形力 *（就是 biu*
+      - 加蓄力
+      - 最多能蓄 6 个点 *（事实上其它点也能加蓄力点*
     - 蓝色为形力点
-      - 加形力 *（就是火力*
+      - 加形力 *（火力*
+      - 最多能蓄 32 个点
     - 绿色为形闪点
-      - 加形闪次数 *（闪避！*
-  - “矩澜雨” *（Bomb*
+      - 加形闪 *（残机*
+      - 不会限制点数
+  - 形分
     - 每释放一次会消耗 12 点形力
     - 释放后会有 3 秒无敌时间
-  - 蓄力
-    - 会根据蓄力点来连续释放常形力
-    - 最多可以蓄 6 个点
-  - 连击 *（捡*
+  - 连击 *（其实是捡形点*
     - 形力点和形闪点才能加连击
     - 拾到任何形点倒计时会重置为 2 秒
     - 倒计时结束会额外加分
-- ### 分数
+  - 形态
+    - 正常形态为正常速度 *（废话*
+    - 特殊形态会移动的比较快 *（键需要长按哦*
+  - 手动攻击 *（键需要配合长按和松开哦*
+    - 会根据蓄力点释放常形力 *（发射子弹*
+- ### 分数 *（不觉得 2 的乘方数很完美吗*
   - 子弹每击中目标 + 64
   - 连击倒计时结束或子关结束 + 2 ^ 连击 *（连击 > 0*
-  - 结算 *（基础分 + (面关结束分 if 子关 == 6 else 0)*
+  - 结算 *（基础分 + (结束分 if 子关 == 6 else 0)*
     - 基础
       - 得点结算：得点 * 512
       - 无闪结算：连续无闪过关数 * 4096
-    - 面关结束
+    - 结束
       - 面数结算：面数 * 16384
       - 形力结算：形力 / 32 * 8192
 - ### 砖块
   - 击落砖块会
-    - 有几率生成弹幕 *（概率在下面的弹幕栏*
+    - 有概率生成弹幕
     - 可能掉落形点 *（每关掉落的形点数是固定的*
   - 白色砖块会有“惊喜”哦
 - ### 弹幕
   - 碰到白色弹幕不会触发形闪
-  - 击落砖块生成弹幕概率
-    - 第一面：0.17 + 0.03
-    - 第二面：0.17 + 0.05
-    - 第三面：0.17 + 0.08
+  - 击落砖块生成弹幕概率为
+    - 0.17 + *（斐波那契数*
+      - 第一面：0.03
+      - 第二面：0.05
+      - 第三面：0.08
 
 ---
 
 ## 备注区
 - ### 本项目版权声明
-  - 程序代码遵循 GNU GPLv3.0 协议
-    - 详细请看 /LICENSE
+  - 程序代码遵循 [GNU GPLv3.0](./LICENSE) 协议
   - 所有资产文件如 .krz 等均保留所有权利 *（字体文件除外*
 - ### 本项目使用以下第三方资源
   - 编程语言：[Python](https://www.python.org) *（需要安装哦*
-    - 推荐 3.10 - π：
-  - 游戏库：[Pygame](https://github.com/pygame/pygame) or [Pygame-CE](https://github.com/pygame-community/pygame-ce) *（这个也是*
-    - 可以在命令提示符输入 pip install pygame 或 pip install pygame-ce 回车
-    - 推荐 Pygame-CE，特别是 Python π
+    - 推荐 3.10 - π
+  - 游戏库：[Pygame-CE](https://github.com/pygame-community/pygame-ce) *（这个也是*
+    - 可以在命令提示符输入 pip install pygame-ce 回车
   - 字体：[GNU Unifont](https://www.unifoundry.com/unifont) *（子集化后的，我称它为 Uni3500*
-    - 子集化用到的：
+    - 子集化用到的
       - 工具：[字体子集化](http://font.ssjjss.com/font-subset)、[Fonttools](https://github.com/fonttools/fonttools)
       - 仓库：[常用汉字集](https://gitee.com/feng_xingkai/chinese)
     - 遵循 [SIL OFL 1.1](https://www.unifoundry.com/OFL-1.1.txt) 协议
-  - 打包：[Zipapp](https://docs.python.org/3/library/zipapp.html) if Ver >= 1.0.5 else [Nuitka](https://nuitka.net)
-  - 音频：[PMD](http://www5.airnet.ne.jp/kajapon/tool.html)、[WaveShop](https://github.com/victimofleisure/WaveShop)
-  - 图像：[Krita](https://krita.org/zh-cn)、[Pillow](https://github.com/python-pillow/Pillow)
+  - 音频
+    - 制作：[PMD](http://www5.airnet.ne.jp/kajapon/tool.html) *（喜欢 YM2203*
+    - 处理：[WaveShop](https://github.com/victimofleisure/WaveShop)
+  - 图像：[Krita](https://krita.org/zh-cn)
+  - 打包：[Zipapp](https://docs.python.org/3/library/zipapp.html)
 
 **本项目网址：https://github.com/An-172N/DianXian-RuiXing** *（感兴趣的话就点个星吧~*  
 
