@@ -152,7 +152,7 @@ def start(screen: pg.Surface):
 
 def save(screen: pg.Surface):
     title = "抚形日志"
-    name = f"由 {GLOBAL.name} 助记"
+    name = f"谢谢 {GLOBAL.name} 的帮助"
     text = [
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {GLOBAL.score} 分",
@@ -183,7 +183,7 @@ def check(screen: pg.Surface):
         ]
         key = ["Del 丢掉", "Esc 合上", "<-- 上页", "--> 下页"]
 
-        full_menu(screen, title, text, key, f"由 {log['Name']} 助记")
+        full_menu(screen, title, text, key, f"谢谢 {log['Name']} 的帮助")
     except:
         GLOBAL.is_check = False
 
@@ -420,10 +420,13 @@ def item_collide():
 
 def barrage_collide(position):
     collide = pg.sprite.spritecollide(GLOBAL.major.decision_box, GLOBAL.barrage_group, False, pg.sprite.collide_mask)
+    count = 0
 
     for barrage in collide:
         if barrage.color != color_dict[6]:
-            if not (GLOBAL.major.is_collide or GLOBAL.major.is_divide):
+            count += 1
+
+            if not (GLOBAL.major.is_collide or GLOBAL.major.is_divide) and count == 1:
                 GLOBAL.major.is_collide = True
                 GLOBAL.unflash = 0
                 GLOBAL.flash -= 1
