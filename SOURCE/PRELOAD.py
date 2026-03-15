@@ -36,7 +36,7 @@ icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))
 
 
 sound_cache = {
-    i: pg.mixer.Sound(BytesIO(asset(rf'ASSET\OGG\{i.upper()}.oga'))) for i in ('pick', 'fire', 'charge')
+    i: pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\{i.upper()}.flac'))) for i in ('pick', 'fire', 'charge')
 }
 
 

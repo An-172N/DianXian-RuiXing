@@ -28,7 +28,7 @@ def main() -> int:
     pygame.display.init()
     pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain')
     pygame.font.init()
-    pygame.mixer.init()
+    pygame.mixer.init(frequency=48000)
 
     screen = pygame.display.set_mode((480, 360), pygame.FULLSCREEN|pygame.SCALED, vsync=1)
 
