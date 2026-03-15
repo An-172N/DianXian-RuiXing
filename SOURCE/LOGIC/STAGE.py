@@ -5,7 +5,7 @@
 from typing import Callable, Any
 
 
-def load_level(
+def load(
     timer: int,
     loaded: bool,
     end: int,
@@ -23,7 +23,7 @@ def load_level(
     return timer, loaded
 
 
-def next_level(
+def follow(
     numbers: tuple[int, int],
     end: int
 ) -> tuple[int, int]:

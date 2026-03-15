@@ -18,7 +18,7 @@ from LOGIC.PLANE import *
 from LOGIC.STAGE import *
 from LOGIC.FILE import *
 from LOGIC.SPRITE import *
-from LOGIC.DRAW import *
+from LOGIC.GRAPHIC import *
 from SCRIPT import GLOBAL
 from SCRIPT.HUMAN import Ono, Hro, Nre, Qdi, Kli
 import SCRIPT.SPRITE as Sprite
@@ -29,7 +29,7 @@ keydown_game_dict = {
     pg.K_LEFT: lambda: setattr(GLOBAL.major, "is_move_left", True),
     pg.K_x: lambda: setattr(GLOBAL.major, "is_fast", True),
     pg.K_z: lambda: setattr(GLOBAL.major, "is_shoot", False),
-    pg.K_SPACE: lambda: (lambda i: (setattr(GLOBAL.major, 'is_divide', i[0]), setattr(GLOBAL, 'power', i[1])))(single_bomb(GLOBAL.major.is_divide, GLOBAL.power, 12)),
+    pg.K_SPACE: lambda: (lambda i: (setattr(GLOBAL.major, 'is_divide', i[0]), setattr(GLOBAL, 'power', i[1])))(bomb(GLOBAL.major.is_divide, GLOBAL.power, 12)),
     pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_pause", True), setattr(GLOBAL, "pop_timer", 0), sound_cache["pick"].play())
 }
 
@@ -61,7 +61,7 @@ keydown_over_dict = {
 
 
 keydown_check_dict = {
-    pg.K_DELETE: lambda: (os.remove(GLOBAL.json_files[GLOBAL.index]), setattr(GLOBAL, "json_files", get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')), setattr(GLOBAL, "total_files", len(GLOBAL.json_files)), setattr(GLOBAL, "index", clamp(GLOBAL.index, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None,
+    pg.K_DELETE: lambda: (os.remove(GLOBAL.json_files[GLOBAL.index]), setattr(GLOBAL, "json_files", get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')), setattr(GLOBAL, "total_files", len(GLOBAL.json_files)), setattr(GLOBAL, "index", clamp(GLOBAL.index, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None,
     pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_check", False), setattr(GLOBAL, "index", 0), setattr(GLOBAL, "pop_timer", 0)),
     pg.K_LEFT: lambda: (setattr(GLOBAL, "index", GLOBAL.index - 1), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.index > 0 else None,
     pg.K_RIGHT: lambda: (setattr(GLOBAL, "index", GLOBAL.index + 1), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.index < GLOBAL.total_files - 1 else None
@@ -77,7 +77,7 @@ keyup_game_dict = {
 
 
 def situation(screen: pg.Surface, clock: pg.time.Clock):
-    GLOBAL.fps_text, GLOBAL.last_time = update_fps(GLOBAL.fps_text, GLOBAL.last_time, 0, 500, clock)
+    GLOBAL.fps_text, GLOBAL.last_time = fps(GLOBAL.fps_text, GLOBAL.last_time, 0, 500, clock)
 
     text = [
         f"分　{GLOBAL.score:9d}",
@@ -89,14 +89,14 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
     ui(screen, text, GLOBAL.fps_text)
 
 
-def pause(screen: pg.Surface):
+def pause_menu(screen: pg.Surface):
     title = "休息ing"
     text = ["Esc 休息好了", "Del 不玩了"]
 
     half_menu(screen, title, text)
 
 
-def load(screen: pg.Surface):
+def load_menu(screen: pg.Surface):
     stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
 
     title = "这一关是————"
@@ -105,7 +105,7 @@ def load(screen: pg.Surface):
     half_menu(screen, title, text)
 
 
-def talk(screen: pg.Surface):
+def talk_menu(screen: pg.Surface):
     try:
         text = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]
         human = text["char"]
@@ -117,7 +117,7 @@ def talk(screen: pg.Surface):
         GLOBAL.is_talk = False
 
 
-def summary(screen: pg.Surface):
+def summary_menu(screen: pg.Surface):
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Clear! {'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
     text = [
         f"得点 {GLOBAL.total_point} * 512 = {GLOBAL.total_point * 512}",
@@ -141,7 +141,7 @@ def summary(screen: pg.Surface):
         full_menu(screen, stage, text + over, ["", "Z 继续", "", ""], title.get(GLOBAL.stage))
 
 
-def start(screen: pg.Surface):
+def start_menu(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ['Ver 1.1.0', '', '', '', '']
@@ -150,7 +150,7 @@ def start(screen: pg.Surface):
     full_menu(screen, title, text, key, other)
 
 
-def save(screen: pg.Surface):
+def save_menu(screen: pg.Surface):
     title = "抚形日志"
     name = f"谢谢 {GLOBAL.name} 的帮助"
     text = [
@@ -165,7 +165,7 @@ def save(screen: pg.Surface):
     full_menu(screen, title, text, key, name)
 
 
-def check(screen: pg.Surface):
+def check_menu(screen: pg.Surface):
     def load_json(filepath: str):
         with open(filepath, 'r', encoding='utf-8') as f:
             return json.load(f)
@@ -211,7 +211,7 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
     (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
 
-    menu, GLOBAL.pop_timer = pop_animate(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
+    menu, GLOBAL.pop_timer = pop(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
 
     surface.blit(menu, (120, 15))
 
@@ -225,7 +225,7 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
 
     (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
 
-    menu, GLOBAL.pop_timer = pop_animate(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
+    menu, GLOBAL.pop_timer = pop(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
 
     surface.blit(menu, (120, 15))
 
@@ -257,14 +257,14 @@ def save_file():
         'Date': date_time[0]
     }
 
-    save_record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', "锐山抚形日志", dump_content)
+    record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', "锐山抚形日志", dump_content)
 
 
 def summary_logic():
     def level_logic():
         mode_one()
 
-        GLOBAL.stage, GLOBAL.level = next_level((GLOBAL.stage, GLOBAL.level), 6)
+        GLOBAL.stage, GLOBAL.level = follow((GLOBAL.stage, GLOBAL.level), 6)
         GLOBAL.unflash += 1
 
     def close_summary(numbers: tuple, final: object, proceed: object, *args):
@@ -357,7 +357,7 @@ def mode_two():
     GLOBAL.power = 0
     GLOBAL.game_total_point = 0
     GLOBAL.is_run = False
-    GLOBAL.json_files = get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+    GLOBAL.json_files = get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
     GLOBAL.index = 0
     GLOBAL.total_files = len(GLOBAL.json_files)
 
@@ -462,9 +462,9 @@ def bullet_collide():
                     if sound_cache["fire"].get_num_channels() < 2:
                         sound_cache["fire"].play()
                     if hasattr(brick, "power"):
-                        spawn_sprite(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
+                        spawn(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
                     if hasattr(brick, "flash"):
-                        spawn_sprite(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
+                        spawn(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
                     brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
                     brick.kill()
 
@@ -474,6 +474,15 @@ def bullet_collide():
 
 
 def sprite_loader():
+    def read(file: bytes, load: object, *args: Any) -> str:
+        content = file.decode('ascii')
+        lines = content.splitlines()
+
+        for row, line in enumerate(lines):
+            load(row, line, *args)
+
+        return content
+
     if GLOBAL.level == 6:
         GLOBAL.char = choose_human()
         GLOBAL.text = json.loads(asset(rf"ASSET\JSON\{GLOBAL.stage}.json").decode('utf-8'))
@@ -481,7 +490,7 @@ def sprite_loader():
 
         GLOBAL.brick_group.add(GLOBAL.char)
     else:
-        read_level(asset(rf"ASSET\STAGE\{GLOBAL.stage}-{GLOBAL.level}.stg"), Sprite.load_brick, color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
+        read(asset(rf"ASSET\STAGE\{GLOBAL.stage}-{GLOBAL.level}.stg"), Sprite.load_brick, color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
         Sprite.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
 
     GLOBAL.wait_load_timer = 0
@@ -513,13 +522,13 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
             GLOBAL.barrage_group.draw(screen)
 
     for condition, func in [
-        (lambda: GLOBAL.is_check, check),
-        (lambda: not GLOBAL.is_run, start),
-        (lambda: GLOBAL.is_pause, pause),
-        (lambda: not GLOBAL.is_level_load, load),
-        (lambda: GLOBAL.is_talk, talk),
-        (lambda: GLOBAL.is_summary, summary),
-        (lambda: GLOBAL.is_save, save)
+        (lambda: GLOBAL.is_check, check_menu),
+        (lambda: not GLOBAL.is_run, start_menu),
+        (lambda: GLOBAL.is_pause, pause_menu),
+        (lambda: not GLOBAL.is_level_load, load_menu),
+        (lambda: GLOBAL.is_talk, talk_menu),
+        (lambda: GLOBAL.is_summary, summary_menu),
+        (lambda: GLOBAL.is_save, save_menu)
     ]:
         if condition() and not GLOBAL.is_exit:
             func(screen)
@@ -538,11 +547,20 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
     ready = True
     timer = 0
-    color = 0
+    alpha = 0
     line_color = color_dict[6]
     text_y = 343
     dx = 0
-    pos = [(randint(0, 480), randint(0, 360)) for _ in range(128)]
+    text = font.render("点线 Project", False, color_dict[6])
+
+    for i in [(randint(0, 480), randint(0, 360)) for _ in range(128)]:
+        point = particle_cache[((2, 2), color_dict[6])]
+
+        picture[7].blit(point, i)
+    for i in (102, 150, 120, 84):
+        line = line_cache[(500, i, line_color)]
+
+        picture[7].blit(line, (0, -5))
 
     while ready:
         timer += 1
@@ -557,29 +575,23 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             dx -= 0.5
 
             if timer % 30 == 0:
-                if timer <= 90 and color < 255:
-                    color += 85
-                elif timer >= 300 and color > 0:
-                    color -= 85
+                if timer <= 90 and alpha < 255:
+                    alpha += 85
+                elif timer >= 300 and alpha > 0:
+                    alpha -= 85
             if timer >= 330 and line_color != color_dict[3]:
                 line_color = color_dict[3]
 
-            text = font.render("点线 Project", False, (color, color, color))
+                for i in (102, 150, 120, 84):
+                    line = line_cache[(500, i, line_color)]
+
+                    picture[7].blit(line, (0, -5))
+
             screen_width = screen.get_width()
             text1_width = text.get_width()
 
-            for i in pos:
-                point = particle_cache[((2, 2), color_dict[6])]
-
-                point.set_alpha(color)
-                screen.blit(point, i)
-            for i in (102, 150, 120, 84):
-                line = line_cache[(500, i, line_color)]
-
-                line.set_alpha(color)
-                screen.blit(line, (0, -5))
-
-            screen.blit(text, (screen_width - text1_width + dx - 8, text_y))
+            screen.blit((surface := picture[7], surface.set_alpha(alpha))[0])
+            screen.blit((surface := text, surface.set_alpha(alpha))[0], (screen_width - text1_width + dx - 8, text_y))
         if timer >= 420:
             ready = False
 
@@ -589,15 +601,16 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
+    picture[7].fill((0, 0, 0))
 
     for i in line_cache.values():
         i.set_alpha(255)
     for i in particle_cache.values():
         i.set_alpha(255)
 
-    del ready, line_color, text_y, dx, pos
+    del ready, line_color, text_y, dx, text
 
-    color = 255
+    alpha = 255
     timer = 0
 
     while True:
@@ -608,10 +621,10 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 if hasattr(GLOBAL.char, "locate"):
                     GLOBAL.char.locate = GLOBAL.major.rect.center
                 GLOBAL.major.power = GLOBAL.power
-                GLOBAL.item_spawn_timer = spawn_sprite(GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_timer)
+                GLOBAL.item_spawn_timer = spawn(GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_timer)
                 if GLOBAL.combo_timer <= 1 and GLOBAL.combo > 0:
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.particle_group)
-                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = count_combo(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
+                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = combo(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.plane_group.update()
                 GLOBAL.bullet_group.update()
@@ -628,26 +641,26 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
                 item_collide()
             if not GLOBAL.is_level_load:
-                GLOBAL.wait_load_timer, GLOBAL.is_level_load = load_level(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
+                GLOBAL.wait_load_timer, GLOBAL.is_level_load = load(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
 
         display(screen, clock)
 
         if GLOBAL.is_exit:
-            if timer % 30 == 0 and color < 255:
-                color += 85
+            if timer % 30 == 0 and alpha < 255:
+                alpha += 85
 
             timer -= 1
 
-            picture[7].set_alpha(color)
+            picture[7].set_alpha(alpha)
             screen.blit(picture[7])
 
             if timer <= -30:
                 sys.exit()
-        elif color > 0 and not GLOBAL.is_exit:
-            if timer % 30 == 0 and color > 0:
-                color -= 85
+        elif alpha > 0 and not GLOBAL.is_exit:
+            if timer % 30 == 0 and alpha > 0:
+                alpha -= 85
 
-            picture[7].set_alpha(color)
+            picture[7].set_alpha(alpha)
             screen.blit(picture[7])
 
             timer += 1

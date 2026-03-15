@@ -12,7 +12,7 @@ import pygame as pg
 from PRELOAD import *
 from LOGIC.PLANE import *
 from LOGIC.CALCULATE import *
-from LOGIC.DRAW import *
+from LOGIC.GRAPHIC import *
 from LOGIC.SPRITE import *
 import SCRIPT.SPRITE as Sprite
 
@@ -249,7 +249,7 @@ class Nre(Basic):
             end_pos = (-randint(120, 465), -360)
             delta_pos = add(end_pos, start_pos)
             pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-            angle = round_angle(bearing(-delta_pos[0], -delta_pos[1]))
+            angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
 
             Sprite.Line((3, 500), 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
 
@@ -274,7 +274,7 @@ class Nre(Basic):
                     end_pos = (-465, -((th.locate[1] - 13) - k * 24))
                     delta_pos = add(end_pos, start_pos)
                     pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-                    angle = round_angle(bearing(-delta_pos[0], -delta_pos[1]))
+                    angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
 
                     Sprite.Line((3, 500), 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
 
@@ -381,8 +381,8 @@ class Qdi(Basic):
 
     def count(th):
         if th.timer == 0:
-            target_pos = (randint(120, 465), randint(15, 150))
-            pos = th.rect.center
+            target_pos = th.interval_locate
+            pos = (randint(120, 465), randint(15, 150))
             two_point = add(target_pos, (-pos[0], -pos[1]))
             angle = bearing(-two_point[0], -two_point[1])
             end = randint(0 + int(angle), 360 + int(angle))
@@ -504,7 +504,7 @@ class Kli(Base):
         if th.is_divide:
             th.free()
 
-        th.image = turn_side(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
+        th.image = swivel(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
         th.x = move(th.x, (3, 8), th.is_move_left, th.is_move_right, th.is_fast)
         th.y = 331 if th.is_fast else 332
         keep_x = clamp(th.x, window.left, window.right)

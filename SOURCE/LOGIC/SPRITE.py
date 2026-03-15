@@ -52,7 +52,7 @@ class Base(pygame.sprite.Sprite):
         th.rect.centery = th._y
 
 
-def spawn_sprite(
+def spawn(
     condition: bool,
     sprite: Callable[..., Any],
     *args: Any,
@@ -70,24 +70,3 @@ def spawn_sprite(
         timer = 0
 
     return timer
-
-
-def vector(
-    present: tuple[int | float, int | float],
-    target: tuple[int | float, int | float],
-    speed: int | float
-) -> tuple[pygame.Vector2, pygame.Vector2]:
-    dir = pygame.math.Vector2(target[0] - present[0], target[1] - present[1])
-    current = pygame.math.Vector2(present[0], present[1])
-    target = pygame.math.Vector2(target[0], target[1])
-
-    delta_vec = target - current
-    distance = delta_vec.length()
-
-    if distance < speed:
-        return target, delta_vec
-    else:
-        if distance > 0:
-            dir.normalize_ip()
-
-        return current + dir * speed, delta_vec

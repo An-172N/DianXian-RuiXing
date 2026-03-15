@@ -5,9 +5,6 @@
 from typing import Callable, Any
 
 
-import pygame
-
-
 def move(
     variable: int | float,
     speed: tuple[int | float, int | float],
@@ -21,20 +18,6 @@ def move(
         variable += speed[1] if change else speed[0]
 
     return variable
-
-
-def turn_side(
-    original_image: pygame.Surface,
-    turn_image: pygame.Surface,
-    flip: bool,
-    turn: bool
-) -> pygame.Surface:
-    if flip:
-        return pygame.transform.flip(turn_image, True, False)
-    elif turn:
-        return turn_image
-    else:
-        return original_image
 
 
 def invinc(
@@ -67,7 +50,7 @@ def invinc(
     return bombed, collided, visitable, timer
 
 
-def single_bomb(
+def bomb(
     condition: bool,
     power: int,
     critical: int
@@ -79,7 +62,7 @@ def single_bomb(
     return condition, power
 
 
-def count_combo(
+def combo(
     timer: int,
     combo: int,
     score: int,

@@ -4,13 +4,9 @@
 
 import json
 import os
-from typing import Callable, Any, ParamSpec, Concatenate
 
 
-P = ParamSpec("P")
-
-
-def save_record(
+def record(
     folder: str,
     file: str,
     title: str,
@@ -32,21 +28,7 @@ def save_record(
         return json.dump(dump, f, indent=4)
 
 
-def read_level(
-    file: bytes,
-    load: Callable[Concatenate[int, str, P], Any],
-    *args: Any
-) -> str:
-    content = file.decode('ascii')
-    lines = content.splitlines()
-
-    for row, line in enumerate(lines):
-        load(row, line, *args)
-
-    return content
-
-
-def get_files(
+def get(
     folder: str,
     extension: str = '.json',
     reverse: bool = True

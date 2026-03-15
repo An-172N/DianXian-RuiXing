@@ -9,7 +9,7 @@ from pkgutil import get_data
 import pygame as pg
 
 
-from LOGIC.DRAW import *
+from LOGIC.GRAPHIC import *
 from LOGIC.CALCULATE import *
 
 

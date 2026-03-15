@@ -133,14 +133,14 @@ def line_barrage(color: list, locate: tuple, group: pg.sprite.Group):
     end_pos = (-locate[0], -locate[1])
     delta_pos = add(end_pos, start_pos)
     pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-    angle = round_angle(bearing(-delta_pos[0], -delta_pos[1]))
+    angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
 
     Line((3, 500), 0, angle, pos, color[1], color[2], group, True)
 
 
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
-        angle = round_angle(randint(0, 360))
+        angle = approximate(randint(0, 360))
 
         Line((2, choice([48, 96, 192])), 6, angle, spawn_pos, color_dict[5], color_dict[9], group, False)
 

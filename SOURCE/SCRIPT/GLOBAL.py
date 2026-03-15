@@ -67,7 +67,7 @@ last_time = pg.time.get_ticks()
 fps_text = last_time
 
 
-json_files = get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+json_files = get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
 index = 0
 total_files = len(json_files)
 
