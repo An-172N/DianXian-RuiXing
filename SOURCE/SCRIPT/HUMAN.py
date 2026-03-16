@@ -10,7 +10,6 @@ import pygame as pg
 
 
 from PRELOAD import *
-from LOGIC.PLANE import *
 from LOGIC.CALCULATE import *
 from LOGIC.GRAPHIC import *
 from LOGIC.SPRITE import *
@@ -19,7 +18,7 @@ import SCRIPT.SPRITE as Sprite
 
 class Basic(Base):
     def __init__(th, image: pg.Surface, locate: tuple, hp: int, color: tuple, *group: pg.sprite.Group):
-        super().__init__(None, image, pos=(292, 60))
+        super().__init__(image, pos=(292, 60))
 
         th.group = group[0]
         th.particle_group = group[1]
@@ -114,7 +113,7 @@ class Ono(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -216,7 +215,7 @@ class Hro(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot and not th.is_choose:
@@ -239,7 +238,7 @@ class Nre(Basic):
                 delta_pos = add(end_pos, start_pos)
                 pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
-                Sprite.Line((3, 500), 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
+                Sprite.Line(498, 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
 
             sound_cache["fire"].play()
 
@@ -251,7 +250,7 @@ class Nre(Basic):
             pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
             angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
 
-            Sprite.Line((3, 500), 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
+            Sprite.Line(498, 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
 
             th.bullets += 1
 
@@ -266,7 +265,7 @@ class Nre(Basic):
                 delta_pos = add(end_pos, start_pos)
                 pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
 
-                Sprite.Line((3, 500), 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
+                Sprite.Line(498, 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
 
             if th.bullets < 1:
                 for k in range(8):
@@ -276,7 +275,7 @@ class Nre(Basic):
                     pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
                     angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
 
-                    Sprite.Line((3, 500), 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
+                    Sprite.Line(498, 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
 
             th.bullets += 1
 
@@ -304,7 +303,7 @@ class Nre(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -426,7 +425,7 @@ class Qdi(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -435,24 +434,22 @@ class Qdi(Basic):
 
 class Kli(Base):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(None, char_image.subsurface((0, 0, 12, 26)), group[2], pos=(292, 332))
+        super().__init__(char_image.subsurface((0, 0, 12, 26)), group[2], pos=(292, 332))
 
         th.group = group[0]
         th.particle_group = group[1]
         th.color = color_dict[5]
-        th.decision_box = Sprite.Rect(rectangle((2, 2), 0, color_dict[7]).convert(), group[2], pos=(292, 332), mask=True)
+        th.decision_box = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[7]).convert(), group[2], pos=(292, 332), mask=True)
+        th.collided = Invinc(180, 6)
+        th.divided = Invinc(180, 4, th.reset_bullet)
         th.bomb_bullets = 0
         th.bullet_timer = 0
-        th.cooldown_timer = 0
         th.bullets = 0
         th.power = 0
         th.is_shoot = True
         th.is_move_right = False
         th.is_move_left = False
         th.is_fast = False
-        th.is_visitable = True
-        th.is_divide = False
-        th.is_collide = False
 
     def fire(th):
         p = 2 ** (th.power // 32)
@@ -501,16 +498,17 @@ class Kli(Base):
             sound_cache["fire"].play(maxtime=32)
 
     def update(th):
-        if th.is_divide:
+        if th.divided.condition:
             th.free()
 
-        th.image = swivel(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
+        th.image = Change.swivel(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
         th.x = move(th.x, (3, 8), th.is_move_left, th.is_move_right, th.is_fast)
         th.y = 331 if th.is_fast else 332
         keep_x = clamp(th.x, window.left, window.right)
         th.x = keep_x
         th.decision_box.rect.center = (keep_x, th.y)
-        th.is_divide, th.is_collide, th.is_visitable, th.cooldown_timer = invinc(th.is_divide, th.is_collide, th.is_visitable, th.cooldown_timer, 180, 6, th.reset_bullet)
+        th.divided.update()
+        th.collided.update()
 
         if th.is_shoot and th.bullets > 0:
             th.fire()

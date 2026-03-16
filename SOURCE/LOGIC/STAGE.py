@@ -2,36 +2,37 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-from typing import Callable, Any
+from typing import Callable, Any, ParamSpec, Concatenate
+
+
+P = ParamSpec('P')
 
 
 def load(
-    timer: int,
-    loaded: bool,
-    end: int,
-    load: Callable[..., Any],
-    *args: Any
-) -> tuple[int, bool]:
-    if timer <= end:
-        timer += 1
-    else:
-        load(*args)
+    file: bytes,
+    func: Callable[Concatenate[int, str, P], Any],
+    *args: Any,
+    decode: str = 'ascii'
+) -> str:
+    content = file.decode(decode)
+    lines = content.splitlines()
 
-        timer = 0
-        loaded = True
+    for row, line in enumerate(lines):
+        func(row, line, *args)
 
-    return timer, loaded
+    return content
 
 
 def follow(
     numbers: tuple[int, int],
-    end: int
+    end: int,
+    start: int = 1
 ) -> tuple[int, int]:
     stage, level = numbers
 
     if level >= end:
         stage += 1
-        level = 1
+        level = start
     else:
         level += 1
 

@@ -2,86 +2,87 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-from typing import Callable, Any, TypedDict
-
-
 import pygame
 
 
-class PopDict(TypedDict):
-    text: str
-    pos: tuple[int, int]
-    color: tuple[int, int, int]
+class Change:
+    @staticmethod
+    def swivel(
+        original_image: pygame.Surface,
+        turn_image: pygame.Surface,
+        flip: bool,
+        turn: bool
+    ) -> pygame.Surface:
+        if flip:
+            return pygame.transform.flip(turn_image, True, False)
+        elif turn:
+            return turn_image
+        else:
+            return original_image
 
-
-def pop(
-    surface: pygame.Surface,
-    font: pygame.font.Font,
-    group: tuple[list[PopDict], list[PopDict], list[PopDict]],
-    timer: int,
-    interval: tuple[int, int, int],
-    play: Callable[..., Any],
-    *args: Any
-) -> tuple[pygame.Surface, int]:
-    def blit_text(
-        timer: int,
-        interval: int,
-        gather: list[PopDict],
+    @staticmethod
+    def color(
         surface: pygame.Surface,
-        font: pygame.font.Font
+        color: tuple[int, int, int]
+    ) -> pygame.Surface:
+        width, height = surface.get_size()
+
+        for x in range(width):
+            for y in range(height):
+                alpha = surface.get_at((x, y))[3]
+
+                surface.set_at((x, y), (*color, alpha))
+
+        return surface
+
+
+class Draw:
+    @staticmethod
+    def rectangle(
+        size: tuple[int | float, int | float],
+        border: int | float,
+        color: tuple[int, int, int]
+    ) -> pygame.Surface:
+        surface = pygame.Surface(size, pygame.SRCALPHA)
+
+        pygame.draw.rect(surface, color, surface.get_rect(), border)
+
+        return surface
+
+    @staticmethod
+    def circle(
+        xy: tuple[int | float, int | float],
+        size: tuple[int | float, int | float],
+        border: int | float,
+        color: tuple[int, int, int]
+    ) -> pygame.Surface:
+        surface = pygame.Surface(size, pygame.SRCALPHA)
+
+        pygame.draw.ellipse(surface, color, (*xy, *size), border)
+
+        return surface
+    
+
+class FPSGetter:
+    def __init__(th,
+        clock: pygame.time.Clock,
+        interval: int = 500,
+        bit: int = 0
     ) -> None:
-        if timer >= interval:
-            for i in gather:
-                color = i["color"] if "color" in i else (255, 255, 255)
-                text = font.render(i["text"], False, color).convert_alpha()
+        th.clock = clock
+        th.interval = interval
+        th.bit = bit
 
-                surface.blit(text, i["pos"])
+        th._last_time = pygame.time.get_ticks()
+        th._fps = f"{th._last_time}"
 
-    for i in range(0, 3):
-        blit_text(timer, interval[i], group[i], surface, font)
+    @property
+    def fps(th) -> str:
+        return th._fps
 
-    if timer < interval[2]:
-        timer += 1
+    def update(th) -> None:
+        current_time = pygame.time.get_ticks()
 
-        if timer == interval[2]:
-            play(*args)
-
-    return surface, timer
-
-
-def swivel(
-    original_image: pygame.Surface,
-    turn_image: pygame.Surface,
-    flip: bool,
-    turn: bool
-) -> pygame.Surface:
-    if flip:
-        return pygame.transform.flip(turn_image, True, False)
-    elif turn:
-        return turn_image
-    else:
-        return original_image
-
-
-def rectangle(
-    size: tuple[int | float, int | float],
-    border: float,
-    color: tuple[int, int, int]
-) -> pygame.Surface:
-    surface = pygame.Surface((size[0], size[1]), pygame.SRCALPHA)
-
-    pygame.draw.rect(surface, color, surface.get_rect(), border)
-
-    return surface
-
-
-def circle(
-    xy_size: tuple[int | float, int | float, int | float, int | float],
-    border: float,
-    color: tuple[int, int, int]
-) -> pygame.Surface:
-    surface = pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA)
-
-    pygame.draw.ellipse(surface, color, xy_size, border)
-
-    return surface
+        if current_time - th._last_time >= th.interval:
+            th._fps = f"{th.clock.get_fps():.{th.bit}f}"
+            th._last_time = current_time

@@ -5,6 +5,5 @@
 import LOGIC.CALCULATE as Calculate
 import LOGIC.FILE as File
 import LOGIC.GRAPHIC as Graphic
-import LOGIC.PLANE as Plane
 import LOGIC.SPRITE as Sprite
 import LOGIC.STAGE as Stage

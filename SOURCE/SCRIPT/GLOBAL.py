@@ -63,8 +63,7 @@ barrage_group = pg.sprite.Group()
 particle_group = pg.sprite.Group()
 
 
-last_time = pg.time.get_ticks()
-fps_text = last_time
+fps = None
 
 
 json_files = get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')

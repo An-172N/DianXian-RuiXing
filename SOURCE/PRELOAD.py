@@ -51,7 +51,7 @@ picture = {
 
 
 barrage_cache = {
-    **{(2, color_dict[i]): circle((0, 0, 9, 9), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
+    **{(2, color_dict[i]): Draw.circle((0, 0), (9, 9), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
     (0, color_dict[2]): (surface := basic_image.subsurface((75, 7, 9, 8)), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
     (0, color_dict[6]): basic_image.subsurface((75, 7, 9, 8))
 }
@@ -59,34 +59,34 @@ barrage_cache = {
 
 brick_cache = {
     **{(i, color_dict[j]): basic_image.subsurface((k, 0, 15, 15)) for i, j, k in [(2, 1, 0), (0, 2, 15), (1, 3, 30), (2, 4, 45), (0, 6, 60)]},
-    (2, color_dict[6]): circle((0, 0, 15, 15), 2, color_dict[6]).convert_alpha(),
-    (1, color_dict[6]): rectangle((15, 15), 2, color_dict[6]).convert_alpha()
+    (2, color_dict[6]): Draw.circle((0, 0), (15, 15), 2, color_dict[6]).convert_alpha(),
+    (1, color_dict[6]): Draw.rectangle((15, 15), 2, color_dict[6]).convert_alpha()
 }
 
 
-bullet = rectangle((2, 15), 0, color_dict[5]).convert_alpha()
+bullet = Draw.rectangle((2, 15), 0, color_dict[5]).convert_alpha()
 bullet_cache = {
     "bullet": bullet,
     "bullet-cross": bullet,
-    "bomb": rectangle((15, 15), 0, color_dict[5]).convert()
+    "bomb": Draw.rectangle((15, 15), 0, color_dict[5]).convert()
 }
 
 
-item_cache = {i: rectangle((9, 9), 2, color_dict[j]).convert() for i, j in [("flash", 2), ("power", 5), ("fire", 6)]}
+item_cache = {i: Draw.rectangle((9, 9), 2, color_dict[j]).convert() for i, j in [("flash", 2), ("power", 5), ("fire", 6)]}
 
 
 line_cache = {
-    (length, angle, color): pg.transform.rotate(rectangle((3, 498) if length == 500 else (2, length), 0, color).convert_alpha(), angle)
-    for length in [48, 96, 192, 500]
+    (length, angle, color): pg.transform.rotate(Draw.rectangle((3, 498) if length == 498 else (2, length), 0, color).convert_alpha(), angle)
+    for length in [48, 96, 192, 498]
     for angle in range(0, 180, 6)
-    for color in ([color_dict[6], color_dict[3]] if length == 500 else [color_dict[5], color_dict[9]])
+    for color in ([color_dict[6], color_dict[3]] if length == 498 else [color_dict[5], color_dict[9]])
 }
 
 
 particle_cache = {
-    ((9, 9), color_dict[5]): rectangle((9, 9), 0, color_dict[5]).convert(),
-    **{((3 * i, 3 * i), color_dict[6]): rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
-    **{((2, 2), color_dict[i]): rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
+    ((9, 9), color_dict[5]): Draw.rectangle((9, 9), 0, color_dict[5]).convert(),
+    **{((3 * i, 3 * i), color_dict[6]): Draw.rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
+    **{((2, 2), color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
 }
 
 

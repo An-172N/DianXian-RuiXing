@@ -16,7 +16,7 @@ from LOGIC.SPRITE import *
 
 class Barrage(Base):
     def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: pg.sprite.Group, mask: bool=True, rotate: bool=True):
-        super().__init__(form, image, group, angle=angle, pos=pos, mask=mask, rotate=rotate)
+        super().__init__(image, group, form=form, angle=angle, pos=pos, mask=mask, rotate=rotate)
 
         th.effective = effective
         th.speed = speed
@@ -33,7 +33,7 @@ class Barrage(Base):
 
 class Text(Base):
     def __init__(th, pos: tuple, kill_time: tuple, speed: float, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group):
-        super().__init__(None, image, group, pos=pos)
+        super().__init__(image, group, pos=pos)
 
         th.target_image = target_image
         th.kill_time = kill_time
@@ -54,12 +54,12 @@ class Text(Base):
 
 class Rect(Base):
     def __init__(th, image: pg.Surface, *group: pg.sprite.Group, pos: tuple=(0, 0), mask: bool=False):
-        super().__init__(None, image, *group, pos=pos, mask=mask)
+        super().__init__(image, *group, pos=pos, mask=mask)
 
 
 class Brick(Base):
     def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pg.Surface, group: pg.sprite.Group):
-        super().__init__(form, image, group, pos=pos)
+        super().__init__(image, group, form=form, pos=pos)
 
         th.color = color
         th.hp = hp
@@ -70,7 +70,7 @@ class Brick(Base):
 
 class Bullet(Base):
     def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, mask: bool=True, rotate: bool=True):
-        super().__init__(form, image, group, angle=angle, pos=pos, mask=mask, rotate=rotate)
+        super().__init__(image, group, form=form, angle=angle, pos=pos, mask=mask, rotate=rotate)
 
         th.effective = effective
         th.speed = speed
@@ -88,7 +88,7 @@ class Bullet(Base):
 
 class Item(Base):
     def __init__(th, type: str, speed: float, pos: tuple, *group: pg.sprite.Group, size: tuple=(0, 0), color: tuple=(0, 0, 0)):
-        super().__init__(type, item_cache[type] if type != "char" else particle_cache[(size, color)], *group, pos=pos)
+        super().__init__(item_cache[type] if type != "char" else particle_cache[(size, color)], *group, form=type, pos=pos)
 
         th.speed = speed
 
@@ -109,10 +109,10 @@ class Item(Base):
 
 
 class Line(Base):
-    def __init__(th, size: tuple, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple, group: pg.sprite.Group, mask: bool):
-        super().__init__("line", line_cache[(size[1], angle, color)], group, angle=angle, pos=pos, mask=mask)
+    def __init__(th, length: int, damage: int, angle: float, pos: tuple, color: tuple, target_color: tuple, group: pg.sprite.Group, mask: bool):
+        super().__init__(line_cache[(length, angle, color)], group, form="line", angle=angle, pos=pos, mask=mask)
 
-        th.size = size
+        th.length = length
         th.damage = damage
         th.color = color
         th.target_color = target_color
@@ -125,7 +125,7 @@ class Line(Base):
             th.kill()
         elif th.timer >= 45 and th.color != th.target_color:
             th.color = th.target_color
-            th.image = line_cache[(th.size[1], th.angle, th.color)]
+            th.image = line_cache[(th.length, th.angle, th.color)]
 
 
 def line_barrage(color: list, locate: tuple, group: pg.sprite.Group):
@@ -135,14 +135,14 @@ def line_barrage(color: list, locate: tuple, group: pg.sprite.Group):
     pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
     angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
 
-    Line((3, 500), 0, angle, pos, color[1], color[2], group, True)
+    Line(498, 0, angle, pos, color[1], color[2], group, True)
 
 
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = approximate(randint(0, 360))
 
-        Line((2, choice([48, 96, 192])), 6, angle, spawn_pos, color_dict[5], color_dict[9], group, False)
+        Line(choice([48, 96, 192]), 6, angle, spawn_pos, color_dict[5], color_dict[9], group, False)
 
 
 def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):

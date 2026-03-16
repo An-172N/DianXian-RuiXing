@@ -8,51 +8,34 @@ import math
 import pygame
 
 
+def vector(
+    current: tuple[int | float, int | float],
+    target: tuple[int | float, int | float],
+    delay: int | float
+) -> tuple[pygame.Vector2, pygame.Vector2]:
+    direction_vec = pygame.math.Vector2(target[0] - current[0], target[1] - current[1])
+    current_vec = pygame.math.Vector2(*current)
+    target_vec = pygame.math.Vector2(*target)
+    delta_vec = target_vec - current_vec
+    distance = delta_vec.length()
+
+    if distance < delay:
+        return target_vec, delta_vec
+    else:
+        if distance > 0:
+            direction_vec.normalize_ip()
+
+        return current_vec + direction_vec * delay, delta_vec
+
+
 def approximate(
     value: int | float,
-    limit: int | float = 180,
+    limit: int = 180,
     step: int = 6
 ) -> int:
     rounded = round((value % limit) / step) * step
 
     return 0 if rounded == limit else rounded
-
-
-def fps(
-    fps: str,
-    timer: int,
-    bit: int,
-    interval: int,
-    clock: pygame.time.Clock
-) -> tuple[str, int]:
-    current_time = pygame.time.get_ticks()
-
-    if current_time - timer >= interval:
-        fps = f"{clock.get_fps():.{bit}f} FPS"
-        timer = current_time
-
-    return fps, timer
-
-
-def vector(
-    present: tuple[int | float, int | float],
-    target: tuple[int | float, int | float],
-    speed: int | float
-) -> tuple[pygame.Vector2, pygame.Vector2]:
-    dir = pygame.math.Vector2(target[0] - present[0], target[1] - present[1])
-    current = pygame.math.Vector2(present[0], present[1])
-    target = pygame.math.Vector2(target[0], target[1])
-
-    delta_vec = target - current
-    distance = delta_vec.length()
-
-    if distance < speed:
-        return target, delta_vec
-    else:
-        if distance > 0:
-            dir.normalize_ip()
-
-        return current + dir * speed, delta_vec
 
 
 def bearing(
