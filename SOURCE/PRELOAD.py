@@ -51,9 +51,9 @@ picture = {
 
 
 barrage_cache = {
-    **{(2, color_dict[i]): Draw.circle((0, 0, 9, 9), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
-    (0, color_dict[2]): (surface := basic_image.subsurface((75, 7, 9, 8)), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
-    (0, color_dict[6]): basic_image.subsurface((75, 7, 9, 8))
+    **{(2, color_dict[i]): Draw.circle((0, 0, 8, 8), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
+    (0, color_dict[2]): (surface := basic_image.subsurface((75, 7, 8, 8)), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
+    (0, color_dict[6]): basic_image.subsurface((75, 7, 8, 8))
 }
 
 
@@ -75,18 +75,11 @@ bullet_cache = {
 item_cache = {i: Draw.rectangle((9, 9), 2, color_dict[j]).convert() for i, j in [("flash", 2), ("power", 5), ("fire", 6)]}
 
 
-line_cache = {
-    (length, angle, color): pg.transform.rotate(Draw.rectangle((3, 498) if length == 498 else (2, length), 0, color).convert_alpha(), angle)
-    for length in [48, 96, 192, 498]
-    for angle in range(0, 180, 6)
-    for color in ([color_dict[6], color_dict[3]] if length == 498 else [color_dict[5], color_dict[9]])
-}
-
-
 particle_cache = {
     ((9, 9), color_dict[5]): Draw.rectangle((9, 9), 0, color_dict[5]).convert(),
+    ((3, 3), color_dict[3]): Draw.rectangle((3, 3), 0, color_dict[3]).convert(),
     **{((3 * i, 3 * i), color_dict[6]): Draw.rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
-    **{((2, 2), color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
+    **{((2, 2), color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 10)}
 }
 
 

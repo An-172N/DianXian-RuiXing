@@ -48,9 +48,9 @@ class Ono(Basic):
             sound_cache["fire"].play()
 
     def free(th):
-        if th.bullets < 8:
-            for i in range(0 + th.timer * 6, 360 + th.timer * 6, 180):
-                for j in range(0 + th.timer * 6, 360 + th.timer * 6, 90):
+        if th.bullets < 10:
+            for i in range(0 + th.timer * 7, 360 + th.timer * 7, 180):
+                for j in range(0 + th.timer * 7, 360 + th.timer * 7, 90):
                     pos = (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i)))
 
                     Sprite.Barrage(effective, 2, 3.5, th.color, j, pos, barrage_cache[(2, th.color)], th.group, True, False)
@@ -165,8 +165,8 @@ class Hro(Basic):
                 current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
 
                 for j in range(45, 136, 90):
-                    angle = bearing(-delta_vec.x, -delta_vec.y) + j + (th.timer * -6)
-                    pos = (current_pos.x, current_pos.y)
+                    angle = bearing(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
+                    pos = current_pos
 
                     Sprite.Barrage(effective, 0, 4, th.color, angle, pos, barrage_cache[(0, th.color)], th.group)
 
@@ -181,10 +181,10 @@ class Hro(Basic):
         if th.timer == 0:
             for _ in range(6):
                 for j in (150, 185, 220, 255, 292, 327, 365, 400, 435):
-                    for k in range(1, 4):
+                    for k in range(0, 4):
                         pos = (j, 60)
-                        two_point = add((th.locate[0], th.locate[1] - 96), (-pos[0], -pos[1]))
-                        angle = bearing(-two_point[0], -two_point[1]) * k
+                        two_point = add((th.locate[0], th.locate[1] - 160), (-pos[0], -pos[1]))
+                        angle = bearing(-two_point[0], -two_point[1]) + k * 90
 
                         Sprite.Barrage(effective, 0, speed, th.color, angle, pos, barrage_cache[(0, th.color)], th.group)
 
@@ -234,23 +234,18 @@ class Nre(Basic):
         if th.timer == 0:
             for i in range(th.locate[0] - 30, th.locate[0] + 31, 20):
                 start_pos = (i, 15)
-                end_pos = (-i, -360)
-                delta_pos = add(end_pos, start_pos)
-                pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
+                end_pos = (i, 360)
 
-                Sprite.Line(498, 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
+                Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
             sound_cache["fire"].play()
 
     def free(th):
-        if th.bullets < 12:
+        if th.bullets < 16:
             start_pos = (randint(120, 465), 15)
-            end_pos = (-randint(120, 465), -360)
-            delta_pos = add(end_pos, start_pos)
-            pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-            angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
+            end_pos = (randint(120, 465), 360)
 
-            Sprite.Line(498, 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
+            Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
             th.bullets += 1
 
@@ -260,22 +255,15 @@ class Nre(Basic):
     def extend(th):
         if th.bullets < 8 and th.timer % 3 == 0:
             for j in (1, -1):
-                start_pos = (th.interval_locate[0] + th.bullets * j * 24, 15)
-                end_pos = (-(th.interval_locate[0] + th.bullets * j * 24), -360)
-                delta_pos = add(end_pos, start_pos)
-                pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
+                start_pos = (th.interval_locate[0] + th.bullets * j * 22, 15)
+                end_pos = ((th.interval_locate[0] + th.bullets * j * 22), 360)
 
-                Sprite.Line(498, 0, 0, pos, color_dict[6], color_dict[3], th.group, True)
+                Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
-            if th.bullets < 1:
-                for k in range(8):
-                    start_pos = (120, (th.locate[1] - 13) - k * 24)
-                    end_pos = (-465, -((th.locate[1] - 13) - k * 24))
-                    delta_pos = add(end_pos, start_pos)
-                    pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-                    angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
+            start_pos = (120, (th.locate[1] - 13) - th.bullets * 22)
+            end_pos = (465, ((th.locate[1] - 13) - th.bullets * 22))
 
-                    Sprite.Line(498, 0, angle, pos, color_dict[6], color_dict[3], th.group, True)
+            Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
             th.bullets += 1
 
@@ -439,7 +427,7 @@ class Kli(Base):
         th.group = group[0]
         th.particle_group = group[1]
         th.color = color_dict[5]
-        th.decision_box = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[7]).convert(), group[2], pos=(292, 332), mask=True)
+        th.decision_box = Sprite.Rect(particle_cache[((2, 2), color_dict[7])], group[2], pos=(292, 332), mask=True)
         th.collided = Invinc(180, 6)
         th.divided = Invinc(180, 4, th.reset_bullet)
         th.bomb_bullets = 0

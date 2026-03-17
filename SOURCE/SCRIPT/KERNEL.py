@@ -366,32 +366,26 @@ def mode_two():
 
 def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
     barrage_dict = {
-        1: Sprite.circle_barrage,
-        2: Sprite.polygon_barrage
+        1: lambda: Sprite.circle_barrage(type, color, spawn_pos, locate, group),
+        2: lambda: Sprite.polygon_barrage(type, color, spawn_pos, locate, group),
+        3: lambda: Sprite.line_barrage(color, (randint(120, 465), 15), (locate[0] + randint(-15, 15), locate[1] + 15), group),
+        4: lambda: Sprite.point_barrage(type, color, locate, group)
     }
 
     if random() <= fib[stage - 1]:
-        if stage in [1, 2]:
-            barrage_dict.get(stage)(type, color, spawn_pos, locate, group)
-        elif stage == 3:
-            Sprite.line_barrage(color, locate, group)
-        else:
-            Sprite.point_barrage(type, color, locate, group)
+        barrage_dict.get(stage)()
 
 
 def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
     process_dict = {
-        1: Sprite.circle_brick,
-        3: Sprite.line_brick
+        1: lambda: Sprite.circle_brick(group, spawn_pos[3]),
+        2: lambda: Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2]),
+        3: lambda: Sprite.line_brick(group, spawn_pos[3]),
+        4: lambda: Sprite.point_brick(group)
     }
 
     if color[0] == color_dict[6]:
-        if stage == 2:
-            Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2])
-        elif stage in [1, 3]:
-            process_dict.get(stage)(group, spawn_pos[3])
-        else:
-            Sprite.point_brick(group)
+        process_dict.get(stage)()
 
 
 def item_collide():
@@ -595,8 +589,19 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
     for i in [(randint(0, 480), randint(0, 360)) for _ in range(128)]:
         picture[7].blit(particle_cache[((2, 2), color_dict[6])], i)
-    for i in (102, 150, 120, 84):
-        picture[7].blit(line_cache[(498, i, line_color)], (0, -5))
+    for i, j in (((8, -2), (482, 64)), ((-2, 64), (384, -2)), ((-2, 192), (448, -2)), ((128, -2), (-2, 320))):
+        points = []
+    
+        while True:
+            points.append(i)
+
+            if math.dist(i, j) < 1e-6:
+                break
+
+            i = vector(i, j, 3)[0]
+
+        for point in points:
+            picture[7].blit(particle_cache[((3, 3), color_dict[6])], point)
 
     while ready:
         timer += 1
@@ -616,12 +621,19 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 elif timer >= 300 and alpha > 0:
                     alpha -= 85
             if timer >= 330 and line_color != color_dict[3]:
-                line_color = color_dict[3]
+                for i, j in (((8, -2), (482, 64)), ((-2, 64), (384, -2)), ((-2, 192), (448, -2)), ((128, -2), (-2, 320))):
+                    points = []
+    
+                    while True:
+                        points.append(i)
 
-                for i in (102, 150, 120, 84):
-                    line = line_cache[(498, i, line_color)]
+                        if math.dist(i, j) < 1e-6:
+                            break
 
-                    picture[7].blit(line, (0, -5))
+                        i = vector(i, j, 3)[0]
+
+                    for point in points:
+                        picture[7].blit(particle_cache[((3, 3), color_dict[3])], point)
 
             screen.blit((surface := picture[7], surface.set_alpha(alpha))[0])
             screen.blit((surface := text, surface.set_alpha(alpha))[0], (screen.get_width() - text.get_width() + dx - 8, text_y))
