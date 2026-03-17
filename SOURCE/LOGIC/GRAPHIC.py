@@ -41,26 +41,24 @@ class Draw:
     def rectangle(
         size: tuple[int | float, int | float],
         border: int | float,
-        color: tuple[int, int, int]
+        color: tuple[int, int, int],
+        radius: tuple[int, int, int, int] = (-1, -1, -1, -1)
     ) -> pygame.Surface:
-        surface = pygame.Surface(size, pygame.SRCALPHA)
-
-        pygame.draw.rect(surface, color, surface.get_rect(), border)
-
-        return surface
+        return (
+            surface := pygame.Surface(size, pygame.SRCALPHA),
+            pygame.draw.rect(surface, color, surface.get_rect(), border, -1, *radius)
+        )[0]
 
     @staticmethod
     def circle(
-        xy: tuple[int | float, int | float],
-        size: tuple[int | float, int | float],
+        xy_size: tuple[int | float, int | float, int | float, int | float],
         border: int | float,
         color: tuple[int, int, int]
     ) -> pygame.Surface:
-        surface = pygame.Surface(size, pygame.SRCALPHA)
-
-        pygame.draw.ellipse(surface, color, (*xy, *size), border)
-
-        return surface
+        return (
+            surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA),
+            pygame.draw.ellipse(surface, color, xy_size, border)
+        )[0]
     
 
 class FPSGetter:

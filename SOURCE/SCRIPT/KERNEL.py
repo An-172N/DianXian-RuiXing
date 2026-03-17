@@ -187,42 +187,48 @@ def check_menu(screen: pg.Surface):
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
     group = (
         [
-            {"text": title, "pos": (8, 9)},
-            {"text": other, "pos": (8, 304)}
+            {"sprite": font.render(title, False, color_dict[6]).convert_alpha(), "pos": (8, 9)},
+            {"sprite": font.render(other, False, color_dict[6]).convert_alpha(), "pos": (8, 304)}
         ],
         [
-            {"text": text[0], "pos": (8, 59)},
-            {"text": text[1], "pos": (8, 84)},
-            {"text": text[2], "pos": (8, 109)},
-            {"text": text[3], "pos": (8, 134)},
-            {"text": text[4], "pos": (8, 159)}
+            {"sprite": font.render(text[0], False, color_dict[6]).convert_alpha(), "pos": (8, 59)},
+            {"sprite": font.render(text[1], False, color_dict[6]).convert_alpha(), "pos": (8, 84)},
+            {"sprite": font.render(text[2], False, color_dict[6]).convert_alpha(), "pos": (8, 109)},
+            {"sprite": font.render(text[3], False, color_dict[6]).convert_alpha(), "pos": (8, 134)},
+            {"sprite": font.render(text[4], False, color_dict[6]).convert_alpha(), "pos": (8, 159)}
         ],
         [
-            {"text": key[0], "pos": (276, 219)},
-            {"text": key[1], "pos": (276, 269)},
-            {"text": key[2], "pos": (276, 169)},
-            {"text": key[3], "pos": (276, 119)}
+            {"sprite": font.render(key[0], False, color_dict[6]).convert_alpha(), "pos": (276, 219)},
+            {"sprite": font.render(key[1], False, color_dict[6]).convert_alpha(), "pos": (276, 269)},
+            {"sprite": font.render(key[2], False, color_dict[6]).convert_alpha(), "pos": (276, 169)},
+            {"sprite": font.render(key[3], False, color_dict[6]).convert_alpha(), "pos": (276, 119)}
         ]
     )
 
     (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
+    GLOBAL.pop_timer += 1
 
-    menu, GLOBAL.pop_timer = pop(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
+    menu = pop(backdrop, group, GLOBAL.pop_timer, interval)
 
+    if GLOBAL.pop_timer == interval[2]:
+        sound_cache["pick"].play()
     surface.blit(menu, (120, 15))
 
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
     group = (
-        [{"text": title, "pos": (8, 9)}],
-        [{"text": text[0], "pos": (8, 59)}],
-        [{"text": text[1], "pos": (8, 84)}]
+        [{"sprite": font.render(title, False, color_dict[6]).convert_alpha(), "pos": (8, 9)}],
+        [{"sprite": font.render(text[0], False, color_dict[6]).convert_alpha(), "pos": (8, 59)}],
+        [{"sprite": font.render(text[1], False, color_dict[6]).convert_alpha(), "pos": (8, 84)}]
     )
 
     (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
+    GLOBAL.pop_timer += 1
 
-    menu, GLOBAL.pop_timer = pop(backdrop, font, group, GLOBAL.pop_timer, interval, sound_cache["pick"].play)
+    menu = pop(backdrop, group, GLOBAL.pop_timer, interval)
 
+    if GLOBAL.pop_timer == interval[2]:
+        sound_cache["pick"].play()
     surface.blit(menu, (120, 15))
 
 
@@ -253,7 +259,7 @@ def save_file():
         'Date': date_time[0]
     }
 
-    record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', "锐山抚形日志", dump_content)
+    record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', ("锐山抚形日志", dump_content))
 
 
 def summary_logic():
@@ -420,7 +426,7 @@ def barrage_collide(position):
 
     for barrage in collide:
         if barrage.color != color_dict[6]:
-            if not GLOBAL.major.collided.condition and not GLOBAL.major.collided.condition:
+            if not GLOBAL.major.collided.condition and not GLOBAL.major.divided.condition:
                 GLOBAL.major.collided.condition = True
                 GLOBAL.unflash = 0
                 GLOBAL.flash -= 1
@@ -482,33 +488,6 @@ def sprite_loader():
     GLOBAL.pop_timer = 0
 
 
-def pop(surface: pygame.Surface, font: pygame.font.Font, group: tuple, timer: int, interval: tuple[int, int, int], play: object, *args) -> tuple:
-        def blit_text(
-            timer: int,
-            interval: int,
-            gather: list,
-            surface: pygame.Surface,
-            font: pygame.font.Font
-        ) -> None:
-            if timer >= interval:
-                for i in gather:
-                    color = i["color"] if "color" in i else (255, 255, 255)
-                    text = font.render(i["text"], False, color).convert_alpha()
-
-                    surface.blit(text, i["pos"])
-
-        for i in range(0, 3):
-            blit_text(timer, interval[i], group[i], surface, font)
-
-        if timer < interval[2]:
-            timer += 1
-
-            if timer == interval[2]:
-                play(*args)
-
-        return surface, timer
-
-
 def spawn(condition: bool, sprite: object, *args, group: pygame.sprite.Group = None, timer: int = 0) -> int:
     timer += 1
 
@@ -521,6 +500,15 @@ def spawn(condition: bool, sprite: object, *args, group: pygame.sprite.Group = N
         timer = 0
 
     return timer
+
+
+def pop(surface: pygame.Surface, group: tuple, timer: int, interval: tuple) -> pygame.Surface:
+    for i in range(0, len(group)):
+        if timer >= interval[i]:
+            for j in group[i]:
+                surface.blit(j["sprite"], j["pos"])
+
+    return surface
 
 
 def choose_human() -> Ono | Hro | Nre | Qdi:
@@ -559,7 +547,7 @@ def wait(timer: int, loaded: bool, end: int, load: object, *args) -> tuple:
     return timer, loaded
 
 
-def display(screen: pg.Surface, clock: pg.time.Clock):
+def display(screen: pg.Surface):
     if GLOBAL.is_run:
         screen.blit(picture[GLOBAL.stage], (120, 15))
 
@@ -606,13 +594,9 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     text = font.render("点线 Project", False, color_dict[6])
 
     for i in [(randint(0, 480), randint(0, 360)) for _ in range(128)]:
-        point = particle_cache[((2, 2), color_dict[6])]
-
-        picture[7].blit(point, i)
+        picture[7].blit(particle_cache[((2, 2), color_dict[6])], i)
     for i in (102, 150, 120, 84):
-        line = line_cache[(498, i, line_color)]
-
-        picture[7].blit(line, (0, -5))
+        picture[7].blit(line_cache[(498, i, line_color)], (0, -5))
 
     while ready:
         timer += 1
@@ -687,7 +671,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             if not GLOBAL.is_level_load:
                 GLOBAL.wait_load_timer, GLOBAL.is_level_load = wait(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
 
-        display(screen, clock)
+        display(screen)
 
         if GLOBAL.is_exit:
             if timer % 30 == 0 and alpha < 255:

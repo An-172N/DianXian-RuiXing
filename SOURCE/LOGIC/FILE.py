@@ -9,8 +9,8 @@ import os
 def record(
     folder: str,
     file: str,
-    title: str,
-    append: str
+    content: tuple[str, str],
+    encoding: str = 'utf-8'
 ) -> None:
     def return_path_with_makedir(
         folder: str,
@@ -21,10 +21,12 @@ def record(
 
         return f'{folder}/{file}'
 
-    dump = [title]
-    dump.append(append)
+    (
+        dump := [content[0]],
+        dump.append(content[1])
+    )[0]
 
-    with open(return_path_with_makedir(folder, file), 'w', encoding='utf-8') as f:
+    with open(return_path_with_makedir(folder, file), 'w', encoding=encoding) as f:
         return json.dump(dump, f, indent=4)
 
 
@@ -37,13 +39,13 @@ def get(
 
     try:
         for file in os.listdir(folder):
-            if file.endswith(extension):
-                path = os.path.join(folder, file)
+            if file.endswith(extension) and (
+                path := os.path.join(folder, file),
+                os.path.isfile(path)
+            ):
+                time = os.path.getmtime(path)
 
-                if os.path.isfile(path):
-                    time = os.path.getmtime(path)
-
-                    files.append((time, path))
+                files.append((time, path))
     except:
         return []
 

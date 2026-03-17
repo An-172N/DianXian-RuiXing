@@ -57,13 +57,13 @@ class Invinc:
     def __init__(th,
         end: int,
         blink_interval: int,
-        callback: Callable[..., Any] = lambda: None,
-        *callback_args: Any
+        func: Callable[..., Any] = lambda: None,
+        *func_args: Any
     ) -> None:
         th.end = end
         th.blink_interval = blink_interval
-        th.callback = callback
-        th.callback_args = callback_args
+        th.func = func
+        th.func_args = func_args
 
         th._condition = False
         th._visitable = True
@@ -88,7 +88,7 @@ class Invinc:
             th._timer += 1
 
             if th._timer >= th.end:
-                th.callback(*th.callback_args)
+                th.func(*th.func_args)
 
                 th._timer = 0
                 th._visitable = True

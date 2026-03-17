@@ -33,16 +33,14 @@ def approximate(
     limit: int = 180,
     step: int = 6
 ) -> int:
-    rounded = round((value % limit) / step) * step
-
-    return 0 if rounded == limit else rounded
+    return 0 if (rounded := round((value % limit) / step) * step) == limit else rounded
 
 
 def bearing(
     x: float,
     y: float
 ) -> float:
-    return math.degrees(math.atan2(x, y))
+    return math.degrees(math.atan2(x, y)) % 360
 
 
 def add(
