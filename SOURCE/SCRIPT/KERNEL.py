@@ -580,75 +580,8 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     GLOBAL.power = clamp(args[3], 0, 32)
     GLOBAL.fps = FPSGetter(clock)
 
-    ready = True
-    timer = 0
-    alpha = 0
-    text_y = 343
-    dx = 0
-    text = font.render("点线 Project", False, color_dict[6])
-
-    for i in [(randint(0, 480), randint(0, 360)) for _ in range(128)]:
-        picture[7].blit(particle_cache[((2, 2), color_dict[6])], i)
-    for i, j in (((8, -2), (482, 64)), ((-2, 64), (384, -2)), ((-2, 192), (448, -2)), ((128, -2), (-2, 320))):
-        points = []
-    
-        while True:
-            points.append(i)
-
-            if math.dist(i, j) < 1e-6:
-                break
-
-            i = vector(i, j, 3)[0]
-
-        for point in points:
-            picture[7].blit(particle_cache[((3, 3), color_dict[6])], point)
-
-    while ready:
-        timer += 1
-
-        for _ in pg.event.get():
-            continue
-
-        screen.fill((0, 0, 0))
-
-        if 360 >= timer >= 30:
-            text_y -= 0.3
-            dx -= 0.5
-
-            if timer % 30 == 0:
-                if timer <= 90 and alpha < 255:
-                    alpha += 85
-                elif timer >= 300 and alpha > 0:
-                    alpha -= 85
-            if timer == 330:
-                for i, j in (((8, -2), (482, 64)), ((-2, 64), (384, -2)), ((-2, 192), (448, -2)), ((128, -2), (-2, 320))):
-                    points = []
-    
-                    while True:
-                        points.append(i)
-
-                        if math.dist(i, j) < 1e-6:
-                            break
-
-                        i = vector(i, j, 3)[0]
-
-                    for point in points:
-                        picture[7].blit(particle_cache[((3, 3), color_dict[3])], point)
-
-            screen.blit((surface := picture[7], surface.set_alpha(alpha))[0])
-            screen.blit((surface := text, surface.set_alpha(alpha))[0], (screen.get_width() - text.get_width() + dx - 8, text_y))
-        if timer >= 420:
-            ready = False
-
-        pg.display.flip()
-
-        clock.tick(60)
-
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
-    picture[7].fill((0, 0, 0))
-
-    del ready, text_y, dx, text
 
     alpha = 255
     timer = 0

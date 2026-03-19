@@ -270,6 +270,25 @@ class Nre(Basic):
             if th.bullets % 2 == 0:
                 sound_cache["fire"].play()
 
+    def final(th):
+        if th.bullets < 12 and th.timer % 2 == 0:
+            start_pos = (220 + th.bullets * 24, 15)
+            end_pos = ((320 + th.bullets * 24), 360)
+
+            Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
+
+            if th.bullets < 6:
+                for i in (120, 465):
+                    start_pos = (i, 15)
+                    end_pos = (292 + th.bullets * choice([30, -30]), 360)
+
+                    Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
+
+            th.bullets += 1
+
+            if th.bullets % 2 == 0:
+                sound_cache["fire"].play()
+
     def update(th):
         th.timer += 1
 
@@ -279,7 +298,7 @@ class Nre(Basic):
             th.timer = 0
             th.interval_locate = th.locate
             th.can_shoot = True
-            th.choice = choice([th.fire] * 5 + [th.free] * 3 + [th.extend] * 2)
+            th.choice = choice([th.fire] * 6 + [th.free] * 3 + [th.extend] * 2 + [th.final])
         if th.timer % 100 >= 82:
             if th.timer % 82 == 0:
                 for _ in range(8):
@@ -316,7 +335,7 @@ class Qdi(Basic):
 
             th.bullets += 1
 
-            if th.bullets % 3 == 0:
+            if th.bullets % 2 == 0:
                 sound_cache["fire"].play()
 
     def free(th):
@@ -342,20 +361,6 @@ class Qdi(Basic):
 
     def final(th):
         if th.timer == 0:
-            pos_list = [(randint(140, 445), randint(90, 190)) for _ in range(randint(1, 4))]
-
-            for _ in range(72):
-                target_pos = choice(pos_list)
-                pos = (randint(120, 465), randint(15, 300))
-                two_point = add(target_pos, (-pos[0], -pos[1]))
-                angle = bearing(-two_point[0], -two_point[1])
-
-                Sprite.Barrage(effective, 2, uniform(4.0, 5.0), th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
-
-            sound_cache["fire"].play()
-
-    def last(th):
-        if th.timer == 0:
             pos = (randint(120, 465), randint(15, 170))
 
             for _ in range(10):
@@ -366,7 +371,7 @@ class Qdi(Basic):
 
             sound_cache["fire"].play()
 
-    def count(th):
+    def last(th):
         if th.timer == 0:
             target_pos = th.interval_locate
             pos = (randint(120, 465), randint(15, 150))
@@ -388,6 +393,20 @@ class Qdi(Basic):
                     Sprite.Barrage(effective, 2, speed, th.color, i, pos, barrage_cache[(2, th.color)], th.group, True, False)
 
             sound_cache["fire"].play()
+
+    def count(th):
+        if th.bullets < 12 and th.timer % 2 == 0:
+            for i in range(0, 360, 30):
+                speed = randint(4, 6)
+                pos = th.rect.center
+                angle = i + 8 * th.bullets
+
+                Sprite.Barrage(effective, 2, speed, th.color, angle, pos, barrage_cache[(2, th.color)], th.group, True, False)
+
+            th.bullets += 1
+
+            if th.bullets % 2 == 0:
+                sound_cache["fire"].play()
 
     def update(th):
         th.timer += 1
