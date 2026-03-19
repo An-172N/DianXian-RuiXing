@@ -32,10 +32,12 @@ class Barrage(Base):
 
 
 class Text(Base):
-    def __init__(th, pos: tuple, kill_time: tuple, speed: float, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group):
-        super().__init__(image, group, pos=pos)
+    def __init__(th, pos: tuple, kill_time: tuple, speed: float, text: str, color: tuple, target_color: tuple, group: pg.sprite.Group):
+        super().__init__(font.render(text, False, color), group, pos=pos)
 
-        th.target_image = target_image
+        th.text = text
+        th.color = color
+        th.target_color = target_color
         th.kill_time = kill_time
         th.speed = speed
         th.timer = 0
@@ -48,8 +50,9 @@ class Text(Base):
 
         if th.timer >= th.kill_time[1]:
             th.kill()
-        elif th.timer >= th.kill_time[0] and th.image != th.target_image:
-            th.image = th.target_image
+        elif th.timer >= th.kill_time[0] and th.color != th.target_color:
+            th.color = th.target_color
+            th.image = font.render(th.text, False, th.color)
 
 
 class Rect(Base):
@@ -109,10 +112,11 @@ class Item(Base):
 
 
 class Line(Base):
-    def __init__(th, size: tuple, damage: int, pos: tuple, color: tuple, target_color: tuple, group: pg.sprite.Group, mask: bool):
-        super().__init__(particle_cache[(size, color)], group, form="line", pos=pos, mask=mask)
+    def __init__(th, size: tuple, damage: int, angle: int, pos: tuple, color: tuple, target_color: tuple, group: pg.sprite.Group, mask: bool):
+        super().__init__(line_cache[(size, angle, color)], group, form="line", pos=pos, mask=mask)
 
         th.size = size
+        th.angle = angle
         th.damage = damage
         th.color = color
         th.target_color = target_color
@@ -125,44 +129,24 @@ class Line(Base):
             th.kill()
         elif th.timer >= 45 and th.color != th.target_color:
             th.color = th.target_color
-            th.image = particle_cache[(th.size, th.color)]
+            th.image = line_cache[(th.size, th.angle, th.color)]
 
 
 def line_barrage(color: list, current: tuple, target: tuple, group: pg.sprite.Group):
-    points = []
-    current = current
-    target = target
-    
-    while True:
-        points.append(current)
+    start_pos = current
+    end_pos = (-target[0], -target[1])
+    delta_pos = add(end_pos, start_pos)
+    pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
+    angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
 
-        if math.dist(current, target) < 1e-6:
-            break
-
-        current = vector(current, target, 3)[0]
-
-    for pos in points:
-        Line((3, 3), 0, pos, color[1], color[2], group, True)
+    Line(512, 0, angle, pos, color[1], color[2], group, True)
 
 
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
-        points = []
-        current = (0, 0)
-        target = (0, randint(32, 256))
-
-        while True:
-            points.append(current)
-
-            if math.dist(current, target) < 1e-6:
-                break
-
-            current = vector(current, target, 2)[0]
-
-        points = rotate(center(points, spawn_pos), randint(0, 180))
-
-        for pos in points:
-            Line((2, 2), 4, pos, color_dict[5], color_dict[9], group, True)
+        angle = approximate(randint(0, 360))
+        
+        Line(choice([72, 144, 216]), 6, angle, spawn_pos, color_dict[5], color_dict[9], group, True)
 
 
 def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):

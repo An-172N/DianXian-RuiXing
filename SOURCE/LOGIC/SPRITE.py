@@ -13,7 +13,7 @@ class Base(pygame.sprite.Sprite):
         image: pygame.Surface,
         *group: pygame.sprite.Group,
         form: int | str = None,
-        angle: int | float = 0,
+        angle: float = 0,
         pos: tuple[int, int] = (0, 0),
         mask: bool = False,
         rotate: bool = False
@@ -31,23 +31,23 @@ class Base(pygame.sprite.Sprite):
         th._x, th._y = pos
 
     @property
-    def x(th) -> int | float:
+    def x(th) -> float:
         return th._x
 
     @x.setter
     def x(th,
-        value: int | float
+        value: float
     ) -> None:
         th._x = value
         th.rect.centerx = th._x
 
     @property
-    def y(th) -> int | float:
+    def y(th) -> float:
         return th._y
 
     @y.setter
     def y(th,
-        value: int | float
+        value: float
     ) -> None:
         th._y = value
         th.rect.centery = th._y
@@ -98,8 +98,8 @@ class Invinc:
 
 
 def move(
-    value: int | float,
-    speed: tuple[int | float, int | float],
+    value: float,
+    speed: tuple[float, float],
     forward: bool,
     backward: bool,
     change: bool

@@ -141,7 +141,7 @@ def start_menu(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ['Ver 1.1.0', '', '', '', '']
-    key = ["C 日志", "Q 退了", "Z 开玩", ""]
+    key = ["C 日志", "Q 退了", "Z 开玩"]
 
     full_menu(screen, title, text, key, other)
 
@@ -156,7 +156,7 @@ def save_menu(screen: pg.Surface):
         f"拾形点率为 {GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61))}",
         f"使用了 {GLOBAL.flashed} 次形闪"
     ]
-    key = ["Ent 记录", "Esc 算了", "", ""]
+    key = ["Ent 记录", "Esc 算了", ""]
 
     full_menu(screen, title, text, key, name)
 
@@ -177,7 +177,7 @@ def check_menu(screen: pg.Surface):
             f"拾形点率为 {log['Rate']}",
             f"使用了 {log['Flash']} 次形闪"
         ]
-        key = ["Del 丢掉", "Esc 合上", "<-- 上页", "--> 下页"]
+        key = ["Del 丢掉", "Esc 合上", "<-> 翻页"]
 
         full_menu(screen, title, text, key, f"谢谢 {log['Name']} 的帮助")
     except:
@@ -200,8 +200,7 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
         [
             {"sprite": font.render(key[0], False, color_dict[6]).convert_alpha(), "pos": (276, 219)},
             {"sprite": font.render(key[1], False, color_dict[6]).convert_alpha(), "pos": (276, 269)},
-            {"sprite": font.render(key[2], False, color_dict[6]).convert_alpha(), "pos": (276, 169)},
-            {"sprite": font.render(key[3], False, color_dict[6]).convert_alpha(), "pos": (276, 119)}
+            {"sprite": font.render(key[2], False, color_dict[6]).convert_alpha(), "pos": (276, 169)}
         ]
     )
 
@@ -285,10 +284,10 @@ def key_event():
         if event.type == pg.QUIT:
             sys.exit()
         elif event.type == pg.KEYUP:
-            if not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keyup_game_dict:
+            if not GLOBAL.is_summary and GLOBAL.is_level_load and event.key in keyup_game_dict:
                 keyup_game_dict[event.key]()
         elif event.type == pg.KEYDOWN:
-            for condition, handler in [
+            event_list = [
                 (
                     lambda: GLOBAL.is_check and event.key in keydown_check_dict,
                     lambda: (keydown_check_dict[event.key](), sound_cache["pick"].play())
@@ -317,7 +316,9 @@ def key_event():
                     lambda: not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_game_dict,
                     lambda: keydown_game_dict[event.key]()
                 )
-            ]:
+            ]
+
+            for condition, handler in event_list:
                 if condition() and not GLOBAL.is_exit:
                     handler()
 
@@ -368,7 +369,7 @@ def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, colo
     barrage_dict = {
         1: lambda: Sprite.circle_barrage(type, color, spawn_pos, locate, group),
         2: lambda: Sprite.polygon_barrage(type, color, spawn_pos, locate, group),
-        3: lambda: Sprite.line_barrage(color, (randint(120, 465), 15), (locate[0] + randint(-15, 15), locate[1] + 15), group),
+        3: lambda: Sprite.line_barrage(color, (randint(120, 465), 15), (locate[0] + randint(-32, 32), locate[1] + 15), group),
         4: lambda: Sprite.point_barrage(type, color, locate, group)
     }
 
@@ -405,7 +406,7 @@ def item_collide():
                 GLOBAL.flash += 1
                 GLOBAL.combo += 1
 
-                Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[("extend", color_dict[6])], text_cache[("extend", color_dict[2])], GLOBAL.particle_group)
+                Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, "Extend", color_dict[6], color_dict[2], GLOBAL.particle_group)
 
             GLOBAL.total_point += 1
             GLOBAL.game_total_point += 1
@@ -435,7 +436,7 @@ def barrage_collide(position):
 
 
 def bullet_collide():
-    collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False)
+    collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False, pg.sprite.collide_mask)
 
     for bullet, hit_bricks in collide.items():
         for brick in hit_bricks:
@@ -582,7 +583,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     ready = True
     timer = 0
     alpha = 0
-    line_color = color_dict[6]
     text_y = 343
     dx = 0
     text = font.render("点线 Project", False, color_dict[6])
@@ -620,7 +620,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                     alpha += 85
                 elif timer >= 300 and alpha > 0:
                     alpha -= 85
-            if timer >= 330 and line_color != color_dict[3]:
+            if timer == 330:
                 for i, j in (((8, -2), (482, 64)), ((-2, 64), (384, -2)), ((-2, 192), (448, -2)), ((128, -2), (-2, 320))):
                     points = []
     
@@ -648,7 +648,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     picture[6].fill((0, 0, 0, 0))
     picture[7].fill((0, 0, 0))
 
-    del ready, line_color, text_y, dx, text
+    del ready, text_y, dx, text
 
     alpha = 255
     timer = 0
@@ -663,7 +663,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.major.power = GLOBAL.power
                 GLOBAL.item_spawn_timer = spawn(GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_timer)
                 if GLOBAL.combo_timer <= 1 and GLOBAL.combo > 0:
-                    Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, text_cache[(2 ** GLOBAL.combo, color_dict[6])], text_cache[(2 ** GLOBAL.combo, color_dict[7])], GLOBAL.particle_group)
+                    Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, f"{2 ** GLOBAL.combo}", color_dict[6], color_dict[7], GLOBAL.particle_group)
                 GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = combo(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.plane_group.update()

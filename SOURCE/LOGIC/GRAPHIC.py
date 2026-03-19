@@ -39,7 +39,7 @@ class Change:
 class Draw:
     @staticmethod
     def rectangle(
-        size: tuple[int | float, int | float],
+        size: tuple[float, float],
         border: int | float,
         color: tuple[int, int, int],
         radius: tuple[int, int, int, int] = (-1, -1, -1, -1)
@@ -51,15 +51,15 @@ class Draw:
 
     @staticmethod
     def circle(
-        xy_size: tuple[int | float, int | float, int | float, int | float],
-        border: int | float,
+        xy_size: tuple[float, float, float, float],
+        border: float,
         color: tuple[int, int, int]
     ) -> pygame.Surface:
         return (
             surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA),
             pygame.draw.ellipse(surface, color, xy_size, border)
         )[0]
-    
+
 
 class FPSGetter:
     def __init__(th,
