@@ -112,14 +112,13 @@ class Item(Base):
 
 
 class Line(Base):
-    def __init__(th, size: tuple, damage: int, angle: int, pos: tuple, color: tuple, target_color: tuple, group: pg.sprite.Group, mask: bool):
-        super().__init__(line_cache[(size, angle, color)], group, form="line", pos=pos, mask=mask)
+    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group, mask: bool):
+        super().__init__(image, group, form="line", pos=pos, mask=mask)
 
-        th.size = size
-        th.angle = angle
-        th.damage = damage
         th.color = color
         th.target_color = target_color
+        th.damage = damage
+        th.target_image = target_image
         th.timer = 0
 
     def update(th):
@@ -127,26 +126,34 @@ class Line(Base):
 
         if th.timer >= 68:
             th.kill()
-        elif th.timer >= 45 and th.color != th.target_color:
+        elif th.timer >= 45 and th.image != th.target_image:
             th.color = th.target_color
-            th.image = line_cache[(th.size, th.angle, th.color)]
+            th.image = th.target_image
 
 
 def line_barrage(color: list, current: tuple, target: tuple, group: pg.sprite.Group):
-    start_pos = current
-    end_pos = (-target[0], -target[1])
-    delta_pos = add(end_pos, start_pos)
-    pos = (start_pos[0] - delta_pos[0] / 2, start_pos[1] - delta_pos[1] / 2)
-    angle = approximate(bearing(-delta_pos[0], -delta_pos[1]))
+    points = []
+    current = current
+    target = target
+    
+    while True:
+        points.append(current)
 
-    Line(512, 0, angle, pos, color[1], color[2], group, True)
+        if math.dist(current, target) < 1e-6:
+            break
+
+        current = vector(current, target, 3)[0]
+
+    for pos in points:
+        Line(color[1], color[2], 0, pos, particle_cache[((3, 3), color[1])], particle_cache[((3, 3), color[2])], group, False)
 
 
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = approximate(randint(0, 360))
+        rands = choice([64, 128, 192])
         
-        Line(choice([72, 144, 216]), 6, angle, spawn_pos, color_dict[5], color_dict[9], group, True)
+        Line(color_dict[5], color_dict[9], 6, spawn_pos, line_cache[(rands, angle, color_dict[5])], line_cache[(rands, angle, color_dict[9])], group, True)
 
 
 def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):

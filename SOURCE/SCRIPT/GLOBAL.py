@@ -28,14 +28,12 @@ wait_load_timer = 0
 name = ''
 
 
-power = 0
-
-
 item_spawn_timer = 0
 combo_timer = 120
 combo = 0
 
 
+power = 0
 flash = 3
 unflash = 1
 score = 0
@@ -61,9 +59,6 @@ brick_group = pg.sprite.Group()
 item_group = pg.sprite.Group()
 barrage_group = pg.sprite.Group()
 particle_group = pg.sprite.Group()
-
-
-fps = None
 
 
 json_files = get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')

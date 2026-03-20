@@ -56,7 +56,7 @@ def rotate(
 def approximate(
     value: float,
     limit: int = 180,
-    step: int = 6
+    step: int = 10
 ) -> int:
     return 0 if (rounded := round((value % limit) / step) * step) == limit else rounded
 

@@ -74,7 +74,7 @@ keyup_game_dict = {
 }
 
 
-def situation(screen: pg.Surface):
+def situation(screen: pg.Surface, clock: pg.time.Clock):
     text = [
         f"分　{GLOBAL.score:9d}",
         f"形　{GLOBAL.power:02d} , {GLOBAL.total_point:02d}",
@@ -82,7 +82,7 @@ def situation(screen: pg.Surface):
         f"连　{GLOBAL.combo:02d} , {(GLOBAL.major.bullets if GLOBAL.major is not None else 0):02d}"
     ]
 
-    ui(screen, text, f"{GLOBAL.fps.fps} FPS")
+    ui(screen, text, f"{int(clock.get_fps())} FPS")
 
 
 def pause_menu(screen: pg.Surface):
@@ -417,10 +417,8 @@ def item_collide():
 
 
 def barrage_collide(position):
-    collide = pg.sprite.spritecollide(GLOBAL.major.decision_box, GLOBAL.barrage_group, False, pg.sprite.collide_mask)
-
-    for barrage in collide:
-        if barrage.color != color_dict[6]:
+    for barrage in GLOBAL.barrage_group:
+        if barrage.color != color_dict[6] and barrage.rect.collidepoint(GLOBAL.major.rect.center):
             if not GLOBAL.major.collided.condition and not GLOBAL.major.divided.condition:
                 GLOBAL.major.collided.condition = True
                 GLOBAL.unflash = 0
@@ -542,7 +540,7 @@ def wait(timer: int, loaded: bool, end: int, load: object, *args) -> tuple:
     return timer, loaded
 
 
-def display(screen: pg.Surface):
+def display(screen: pg.Surface, clock: pg.time.Clock):
     if GLOBAL.is_run:
         screen.blit(picture[GLOBAL.stage], (120, 15))
 
@@ -555,7 +553,7 @@ def display(screen: pg.Surface):
             GLOBAL.particle_group.draw(screen)
             GLOBAL.barrage_group.draw(screen)
 
-    for condition, func in [
+    menu_list = [
         (lambda: GLOBAL.is_check, check_menu),
         (lambda: not GLOBAL.is_run, start_menu),
         (lambda: GLOBAL.is_pause, pause_menu),
@@ -563,14 +561,16 @@ def display(screen: pg.Surface):
         (lambda: GLOBAL.is_talk, talk_menu),
         (lambda: GLOBAL.is_summary, summary_menu),
         (lambda: GLOBAL.is_save, save_menu)
-    ]:
+    ]
+
+    for condition, func in menu_list:
         if condition() and not GLOBAL.is_exit:
             func(screen)
 
             break
 
     screen.blit(picture[6], (0, 0))
-    situation(screen)
+    situation(screen, clock)
 
 
 def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
@@ -578,7 +578,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     GLOBAL.level = clamp(args[1], 1, 6)
     GLOBAL.flash = clamp(args[2], 1, 96)
     GLOBAL.power = clamp(args[3], 0, 32)
-    GLOBAL.fps = FPSGetter(clock)
 
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
@@ -616,7 +615,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             if not GLOBAL.is_level_load:
                 GLOBAL.wait_load_timer, GLOBAL.is_level_load = wait(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
 
-        display(screen)
+        display(screen, clock)
 
         if GLOBAL.is_exit:
             if timer % 30 == 0 and alpha < 255:
@@ -640,4 +639,3 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
         pg.display.flip()
         clock.tick(60)
-        GLOBAL.fps.update()

@@ -52,7 +52,7 @@ picture = {
 
 barrage_cache = {
     **{(2, color_dict[i]): Draw.circle((0, 0, 8, 8), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
-    (0, color_dict[2]): (surface := basic_image.subsurface((75, 7, 8, 8)), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
+    (0, color_dict[2]): (surface := basic_image.subsurface((75, 7, 8, 8)).copy(), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
     (0, color_dict[6]): basic_image.subsurface((75, 7, 8, 8))
 }
 
@@ -73,10 +73,10 @@ bullet_cache = {
 
 
 line_cache = {
-    (length, angle, color): pg.transform.rotate(Draw.rectangle((3, 512) if length == 512 else (2, length), 0, color).convert_alpha(), angle)
-    for length in [72, 144, 216, 512]
-    for angle in range(0, 180, 6)
-    for color in ([color_dict[6], color_dict[3]] if length == 512 else [color_dict[5], color_dict[9]])
+    (length, angle, color): pg.transform.rotate(Draw.rectangle((2, length), 0, color).convert_alpha(), angle)
+    for length in [64, 128, 192]
+    for angle in range(0, 180, 10)
+    for color in ([color_dict[5], color_dict[9]])
 }
 
 
@@ -87,7 +87,7 @@ particle_cache = {
     ((9, 9), color_dict[5]): Draw.rectangle((9, 9), 0, color_dict[5]).convert(),
     ((3, 3), color_dict[3]): Draw.rectangle((3, 3), 0, color_dict[3]).convert(),
     **{((3 * i, 3 * i), color_dict[6]): Draw.rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
-    **{((2, 2), color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 8)}
+    **{((2, 2), color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
 }
 
 

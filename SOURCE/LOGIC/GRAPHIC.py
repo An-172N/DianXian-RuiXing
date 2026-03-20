@@ -59,28 +59,3 @@ class Draw:
             surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA),
             pygame.draw.ellipse(surface, color, xy_size, border)
         )[0]
-
-
-class FPSGetter:
-    def __init__(th,
-        clock: pygame.time.Clock,
-        interval: int = 500,
-        bit: int = 0
-    ) -> None:
-        th.clock = clock
-        th.interval = interval
-        th.bit = bit
-
-        th._last_time = pygame.time.get_ticks()
-        th._fps = f"{th._last_time}"
-
-    @property
-    def fps(th) -> str:
-        return th._fps
-
-    def update(th) -> None:
-        current_time = pygame.time.get_ticks()
-
-        if current_time - th._last_time >= th.interval:
-            th._fps = f"{th.clock.get_fps():.{th.bit}f}"
-            th._last_time = current_time

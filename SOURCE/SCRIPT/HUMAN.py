@@ -446,7 +446,6 @@ class Kli(Base):
         th.group = group[0]
         th.particle_group = group[1]
         th.color = color_dict[5]
-        th.decision_box = Sprite.Rect(particle_cache[((2, 2), color_dict[7])], group[2], pos=(292, 332), mask=True)
         th.collided = Invinc(180, 6)
         th.divided = Invinc(180, 4, th.reset_bullet)
         th.bomb_bullets = 0
@@ -513,7 +512,6 @@ class Kli(Base):
         th.y = 331 if th.is_fast else 332
         keep_x = clamp(th.x, window.left, window.right)
         th.x = keep_x
-        th.decision_box.rect.center = (keep_x, th.y)
         th.divided.update()
         th.collided.update()
 
