@@ -199,11 +199,10 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
     (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
     GLOBAL.pop_timer += 1
-    menu = pop(backdrop, group, GLOBAL.pop_timer, interval)
 
     if GLOBAL.pop_timer == interval[2]:
         sound_cache["pick"].play()
-    surface.blit(menu, (120, 15))
+    surface.blit(pop(backdrop, group, GLOBAL.pop_timer, interval), (120, 15))
 
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
@@ -214,11 +213,10 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
     )
     (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
     GLOBAL.pop_timer += 1
-    menu = pop(backdrop, group, GLOBAL.pop_timer, interval)
 
     if GLOBAL.pop_timer == interval[2]:
         sound_cache["pick"].play()
-    surface.blit(menu, (120, 15))
+    surface.blit(pop(backdrop, group, GLOBAL.pop_timer, interval), (120, 15))
 
 
 def ui(surface: pg.Surface, text: list, fps: str):
@@ -231,9 +229,7 @@ def ui(surface: pg.Surface, text: list, fps: str):
     ]
 
     for text_info in text_type:
-        text = font.render(f"{text_info['text']}", False, color_dict[6])
-
-        surface.blit(text, text_info["pos"])
+        surface.blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
 
 
 def save_file():
@@ -259,13 +255,10 @@ def summary_logic():
         GLOBAL.stage, GLOBAL.level = follow((GLOBAL.stage, GLOBAL.level), 6)
         GLOBAL.unflash += 1
 
-    def close_summary(numbers: tuple, final: object, proceed: object, *args):
-        return final(*args) if numbers[0][0] >= numbers[1][0] and numbers[0][1] == numbers[1][1] else proceed(*args)
-
     GLOBAL.score += GLOBAL.score_summary(GLOBAL.total_point, GLOBAL.power, GLOBAL.unflash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level))
     GLOBAL.is_summary = False
 
-    close_summary(((GLOBAL.stage, GLOBAL.level), (3, 6)), lambda: setattr(GLOBAL, 'is_save', True), level_logic)
+    GLOBAL.is_save = True if GLOBAL.stage >= 3 and GLOBAL.level == 6 else level_logic()
 
     GLOBAL.pop_timer = 0
 
@@ -295,13 +288,6 @@ def key_event():
 
 
 def mode_one():
-    GLOBAL.is_pause = False
-    GLOBAL.is_summary = False
-    GLOBAL.is_talk = False
-    GLOBAL.is_save = False
-    GLOBAL.is_level_load = False
-    GLOBAL.pop_timer = 0
-
     GLOBAL.item_group.empty()
     GLOBAL.brick_group.empty()
     GLOBAL.plane_group.empty()
@@ -309,6 +295,11 @@ def mode_one():
     GLOBAL.particle_group.empty()
     GLOBAL.barrage_group.empty()
 
+    GLOBAL.is_pause = False
+    GLOBAL.is_summary = False
+    GLOBAL.is_talk = False
+    GLOBAL.is_save = False
+    GLOBAL.is_level_load = False
     GLOBAL.major = Kli(GLOBAL.bullet_group, GLOBAL.particle_group, GLOBAL.plane_group)
     GLOBAL.total_point = 0
     GLOBAL.item_spawn_timer = 0
@@ -316,6 +307,7 @@ def mode_one():
     GLOBAL.combo_timer = 120
     GLOBAL.text_part = 0
     GLOBAL.text_number = 0
+    GLOBAL.pop_timer = 0
 
 
 def mode_two():
@@ -347,7 +339,7 @@ def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, colo
 
 
 def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
-    process_dict = {
+    blast_dict = {
         1: lambda: Sprite.circle_brick(group, spawn_pos[3]),
         2: lambda: Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2]),
         3: lambda: Sprite.line_brick(group, spawn_pos[3]),
@@ -355,7 +347,7 @@ def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tup
     }
 
     if color[0] == color_dict[6]:
-        process_dict.get(stage)()
+        blast_dict.get(stage)()
 
 
 def item_collide():
@@ -384,8 +376,8 @@ def item_collide():
 
 
 def barrage_collide(position):
-    for barrage in GLOBAL.barrage_group:
-        if barrage.color != color_dict[6] and barrage.rect.collidepoint(GLOBAL.major.rect.center):
+    for barrage in pygame.sprite.spritecollide(GLOBAL.major, GLOBAL.barrage_group, dokill=False, collided=pygame.sprite.collide_circle):
+        if barrage.color != color_dict[6]:
             if not GLOBAL.major.collided.condition and not GLOBAL.major.divided.condition:
                 GLOBAL.major.collided.condition = True
                 GLOBAL.unflash = 0
@@ -408,7 +400,6 @@ def bullet_collide():
                 brick.hp -= bullet.damage
             if brick.hp <= 0:
                 if not brick.is_die:
-                    Sprite.spawn_particles(GLOBAL.particle_group, 2, brick.rect.center, (4, 8), brick.color, color_dict[6])
                     if hasattr(brick, "free"):
                         GLOBAL.text_part += 1
                         GLOBAL.text_number = 0
@@ -424,6 +415,7 @@ def bullet_collide():
                     if hasattr(brick, "flash"):
                         spawn(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
                     brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
+                    Sprite.spawn_particles(GLOBAL.particle_group, 2, brick.rect.center, (4, 8), brick.color, color_dict[6])
                     brick.kill()
 
                 brick.is_die = True
@@ -539,12 +531,11 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     GLOBAL.level = clamp(args[1], 1, 6)
     GLOBAL.flash = clamp(args[2], 1, 96)
     GLOBAL.power = clamp(args[3], 0, 32)
+    alpha = 255
+    timer = 0
 
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
-
-    alpha = 255
-    timer = 0
 
     while True:
         key_event()
@@ -565,14 +556,12 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.item_group.update()
                 GLOBAL.particle_group.update()
                 GLOBAL.brick_group.update()
-
                 barrage_collide(GLOBAL.major.rect.center)
                 bullet_collide()
+                item_collide()
 
                 if len(GLOBAL.brick_group) == 0 and len(GLOBAL.item_group) == 0 and not GLOBAL.is_talk:
                     GLOBAL.is_summary = True
-
-                item_collide()
             if not GLOBAL.is_level_load:
                 GLOBAL.wait_load_timer, GLOBAL.is_level_load = wait(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
 
@@ -585,7 +574,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
 
             picture[7].set_alpha(alpha)
             screen.blit(picture[7])
-
             if timer <= -30:
                 sys.exit()
         elif alpha > 0 and not GLOBAL.is_exit:

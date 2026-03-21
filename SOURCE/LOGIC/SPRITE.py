@@ -16,12 +16,14 @@ class Base(pygame.sprite.Sprite):
         angle: float = 0,
         pos: tuple[int, int] = (0, 0),
         mask: bool = False,
-        rotate: bool = False
+        rotate: bool = False,
+        radius: int = 0
     ) -> None:
         super().__init__(*group)
 
         th.image = pygame.transform.rotate(image, angle) if rotate else image
         th.rect = th.image.get_rect(center=pos)
+        th.radius = min(th.rect.width, th.rect.height) // 2 if not radius else radius
         th.angle = angle
         if mask:
             th.mask = pygame.mask.from_surface(th.image)
