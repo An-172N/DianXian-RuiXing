@@ -12,7 +12,7 @@ def record(
     content: tuple[str, str],
     encoding: str = 'utf-8'
 ) -> None:
-    def return_path_with_makedir(
+    def get_path_and_makedir(
         folder: str,
         file: str
     ) -> str:
@@ -26,7 +26,7 @@ def record(
         dump.append(content[1])
     )[0]
 
-    with open(return_path_with_makedir(folder, file), 'w', encoding=encoding) as f:
+    with open(get_path_and_makedir(folder, file), 'w', encoding=encoding) as f:
         return json.dump(dump, f, indent=4)
 
 

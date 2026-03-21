@@ -90,7 +90,7 @@ class Bullet(Base):
 
 
 class Item(Base):
-    def __init__(th, type: str, speed: float, pos: tuple, *group: pg.sprite.Group, size: tuple=(0, 0), color: tuple=(0, 0, 0)):
+    def __init__(th, type: str, speed: float, pos: tuple, *group: pg.sprite.Group, size: int=0, color: tuple=(0, 0, 0)):
         super().__init__(item_cache[type] if type != "char" else particle_cache[(size, color)], *group, form=type, pos=pos)
 
         th.speed = speed
@@ -145,7 +145,7 @@ def line_barrage(color: list, current: tuple, target: tuple, group: pg.sprite.Gr
         current = vector(current, target, 3)[0]
 
     for pos in points:
-        Line(color[1], color[2], 0, pos, particle_cache[((3, 3), color[1])], particle_cache[((3, 3), color[2])], group, False)
+        Line(color[1], color[2], 0, pos, particle_cache[(3, color[1])], particle_cache[(3, color[2])], group, False)
 
 
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
@@ -235,7 +235,7 @@ def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group)
         Barrage(effective, type, 4, color[0], angle, pos, barrage_cache[(type, color[0])], group, rotate=False)
 
 
-def spawn_particles(group: pg.sprite.Group, size: tuple, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):
+def spawn_particles(group: pg.sprite.Group, size: int, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):
     rands = randint(0, 45)
 
     for i in range(0 + rands, 360 + rands, 45):

@@ -199,7 +199,6 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
     (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
     GLOBAL.pop_timer += 1
-
     menu = pop(backdrop, group, GLOBAL.pop_timer, interval)
 
     if GLOBAL.pop_timer == interval[2]:
@@ -213,10 +212,8 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
         [{"text": text[0], "pos": (8, 59)}],
         [{"text": text[1], "pos": (8, 84)}]
     )
-
     (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
     GLOBAL.pop_timer += 1
-
     menu = pop(backdrop, group, GLOBAL.pop_timer, interval)
 
     if GLOBAL.pop_timer == interval[2]:
@@ -397,7 +394,7 @@ def barrage_collide(position):
                 if GLOBAL.flash == 0:
                     GLOBAL.is_save = True
 
-                Sprite.spawn_particles(GLOBAL.particle_group, (9, 9), position, (10, 16), color_dict[5], color_dict[6])
+                Sprite.spawn_particles(GLOBAL.particle_group, 9, position, (10, 16), color_dict[5], color_dict[6])
                 sound_cache["fire"].play()
 
             barrage.kill()
@@ -411,7 +408,7 @@ def bullet_collide():
                 brick.hp -= bullet.damage
             if brick.hp <= 0:
                 if not brick.is_die:
-                    Sprite.spawn_particles(GLOBAL.particle_group, (2, 2), brick.rect.center, (4, 8), brick.color, color_dict[6])
+                    Sprite.spawn_particles(GLOBAL.particle_group, 2, brick.rect.center, (4, 8), brick.color, color_dict[6])
                     if hasattr(brick, "free"):
                         GLOBAL.text_part += 1
                         GLOBAL.text_number = 0
@@ -449,7 +446,7 @@ def sprite_loader():
     GLOBAL.pop_timer = 0
 
 
-def spawn(condition: bool, sprite: object, *args, group: pygame.sprite.Group = None, timer: int = 0) -> int:
+def spawn(condition: bool, sprite: object, *args, group: pg.sprite.Group = None, timer: int = 0) -> int:
     timer += 1
 
     if condition:
@@ -463,7 +460,7 @@ def spawn(condition: bool, sprite: object, *args, group: pygame.sprite.Group = N
     return timer
 
 
-def pop(surface: pygame.Surface, group: tuple, timer: int, interval: tuple) -> pygame.Surface:
+def pop(surface: pg.Surface, group: tuple, timer: int, interval: tuple) -> pg.Surface:
     for i in range(0, len(group)):
         if timer >= interval[i]:
             for j in group[i]:
@@ -489,7 +486,6 @@ def combo(timer: int, count: int, score: int, bonus: int, end: int) -> tuple:
     if timer <= 0:
         if count > 0:
             score += bonus
-
         count = 0
         timer = end
 
@@ -511,7 +507,6 @@ def wait(timer: int, loaded: bool, end: int, load: object, *args) -> tuple:
 def display(screen: pg.Surface, clock: pg.time.Clock):
     if GLOBAL.is_run:
         screen.blit(picture[GLOBAL.stage], (120, 15))
-
         if GLOBAL.is_level_load:
             GLOBAL.bullet_group.draw(screen)
             if GLOBAL.major is not None and GLOBAL.major.collided.visitable and GLOBAL.major.divided.visitable:
@@ -586,7 +581,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
         if GLOBAL.is_exit:
             if timer % 30 == 0 and alpha < 255:
                 alpha += 85
-
             timer -= 1
 
             picture[7].set_alpha(alpha)
@@ -597,11 +591,10 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
         elif alpha > 0 and not GLOBAL.is_exit:
             if timer % 30 == 0 and alpha > 0:
                 alpha -= 85
+            timer += 1
 
             picture[7].set_alpha(alpha)
             screen.blit(picture[7])
-
-            timer += 1
 
         pg.display.flip()
         clock.tick(60)

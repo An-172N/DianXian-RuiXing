@@ -113,7 +113,7 @@ class Ono(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -215,7 +215,7 @@ class Hro(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot and not th.is_choose:
@@ -306,11 +306,11 @@ class Nre(Basic):
                     two_point = add((th.x, th.y), (-pos[0], -pos[1]))
                     angle = bearing(-two_point[0], -two_point[1])
 
-                    Sprite.Barrage(effective, None, 3, color_dict[6], angle, pos, particle_cache[((9, 9), color_dict[6])], th.particle_group, False)
+                    Sprite.Barrage(effective, None, 3, color_dict[6], angle, pos, particle_cache[(9, color_dict[6])], th.particle_group, False)
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -432,7 +432,7 @@ class Qdi(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(Draw.rectangle((2, 2), 0, color_dict[8]).convert(), pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y), mask=False)
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -508,17 +508,15 @@ class Kli(Base):
             th.free()
 
         th.image = Change.swivel(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
-        if th.is_move_left:
-            th.x = vector(th.rect.center, (window.left, th.y), 8 if th.is_fast else 3)[0][0]
-        elif th.is_move_right:
-            th.x = vector(th.rect.center, (window.right, th.y), 8 if th.is_fast else 3)[0][0]
+        if th.is_move_left or th.is_move_right:
+            th.x = vector(th.rect.center, (window.left if th.is_move_left else window.right if th.is_move_right else th.x, th.y), 8 if th.is_fast else 3)[0][0]
         th.y = 331 if th.is_fast else 332
         th.divided.update()
         th.collided.update()
 
         if th.is_shoot and th.bullets > 0:
             th.fire()
-            Sprite.spawn_particles(th.particle_group, (2, 2), th.rect.center, (4, 8), th.color)
+            Sprite.spawn_particles(th.particle_group, 2, th.rect.center, (4, 8), th.color)
 
             th.bullets -= 1
 

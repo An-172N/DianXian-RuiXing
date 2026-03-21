@@ -86,10 +86,10 @@ item_cache = {i: Draw.rectangle((9, 9), 2, color_dict[j]).convert() for i, j in 
 
 
 particle_cache = {
-    ((9, 9), color_dict[5]): Draw.rectangle((9, 9), 0, color_dict[5]).convert(),
-    ((3, 3), color_dict[3]): Draw.rectangle((3, 3), 0, color_dict[3]).convert(),
-    **{((3 * i, 3 * i), color_dict[6]): Draw.rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
-    **{((2, 2), color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
+    (9, color_dict[5]): Draw.rectangle((9, 9), 0, color_dict[5]).convert(),
+    (3, color_dict[3]): Draw.rectangle((3, 3), 0, color_dict[3]).convert(),
+    **{(3 * i, color_dict[6]): Draw.rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
+    **{(2, color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
 }
 
 
