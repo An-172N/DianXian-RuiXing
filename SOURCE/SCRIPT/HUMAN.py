@@ -234,7 +234,7 @@ class Nre(Basic):
         if th.timer == 0:
             for i in range(th.locate[0] - 30, th.locate[0] + 31, 20):
                 start_pos = (i, 15)
-                end_pos = (i, 360)
+                end_pos = (i, 345)
 
                 Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
@@ -243,7 +243,7 @@ class Nre(Basic):
     def free(th):
         if th.bullets < 16:
             start_pos = (randint(120, 465), 15)
-            end_pos = (randint(120, 465), 360)
+            end_pos = (randint(120, 465), 345)
 
             Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
@@ -256,7 +256,7 @@ class Nre(Basic):
         if th.bullets < 8 and th.timer % 3 == 0:
             for j in (1, -1):
                 start_pos = (th.interval_locate[0] + th.bullets * j * 22, 15)
-                end_pos = ((th.interval_locate[0] + th.bullets * j * 22), 360)
+                end_pos = ((th.interval_locate[0] + th.bullets * j * 22), 345)
 
                 Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
@@ -273,14 +273,14 @@ class Nre(Basic):
     def final(th):
         if th.bullets < 12 and th.timer % 2 == 0:
             start_pos = (220 + th.bullets * 24, 15)
-            end_pos = ((320 + th.bullets * 24), 360)
+            end_pos = ((320 + th.bullets * 24), 345)
 
             Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
             if th.bullets < 6:
                 for i in (120, 465):
                     start_pos = (i, 15)
-                    end_pos = (292 + th.bullets * choice([30, -30]), 360)
+                    end_pos = (292 + th.bullets * choice([30, -30]), 345)
 
                     Sprite.line_barrage([None, color_dict[6], color_dict[3]], start_pos, end_pos, th.group)
 
@@ -508,10 +508,11 @@ class Kli(Base):
             th.free()
 
         th.image = Change.swivel(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
-        th.x = move(th.x, (3, 8), th.is_move_left, th.is_move_right, th.is_fast)
+        if th.is_move_left:
+            th.x = vector(th.rect.center, (window.left, th.y), 8 if th.is_fast else 3)[0][0]
+        elif th.is_move_right:
+            th.x = vector(th.rect.center, (window.right, th.y), 8 if th.is_fast else 3)[0][0]
         th.y = 331 if th.is_fast else 332
-        keep_x = clamp(th.x, window.left, window.right)
-        th.x = keep_x
         th.divided.update()
         th.collided.update()
 

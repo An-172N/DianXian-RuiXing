@@ -17,17 +17,18 @@ window = pg.Rect(120, 15, 345, 330)
 effective = pg.Rect(105, 0, 375, 360)
 
 
-color_dict = {
-    1: (255, 128, 0),
-    2: (0, 255, 0),
-    3: (128, 0, 128),
-    4: (251, 234, 18),
-    5: (45, 194, 229),
-    6: (255, 255, 255),
-    7: (128, 128, 128),
-    8: (0, 0, 0),
-    9: (32, 0, 128)
-}
+color_dict = (
+    None,
+    (255, 128, 0),
+    (0, 255, 0),
+    (128, 0, 128),
+    (251, 234, 18),
+    (45, 194, 229),
+    (255, 255, 255),
+    (128, 128, 128),
+    (0, 0, 0),
+    (32, 0, 128)
+)
 
 
 asset = lambda path: get_data(__name__, path)
@@ -42,12 +43,13 @@ sound_cache = {
 
 char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alpha()
 basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
-picture = {
-    **{i: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE{i}BG.png'))).convert() for i in range(1, 5)},
-    5: pg.Surface((345, 330)).convert(),
-    6: pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
-    7: pg.Surface((480, 360)).convert()
-}
+picture = (
+    None,
+    *[pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE{i}BG.png'))).convert() for i in range(1, 5)],
+    pg.Surface((345, 330)).convert(),
+    pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
+    pg.Surface((480, 360)).convert()
+)
 
 
 barrage_cache = {

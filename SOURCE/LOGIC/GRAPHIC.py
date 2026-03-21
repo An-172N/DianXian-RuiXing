@@ -20,21 +20,6 @@ class Change:
         else:
             return original_image
 
-    @staticmethod
-    def color(
-        surface: pygame.Surface,
-        color: tuple[int, int, int]
-    ) -> pygame.Surface:
-        width, height = surface.get_size()
-
-        for x in range(width):
-            for y in range(height):
-                alpha = surface.get_at((x, y))[3]
-
-                surface.set_at((x, y), (*color, alpha))
-
-        return surface
-
 
 class Draw:
     @staticmethod

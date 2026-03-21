@@ -97,21 +97,6 @@ class Invinc:
                 th._visitable = (th._timer // th.blink_interval) % 2 == 1
 
 
-def move(
-    value: float,
-    speed: tuple[float, float],
-    forward: bool,
-    backward: bool,
-    change: bool
-) -> int | float:
-    if forward:
-        value -= speed[1] if change else speed[0]
-    if backward:
-        value += speed[1] if change else speed[0]
-
-    return value
-
-
 def bomb(
     condition: bool,
     power: int,

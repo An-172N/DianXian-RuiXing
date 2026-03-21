@@ -93,10 +93,8 @@ def pause_menu(screen: pg.Surface):
 
 
 def load_menu(screen: pg.Surface):
-    stage_text = GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'
-
     title = "这一关是————"
-    text = [f"Stage {stage_text} - {GLOBAL.level} !!", "START!!!!"]
+    text = [f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} !!", "START!!!!"]
 
     half_menu(screen, title, text)
 
@@ -105,10 +103,9 @@ def talk_menu(screen: pg.Surface):
     try:
         text = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]
         human = text["char"]
-        contest1 = text["1"]
-        contest2 = text["2"] if "2" in text else ''
+        content = [text["1"], text["2"] if "2" in text else '']
 
-        half_menu(screen, human, [contest1, contest2], (0, 6, 12))
+        half_menu(screen, human, content, (0, 6, 12))
     except KeyError:
         GLOBAL.is_talk = False
 
@@ -117,9 +114,7 @@ def summary_menu(screen: pg.Surface):
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Clear! {'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
     text = [
         f"得点 {GLOBAL.total_point} * 512 = {GLOBAL.total_point * 512}",
-        f"无闪 {GLOBAL.unflash} * 4096 = {GLOBAL.unflash * 4096}"
-    ]
-    over = [
+        f"无闪 {GLOBAL.unflash} * 4096 = {GLOBAL.unflash * 4096}",
         f"面数 {GLOBAL.stage} * 16384 = {GLOBAL.stage * 16384}",
         f"形力 {GLOBAL.power} / 32 * 8192 = {int(GLOBAL.power / 32 * 8192)}",
         ""
@@ -130,11 +125,9 @@ def summary_menu(screen: pg.Surface):
         3: "午夜行至最高峰 ~ Thunder Studio",
         4: "享受禁饮 ~ Point's Hideaway"
     }
+    key = ["", "Z 继续", "", ""]
 
-    if GLOBAL.level <= 5:
-        half_menu(screen, stage, text)
-    else:
-        full_menu(screen, stage, text + over, ["", "Z 继续", "", ""], title.get(GLOBAL.stage))
+    half_menu(screen, stage, [text[0], text[1]]) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
 
 
 def start_menu(screen: pg.Surface):
@@ -152,9 +145,9 @@ def save_menu(screen: pg.Surface):
     text = [
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {GLOBAL.score} 分",
-        f"最远到达的地方是 {GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'} - {GLOBAL.level} 站",
+        f"最远到达的地方是 {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} 站",
         f"拾形点率为 {GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61))}",
-        f"使用了 {GLOBAL.flashed} 次形闪"
+        f"使用了 {GLOBAL.flashed} 次形闪{'（用完了' if GLOBAL.flash == 0 else ''}"
     ]
     key = ["Ent 记录", "Esc 算了", ""]
 
@@ -175,7 +168,7 @@ def check_menu(screen: pg.Surface):
             f"得到了 {log['Score']} 分",
             f"最远到达的地方是 {log['Stage']} 站",
             f"拾形点率为 {log['Rate']}",
-            f"使用了 {log['Flash']} 次形闪"
+            f"使用了 {log['Flashed']} 次形闪{'（用完了' if log['Flash'] == 0 else ''}"
         ]
         key = ["Del 丢掉", "Esc 合上", "<-> 翻页"]
 
@@ -186,22 +179,22 @@ def check_menu(screen: pg.Surface):
 
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
     group = (
-        [
-            {"sprite": font.render(title, False, color_dict[6]).convert_alpha(), "pos": (8, 9)},
-            {"sprite": font.render(other, False, color_dict[6]).convert_alpha(), "pos": (8, 304)}
-        ],
-        [
-            {"sprite": font.render(text[0], False, color_dict[6]).convert_alpha(), "pos": (8, 59)},
-            {"sprite": font.render(text[1], False, color_dict[6]).convert_alpha(), "pos": (8, 84)},
-            {"sprite": font.render(text[2], False, color_dict[6]).convert_alpha(), "pos": (8, 109)},
-            {"sprite": font.render(text[3], False, color_dict[6]).convert_alpha(), "pos": (8, 134)},
-            {"sprite": font.render(text[4], False, color_dict[6]).convert_alpha(), "pos": (8, 159)}
-        ],
-        [
-            {"sprite": font.render(key[0], False, color_dict[6]).convert_alpha(), "pos": (276, 219)},
-            {"sprite": font.render(key[1], False, color_dict[6]).convert_alpha(), "pos": (276, 269)},
-            {"sprite": font.render(key[2], False, color_dict[6]).convert_alpha(), "pos": (276, 169)}
-        ]
+        (
+            {"text": title, "pos": (8, 9)},
+            {"text": other, "pos": (8, 304)}
+        ),
+        (
+            {"text": text[0], "pos": (8, 59)},
+            {"text": text[1], "pos": (8, 84)},
+            {"text": text[2], "pos": (8, 109)},
+            {"text": text[3], "pos": (8, 134)},
+            {"text": text[4], "pos": (8, 159)}
+        ),
+        (
+            {"text": key[0], "pos": (276, 219)},
+            {"text": key[1], "pos": (276, 269)},
+            {"text": key[2], "pos": (276, 169)}
+        )
     )
 
     (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
@@ -216,9 +209,9 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
     group = (
-        [{"sprite": font.render(title, False, color_dict[6]).convert_alpha(), "pos": (8, 9)}],
-        [{"sprite": font.render(text[0], False, color_dict[6]).convert_alpha(), "pos": (8, 59)}],
-        [{"sprite": font.render(text[1], False, color_dict[6]).convert_alpha(), "pos": (8, 84)}]
+        [{"text": title, "pos": (8, 9)}],
+        [{"text": text[0], "pos": (8, 59)}],
+        [{"text": text[1], "pos": (8, 84)}]
     )
 
     (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
@@ -252,10 +245,11 @@ def save_file():
     dump_content = {
         'Name': GLOBAL.name,
         'Score': GLOBAL.score,
-        'Stage': f"{GLOBAL.stage if GLOBAL.stage <= 3 else f'Extra'} - {GLOBAL.level}",
+        'Stage': f"{GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level}",
         'Rate': GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61)),
-        'Flash': GLOBAL.flashed,
-        'Date': date_time[0]
+        'Flashed': GLOBAL.flashed,
+        'Date': date_time[0],
+        'Flash': GLOBAL.flash
     }
 
     record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', ("锐山抚形日志", dump_content))
@@ -287,42 +281,20 @@ def key_event():
             if not GLOBAL.is_summary and GLOBAL.is_level_load and event.key in keyup_game_dict:
                 keyup_game_dict[event.key]()
         elif event.type == pg.KEYDOWN:
-            event_list = [
-                (
-                    lambda: GLOBAL.is_check and event.key in keydown_check_dict,
-                    lambda: (keydown_check_dict[event.key](), sound_cache["pick"].play())
-                ),
-                (
-                    lambda: not GLOBAL.is_run and not GLOBAL.is_check and event.key in keydown_start_dict,
-                    lambda: (sound_cache["pick"].play(), keydown_start_dict[event.key]())
-                ),
-                (
-                    lambda: GLOBAL.is_save,
-                    lambda: ((keydown_over_dict[event.key]() if event.key in keydown_over_dict else setattr(GLOBAL, 'name', (GLOBAL.name + event.unicode)[:8])), sound_cache["pick"].play())
-                ),
-                (
-                    lambda: GLOBAL.is_pause and event.key in keydown_pause_dict,
-                    lambda: (keydown_pause_dict[event.key](), sound_cache["pick"].play())
-                ),
-                (
-                    lambda: GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict,
-                    lambda: (keydown_talk_dict[event.key](), sound_cache["pick"].play())
-                ),
-                (
-                    lambda: GLOBAL.is_summary,
-                    lambda: (summary_logic(), sound_cache["pick"].play()) if event.key == pg.K_z else None
-                ),
-                (
-                    lambda: not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_game_dict,
-                    lambda: keydown_game_dict[event.key]()
-                )
-            ]
-
-            for condition, handler in event_list:
-                if condition() and not GLOBAL.is_exit:
-                    handler()
-
-                    break
+            if GLOBAL.is_check and event.key in keydown_check_dict:
+                (keydown_check_dict[event.key](), sound_cache["pick"].play())
+            elif not GLOBAL.is_run and not GLOBAL.is_check and event.key in keydown_start_dict:
+                (sound_cache["pick"].play(), keydown_start_dict[event.key]())
+            elif GLOBAL.is_save:
+                ((keydown_over_dict[event.key]() if event.key in keydown_over_dict else setattr(GLOBAL, 'name', (GLOBAL.name + event.unicode)[:8])), sound_cache["pick"].play())
+            elif GLOBAL.is_pause and event.key in keydown_pause_dict:
+                (keydown_pause_dict[event.key](), sound_cache["pick"].play())
+            elif GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict:
+                (keydown_talk_dict[event.key](), sound_cache["pick"].play())
+            elif GLOBAL.is_summary:
+                (summary_logic(), sound_cache["pick"].play()) if event.key == pg.K_z else None
+            elif not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_game_dict:
+                keydown_game_dict[event.key]()
 
 
 def mode_one():
@@ -369,7 +341,7 @@ def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, colo
     barrage_dict = {
         1: lambda: Sprite.circle_barrage(type, color, spawn_pos, locate, group),
         2: lambda: Sprite.polygon_barrage(type, color, spawn_pos, locate, group),
-        3: lambda: Sprite.line_barrage(color, (randint(120, 465), 15), (locate[0] + randint(-32, 32), locate[1] + 15), group),
+        3: lambda: Sprite.line_barrage(color, (randint(120, 465), 15), (locate[0] + randint(-32, 32), 345), group),
         4: lambda: Sprite.point_barrage(type, color, locate, group)
     }
 
@@ -390,9 +362,7 @@ def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tup
 
 
 def item_collide():
-    collide = pg.sprite.spritecollide(GLOBAL.major, GLOBAL.item_group, False)
-
-    for item in collide:
+    for item in pg.sprite.spritecollide(GLOBAL.major, GLOBAL.item_group, False):
         GLOBAL.combo_timer = 120
         GLOBAL.major.bullets = int(clamp(GLOBAL.major.bullets + 1, 0, 6))
 
@@ -434,9 +404,7 @@ def barrage_collide(position):
 
 
 def bullet_collide():
-    collide = pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False, pg.sprite.collide_mask)
-
-    for bullet, hit_bricks in collide.items():
+    for bullet, hit_bricks in pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False, pg.sprite.collide_mask).items():
         for brick in hit_bricks:
             if brick.hp > 0:
                 GLOBAL.score += 64
@@ -499,7 +467,7 @@ def pop(surface: pygame.Surface, group: tuple, timer: int, interval: tuple) -> p
     for i in range(0, len(group)):
         if timer >= interval[i]:
             for j in group[i]:
-                surface.blit(j["sprite"], j["pos"])
+                surface.blit(font.render(j["text"], False, (255, 255, 255)), j["pos"])
 
     return surface
 
@@ -553,7 +521,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
             GLOBAL.particle_group.draw(screen)
             GLOBAL.barrage_group.draw(screen)
 
-    menu_list = [
+    for condition, func in (
         (lambda: GLOBAL.is_check, check_menu),
         (lambda: not GLOBAL.is_run, start_menu),
         (lambda: GLOBAL.is_pause, pause_menu),
@@ -561,9 +529,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
         (lambda: GLOBAL.is_talk, talk_menu),
         (lambda: GLOBAL.is_summary, summary_menu),
         (lambda: GLOBAL.is_save, save_menu)
-    ]
-
-    for condition, func in menu_list:
+    ):
         if condition() and not GLOBAL.is_exit:
             func(screen)
 
