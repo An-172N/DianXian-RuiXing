@@ -2,7 +2,7 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-def main() -> int:
+def main():
     import sys
 
     sys.dont_write_bytecode = True
@@ -34,8 +34,6 @@ def main() -> int:
     import SCRIPT
 
     SCRIPT.KERNEL.update(clock, screen, (int(args.stage), int(args.level), int(args.flash), int(args.power)))
-
-    return 0
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ import SCRIPT.SPRITE as Sprite
 
 class Basic(Base):
     def __init__(th, image: pg.Surface, locate: tuple, hp: int, color: tuple, *group: pg.sprite.Group):
-        super().__init__(image, pos=(292, 60))
+        super().__init__(image, group[2], pos=(292, 60))
 
         th.group = group[0]
         th.particle_group = group[1]
@@ -70,8 +70,8 @@ class Ono(Basic):
                     delay += 20
 
                     for k in (j - 180, j, 180 - delay):
-                        two_point = add(th.locate, (-th.x, -th.y))
-                        angle = bearing(-two_point[0], -two_point[1]) + k
+                        delta = add(th.locate, (-th.x, -th.y))
+                        angle = direct(-delta[0], -delta[1]) + k
 
                         Sprite.Barrage(effective, 2, speed, th.color, angle, (th.x, th.y), barrage_cache[(2, th.color)], th.group, rotate=False)
 
@@ -81,8 +81,8 @@ class Ono(Basic):
 
     def final(th):
         if th.bullets < 24:
-            two_point = add(th.locate, (-th.x, -th.y))
-            angle = bearing(-two_point[0], -two_point[1]) + 180
+            delta = add(th.locate, (-th.x, -th.y))
+            angle = direct(-delta[0], -delta[1]) + 180
 
             for i in (2, 1, -1, -2):
                 Sprite.Barrage(effective, 2, 4, th.color, ((th.timer * 12) * i) + angle, (th.x, th.y), barrage_cache[(2, th.color)], th.group, rotate=False)
@@ -102,18 +102,17 @@ class Ono(Basic):
             th.timer = 0
             th.can_shoot = True
             th.choice = choice([th.fire] * 5 + [th.free, th.extend, th.final])
-        if th.timer % 120 >= 99:
-            if th.timer % 99 == 0: 
-                for i in range(0, 360, 30):
-                    pos = (th.x + 48 * cos(radians(i)), th.y + 48 * sin(radians(i)))
-                    two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    angle = bearing(-two_point[0], -two_point[1])
+        if th.timer % 99 == 0 and th.timer % 120 >= 99: 
+            for i in range(0, 360, 30):
+                pos = (th.x + 48 * cos(radians(i)), th.y + 48 * sin(radians(i)))
+                delta = add((th.x, th.y), (-pos[0], -pos[1]))
+                angle = direct(-delta[0], -delta[1])
 
-                    Sprite.Barrage(effective, 2, 3, color_dict[6], angle, pos, barrage_cache[(2, color_dict[6])], th.particle_group, rotate=False)
+                Sprite.Barrage(effective, 2, 3, color_dict[6], angle, pos, barrage_cache[(2, color_dict[6])], th.particle_group, rotate=False)
 
-                sound_cache["charge"].play()
+            sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y), mask=False)
+            th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -134,8 +133,8 @@ class Hro(Basic):
             pos = (th.x, th.y)
 
             for i in range(-30, 31, 30):
-                two_point = add((th.locate[0], th.locate[1]), (-pos[0], -pos[1]))
-                angle = bearing(-two_point[0], -two_point[1]) + i
+                delta = add((th.locate[0], th.locate[1]), (-pos[0], -pos[1]))
+                angle = direct(-delta[0], -delta[1]) + i
 
                 Sprite.Barrage(effective, 0, 4, th.color, angle, pos, barrage_cache[(0, th.color)], th.group, radius=4)
 
@@ -165,7 +164,7 @@ class Hro(Basic):
                 current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
 
                 for j in range(45, 136, 90):
-                    angle = bearing(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
+                    angle = direct(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
                     pos = current_pos
 
                     Sprite.Barrage(effective, 0, 4, th.color, angle, pos, barrage_cache[(0, th.color)], th.group, radius=4)
@@ -183,8 +182,8 @@ class Hro(Basic):
                 for j in (150, 185, 220, 255, 292, 327, 365, 400, 435):
                     for k in range(0, 4):
                         pos = (j, 60)
-                        two_point = add((th.locate[0], th.locate[1] - 160), (-pos[0], -pos[1]))
-                        angle = bearing(-two_point[0], -two_point[1]) + k * 90
+                        delta = add((th.locate[0], th.locate[1] - 160), (-pos[0], -pos[1]))
+                        angle = direct(-delta[0], -delta[1]) + k * 90
 
                         Sprite.Barrage(effective, 0, speed, th.color, angle, pos, barrage_cache[(0, th.color)], th.group, radius=4)
 
@@ -208,14 +207,14 @@ class Hro(Basic):
             if th.timer % 91 == 0:
                 for i in range(0, 360, 120 if th.choice == th.fire else 90):
                     pos = (th.x + 45 * cos(radians(i)), th.y + 45 * sin(radians(i)))
-                    two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    angle = bearing(-two_point[0], -two_point[1])
+                    delta = add((th.x, th.y), (-pos[0], -pos[1]))
+                    angle = direct(-delta[0], -delta[1])
 
                     Sprite.Barrage(effective, 0, 3, color_dict[6], angle, pos, barrage_cache[(0, color_dict[6])], th.particle_group)
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y), mask=False)
+                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot and not th.is_choose:
@@ -303,8 +302,8 @@ class Nre(Basic):
             if th.timer % 82 == 0:
                 for _ in range(8):
                     pos = (int(uniform(th.x - 48, th.x + 48)), th.y)
-                    two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    angle = bearing(-two_point[0], -two_point[1])
+                    delta = add((th.x, th.y), (-pos[0], -pos[1]))
+                    angle = direct(-delta[0], -delta[1])
 
                     Sprite.Barrage(effective, None, 3, color_dict[6], angle, pos, particle_cache[(9, color_dict[6])], th.particle_group)
 
@@ -328,8 +327,8 @@ class Qdi(Basic):
     def fire(th):
         if th.bullets < 6 and th.timer % 2 == 0:
             pos = (randint(120, 465), randint(15, 230))
-            two_point = add(th.locate, (-pos[0], -pos[1]))
-            angle = bearing(-two_point[0], -two_point[1])
+            delta = add(th.locate, (-pos[0], -pos[1]))
+            angle = direct(-delta[0], -delta[1])
 
             Sprite.Barrage(effective, 2, 3.5, th.color, angle, pos, barrage_cache[(2, th.color)], th.group, rotate=False)
 
@@ -375,8 +374,8 @@ class Qdi(Basic):
         if th.timer == 0:
             target_pos = th.interval_locate
             pos = (randint(120, 465), randint(15, 150))
-            two_point = add(target_pos, (-pos[0], -pos[1]))
-            angle = bearing(-two_point[0], -two_point[1])
+            delta = add(target_pos, (-pos[0], -pos[1]))
+            angle = direct(-delta[0], -delta[1])
             end = randint(0 + int(angle), 360 + int(angle))
 
             for i in range(0 + int(angle), 360 + int(angle), 360 // th.target_bullets):
@@ -419,20 +418,19 @@ class Qdi(Basic):
             th.target_bullets = choice([20, 24, 30, 40])
             th.can_shoot = True
             th.choice = choice([th.fire] * 12 + [th.free] * 2 + [th.extend, th.final, th.last, th.count])
-        if th.timer % 150 >= 125:
-            if th.timer % 150 >= 145:
-                th.x += choice([-4, 4])
-            if th.timer % 125 == 0:
-                for _ in range(12):
-                    pos = (int(uniform(th.x - 48, th.x + 48)), int(uniform(th.y - 64, th.y + 64)))
-                    two_point = add((th.x, th.y), (-pos[0], -pos[1]))
-                    angle = bearing(-two_point[0], -two_point[1])
+        if th.timer % 150 >= 145:
+            th.x += choice([-4, 4])
+        if th.timer % 125 == 0 and th.timer % 150 >= 125:
+            for _ in range(12):
+                pos = (int(uniform(th.x - 48, th.x + 48)), int(uniform(th.y - 64, th.y + 64)))
+                delta = add((th.x, th.y), (-pos[0], -pos[1]))
+                angle = direct(-delta[0], -delta[1])
 
-                    Sprite.Barrage(effective, 2, 3, color_dict[6], angle, pos, barrage_cache[(2, color_dict[6])], th.particle_group, rotate=False)
+                Sprite.Barrage(effective, 2, 3, color_dict[6], angle, pos, barrage_cache[(2, color_dict[6])], th.particle_group, rotate=False)
 
-                sound_cache["charge"].play()
+            sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y), mask=False)
+            th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -465,7 +463,7 @@ class Kli(Base):
             for j in range(-q, q + 1, q):
                 dx = 0 + i * 10
                 dy = 0 + i * 12
-                bullet_type = [
+                bullet_type = (
                     {
                         'x': th.rect.left - dx,
                         'y': th.rect.top + dy,
@@ -476,7 +474,7 @@ class Kli(Base):
                         'y': th.rect.top + dy,
                         'angle': -j
                     }
-                ]
+                )
 
                 for bullet_info in bullet_type:
                     Sprite.Bullet(effective, "bullet", 16, th.color, bullet_info['angle'], (bullet_info['x'], bullet_info['y']), 4, bullet_cache["bullet"], th.group)
@@ -508,8 +506,11 @@ class Kli(Base):
             th.free()
 
         th.image = Change.swivel(char_image.subsurface((0, 0, 12, 26)), char_image.subsurface((12, 0, 12, 26)), th.is_move_right, th.is_move_left)
-        if th.is_move_left or th.is_move_right:
-            th.x = vector(th.rect.center, (window.left if th.is_move_left else window.right if th.is_move_right else th.x, th.y), 8 if th.is_fast else 3)[0][0]
+        if th.is_move_left:
+            th.x -= 8 if th.is_fast else 3
+        if th.is_move_right:
+            th.x += 8 if th.is_fast else 3
+        th.x = clamp(th.x, window.left, window.right)
         th.y = 331 if th.is_fast else 332
         th.divided.update()
         th.collided.update()

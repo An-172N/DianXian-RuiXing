@@ -75,26 +75,26 @@ keyup_game_dict = {
 
 
 def situation(screen: pg.Surface, clock: pg.time.Clock):
-    text = [
+    text = (
         f"分　{GLOBAL.score:9d}",
         f"形　{GLOBAL.power:02d} , {GLOBAL.total_point:02d}",
         f"闪　{GLOBAL.flash:02d}",
         f"连　{GLOBAL.combo:02d} , {(GLOBAL.major.bullets if GLOBAL.major is not None else 0):02d}"
-    ]
+    )
 
     ui(screen, text, f"{int(clock.get_fps())} FPS")
 
 
 def pause_menu(screen: pg.Surface):
     title = "休息ing"
-    text = ["Esc 休息好了", "Del 不玩了"]
+    text = ("Esc 休息好了", "Del 不玩了")
 
     half_menu(screen, title, text)
 
 
 def load_menu(screen: pg.Surface):
     title = "这一关是————"
-    text = [f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} !!", "START!!!!"]
+    text = (f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} !!", "START!!!!")
 
     half_menu(screen, title, text)
 
@@ -112,13 +112,13 @@ def talk_menu(screen: pg.Surface):
 
 def summary_menu(screen: pg.Surface):
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Clear! {'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
-    text = [
+    text = (
         f"得点 {GLOBAL.total_point} * 512 = {GLOBAL.total_point * 512}",
         f"无闪 {GLOBAL.unflash} * 4096 = {GLOBAL.unflash * 4096}",
         f"面数 {GLOBAL.stage} * 16384 = {GLOBAL.stage * 16384}",
         f"形力 {GLOBAL.power} / 32 * 8192 = {int(GLOBAL.power / 32 * 8192)}",
         ""
-    ]
+    )
     title = {
         1: "水边的秋霜店 ~ Sweet Reservoir",
         2: "X 在树林 ~ Hypnotized",
@@ -133,8 +133,8 @@ def summary_menu(screen: pg.Surface):
 def start_menu(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
-    text = ['Ver 1.1.0', '', '', '', '']
-    key = ["C 日志", "Q 退了", "Z 开玩"]
+    text = ('Ver 1.1.0', '', '', '', '')
+    key = ("C 日志", "Q 退了", "Z 开玩")
 
     full_menu(screen, title, text, key, other)
 
@@ -142,14 +142,14 @@ def start_menu(screen: pg.Surface):
 def save_menu(screen: pg.Surface):
     title = "抚形日志"
     name = f"谢谢 {GLOBAL.name} 的帮助"
-    text = [
+    text = (
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {GLOBAL.score} 分",
         f"最远到达的地方是 {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} 站",
         f"拾形点率为 {GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61))}",
-        f"使用了 {GLOBAL.flashed} 次形闪{'（用完了' if GLOBAL.flash == 0 else ''}"
-    ]
-    key = ["Ent 记录", "Esc 算了", ""]
+        f"使用了 {GLOBAL.flashed} 次形闪{'（躺' if GLOBAL.flash == 0 else ''}"
+    )
+    key = ("Ent 记录", "Esc 算了", "")
 
     full_menu(screen, title, text, key, name)
 
@@ -161,16 +161,15 @@ def check_menu(screen: pg.Surface):
 
     try:
         log = load_json(GLOBAL.json_files[GLOBAL.index])[1]
-
         title = "抚形日志"
-        text = [
+        text = (
             f"今天是 {log['Date']}",
             f"得到了 {log['Score']} 分",
             f"最远到达的地方是 {log['Stage']} 站",
             f"拾形点率为 {log['Rate']}",
-            f"使用了 {log['Flashed']} 次形闪{'（用完了' if log['Flash'] == 0 else ''}"
-        ]
-        key = ["Del 丢掉", "Esc 合上", "<-> 翻页"]
+            f"使用了 {log['Flashed']} 次形闪{'（躺' if log['Flash'] == 0 else ''}"
+        )
+        key = ("Del 丢掉", "Esc 合上", "<-> 翻页")
 
         full_menu(screen, title, text, key, f"谢谢 {log['Name']} 的帮助")
     except:
@@ -196,7 +195,6 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
             {"text": key[2], "pos": (276, 169)}
         )
     )
-
     (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
     GLOBAL.pop_timer += 1
 
@@ -220,32 +218,30 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
 
 
 def ui(surface: pg.Surface, text: list, fps: str):
-    text_type = [
+    for text_info in (
         {"text": text[0], "pos": (8, 25)},
         {"text": text[1], "pos": (8, 270)},
         {"text": text[2], "pos": (8, 295)},
         {"text": text[3], "pos": (8, 320)},
         {"text": fps, "pos": (405, 343)}
-    ]
-
-    for text_info in text_type:
+    ):
         surface.blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
 
 
 def save_file():
     name = GLOBAL.name.translate(str.maketrans('!<>:"/\\|?*', '__________'))
-    date_time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
-    dump_content = {
+    time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
+    content = {
         'Name': GLOBAL.name,
         'Score': GLOBAL.score,
         'Stage': f"{GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level}",
         'Rate': GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61)),
         'Flashed': GLOBAL.flashed,
-        'Date': date_time[0],
+        'Date': time[0],
         'Flash': GLOBAL.flash
     }
 
-    record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{date_time[0]}_{date_time[1]}.json', ("锐山抚形日志", dump_content))
+    record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.json', ("DX00", content))
 
 
 def summary_logic():
@@ -257,9 +253,7 @@ def summary_logic():
 
     GLOBAL.score += GLOBAL.score_summary(GLOBAL.total_point, GLOBAL.power, GLOBAL.unflash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level))
     GLOBAL.is_summary = False
-
     GLOBAL.is_save = True if GLOBAL.stage >= 3 and GLOBAL.level == 6 else level_logic()
-
     GLOBAL.pop_timer = 0
 
 
@@ -327,27 +321,23 @@ def mode_two():
 
 
 def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
-    barrage_dict = {
-        1: lambda: Sprite.circle_barrage(type, color, spawn_pos, locate, group),
-        2: lambda: Sprite.polygon_barrage(type, color, spawn_pos, locate, group),
-        3: lambda: Sprite.line_barrage(color, (randint(120, 465), 15), (locate[0] + randint(-32, 32), 345), group),
-        4: lambda: Sprite.point_barrage(type, color, locate, group)
-    }
-
     if random() <= fib[stage - 1]:
-        barrage_dict.get(stage)()
+        {
+            1: lambda: Sprite.circle_barrage(type, color, spawn_pos, locate, group),
+            2: lambda: Sprite.polygon_barrage(type, color, spawn_pos, locate, group),
+            3: lambda: Sprite.line_barrage(color, (randint(120, 465), 15), (locate[0] + randint(-32, 32), 345), group),
+            4: lambda: Sprite.point_barrage(type, color, locate, group)
+        }[stage]()
 
 
 def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
-    blast_dict = {
-        1: lambda: Sprite.circle_brick(group, spawn_pos[3]),
-        2: lambda: Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2]),
-        3: lambda: Sprite.line_brick(group, spawn_pos[3]),
-        4: lambda: Sprite.point_brick(group)
-    }
-
     if color[0] == color_dict[6]:
-        blast_dict.get(stage)()
+        {
+            1: lambda: Sprite.circle_brick(group, spawn_pos[3], randint(0, 45)),
+            2: lambda: Sprite.polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2]),
+            3: lambda: Sprite.line_brick(group, spawn_pos[3]),
+            4: lambda: Sprite.point_brick(group)
+        }[stage]()
 
 
 def item_collide():
@@ -392,13 +382,20 @@ def barrage_collide(position):
             barrage.kill()
 
 
+def collide(sprite1, sprite2):
+    if hasattr(sprite1, 'mask') and hasattr(sprite2, 'mask'):
+        return pygame.sprite.collide_mask(sprite1, sprite2)
+    else:
+        return pygame.sprite.collide_rect(sprite1, sprite2)
+
+
 def bullet_collide():
-    for bullet, hit_bricks in pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False, pg.sprite.collide_mask).items():
+    for bullet, hit_bricks in pg.sprite.groupcollide(GLOBAL.bullet_group, GLOBAL.brick_group, False, False, collide).items():
         for brick in hit_bricks:
             if brick.hp > 0:
                 GLOBAL.score += 64
                 brick.hp -= bullet.damage
-            if brick.hp <= 0:
+            else:
                 if not brick.is_die:
                     if hasattr(brick, "free"):
                         GLOBAL.text_part += 1
@@ -419,6 +416,7 @@ def bullet_collide():
                     brick.kill()
 
                 brick.is_die = True
+
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()
 
@@ -428,8 +426,6 @@ def sprite_loader():
         GLOBAL.char = choose_human()
         GLOBAL.text = json.loads(asset(rf"ASSET\JSON\{GLOBAL.stage}.json").decode('utf-8'))
         GLOBAL.is_talk = True
-
-        GLOBAL.brick_group.add(GLOBAL.char)
     else:
         load(asset(rf"ASSET\STAGE\{GLOBAL.stage}-{GLOBAL.level}.stg"), Sprite.load_brick, color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
         Sprite.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
@@ -461,39 +457,13 @@ def pop(surface: pg.Surface, group: tuple, timer: int, interval: tuple) -> pg.Su
     return surface
 
 
-def choose_human() -> Ono | Hro | Nre | Qdi:
-    char_dict = {
+def choose_human():
+    return {
         1: Ono,
         2: Hro,
         3: Nre,
         4: Qdi
-    }
-
-    return char_dict.get(GLOBAL.stage)(GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group)
-
-
-def combo(timer: int, count: int, score: int, bonus: int, end: int) -> tuple:
-    timer -= 1
-
-    if timer <= 0:
-        if count > 0:
-            score += bonus
-        count = 0
-        timer = end
-
-    return timer, count, score
-
-
-def wait(timer: int, loaded: bool, end: int, load: object, *args) -> tuple:
-    if timer <= end:
-        timer += 1
-    else:
-        load(*args)
-
-        timer = 0
-        loaded = True
-
-    return timer, loaded
+    }[GLOBAL.stage](GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group, GLOBAL.brick_group)
 
 
 def display(screen: pg.Surface, clock: pg.time.Clock):
@@ -522,7 +492,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
 
             break
 
-    screen.blit(picture[6], (0, 0))
+    screen.blit(picture[6])
     situation(screen, clock)
 
 
@@ -548,7 +518,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 GLOBAL.item_spawn_timer = spawn(GLOBAL.item_spawn_timer >= 45 and len(GLOBAL.brick_group) > 0, Sprite.Item, "fire", -2, (randint(120, 465), 10), GLOBAL.item_group, timer=GLOBAL.item_spawn_timer)
                 if GLOBAL.combo_timer <= 1 and GLOBAL.combo > 0:
                     Sprite.Text(GLOBAL.major.rect.midtop, (45, 60), 0.5, f"{2 ** GLOBAL.combo}", color_dict[6], color_dict[7], GLOBAL.particle_group)
-                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = combo(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
+                GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score = GLOBAL.combo_counter(GLOBAL.combo_timer, GLOBAL.combo, GLOBAL.score, 2 ** GLOBAL.combo, 120)
 
                 GLOBAL.plane_group.update()
                 GLOBAL.bullet_group.update()
@@ -563,7 +533,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
                 if len(GLOBAL.brick_group) == 0 and len(GLOBAL.item_group) == 0 and not GLOBAL.is_talk:
                     GLOBAL.is_summary = True
             if not GLOBAL.is_level_load:
-                GLOBAL.wait_load_timer, GLOBAL.is_level_load = wait(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
+                GLOBAL.wait_load_timer, GLOBAL.is_level_load = GLOBAL.wait(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
 
         display(screen, clock)
 

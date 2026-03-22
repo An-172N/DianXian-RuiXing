@@ -61,7 +61,7 @@ def approximate(
     return 0 if (rounded := round((value % limit) / step) * step) == limit else rounded
 
 
-def bearing(
+def direct(
     x: float,
     y: float
 ) -> float:

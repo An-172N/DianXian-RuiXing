@@ -72,3 +72,27 @@ def calculate_item_rate(number: int, condition: bool, critical: tuple) -> str:
 
 def score_summary(total_point: int, power: int, unflash: int, combo: int, numbers: tuple) -> int:
     return total_point * 512 + unflash * 4096 + ((2 ** combo) if combo > 0 else 0) + ((numbers[0] * 16384) if numbers[1] == 6 else 0) + ((int(power / 32 * 8192)) if numbers[1] == 6 else 0)
+
+
+def combo_counter(timer: int, count: int, score: int, bonus: int, end: int) -> tuple:
+    timer -= 1
+
+    if timer <= 0:
+        if count > 0:
+            score += bonus
+        count = 0
+        timer = end
+
+    return timer, count, score
+
+
+def wait(timer: int, loaded: bool, end: int, load: object, *args) -> tuple:
+    if timer <= end:
+        timer += 1
+    else:
+        load(*args)
+
+        timer = 0
+        loaded = True
+
+    return timer, loaded

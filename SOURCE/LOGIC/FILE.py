@@ -35,20 +35,17 @@ def get(
     extension: str = '.json',
     reverse: bool = True
 ) -> list[str]:
-    files = []
-
     try:
+        files = []
+
         for file in os.listdir(folder):
-            if file.endswith(extension) and (
-                path := os.path.join(folder, file),
-                os.path.isfile(path)
-            ):
+            if file.endswith(extension) and os.path.isfile(path := os.path.join(folder, file)):
                 time = os.path.getmtime(path)
 
                 files.append((time, path))
+
+        files.sort(key=lambda x: x[0], reverse=reverse)
+
+        return [path for _, path in files]
     except:
         return []
-
-    files.sort(key=lambda x: x[0], reverse=reverse)
-
-    return [path for _, path in files]

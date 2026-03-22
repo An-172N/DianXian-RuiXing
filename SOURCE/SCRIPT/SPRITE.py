@@ -15,8 +15,8 @@ from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
-    def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: pg.sprite.Group, mask: bool=False, rotate: bool=True, radius: int=0):
-        super().__init__(image, group, form=form, angle=angle, pos=pos, mask=mask, rotate=rotate, radius=radius)
+    def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: pg.sprite.Group, rotate: bool=True, radius: int=0):
+        super().__init__(image, group, form=form, angle=angle, pos=pos, rotate=rotate, radius=radius)
 
         th.effective = effective
         th.speed = speed
@@ -56,13 +56,13 @@ class Text(Base):
 
 
 class Rect(Base):
-    def __init__(th, image: pg.Surface, *group: pg.sprite.Group, pos: tuple=(0, 0), mask: bool=False):
-        super().__init__(image, *group, pos=pos, mask=mask)
+    def __init__(th, image: pg.Surface, *group: pg.sprite.Group, pos: tuple=(0, 0)):
+        super().__init__(image, *group, pos=pos, radius=2)
 
 
 class Brick(Base):
     def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pg.Surface, group: pg.sprite.Group):
-        super().__init__(image, group, form=form, pos=pos)
+        super().__init__(image, group, form=form, pos=pos, mask=True)
 
         th.color = color
         th.hp = hp
@@ -72,8 +72,8 @@ class Brick(Base):
 
 
 class Bullet(Base):
-    def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, mask: bool=False, rotate: bool=True):
-        super().__init__(image, group, form=form, angle=angle, pos=pos, mask=mask, rotate=rotate)
+    def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, rotate: bool=True):
+        super().__init__(image, group, form=form, angle=angle, pos=pos, rotate=rotate)
 
         th.effective = effective
         th.speed = speed
@@ -152,10 +152,8 @@ def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
         Line(color_dict[5], color_dict[9], 6, spawn_pos, line_cache[(rands, angle, color_dict[5])], line_cache[(rands, angle, color_dict[9])], group, True)
 
 
-def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):
-    rands = randint(0, 45)
-
-    for i in range(0 + rands, 360 + rands, 15):
+def circle_brick(group: pg.sprite.Group, spawn_pos: tuple, delay: int):
+    for i in range(0 + delay, 360 + delay, 15):
         Bullet(effective, "bullet", 16, 0, i, spawn_pos, 4, bullet_cache["bullet"], group).update()
 
 
@@ -181,10 +179,7 @@ def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
 
 def point_brick(group: pg.sprite.Group):
     for _ in range(24):
-        pos = (randint(120, 465), randint(15, 345))
-        angle = randint(0, 360)
-
-        Bullet(effective, "bullet", 16, 0, angle, pos, 4, bullet_cache["bullet"], group)
+        Bullet(effective, "bullet", 16, 0, randint(0, 360), (randint(120, 465), randint(15, 345)), 4, bullet_cache["bullet"], group)
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple, group: pg.sprite.Group):
@@ -208,27 +203,24 @@ def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic
 
 
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
-    two_point = add(locate, (-spawn_pos[0], -spawn_pos[1]))
-    angle = bearing(-two_point[0], -two_point[1])
+    delta = add(locate, (-spawn_pos[0], -spawn_pos[1]))
 
-    Barrage(effective, type, 3, color[0], angle, spawn_pos, barrage_cache[(type, color[0])], group, rotate=False)
+    Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, barrage_cache[(type, color[0])], group, rotate=False)
 
 
 def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     for i in range(locate[0] - 32, locate[0] + 33, 64):
-        two_point = add((i, locate[1]), (-spawn_pos[0], -spawn_pos[1]))
-        angle = bearing(-two_point[0], -two_point[1])
+        delta = add((i, locate[1]), (-spawn_pos[0], -spawn_pos[1]))
 
-        Barrage(effective, type, 3, color[0], angle, spawn_pos, barrage_cache[(type, color[0])], group, radius=4)
+        Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, barrage_cache[(type, color[0])], group, radius=4)
 
 
 def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group):
     for _ in range(3):
         pos = (randint(120, 465), randint(15, 225))
-        two_point = add(locate, (-pos[0], -pos[1]))
-        angle = bearing(-two_point[0], -two_point[1])
+        delta = add(locate, (-pos[0], -pos[1]))
 
-        Barrage(effective, type, 4, color[0], angle, pos, barrage_cache[(type, color[0])], group, rotate=False)
+        Barrage(effective, type, 4, color[0], direct(-delta[0], -delta[1]), pos, barrage_cache[(type, color[0])], group, rotate=False)
 
 
 def spawn_particles(group: pg.sprite.Group, size: int, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):
