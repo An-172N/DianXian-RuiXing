@@ -177,14 +177,14 @@ def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     delta = add(locate, (-spawn_pos[0], -spawn_pos[1]))
 
-    Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, False, 8)
+    Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, False, 4)
 
 
 def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = add((i, locate[1]), (-spawn_pos[0], -spawn_pos[1]))
 
-        Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, radius=4)
+        Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, radius=2)
 
 
 def line_barrage(color: list, current: tuple, target: tuple, group: pg.sprite.Group):
@@ -205,7 +205,7 @@ def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group)
         pos = (randint(120, 465), randint(15, 225))
         delta = add(locate, (-pos[0], -pos[1]))
 
-        Barrage(effective, type, 4, color[0], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(type, color[0])], group, False, 8)
+        Barrage(effective, type, 4, color[0], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(type, color[0])], group, False, 4)
 
 
 def spawn_particles(group: pg.sprite.Group, size: int, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):

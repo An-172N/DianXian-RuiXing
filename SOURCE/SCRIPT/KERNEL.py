@@ -125,7 +125,7 @@ def summary_menu(screen: pg.Surface):
         3: "午夜行至最高峰 ~ Thunder Studio",
         4: "享受禁饮 ~ Point's Hideaway"
     }
-    key = ("", "Z 继续", "", "")
+    key = ("Z 继续", "", "")
 
     half_menu(screen, stage, (text[0], text[1])) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
 
@@ -134,12 +134,13 @@ def start_menu(screen: pg.Surface):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = ('Ver 1.1.0', '', '', '', '')
-    key = ("C 日志", "Q 退了", "Z 开玩")
+    key = ("Z 开玩", "C 日志", "Q 退了")
 
     full_menu(screen, title, text, key, other)
 
 
 def save_menu(screen: pg.Surface):
+    shortly = False
     title = "抚形日志"
     name = f"谢谢 {GLOBAL.name} 的帮助"
     text = (
@@ -149,9 +150,13 @@ def save_menu(screen: pg.Surface):
         f"拾形点率为 {GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61))}",
         f"使用了 {GLOBAL.flashed} 次形闪{'（躺' if GLOBAL.flash == 0 else ''}"
     )
-    key = ("Ent 记录", "Esc 算了", "")
+    key = ("", "Ent 记录", "Esc 算了")
+    keys = pg.key.get_pressed()
+    for i in range(len(keys)):
+        if keys[i]:
+            shortly = True
 
-    full_menu(screen, title, text, key, name)
+    full_menu(screen, title, text, key, name, shortly=shortly)
 
 
 def check_menu(screen: pg.Surface):
@@ -169,52 +174,54 @@ def check_menu(screen: pg.Surface):
             f"拾形点率为 {log['Rate']}",
             f"使用了 {log['Flashed']} 次形闪{'（躺' if log['Flash'] == 0 else ''}"
         )
-        key = ("Del 丢掉", "Esc 合上", "<-> 翻页")
+        key = ("<-> 翻页", "Del 丢掉", "Esc 合上")
 
         full_menu(screen, title, text, key, f"谢谢 {log['Name']} 的帮助")
     except:
         GLOBAL.is_check = False
 
 
-def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60)):
+def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60), shortly: bool=False):
+    func = lambda i, j: {"surface": font.render(i, False, (255, 255, 255)), "pos": j}
     group = (
         (
-            {"text": title, "pos": (8, 9)},
-            {"text": other, "pos": (8, 304)}
+            func(title, (8, 9)),
+            func(other, (8, 304))
         ),
         (
-            {"text": text[0], "pos": (8, 59)},
-            {"text": text[1], "pos": (8, 84)},
-            {"text": text[2], "pos": (8, 109)},
-            {"text": text[3], "pos": (8, 134)},
-            {"text": text[4], "pos": (8, 159)}
+            *[func(text[i], (8, 59 + (25 * i))) for i in range(0, 5)],
         ),
         (
-            {"text": key[0], "pos": (276, 219)},
-            {"text": key[1], "pos": (276, 269)},
-            {"text": key[2], "pos": (276, 169)}
+            *[func(key[i], (276, 169 + (50 * i))) for i in range(0, 3)],
         )
     )
-    (backdrop := picture[5], backdrop.fill(color_dict[8]))[0]
-    GLOBAL.pop_timer += 1
 
+    if GLOBAL.pop_timer == interval[0]:
+        picture[5].fill(color_dict[8])
     if GLOBAL.pop_timer == interval[2]:
         sound_cache["pick"].play()
-    surface.blit(pop(backdrop, group, GLOBAL.pop_timer, interval), (120, 15))
+    surface.blit(Change.layers(picture[5], group, GLOBAL.pop_timer, interval, shortly), (120, 15))
+
+    if GLOBAL.pop_timer < interval[2] + 1:
+        GLOBAL.pop_timer += 1
 
 
-def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
+def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
+    func = lambda i, j: ({"surface": font.render(i, False, (255, 255, 255)), "pos": j},)
     group = (
-        ({"text": title, "pos": (8, 9)},),
-        ({"text": text[0], "pos": (8, 59)},),
-        ({"text": text[1], "pos": (8, 84)},)
+        func(title, (8, 9)),
+        func(text[0], (8, 59)),
+        func(text[1], (8, 84))
     )
-    (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
-    GLOBAL.pop_timer += 1
 
+    if GLOBAL.pop_timer == interval[0]:
+        picture[5].fill(color_dict[8])
     if GLOBAL.pop_timer == interval[2]:
         sound_cache["pick"].play()
-    surface.blit(pop(backdrop, group, GLOBAL.pop_timer, interval), (120, 15))
+    surface.blit(Change.layers(picture[5].subsurface((0, 0, 345, 110)), group, GLOBAL.pop_timer, interval, shortly), (120, 15))
+
+    if GLOBAL.pop_timer < interval[2] + 1:
+        GLOBAL.pop_timer += 1
 
 
 def ui(surface: pg.Surface, text: list, fps: str):
@@ -270,7 +277,12 @@ def key_event():
             elif not GLOBAL.is_run and not GLOBAL.is_check and event.key in keydown_start_dict:
                 (sound_cache["pick"].play(), keydown_start_dict[event.key]())
             elif GLOBAL.is_save:
-                ((keydown_over_dict[event.key]() if event.key in keydown_over_dict else setattr(GLOBAL, 'name', (GLOBAL.name + event.unicode)[:8])), sound_cache["pick"].play())
+                if event.key in keydown_over_dict:
+                    keydown_over_dict[event.key]()
+                else:
+                    GLOBAL.name = (GLOBAL.name + event.unicode)[:8]
+
+                sound_cache["pick"].play()
             elif GLOBAL.is_pause and event.key in keydown_pause_dict:
                 (keydown_pause_dict[event.key](), sound_cache["pick"].play())
             elif GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict:
@@ -439,15 +451,6 @@ def spawn(condition: bool, sprite: object, *args, group: pg.sprite.Group = None,
         timer = 0
 
     return timer
-
-
-def pop(surface: pg.Surface, group: tuple, timer: int, interval: tuple) -> pg.Surface:
-    for i in range(0, len(group)):
-        if timer >= interval[i]:
-            for j in group[i]:
-                surface.blit(font.render(j["text"], False, (255, 255, 255)), j["pos"])
-
-    return surface
 
 
 def choose_human():

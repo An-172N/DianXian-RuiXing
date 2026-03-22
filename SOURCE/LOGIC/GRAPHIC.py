@@ -19,6 +19,26 @@ class Change:
             return turn_image
         else:
             return original_image
+        
+    def layers(
+        surface: pygame.Surface,
+        group: tuple,
+        timer: int,
+        interval: tuple,
+        shortly: bool
+    ) -> pygame.Surface:
+        if shortly:
+            surface.fill((0, 0, 0))
+            for i in range(len(group)):
+                for j in group[i]:
+                    surface.blit(j["surface"], j["pos"])
+        else:
+            for i in range(len(group)):
+                if timer == interval[i]:
+                    for j in group[i]:
+                        surface.blit(j["surface"], j["pos"])
+
+        return surface
 
 
 class Draw:
