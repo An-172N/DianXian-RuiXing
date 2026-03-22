@@ -6,7 +6,7 @@ def main():
     import sys
 
     sys.dont_write_bytecode = True
-    for module in ['numpy', 'timidity', 'pygame.examples']:
+    for module in ('numpy', 'timidity', 'pygame.examples'):
         sys.modules[module] = None
 
     import argparse

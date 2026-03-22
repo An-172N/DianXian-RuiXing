@@ -17,14 +17,15 @@ class Base(pygame.sprite.Sprite):
         pos: tuple[int, int] = (0, 0),
         mask: bool = False,
         rotate: bool = False,
-        radius: int = 0
+        radius: int = None
     ) -> None:
         super().__init__(*group)
 
         th.image = pygame.transform.rotate(image, angle) if rotate else image
         th.rect = th.image.get_rect(center=pos)
-        th.radius = (min(th.rect.width, th.rect.height) // 2) if not radius else radius
         th.angle = angle
+        if radius:
+            th.radius = radius
         if mask:
             th.mask = pygame.mask.from_surface(th.image)
         if form is not None:
@@ -109,3 +110,15 @@ def bomb(
         power -= critical
 
     return condition, power
+
+
+def collide(
+    sprite1: pygame.sprite.Sprite,
+    sprite2: pygame.sprite.Sprite
+) -> tuple[int, int] | bool | None:
+    if hasattr(sprite1, 'mask') and hasattr(sprite2, 'mask'):
+        return pygame.sprite.collide_mask(sprite1, sprite2)
+    elif hasattr(sprite1, 'radius') and hasattr(sprite2, 'radius'):
+        return pygame.sprite.collide_circle(sprite1, sprite2)
+    else:
+        return pygame.sprite.collide_rect(sprite1, sprite2)

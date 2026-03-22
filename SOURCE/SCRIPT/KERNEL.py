@@ -76,10 +76,10 @@ keyup_game_dict = {
 
 def situation(screen: pg.Surface, clock: pg.time.Clock):
     text = (
-        f"分　{GLOBAL.score:9d}",
-        f"形　{GLOBAL.power:02d} , {GLOBAL.total_point:02d}",
-        f"闪　{GLOBAL.flash:02d}",
-        f"连　{GLOBAL.combo:02d} , {(GLOBAL.major.bullets if GLOBAL.major is not None else 0):02d}"
+        f"{GLOBAL.score:9d}",
+        f"{GLOBAL.power:02d} , {GLOBAL.total_point:02d}",
+        f"{GLOBAL.flash:02d}",
+        f"{GLOBAL.combo:02d} , {(GLOBAL.major.bullets if GLOBAL.major is not None else 0):02d}"
     )
 
     ui(screen, text, f"{int(clock.get_fps())} FPS")
@@ -103,7 +103,7 @@ def talk_menu(screen: pg.Surface):
     try:
         text = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]
         human = text["char"]
-        content = [text["1"], text["2"] if "2" in text else '']
+        content = (text["1"], text["2"] if "2" in text else '')
 
         half_menu(screen, human, content, (0, 6, 12))
     except KeyError:
@@ -125,9 +125,9 @@ def summary_menu(screen: pg.Surface):
         3: "午夜行至最高峰 ~ Thunder Studio",
         4: "享受禁饮 ~ Point's Hideaway"
     }
-    key = ["", "Z 继续", "", ""]
+    key = ("", "Z 继续", "", "")
 
-    half_menu(screen, stage, [text[0], text[1]]) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
+    half_menu(screen, stage, (text[0], text[1])) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
 
 
 def start_menu(screen: pg.Surface):
@@ -205,9 +205,9 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60)):
     group = (
-        [{"text": title, "pos": (8, 9)}],
-        [{"text": text[0], "pos": (8, 59)}],
-        [{"text": text[1], "pos": (8, 84)}]
+        ({"text": title, "pos": (8, 9)},),
+        ({"text": text[0], "pos": (8, 59)},),
+        ({"text": text[1], "pos": (8, 84)},)
     )
     (backdrop := picture[5].subsurface((0, 0, 345, 110)), backdrop.fill(color_dict[8]))[0]
     GLOBAL.pop_timer += 1
@@ -219,10 +219,10 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
 
 def ui(surface: pg.Surface, text: list, fps: str):
     for text_info in (
-        {"text": text[0], "pos": (8, 25)},
-        {"text": text[1], "pos": (8, 270)},
-        {"text": text[2], "pos": (8, 295)},
-        {"text": text[3], "pos": (8, 320)},
+        {"text": text[0], "pos": (38, 25)},
+        {"text": text[1], "pos": (38, 270)},
+        {"text": text[2], "pos": (38, 295)},
+        {"text": text[3], "pos": (38, 320)},
         {"text": fps, "pos": (405, 343)}
     ):
         surface.blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
@@ -366,7 +366,7 @@ def item_collide():
 
 
 def barrage_collide(position):
-    for barrage in pygame.sprite.spritecollide(GLOBAL.major, GLOBAL.barrage_group, dokill=False, collided=pygame.sprite.collide_circle):
+    for barrage in pygame.sprite.spritecollide(GLOBAL.major.point, GLOBAL.barrage_group, False, collide):
         if barrage.color != color_dict[6]:
             if not GLOBAL.major.collided.condition and not GLOBAL.major.divided.condition:
                 GLOBAL.major.collided.condition = True
@@ -380,13 +380,6 @@ def barrage_collide(position):
                 sound_cache["fire"].play()
 
             barrage.kill()
-
-
-def collide(sprite1, sprite2):
-    if hasattr(sprite1, 'mask') and hasattr(sprite2, 'mask'):
-        return pygame.sprite.collide_mask(sprite1, sprite2)
-    else:
-        return pygame.sprite.collide_rect(sprite1, sprite2)
 
 
 def bullet_collide():
@@ -504,6 +497,13 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
     alpha = 255
     timer = 0
 
+    for text_info in (
+        {"text": "分", "pos": (8, 25)},
+        {"text": '形', "pos": (8, 270)},
+        {"text": '闪', "pos": (8, 295)},
+        {"text": '连', "pos": (8, 320)},
+    ):
+        picture[6].blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
 

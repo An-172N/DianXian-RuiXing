@@ -15,18 +15,24 @@ from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
-    def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: pg.sprite.Group, rotate: bool=True, radius: int=0):
+    def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, rotate: bool=True, radius: int=0):
         super().__init__(image, group, form=form, angle=angle, pos=pos, rotate=rotate, radius=radius)
 
         th.effective = effective
         th.speed = speed
         th.color = color
+        if damage:
+            th.damage = damage
 
     def update(th):
         rad = radians(th.angle)
         sin_, cos_ = sin(rad), cos(rad)
         th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
 
+        if hasattr(th, "type") and th.type == "char":
+            th.speed -= 0.1
+            if th.speed < -4:
+                th.speed = -4
         if not th.effective.collidepoint(th.rect.center):
             th.kill()
 
@@ -71,42 +77,20 @@ class Brick(Base):
         th.is_die = False
 
 
-class Bullet(Base):
-    def __init__(th, effective: pg.Rect, form: str, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, rotate: bool=True):
-        super().__init__(image, group, form=form, angle=angle, pos=pos, rotate=rotate)
-
-        th.effective = effective
-        th.speed = speed
-        th.color = color
-        th.damage = damage
-
-    def update(th):
-        rad = radians(th.angle)
-        sin_, cos_ = sin(rad), cos(rad)
-        th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
-
-        if not th.effective.collidepoint(th.rect.center):
-            th.kill()
-
-
 class Item(Base):
-    def __init__(th, type: str, speed: float, pos: tuple, *group: pg.sprite.Group, size: int=0, color: tuple=(0, 0, 0)):
-        super().__init__(item_cache[type] if type != "char" else particle_cache[(size, color)], *group, form=type, pos=pos)
+    def __init__(th, type: str, speed: float, pos: tuple, *group: pg.sprite.Group):
+        super().__init__(item_cache[type], *group, form=type, pos=pos)
 
         th.speed = speed
 
     def update(th):
         th.y -= th.speed
 
-        if th.type in ["power", "flash"]:
+        if th.type in ("power", "flash"):
             th.speed -= 0.1
 
             if th.speed < -2:
                 th.speed = -2
-        elif th.type == "char":
-            th.speed -= 0.1
-            if th.speed < -4:
-                th.speed = -4
         if th.y >= 360:
             th.kill()
 
@@ -117,7 +101,8 @@ class Line(Base):
 
         th.color = color
         th.target_color = target_color
-        th.damage = damage
+        if damage:
+            th.damage = damage
         th.target_image = target_image
         th.timer = 0
 
@@ -131,19 +116,6 @@ class Line(Base):
             th.image = th.target_image
 
 
-def line_barrage(color: list, current: tuple, target: tuple, group: pg.sprite.Group):
-    current = current
-    target = target
-    
-    while True:
-        Line(color[1], color[2], 0, current, particle_cache[(3, color[1])], particle_cache[(3, color[2])], group)
-
-        if math.dist(current, target) < 1e-6:
-            break
-
-        current = vector(current, target, 3)[0]
-
-
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = approximate(randint(0, 360))
@@ -154,11 +126,11 @@ def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
 
 def circle_brick(group: pg.sprite.Group, spawn_pos: tuple, delay: int):
     for i in range(0 + delay, 360 + delay, 15):
-        Bullet(effective, "bullet", 16, 0, i, spawn_pos, 4, bullet_cache["bullet"], group).update()
+        Barrage(effective, "bullet", 16, 0, i, spawn_pos, 4, bullet_cache["bullet"], group).update()
 
 
 def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
-    bullet_index = [
+    bullet_index = (
         {
             'angle': choice([-30, -210]),
             'pos': spawn_pos[0]
@@ -171,15 +143,15 @@ def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
             'angle': choice([90, 270]),
             'pos': spawn_pos[2]
         }
-    ]
+    )
 
-    for bullet_info in bullet_index:
-        Bullet(effective, "bullet-cross", 16, 0, bullet_info['angle'], bullet_info['pos'], 4, bullet_cache["bullet-cross"], group)
+    for info in bullet_index:
+        Barrage(effective, "bullet-cross", 16, 0, info['angle'], info['pos'], 4, bullet_cache["bullet-cross"], group)
 
 
 def point_brick(group: pg.sprite.Group):
     for _ in range(24):
-        Bullet(effective, "bullet", 16, 0, randint(0, 360), (randint(120, 465), randint(15, 345)), 4, bullet_cache["bullet"], group)
+        Barrage(effective, "bullet", 16, 0, randint(0, 360), (randint(120, 465), randint(15, 345)), 4, bullet_cache["bullet"], group)
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple, group: pg.sprite.Group):
@@ -205,14 +177,27 @@ def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     delta = add(locate, (-spawn_pos[0], -spawn_pos[1]))
 
-    Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, barrage_cache[(type, color[0])], group, rotate=False)
+    Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, False, 8)
 
 
 def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = add((i, locate[1]), (-spawn_pos[0], -spawn_pos[1]))
 
-        Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, barrage_cache[(type, color[0])], group, radius=4)
+        Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, radius=4)
+
+
+def line_barrage(color: list, current: tuple, target: tuple, group: pg.sprite.Group):
+    current = current
+    target = target
+    
+    while True:
+        Line(color[1], color[2], 0, current, particle_cache[(3, color[1])], particle_cache[(3, color[2])], group)
+
+        if math.dist(current, target) < 1e-6:
+            break
+
+        current = vector(current, target, 3)[0]
 
 
 def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group):
@@ -220,7 +205,7 @@ def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group)
         pos = (randint(120, 465), randint(15, 225))
         delta = add(locate, (-pos[0], -pos[1]))
 
-        Barrage(effective, type, 4, color[0], direct(-delta[0], -delta[1]), pos, barrage_cache[(type, color[0])], group, rotate=False)
+        Barrage(effective, type, 4, color[0], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(type, color[0])], group, False, 8)
 
 
 def spawn_particles(group: pg.sprite.Group, size: int, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):
@@ -229,4 +214,4 @@ def spawn_particles(group: pg.sprite.Group, size: int, pos: tuple, speed: tuple,
     for i in range(0 + rands, 360 + rands, 45):
         color = color1 if color2 is None else choice([color1, color2])
 
-        Barrage(effective, None, randint(speed[0], speed[1]), color, i, pos, particle_cache[(size, color)], group, rotate=False)
+        Barrage(effective, None, randint(speed[0], speed[1]), color, i, pos, 0, particle_cache[(size, color)], group, False)
