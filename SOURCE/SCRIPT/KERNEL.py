@@ -125,7 +125,7 @@ def summary_menu(screen: pg.Surface):
         3: "午夜行至最高峰 ~ Thunder Studio",
         4: "享受禁饮 ~ Point's Hideaway"
     }
-    key = ("Z 继续", "", "")
+    key = ("", "", "Z 继续")
 
     half_menu(screen, stage, (text[0], text[1])) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
 
@@ -151,10 +151,11 @@ def save_menu(screen: pg.Surface):
         f"使用了 {GLOBAL.flashed} 次形闪{'（躺' if GLOBAL.flash == 0 else ''}"
     )
     key = ("", "Ent 记录", "Esc 算了")
-    keys = pg.key.get_pressed()
-    for i in range(len(keys)):
-        if keys[i]:
-            shortly = True
+    if GLOBAL.pop_timer >= 60:
+        keys = pg.key.get_pressed()
+        for i in range(len(keys)):
+            if keys[i]:
+                shortly = True
 
     full_menu(screen, title, text, key, name, shortly=shortly)
 
@@ -260,8 +261,8 @@ def summary_logic():
 
     GLOBAL.score += GLOBAL.score_summary(GLOBAL.total_point, GLOBAL.power, GLOBAL.unflash, GLOBAL.combo, (GLOBAL.stage, GLOBAL.level))
     GLOBAL.is_summary = False
-    GLOBAL.is_save = True if GLOBAL.stage >= 3 and GLOBAL.level == 6 else level_logic()
     GLOBAL.pop_timer = 0
+    GLOBAL.is_save = True if GLOBAL.stage >= 3 and GLOBAL.level == 6 else level_logic()
 
 
 def key_event():
@@ -272,23 +273,24 @@ def key_event():
             if not GLOBAL.is_summary and GLOBAL.is_level_load and event.key in keyup_game_dict:
                 keyup_game_dict[event.key]()
         elif event.type == pg.KEYDOWN:
-            if GLOBAL.is_check and event.key in keydown_check_dict:
-                (keydown_check_dict[event.key](), sound_cache["pick"].play())
-            elif not GLOBAL.is_run and not GLOBAL.is_check and event.key in keydown_start_dict:
-                (sound_cache["pick"].play(), keydown_start_dict[event.key]())
-            elif GLOBAL.is_save:
-                if event.key in keydown_over_dict:
-                    keydown_over_dict[event.key]()
-                else:
-                    GLOBAL.name = (GLOBAL.name + event.unicode)[:8]
+            if GLOBAL.pop_timer >= 60:
+                if GLOBAL.is_check and event.key in keydown_check_dict:
+                    (keydown_check_dict[event.key](), sound_cache["pick"].play())
+                elif not GLOBAL.is_run and not GLOBAL.is_check and event.key in keydown_start_dict:
+                    (sound_cache["pick"].play(), keydown_start_dict[event.key]())
+                elif GLOBAL.is_save:
+                    if event.key in keydown_over_dict:
+                        keydown_over_dict[event.key]()
+                    else:
+                        GLOBAL.name = (GLOBAL.name + event.unicode)[:8]
 
-                sound_cache["pick"].play()
-            elif GLOBAL.is_pause and event.key in keydown_pause_dict:
-                (keydown_pause_dict[event.key](), sound_cache["pick"].play())
-            elif GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict:
+                    sound_cache["pick"].play()
+                elif GLOBAL.is_pause and event.key in keydown_pause_dict:
+                    (keydown_pause_dict[event.key](), sound_cache["pick"].play())
+                elif GLOBAL.is_summary:
+                    (summary_logic(), sound_cache["pick"].play()) if event.key == pg.K_z else None
+            elif GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_talk_dict and GLOBAL.pop_timer >= 12:
                 (keydown_talk_dict[event.key](), sound_cache["pick"].play())
-            elif GLOBAL.is_summary:
-                (summary_logic(), sound_cache["pick"].play()) if event.key == pg.K_z else None
             elif not GLOBAL.is_summary and GLOBAL.is_level_load and not GLOBAL.is_talk and not GLOBAL.is_pause and event.key in keydown_game_dict:
                 keydown_game_dict[event.key]()
 

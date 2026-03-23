@@ -25,7 +25,7 @@ class Change:
         group: tuple,
         timer: int,
         interval: tuple,
-        shortly: bool
+        shortly: bool,
     ) -> pygame.Surface:
         if shortly:
             surface.fill((0, 0, 0))
