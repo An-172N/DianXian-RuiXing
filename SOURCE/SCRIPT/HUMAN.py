@@ -43,7 +43,7 @@ class Ono(Basic):
     def fire(th):
         if th.timer == 0:
             for i in range(0, 360, 15):
-                Sprite.Barrage(effective, 2, 4, th.color, i, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                Sprite.Barrage(effective, 2, 4, th.color, i, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             sound_cache["fire"].play()
 
@@ -51,7 +51,7 @@ class Ono(Basic):
         if th.bullets < 10:
             for i in range(0 + th.timer * 7, 360 + th.timer * 7, 180):
                 for j in range(0 + th.timer * 7, 360 + th.timer * 7, 90):
-                    Sprite.Barrage(effective, 2, 3.5, th.color, j, (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i))), 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                    Sprite.Barrage(effective, 2, 3.5, th.color, j, (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i))), 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             th.bullets += 1
 
@@ -70,7 +70,7 @@ class Ono(Basic):
                     for k in (j - 180, j, 180 - delay):
                         delta = add(th.locate, (-th.x, -th.y))
 
-                        Sprite.Barrage(effective, 2, speed, th.color, direct(-delta[0], -delta[1]) + k, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                        Sprite.Barrage(effective, 2, speed, th.color, direct(-delta[0], -delta[1]) + k, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
                 speed -= 0.5
 
@@ -81,7 +81,7 @@ class Ono(Basic):
             delta = add(th.locate, (-th.x, -th.y))
 
             for i in (2, 1, -1, -2):
-                Sprite.Barrage(effective, 2, 4, th.color, ((th.timer * 12) * i) + (direct(-delta[0], -delta[1]) + 180), (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                Sprite.Barrage(effective, 2, 4, th.color, ((th.timer * 12) * i) + (direct(-delta[0], -delta[1]) + 180), (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             th.bullets += 1
 
@@ -130,7 +130,7 @@ class Hro(Basic):
             for i in range(-30, 31, 30):
                 delta = add((th.locate[0], th.locate[1]), (-pos[0], -pos[1]))
 
-                Sprite.Barrage(effective, 0, 4, th.color, direct(-delta[0], -delta[1]) + i, pos, 0, barrage_cache[(0, th.color)], th.group, radius=2)
+                Sprite.Barrage(effective, 0, 4, th.color, direct(-delta[0], -delta[1]) + i, pos, 0, barrage_cache[(0, th.color)], th.group, radius=1.5)
 
             th.bullets += 1
             sound_cache["fire"].play()
@@ -160,7 +160,7 @@ class Hro(Basic):
                 for j in range(45, 136, 90):
                     angle = direct(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
 
-                    Sprite.Barrage(effective, 0, 4, th.color, angle, current_pos, 0, barrage_cache[(0, th.color)], th.group, radius=2)
+                    Sprite.Barrage(effective, 0, 4, th.color, angle, current_pos, 0, barrage_cache[(0, th.color)], th.group, radius=1.5)
 
             th.bullets += 1
 
@@ -177,7 +177,7 @@ class Hro(Basic):
                         pos = (j, 60)
                         delta = add((th.locate[0], th.locate[1] - 160), (-pos[0], -pos[1]))
 
-                        Sprite.Barrage(effective, 0, speed, th.color, direct(-delta[0], -delta[1]) + k * 90, pos, 0, barrage_cache[(0, th.color)], th.group, radius=2)
+                        Sprite.Barrage(effective, 0, speed, th.color, direct(-delta[0], -delta[1]) + k * 90, pos, 0, barrage_cache[(0, th.color)], th.group, radius=1.5)
 
                 speed -= 0.6
 
@@ -261,6 +261,23 @@ class Nre(Basic):
             if th.bullets % 2 == 0:
                 sound_cache["fire"].play()
 
+    def last(th):
+        if th.bullets < 20 and th.timer % 2 == 0:
+            pos = (th.x + 478 * cos(radians(th.bullets * 18)), th.y + 478 * sin(radians(th.bullets * 18)))
+            rands = (randint(120, 465), randint(15, 255))
+
+            Sprite.line_barrage([None, color_dict[6], color_dict[3]], th.interval_pos, pos, th.group)
+
+            for _ in range(3):
+                pos = (rands[0] + 478 * cos(radians(th.bullets * 18)), rands[1] + 478 * sin(radians(th.bullets * 18)))
+
+                Sprite.line_barrage([None, color_dict[6], color_dict[3]], rands, pos, th.group)
+
+            th.bullets += 1
+
+            if th.bullets % 2 == 0:
+                sound_cache["fire"].play()
+
     def update(th):
         th.timer += 1
 
@@ -268,9 +285,10 @@ class Nre(Basic):
             th.target_pos = (choice((150, 220, 292, 365, 435)), 60)
             th.bullets = 0
             th.timer = 0
+            th.interval_pos = th.rect.center
             th.interval_locate = th.locate
             th.can_shoot = True
-            th.choice = choice([th.fire] * 6 + [th.free] * 3 + [th.extend] * 2 + [th.final])
+            th.choice = choice([th.fire] * 7 + [th.free] * 3 + [th.extend] * 2 + [th.final, th.last])
         if th.timer % 100 >= 82:
             if th.timer % 82 == 0:
                 for _ in range(8):
@@ -301,7 +319,7 @@ class Qdi(Basic):
             pos = (randint(120, 465), randint(15, 230))
             delta = add(th.locate, (-pos[0], -pos[1]))
 
-            Sprite.Barrage(effective, 2, 3.5, th.color, direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, th.color)], th.group, False, 4)
+            Sprite.Barrage(effective, 2, 3.5, th.color, direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             th.bullets += 1
 
@@ -311,7 +329,7 @@ class Qdi(Basic):
     def free(th):
         if th.timer == 0:
             for _ in range(64):
-                Sprite.Barrage(effective, 2, 4, th.color, randint(0, 360), (randint(120, 465), randint(15, 225)), 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                Sprite.Barrage(effective, 2, 4, th.color, randint(0, 360), (randint(120, 465), randint(15, 225)), 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             sound_cache["fire"].play()
 
@@ -322,7 +340,7 @@ class Qdi(Basic):
                 rands = randint(0, 30)
 
                 for j in range(0 + rands, 360 + rands, 30):
-                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, j, pos, 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, j, pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             sound_cache["fire"].play()
 
@@ -334,7 +352,7 @@ class Qdi(Basic):
                 rands = randint(0, 30)
 
                 for i in range(0 + rands, 360 + rands, 30):
-                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             sound_cache["fire"].play()
 
@@ -356,14 +374,14 @@ class Qdi(Basic):
                     fast_speed -= fast_lose
                     slow_speed -= slow_lose
 
-                    Sprite.Barrage(effective, 2, fast_speed if i <= end else slow_speed, th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                    Sprite.Barrage(effective, 2, fast_speed if i <= end else slow_speed, th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             sound_cache["fire"].play()
 
     def count(th):
         if th.bullets < 12 and th.timer % 2 == 0:
             for i in range(0, 360, 30):
-                Sprite.Barrage(effective, 2, randint(4, 6), th.color, i + 8 * th.bullets, th.rect.center, 0, barrage_cache[(2, th.color)], th.group, False, 4)
+                Sprite.Barrage(effective, 2, randint(4, 6), th.color, i + 8 * th.bullets, th.rect.center, 0, barrage_cache[(2, th.color)], th.group, False, 3)
 
             th.bullets += 1
 
@@ -408,7 +426,7 @@ class Kli(Base):
         th.color = color_dict[5]
         th.collided = Invinc(180, 6)
         th.divided = Invinc(180, 4, th.reset_bullet)
-        th.point = Sprite.Rect(particle_cache[(2, color_dict[7])], group[2])
+        th.point = Sprite.Rect(particle_cache[(2, color_dict[7])], group[2], radius=1)
         th.point.radius = 2
         th.bomb_bullets = 0
         th.bullet_timer = 0

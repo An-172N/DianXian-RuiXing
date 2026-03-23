@@ -62,8 +62,8 @@ class Text(Base):
 
 
 class Rect(Base):
-    def __init__(th, image: pg.Surface, *group: pg.sprite.Group, pos: tuple=(0, 0)):
-        super().__init__(image, *group, pos=pos, radius=2)
+    def __init__(th, image: pg.Surface, *group: pg.sprite.Group, pos: tuple=(0, 0), radius: int=0):
+        super().__init__(image, *group, pos=pos, radius=radius)
 
 
 class Brick(Base):
@@ -177,21 +177,21 @@ def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     delta = add(locate, (-spawn_pos[0], -spawn_pos[1]))
 
-    Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, False, 4)
+    Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, False, 3)
 
 
 def polygon_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = add((i, locate[1]), (-spawn_pos[0], -spawn_pos[1]))
 
-        Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, radius=2)
+        Barrage(effective, type, 3, color[0], direct(-delta[0], -delta[1]), spawn_pos, 0, barrage_cache[(type, color[0])], group, radius=1.5)
 
 
 def line_barrage(color: list, current: tuple, target: tuple, group: pg.sprite.Group):
-    current = current
-    target = target
-    
     while True:
+        if not effective.collidepoint(current):
+            break
+
         Line(color[1], color[2], 0, current, particle_cache[(3, color[1])], particle_cache[(3, color[2])], group)
 
         if math.dist(current, target) < 1e-6:
@@ -205,7 +205,7 @@ def point_barrage(type: int, color: list, locate: tuple, group: pg.sprite.Group)
         pos = (randint(120, 465), randint(15, 225))
         delta = add(locate, (-pos[0], -pos[1]))
 
-        Barrage(effective, type, 4, color[0], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(type, color[0])], group, False, 4)
+        Barrage(effective, type, 4, color[0], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(type, color[0])], group, False, 3)
 
 
 def spawn_particles(group: pg.sprite.Group, size: int, pos: tuple, speed: tuple, color1: tuple, color2: tuple=None):

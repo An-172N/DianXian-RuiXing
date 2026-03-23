@@ -17,7 +17,7 @@ class Base(pygame.sprite.Sprite):
         pos: tuple[int, int] = (0, 0),
         mask: bool = False,
         rotate: bool = False,
-        radius: int = None
+        radius: float = None
     ) -> None:
         super().__init__(*group)
 
