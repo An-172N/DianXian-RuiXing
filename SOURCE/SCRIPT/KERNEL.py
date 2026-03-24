@@ -401,33 +401,29 @@ def bullet_collide():
         for brick in hit_bricks:
             if brick.hp > 0:
                 GLOBAL.score += 64
-            brick.hp -= bullet.damage
-
+                brick.hp -= bullet.damage
             if brick.hp <= 0:
-                if bullet.type in ("bullet", "bomb") and brick.is_die:
-                    bullet.kill()
+                if not brick.is_die:
+                    if hasattr(brick, "free"):
+                        GLOBAL.text_part += 1
+                        GLOBAL.text_number = 0
+                        GLOBAL.is_talk = True
+                        GLOBAL.pop_timer = 0
+                    else:
+                        spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
 
-                    break
+                    if sound_cache["fire"].get_num_channels() < 2:
+                        sound_cache["fire"].play()
+                    if hasattr(brick, "power"):
+                        spawn(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
+                    if hasattr(brick, "flash"):
+                        spawn(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
+                    brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
+                    Sprite.spawn_particles(GLOBAL.particle_group, 2, brick.rect.center, (4, 8), brick.color, color_dict[6])
+                    brick.kill()
 
                 brick.is_die = True
 
-                if hasattr(brick, "free"):
-                    GLOBAL.text_part += 1
-                    GLOBAL.text_number = 0
-                    GLOBAL.is_talk = True
-                    GLOBAL.pop_timer = 0
-                else:
-                    spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
-
-                if sound_cache["fire"].get_num_channels() < 2:
-                    sound_cache["fire"].play()
-                if hasattr(brick, "power"):
-                    spawn(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
-                if hasattr(brick, "flash"):
-                    spawn(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
-                brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
-                Sprite.spawn_particles(GLOBAL.particle_group, 2, brick.rect.center, (4, 8), brick.color, color_dict[6])
-                brick.kill()
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()
 
