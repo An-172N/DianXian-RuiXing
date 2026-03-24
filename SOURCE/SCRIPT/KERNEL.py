@@ -93,7 +93,7 @@ def pause_menu(screen: pg.Surface, _):
 
 
 def load_menu(screen: pg.Surface, _):
-    title = "这一关是————"
+    title = "这一站是————"
     text = (f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} !!", "START!!!!")
 
     half_menu(screen, title, text)
@@ -172,7 +172,7 @@ def check_menu(screen: pg.Surface, _):
 
     try:
         log = load_json(GLOBAL.json_files[GLOBAL.index])[1]
-        title = "抚形日志"
+        title = f"抚形日志簿 Page {GLOBAL.total_files - GLOBAL.index} / {GLOBAL.total_files}"
         text = (
             f"今天是 {log['Date']}",
             f"得到了 {log['Score']} 分",
