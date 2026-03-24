@@ -172,7 +172,7 @@ def check_menu(screen: pg.Surface, _):
 
     try:
         log = load_json(GLOBAL.json_files[GLOBAL.index])[1]
-        title = f"抚形日志簿 Page {GLOBAL.total_files - GLOBAL.index} / {GLOBAL.total_files}"
+        title = f"抚形日志簿第 {GLOBAL.total_files - GLOBAL.index} / {GLOBAL.total_files} 页"
         text = (
             f"今天是 {log['Date']}",
             f"得到了 {log['Score']} 分",
