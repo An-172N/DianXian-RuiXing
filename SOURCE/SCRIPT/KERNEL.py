@@ -85,21 +85,21 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
     ui(screen, text, f"{int(clock.get_fps())} FPS")
 
 
-def pause_menu(screen: pg.Surface):
+def pause_menu(screen: pg.Surface, _):
     title = "休息ing"
     text = ("Esc 休息好了", "Del 不玩了")
 
     half_menu(screen, title, text)
 
 
-def load_menu(screen: pg.Surface):
+def load_menu(screen: pg.Surface, _):
     title = "这一关是————"
     text = (f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} !!", "START!!!!")
 
     half_menu(screen, title, text)
 
 
-def talk_menu(screen: pg.Surface):
+def talk_menu(screen: pg.Surface, _):
     try:
         text = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]
         human = text["char"]
@@ -110,7 +110,7 @@ def talk_menu(screen: pg.Surface):
         GLOBAL.is_talk = False
 
 
-def summary_menu(screen: pg.Surface):
+def summary_menu(screen: pg.Surface, _):
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Clear! {'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
     text = (
         f"得点 {GLOBAL.total_point} * 512 = {GLOBAL.total_point * 512}",
@@ -130,16 +130,16 @@ def summary_menu(screen: pg.Surface):
     half_menu(screen, stage, (text[0], text[1])) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
 
 
-def start_menu(screen: pg.Surface):
+def start_menu(screen: pg.Surface, version: str):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
-    text = ('Ver 1.1.0', '', '', '', '')
+    text = (f"Ver {version}", '', '', '', '')
     key = ("Z 开玩", "C 日志", "Q 退了")
 
     full_menu(screen, title, text, key, other)
 
 
-def save_menu(screen: pg.Surface):
+def save_menu(screen: pg.Surface, _):
     shortly = False
     title = "抚形日志"
     name = f"谢谢 {GLOBAL.name} 的帮助"
@@ -160,7 +160,7 @@ def save_menu(screen: pg.Surface):
     full_menu(screen, title, text, key, name, shortly=shortly)
 
 
-def check_menu(screen: pg.Surface):
+def check_menu(screen: pg.Surface, _):
     def load_json(filepath: str):
         with open(filepath, 'r', encoding='utf-8') as f:
             return json.load(f)
@@ -276,7 +276,7 @@ def key_event():
             if GLOBAL.pop_timer >= 60:
                 if GLOBAL.is_check and event.key in keydown_check_dict:
                     (keydown_check_dict[event.key](), sound_cache["pick"].play())
-                elif not GLOBAL.is_run and not GLOBAL.is_check and event.key in keydown_start_dict:
+                elif not GLOBAL.is_run and not GLOBAL.is_check and not GLOBAL.is_exit and event.key in keydown_start_dict:
                     (sound_cache["pick"].play(), keydown_start_dict[event.key]())
                 elif GLOBAL.is_save:
                     if event.key in keydown_over_dict:
@@ -401,29 +401,33 @@ def bullet_collide():
         for brick in hit_bricks:
             if brick.hp > 0:
                 GLOBAL.score += 64
-                brick.hp -= bullet.damage
-            else:
-                if not brick.is_die:
-                    if hasattr(brick, "free"):
-                        GLOBAL.text_part += 1
-                        GLOBAL.text_number = 0
-                        GLOBAL.is_talk = True
-                        GLOBAL.pop_timer = 0
-                    else:
-                        spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
+            brick.hp -= bullet.damage
 
-                    if sound_cache["fire"].get_num_channels() < 2:
-                        sound_cache["fire"].play()
-                    if hasattr(brick, "power"):
-                        spawn(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
-                    if hasattr(brick, "flash"):
-                        spawn(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
-                    brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
-                    Sprite.spawn_particles(GLOBAL.particle_group, 2, brick.rect.center, (4, 8), brick.color, color_dict[6])
-                    brick.kill()
+            if brick.hp <= 0:
+                if bullet.type in ("bullet", "bomb") and brick.is_die:
+                    bullet.kill()
+
+                    break
 
                 brick.is_die = True
 
+                if hasattr(brick, "free"):
+                    GLOBAL.text_part += 1
+                    GLOBAL.text_number = 0
+                    GLOBAL.is_talk = True
+                    GLOBAL.pop_timer = 0
+                else:
+                    spawn_barrage(GLOBAL.stage, GLOBAL.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], brick.rect.center, GLOBAL.major.rect.center)
+
+                if sound_cache["fire"].get_num_channels() < 2:
+                    sound_cache["fire"].play()
+                if hasattr(brick, "power"):
+                    spawn(brick.power, Sprite.Item, "power", 2.5, brick.rect.center, GLOBAL.item_group)
+                if hasattr(brick, "flash"):
+                    spawn(brick.flash, Sprite.Item, "flash", 2.5, brick.rect.center, GLOBAL.item_group)
+                brick_blast(GLOBAL.bullet_group, GLOBAL.stage, [brick.color, color_dict[5], color_dict[3]], brick.rect.midleft, brick.rect.midright, brick.rect.midbottom, brick.rect.center)
+                Sprite.spawn_particles(GLOBAL.particle_group, 2, brick.rect.center, (4, 8), brick.color, color_dict[6])
+                brick.kill()
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()
 
@@ -464,7 +468,7 @@ def choose_human():
     }[GLOBAL.stage](GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group, GLOBAL.brick_group)
 
 
-def display(screen: pg.Surface, clock: pg.time.Clock):
+def display(screen: pg.Surface, clock: pg.time.Clock, version: str):
     if GLOBAL.is_run:
         screen.blit(picture[GLOBAL.stage], (120, 15))
         if GLOBAL.is_level_load:
@@ -486,7 +490,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
         (lambda: GLOBAL.is_save, save_menu)
     ):
         if condition() and not GLOBAL.is_exit:
-            func(screen)
+            func(screen, version)
 
             break
 
@@ -494,7 +498,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock):
     situation(screen, clock)
 
 
-def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
+def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str):
     GLOBAL.stage = clamp(args[0], 1, 4)
     GLOBAL.level = clamp(args[1], 1, 6)
     GLOBAL.flash = clamp(args[2], 1, 96)
@@ -540,7 +544,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple):
             if not GLOBAL.is_level_load:
                 GLOBAL.wait_load_timer, GLOBAL.is_level_load = GLOBAL.wait(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
 
-        display(screen, clock)
+        display(screen, clock, version)
 
         if GLOBAL.is_exit:
             if timer % 30 == 0 and alpha < 255:

@@ -31,6 +31,7 @@ class Basic(Base):
         th.choice = None
         th.timer = 0
         th.bullets = 0
+        th.index = 0
         th.target_pos = (292, 60)
 
 
@@ -39,6 +40,7 @@ class Ono(Basic):
         super().__init__(char_image.subsurface((24, 0, 12, 26)), locate, 192, color_dict[1], *group)
 
         th.power = True
+        th.sd = [th.fire] * 3 + [th.free, th.extend, th.final]
 
     def fire(th):
         if th.timer == 0:
@@ -48,17 +50,6 @@ class Ono(Basic):
             sound_cache["fire"].play()
 
     def free(th):
-        if th.bullets < 10:
-            for i in range(0 + th.timer * 7, 360 + th.timer * 7, 180):
-                for j in range(0 + th.timer * 7, 360 + th.timer * 7, 90):
-                    Sprite.Barrage(effective, 2, 3.5, th.color, j, (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i))), 0, barrage_cache[(2, th.color)], th.group, False, 3)
-
-            th.bullets += 1
-
-            if th.bullets % 3 == 0:
-                sound_cache["fire"].play()
-
-    def extend(th):
         speed = 5
         delay = 0
 
@@ -75,6 +66,17 @@ class Ono(Basic):
                 speed -= 0.5
 
             sound_cache["fire"].play()
+
+    def extend(th):
+        if th.bullets < 10:
+            for i in range(0 + th.timer * 7, 360 + th.timer * 7, 180):
+                for j in range(0 + th.timer * 7, 360 + th.timer * 7, 90):
+                    Sprite.Barrage(effective, 2, 3.5, th.color, j, (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i))), 0, barrage_cache[(2, th.color)], th.group, False, 3)
+
+            th.bullets += 1
+
+            if th.bullets % 3 == 0:
+                sound_cache["fire"].play()
 
     def final(th):
         if th.bullets < 24:
@@ -97,7 +99,8 @@ class Ono(Basic):
             th.bullets = 0
             th.timer = 0
             th.can_shoot = True
-            th.choice = choice([th.fire] * 5 + [th.free, th.extend, th.final])
+            th.choice = th.sd[th.index]
+            th.index = (th.index + 1) if th.index < len(th.sd) - 1 else 0
         if th.timer % 99 == 0 and th.timer % 120 >= 99: 
             for i in range(0, 360, 30):
                 pos = (th.x + 48 * cos(radians(i)), th.y + 48 * sin(radians(i)))
@@ -122,6 +125,11 @@ class Hro(Basic):
 
         th.is_choose = False
         th.flash = True
+        th.group_index = 1
+        th.group_choice = None
+        th.sd1 = [th.fire] * 2 + [th.free]
+        th.sd2 = [th.fire] * 3 + [th.extend]
+        th.sd3 = [th.fire] * 4 + [th.free, th.extend]
 
     def fire(th):
         if th.timer % 6 == 0 and th.bullets < 3:
@@ -194,7 +202,12 @@ class Hro(Basic):
             th.can_shoot = True
         if th.timer % 110 >= 91:
             if not th.is_choose:
-                th.choice = choice([th.fire] * 3 + [th.free, th.extend])
+                th.group_choice = th.sd1 if th.group_index == 1 else th.sd2 if th.group_index == 2 else th.sd3
+                th.choice = (th.group_choice)[th.index]
+                th.index += 1
+                if th.index == len(th.group_choice):
+                    th.group_index = (th.group_index + 1) if th.group_index < 3 else 1
+                    th.index = 0
                 th.is_choose = True
             if th.timer % 91 == 0:
                 for i in range(0, 360, 120 if th.choice == th.fire else 90):
@@ -219,6 +232,10 @@ class Nre(Basic):
         super().__init__(char_image.subsurface((48, 0, 12, 26)), locate, 256, color_dict[3], *group)
 
         th.power = True
+        th.group_index = 1
+        th.group_choice = None
+        th.sd1 = [th.fire, th.free, th.fire, th.extend, th.fire, th.final, th.fire, th.last]
+        th.sd2 = [th.extend, th.final, th.last]
 
     def fire(th):
         if th.timer == 0:
@@ -288,7 +305,12 @@ class Nre(Basic):
             th.interval_pos = th.rect.center
             th.interval_locate = th.locate
             th.can_shoot = True
-            th.choice = choice([th.fire] * 7 + [th.free] * 3 + [th.extend] * 2 + [th.final, th.last])
+            th.group_choice = th.sd1 if th.group_index == 1 else th.sd2
+            th.choice = (th.group_choice)[th.index]
+            th.index += 1
+            if th.index == len(th.group_choice):
+                th.group_index = (th.group_index + 1) if th.group_index < 2 else 1
+                th.index = 0
         if th.timer % 100 >= 82:
             if th.timer % 82 == 0:
                 for _ in range(8):

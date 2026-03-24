@@ -3,6 +3,11 @@
 
 
 def main():
+    project = '点线 Project'
+    title = '锐行 ~ Thunder Out of the Mountain'
+    version = '1.1.0'
+    author = 'An_172N'
+
     import sys
 
     sys.dont_write_bytecode = True
@@ -15,6 +20,7 @@ def main():
     for i, j in (('-stage', 1), ('-level', 1), ('-flash', 3), ('-power', 0), ('-seed', None)):
         parser.add_argument(i, type=int, default=j)
     args = parser.parse_args()
+    args_tuple = (int(args.stage), int(args.level), int(args.flash), int(args.power))
 
     import random
 
@@ -25,7 +31,7 @@ def main():
     clock = pygame.time.Clock()
 
     pygame.display.init()
-    pygame.display.set_caption('锐行 ~ Thunder Out of the Mountain')
+    pygame.display.set_caption(title)
     pygame.font.init()
     pygame.mixer.init()
 
@@ -33,7 +39,8 @@ def main():
 
     import SCRIPT
 
-    SCRIPT.KERNEL.update(clock, screen, (int(args.stage), int(args.level), int(args.flash), int(args.power)))
+    print(f"{project} | {title} | Ver {version} | By {author}")
+    SCRIPT.KERNEL.update(clock, screen, args_tuple, version)
 
 
 if __name__ == "__main__":
