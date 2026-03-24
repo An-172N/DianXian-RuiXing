@@ -111,7 +111,8 @@ def talk_menu(screen: pg.Surface, _):
 
 
 def summary_menu(screen: pg.Surface, _):
-    stage = f"Stage {GLOBAL.stage if GLOBAL.stage <= 3 else 'Extra'} - {GLOBAL.level} Clear! {'Hit Z Key.' if GLOBAL.level <= 5 else ''}"
+    shortly = False
+    stage = f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} Clear! {'Hit Z Key.' if GLOBAL.level <= 5 and GLOBAL.pop_timer >= 60 else ''}"
     text = (
         f"得点 {GLOBAL.total_point} * 512 = {GLOBAL.total_point * 512}",
         f"无闪 {GLOBAL.unflash} * 4096 = {GLOBAL.unflash * 4096}",
@@ -126,8 +127,10 @@ def summary_menu(screen: pg.Surface, _):
         4: "享受禁饮 ~ Point's Hideaway"
     }
     key = ("", "", "Z 继续")
+    if GLOBAL.pop_timer == 60:
+        shortly = True
 
-    half_menu(screen, stage, (text[0], text[1])) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
+    half_menu(screen, stage, (text[0], text[1]), shortly=shortly) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
 
 
 def start_menu(screen: pg.Surface, version: str):
@@ -142,7 +145,7 @@ def start_menu(screen: pg.Surface, version: str):
 def save_menu(screen: pg.Surface, _):
     shortly = False
     title = "抚形日志"
-    name = f"谢谢 {GLOBAL.name} 的帮助"
+    name = f"{f'谢谢 {GLOBAL.name} 的帮助' if GLOBAL.pop_timer >= 60 else ''}"
     text = (
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {GLOBAL.score} 分",
@@ -151,6 +154,8 @@ def save_menu(screen: pg.Surface, _):
         f"使用了 {GLOBAL.flashed} 次形闪{'（躺' if GLOBAL.flash == 0 else ''}"
     )
     key = ("", "Ent 记录", "Esc 算了")
+    if GLOBAL.pop_timer == 60:
+        shortly = True
     if GLOBAL.pop_timer >= 60:
         keys = pg.key.get_pressed()
         for i in range(len(keys)):
