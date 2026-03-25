@@ -194,14 +194,14 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
     func = lambda i, j: {"surface": font.render(i, False, (255, 255, 255)), "pos": j}
     group = (
         (
-            func(title, (8, 9)),
-            func(other, (8, 304))
+            func(title, (8, 10)),
+            func(other, (8, 305))
         ),
         (
-            *[func(text[i], (8, 59 + (25 * i))) for i in range(0, 5)],
+            *[func(text[i], (8, 60 + (25 * i))) for i in range(0, 5)],
         ),
         (
-            *[func(key[i], (276, 169 + (50 * i))) for i in range(0, 3)],
+            *[func(key[i], (275, 170 + (50 * i))) for i in range(0, 3)],
         )
     )
 
@@ -218,9 +218,9 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
     func = lambda i, j: ({"surface": font.render(i, False, (255, 255, 255)), "pos": j},)
     group = (
-        func(title, (8, 9)),
-        func(text[0], (8, 59)),
-        func(text[1], (8, 84))
+        func(title, (8, 10)),
+        func(text[0], (8, 60)),
+        func(text[1], (8, 85))
     )
 
     if GLOBAL.pop_timer == interval[0]:
@@ -234,14 +234,14 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
 
 
 def ui(surface: pg.Surface, text: list, fps: str):
-    for text_info in (
+    for info in (
         {"text": text[0], "pos": (39, 25)},
         {"text": text[1], "pos": (39, 270)},
         {"text": text[2], "pos": (39, 295)},
         {"text": text[3], "pos": (39, 320)},
-        {"text": fps, "pos": (405, 343)}
+        {"text": fps, "pos": (405, 345)}
     ):
-        surface.blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
+        surface.blit(font.render(f"{info['text']}", False, color_dict[6]), info["pos"])
 
 
 def save_file():

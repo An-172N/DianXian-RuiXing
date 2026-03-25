@@ -2,10 +2,17 @@
 # 此代码遵循 GPLv3.0 协议
 
 
+from typing import TypedDict
+
+
 import pygame
 
 
 class Change:
+    class LayersGroup(TypedDict):
+        surface: pygame.Surface
+        pos: tuple[int, int]
+
     @staticmethod
     def swivel(
         original_image: pygame.Surface,
@@ -19,16 +26,18 @@ class Change:
             return turn_image
         else:
             return original_image
-        
+
+    @staticmethod
     def layers(
         surface: pygame.Surface,
-        group: tuple,
+        group: tuple[tuple[LayersGroup]],
         timer: int,
-        interval: tuple,
+        interval: tuple[int, ...],
         shortly: bool,
+        color: tuple[int, int, int, int] = (0, 0, 0, 0)
     ) -> pygame.Surface:
         if shortly:
-            surface.fill((0, 0, 0))
+            surface.fill(color)
             for i in range(len(group)):
                 for j in group[i]:
                     surface.blit(j["surface"], j["pos"])
