@@ -77,12 +77,13 @@ keyup_game_dict = {
 def situation(screen: pg.Surface, clock: pg.time.Clock):
     text = (
         f"{GLOBAL.score:9d}",
+        f"{int(clock.get_fps()): 9d}",
         f"{GLOBAL.power:02d}  ,  {GLOBAL.total_point:02d}",
         f"{GLOBAL.flash:02d}",
         f"{GLOBAL.combo:02d}  ,  {(GLOBAL.major.bullets if GLOBAL.major is not None else 0):02d}"
     )
 
-    ui(screen, text, f"{int(clock.get_fps())} FPS")
+    ui(screen, text)
 
 
 def pause_menu(screen: pg.Surface):
@@ -233,13 +234,13 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
         GLOBAL.pop_timer += 1
 
 
-def ui(surface: pg.Surface, text: list, fps: str):
+def ui(surface: pg.Surface, text: list):
     for info in (
         {"text": text[0], "pos": (39, 25)},
-        {"text": text[1], "pos": (39, 270)},
-        {"text": text[2], "pos": (39, 295)},
-        {"text": text[3], "pos": (39, 320)},
-        {"text": fps, "pos": (405, 345)}
+        {"text": text[1], "pos": (39, 50)},
+        {"text": text[2], "pos": (39, 270)},
+        {"text": text[3], "pos": (39, 295)},
+        {"text": text[4], "pos": (39, 320)},
     ):
         surface.blit(font.render(f"{info['text']}", False, color_dict[6]), info["pos"])
 
@@ -516,6 +517,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str):
 
     for text_info in (
         {"text": "分", "pos": (9, 25)},
+        {"text": "刷", "pos": (9, 50)},
         {"text": '形', "pos": (9, 270)},
         {"text": '闪', "pos": (9, 295)},
         {"text": '连', "pos": (9, 320)},
