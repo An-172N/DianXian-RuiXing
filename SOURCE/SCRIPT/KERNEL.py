@@ -86,10 +86,13 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
 
 
 def pause_menu(screen: pg.Surface, _):
+    shortly = False
     title = "休息ing"
-    text = ("Esc 休息好了", "Del 不玩了")
+    text = ("Esc 休息好了", "Del 不玩了") if GLOBAL.pop_timer >= 60 else ("", "")
+    if GLOBAL.pop_timer == 60:
+        shortly = True
 
-    half_menu(screen, title, text)
+    half_menu(screen, title, text, shortly=shortly)
 
 
 def load_menu(screen: pg.Surface, _):
@@ -137,7 +140,7 @@ def start_menu(screen: pg.Surface, version: str):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = (f"Ver {version}", '', '', '', '')
-    key = ("Z 开玩", "C 日志", "Q 退了")
+    key = ("Z 开玩", "C 日志" if GLOBAL.total_files > 0 else "C 木鱼", "Q 退了")
 
     full_menu(screen, title, text, key, other)
 
