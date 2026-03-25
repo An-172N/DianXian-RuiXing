@@ -61,8 +61,8 @@ keydown_over_dict = {
 keydown_check_dict = {
     pg.K_DELETE: lambda: (os.remove(GLOBAL.json_files[GLOBAL.index]), setattr(GLOBAL, "json_files", get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')), setattr(GLOBAL, "total_files", len(GLOBAL.json_files)), setattr(GLOBAL, "index", clamp(GLOBAL.index, 0, GLOBAL.total_files - 1)), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.total_files > 0 else None,
     pg.K_ESCAPE: lambda: (setattr(GLOBAL, "is_check", False), setattr(GLOBAL, "index", 0), setattr(GLOBAL, "pop_timer", 0)),
-    pg.K_LEFT: lambda: (setattr(GLOBAL, "index", GLOBAL.index - 1), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.index > 0 else None,
-    pg.K_RIGHT: lambda: (setattr(GLOBAL, "index", GLOBAL.index + 1), setattr(GLOBAL, "pop_timer", 0)) if GLOBAL.index < GLOBAL.total_files - 1 else None
+    pg.K_LEFT: lambda: (setattr(GLOBAL, "index", (GLOBAL.index - 1) if GLOBAL.index > 0 else GLOBAL.total_files - 1), setattr(GLOBAL, "pop_timer", 0)),
+    pg.K_RIGHT: lambda: (setattr(GLOBAL, "index", (GLOBAL.index + 1) if GLOBAL.index < GLOBAL.total_files - 1 else 0), setattr(GLOBAL, "pop_timer", 0))
 }
 
 
@@ -77,9 +77,9 @@ keyup_game_dict = {
 def situation(screen: pg.Surface, clock: pg.time.Clock):
     text = (
         f"{GLOBAL.score:9d}",
-        f"{GLOBAL.power:02d} , {GLOBAL.total_point:02d}",
+        f"{GLOBAL.power:02d}  ,  {GLOBAL.total_point:02d}",
         f"{GLOBAL.flash:02d}",
-        f"{GLOBAL.combo:02d} , {(GLOBAL.major.bullets if GLOBAL.major is not None else 0):02d}"
+        f"{GLOBAL.combo:02d}  ,  {(GLOBAL.major.bullets if GLOBAL.major is not None else 0):02d}"
     )
 
     ui(screen, text, f"{int(clock.get_fps())} FPS")
@@ -232,10 +232,10 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
 
 def ui(surface: pg.Surface, text: list, fps: str):
     for text_info in (
-        {"text": text[0], "pos": (38, 25)},
-        {"text": text[1], "pos": (38, 270)},
-        {"text": text[2], "pos": (38, 295)},
-        {"text": text[3], "pos": (38, 320)},
+        {"text": text[0], "pos": (39, 25)},
+        {"text": text[1], "pos": (39, 270)},
+        {"text": text[2], "pos": (39, 295)},
+        {"text": text[3], "pos": (39, 320)},
         {"text": fps, "pos": (405, 343)}
     ):
         surface.blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
@@ -508,10 +508,10 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str):
     timer = 0
 
     for text_info in (
-        {"text": "分", "pos": (8, 25)},
-        {"text": '形', "pos": (8, 270)},
-        {"text": '闪', "pos": (8, 295)},
-        {"text": '连', "pos": (8, 320)},
+        {"text": "分", "pos": (9, 25)},
+        {"text": '形', "pos": (9, 270)},
+        {"text": '闪', "pos": (9, 295)},
+        {"text": '连', "pos": (9, 320)},
     ):
         picture[6].blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
     picture[6].set_clip(window)
