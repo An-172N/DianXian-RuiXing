@@ -85,7 +85,7 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
     ui(screen, text, f"{int(clock.get_fps())} FPS")
 
 
-def pause_menu(screen: pg.Surface, _):
+def pause_menu(screen: pg.Surface):
     shortly = False
     title = "休息ing"
     text = ("Esc 休息好了", "Del 不玩了") if GLOBAL.pop_timer >= 60 else ("", "")
@@ -95,14 +95,14 @@ def pause_menu(screen: pg.Surface, _):
     half_menu(screen, title, text, shortly=shortly)
 
 
-def load_menu(screen: pg.Surface, _):
+def load_menu(screen: pg.Surface):
     title = "这一站是————"
     text = (f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} !!", "START!!!!")
 
     half_menu(screen, title, text)
 
 
-def talk_menu(screen: pg.Surface, _):
+def talk_menu(screen: pg.Surface):
     try:
         text = GLOBAL.text[f"{GLOBAL.text_part}"][f"{GLOBAL.text_number}"]
         human = text["char"]
@@ -113,7 +113,7 @@ def talk_menu(screen: pg.Surface, _):
         GLOBAL.is_talk = False
 
 
-def summary_menu(screen: pg.Surface, _):
+def summary_menu(screen: pg.Surface):
     shortly = False
     stage = f"Stage {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} Clear! {'Hit Z Key.' if GLOBAL.level <= 5 and GLOBAL.pop_timer >= 60 else ''}"
     text = (
@@ -145,7 +145,7 @@ def start_menu(screen: pg.Surface, version: str):
     full_menu(screen, title, text, key, other)
 
 
-def save_menu(screen: pg.Surface, _):
+def save_menu(screen: pg.Surface):
     shortly = False
     title = "抚形日志"
     name = f"{f'谢谢 {GLOBAL.name} 的帮助' if GLOBAL.pop_timer >= 60 else ''}"
@@ -168,7 +168,7 @@ def save_menu(screen: pg.Surface, _):
     full_menu(screen, title, text, key, name, shortly=shortly)
 
 
-def check_menu(screen: pg.Surface, _):
+def check_menu(screen: pg.Surface):
     def load_json(filepath: str):
         with open(filepath, 'r', encoding='utf-8') as f:
             return json.load(f)
@@ -484,19 +484,23 @@ def display(screen: pg.Surface, clock: pg.time.Clock, version: str):
             GLOBAL.particle_group.draw(screen)
             GLOBAL.barrage_group.draw(screen)
 
-    for condition, func in (
-        (lambda: GLOBAL.is_check, check_menu),
-        (lambda: not GLOBAL.is_run, start_menu),
-        (lambda: GLOBAL.is_pause, pause_menu),
-        (lambda: not GLOBAL.is_level_load, load_menu),
-        (lambda: GLOBAL.is_talk, talk_menu),
-        (lambda: GLOBAL.is_summary, summary_menu),
-        (lambda: GLOBAL.is_save, save_menu)
-    ):
-        if condition() and not GLOBAL.is_exit:
-            func(screen, version)
+    if not GLOBAL.is_exit:
+        if GLOBAL.is_check:
+            check_menu(screen)
+        elif not GLOBAL.is_run:
+            start_menu(screen, version)
+        else:
+            for condition, func in (
+                (lambda: GLOBAL.is_pause, pause_menu),
+                (lambda: not GLOBAL.is_level_load, load_menu),
+                (lambda: GLOBAL.is_talk, talk_menu),
+                (lambda: GLOBAL.is_summary, summary_menu),
+                (lambda: GLOBAL.is_save, save_menu)
+            ):
+                if condition():
+                    func(screen)
 
-            break
+                    break
 
     screen.blit(picture[6])
     situation(screen, clock)
