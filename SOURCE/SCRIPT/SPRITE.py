@@ -151,7 +151,7 @@ def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
 
 def point_brick(group: pg.sprite.Group):
     for _ in range(24):
-        Barrage(effective, "bullet", 16, 0, randint(0, 360), (randint(120, 465), randint(15, 345)), 4, bullet_cache["bullet"], group)
+        Barrage(effective, "bullet", 16, 0, randint(0, 360), (randint(120, 465), randint(15, 320)), 4, bullet_cache["bullet"], group)
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple, group: pg.sprite.Group):
