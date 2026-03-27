@@ -89,7 +89,7 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
 def pause_menu(screen: pg.Surface):
     shortly = False
     title = "休息ing"
-    text = ("Esc 休息好了", "Del 不玩了") if GLOBAL.pop_timer >= 60 else ("", "")
+    text = ("Esc 休息好了", "Del 不爬了") if GLOBAL.pop_timer >= 60 else ("", "")
     if GLOBAL.pop_timer == 60:
         shortly = True
 
@@ -141,19 +141,19 @@ def start_menu(screen: pg.Surface, version: str):
     title = "锐行 ~ Thunder Out of the Mountain"
     other = "(C)opyright 2026 An_172N"
     text = (f"Ver {version}", '', '', '', '')
-    key = ("Z 开玩", "C 日志" if GLOBAL.total_files > 0 else "C 木鱼", "Q 退了")
+    key = ("Z 爬山", "C 日志" if GLOBAL.total_files > 0 else "C 木鱼", "Q 拜拜")
 
     full_menu(screen, title, text, key, other)
 
 
 def save_menu(screen: pg.Surface):
     shortly = False
-    title = "抚形日志"
+    title = "爬山日志"
     name = f"{f'谢谢 {GLOBAL.name} 的帮助' if GLOBAL.pop_timer >= 60 else ''}"
     text = (
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {GLOBAL.score} 分",
-        f"最远到达的地方是 {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} 站",
+        f"最高能到 {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} 站",
         f"拾形点率为 {GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61))}",
         f"使用了 {GLOBAL.flashed} 次形闪{'（躺' if GLOBAL.flash == 0 else ''}"
     )
@@ -176,11 +176,11 @@ def check_menu(screen: pg.Surface):
 
     try:
         log = load_json(GLOBAL.json_files[GLOBAL.index])[1]
-        title = f"抚形日志簿第 {GLOBAL.total_files - GLOBAL.index} / {GLOBAL.total_files} 页"
+        title = f"爬山日志簿第 {GLOBAL.total_files - GLOBAL.index} / {GLOBAL.total_files} 页"
         text = (
             f"今天是 {log['Date']}",
             f"得到了 {log['Score']} 分",
-            f"最远到达的地方是 {log['Stage']} 站",
+            f"最高能到 {log['Stage']} 站",
             f"拾形点率为 {log['Rate']}",
             f"使用了 {log['Flashed']} 次形闪{'（躺' if log['Flash'] == 0 else ''}"
         )
