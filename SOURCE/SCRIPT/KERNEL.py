@@ -153,7 +153,7 @@ def save_menu(screen: pg.Surface):
     text = (
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {GLOBAL.score} 分",
-        f"最高能到 {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} 站",
+        f"最终到达 {GLOBAL.stage if GLOBAL.stage < 3 else 'Final' if GLOBAL.stage == 3 else 'Extra'} - {GLOBAL.level} 站",
         f"拾形点率为 {GLOBAL.calculate_item_rate(GLOBAL.game_total_point, GLOBAL.stage <= 3, (153, 61))}",
         f"使用了 {GLOBAL.flashed} 次形闪{'（躺' if GLOBAL.flash == 0 else ''}"
     )
@@ -180,7 +180,7 @@ def check_menu(screen: pg.Surface):
         text = (
             f"今天是 {log['Date']}",
             f"得到了 {log['Score']} 分",
-            f"最高能到 {log['Stage']} 站",
+            f"最终到达 {log['Stage']} 站",
             f"拾形点率为 {log['Rate']}",
             f"使用了 {log['Flashed']} 次形闪{'（躺' if log['Flash'] == 0 else ''}"
         )
