@@ -15,6 +15,7 @@ from LOGIC.CALCULATE import *
 
 window = pg.Rect(120, 15, 345, 330)
 effective = pg.Rect(105, 0, 375, 360)
+brick_ready = []
 
 
 color_dict = {

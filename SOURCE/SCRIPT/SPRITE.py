@@ -67,8 +67,8 @@ class Rect(Base):
 
 
 class Brick(Base):
-    def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pg.Surface, group: pg.sprite.Group):
-        super().__init__(image, group, form=form, pos=pos, mask=True)
+    def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pg.Surface):
+        super().__init__(image, form=form, pos=pos, mask=True)
 
         th.color = color
         th.hp = hp
@@ -160,18 +160,17 @@ def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tu
             shape = int(line[i])
             c = color if random() >= rate else color_dict[6]
 
-            Brick(shape, hp, c, (size[0] + i * interval[0], size[1] + row * interval[1]), brick_cache[(shape, c)], group)
+            brick_ready.append(Brick(shape, hp, c, (size[0] + i * interval[0], size[1] + row * interval[1]), brick_cache[(shape, c)]))
 
 
-def choose_brick(group: pg.sprite.Group, numbers: tuple, basic_power: int, basic_flash: int):
-    brick_list = list(group)
-    choose_power = sample(range(len(brick_list)), basic_power + numbers[0] + numbers[1])
-    choose_flash = sample(range(len(brick_list)), basic_flash)
+def choose_brick(group: list, numbers: tuple, basic_power: int, basic_flash: int):
+    choose_power = sample(range(len(group)), basic_power + numbers[0] + numbers[1])
+    choose_flash = sample(range(len(group)), basic_flash)
 
     for i in choose_power:
-        brick_list[i].power = True
+        group[i].power = True
     for j in choose_flash:
-        brick_list[j].flash = True
+        group[j].flash = True
 
 
 def circle_barrage(type: int, color: list, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):

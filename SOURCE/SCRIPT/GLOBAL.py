@@ -23,6 +23,7 @@ is_exit = False
 
 pop_timer = 0
 wait_load_timer = 0
+remaining_brick = []
 
 
 name = ''
@@ -84,15 +85,3 @@ def combo_counter(timer: int, count: int, score: int, bonus: int, end: int) -> t
         timer = end
 
     return timer, count, score
-
-
-def wait(timer: int, loaded: bool, end: int, load: object, *args) -> tuple:
-    if timer <= end:
-        timer += 1
-    else:
-        load(*args)
-
-        timer = 0
-        loaded = True
-
-    return timer, loaded

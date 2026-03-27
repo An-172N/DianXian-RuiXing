@@ -6,7 +6,7 @@ import json
 import sys
 import os
 from datetime import datetime
-from random import randint, random
+from random import randint, random, sample
 
 
 import pygame as pg
@@ -441,13 +441,9 @@ def sprite_loader():
     if GLOBAL.level == 6:
         GLOBAL.char = choose_human()
         GLOBAL.text = json.loads(asset(rf"ASSET\JSON\{GLOBAL.stage}.json").decode('utf-8'))
-        GLOBAL.is_talk = True
     else:
         load(asset(rf"ASSET\STAGE\{GLOBAL.stage}-{GLOBAL.level}.stg"), Sprite.load_brick, color_dict[GLOBAL.stage], 4, 0.031, (127, 22), (15, 15), GLOBAL.brick_group)
-        Sprite.choose_brick(GLOBAL.brick_group, (GLOBAL.stage, GLOBAL.level), 4, 1)
-
-    GLOBAL.wait_load_timer = 0
-    GLOBAL.pop_timer = 0
+        Sprite.choose_brick(brick_ready, (GLOBAL.stage, GLOBAL.level), 4, 1)
 
 
 def spawn(condition: bool, sprite: object, *args, group: pg.sprite.Group = None, timer: int = 0) -> int:
@@ -476,14 +472,13 @@ def choose_human():
 def display(screen: pg.Surface, clock: pg.time.Clock, version: str):
     if GLOBAL.is_run:
         screen.blit(picture[GLOBAL.stage], (120, 15))
-        if GLOBAL.is_level_load:
-            GLOBAL.bullet_group.draw(screen)
-            if GLOBAL.major is not None and GLOBAL.major.collided.visitable and GLOBAL.major.divided.visitable:
-                GLOBAL.plane_group.draw(screen)
-            GLOBAL.brick_group.draw(screen)
-            GLOBAL.item_group.draw(screen)
-            GLOBAL.particle_group.draw(screen)
-            GLOBAL.barrage_group.draw(screen)
+        GLOBAL.bullet_group.draw(screen)
+        if GLOBAL.major is not None and GLOBAL.major.collided.visitable and GLOBAL.major.divided.visitable and GLOBAL.is_level_load:
+            GLOBAL.plane_group.draw(screen)
+        GLOBAL.brick_group.draw(screen)
+        GLOBAL.item_group.draw(screen)
+        GLOBAL.particle_group.draw(screen)
+        GLOBAL.barrage_group.draw(screen)
 
     if not GLOBAL.is_exit:
         if GLOBAL.is_check:
@@ -552,7 +547,31 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str):
                 if len(GLOBAL.brick_group) == 0 and len(GLOBAL.item_group) == 0 and not GLOBAL.is_talk:
                     GLOBAL.is_summary = True
             if not GLOBAL.is_level_load:
-                GLOBAL.wait_load_timer, GLOBAL.is_level_load = GLOBAL.wait(GLOBAL.wait_load_timer, GLOBAL.is_level_load, 90, sprite_loader)
+                if GLOBAL.wait_load_timer <= 90:
+                    if GLOBAL.wait_load_timer == 0:
+                        sprite_loader()
+                    if GLOBAL.wait_load_timer >= 30 and GLOBAL.wait_load_timer % 30 == 0:
+                        if not GLOBAL.remaining_brick:
+                            GLOBAL.remaining_brick = list(range(len(brick_ready)))
+                        if GLOBAL.remaining_brick:
+                            size = len(GLOBAL.remaining_brick) if GLOBAL.wait_load_timer == 90 else min(len(brick_ready) // 3, len(GLOBAL.remaining_brick))
+                            choose_brick = sample(GLOBAL.remaining_brick, size)
+
+                            for i in choose_brick:
+                                GLOBAL.brick_group.add(brick_ready[i])
+
+                            GLOBAL.remaining_brick = [i for i in GLOBAL.remaining_brick if i not in choose_brick]
+
+                    GLOBAL.wait_load_timer += 1
+                else:
+                    GLOBAL.wait_load_timer = 0
+                    GLOBAL.is_level_load = True
+                    GLOBAL.pop_timer = 0
+                    if GLOBAL.level == 6:
+                        GLOBAL.is_talk = True
+
+                    GLOBAL.remaining_brick.clear()
+                    brick_ready.clear()
 
         display(screen, clock, version)
 
