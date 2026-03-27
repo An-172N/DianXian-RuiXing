@@ -39,7 +39,7 @@ def main():
     import SCRIPT
 
     print(f"{project} | {title} | Ver {version} | By {author}")
-    SCRIPT.KERNEL.update(clock, screen, args_tuple, version)
+    SCRIPT.KERNEL.update(clock, screen, args_tuple, version, title)
 
 
 if __name__ == "__main__":

@@ -137,11 +137,10 @@ def summary_menu(screen: pg.Surface):
     half_menu(screen, stage, (text[0], text[1]), shortly=shortly) if GLOBAL.level <= 5 else full_menu(screen, stage, text, key, title.get(GLOBAL.stage))
 
 
-def start_menu(screen: pg.Surface, version: str):
-    title = "锐行 ~ Thunder Out of the Mountain"
+def start_menu(screen: pg.Surface, version: str, title: str):
     other = "(C)opyright 2026 An_172N"
     text = (f"Ver {version}", '', '', '', '')
-    key = ("Z 爬山", "C 日志" if GLOBAL.total_files > 0 else "C 木鱼", "Q 拜拜")
+    key = ("Z 爬山" if GLOBAL.stage < 4 else "Z 下山", "C 日志" if GLOBAL.total_files > 0 else "C 木鱼", "Q 拜拜")
 
     full_menu(screen, title, text, key, other)
 
@@ -469,7 +468,7 @@ def choose_human():
     }[GLOBAL.stage](GLOBAL.major.rect.center, GLOBAL.barrage_group, GLOBAL.particle_group, GLOBAL.brick_group)
 
 
-def display(screen: pg.Surface, clock: pg.time.Clock, version: str):
+def display(screen: pg.Surface, clock: pg.time.Clock, version: str, title: str):
     if GLOBAL.is_run:
         screen.blit(picture[GLOBAL.stage], (120, 15))
         GLOBAL.bullet_group.draw(screen)
@@ -484,7 +483,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock, version: str):
         if GLOBAL.is_check:
             check_menu(screen)
         elif not GLOBAL.is_run:
-            start_menu(screen, version)
+            start_menu(screen, version, title)
         else:
             for condition, func in (
                 (lambda: GLOBAL.is_pause, pause_menu),
@@ -502,7 +501,7 @@ def display(screen: pg.Surface, clock: pg.time.Clock, version: str):
     situation(screen, clock)
 
 
-def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str):
+def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, title: str):
     GLOBAL.stage = clamp(args[0], 1, 4)
     GLOBAL.level = clamp(args[1], 1, 6)
     GLOBAL.flash = clamp(args[2], 1, 96)
@@ -573,7 +572,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str):
                     GLOBAL.remaining_brick.clear()
                     brick_ready.clear()
 
-        display(screen, clock, version)
+        display(screen, clock, version, title)
 
         if GLOBAL.is_exit:
             if timer % 30 == 0 and alpha < 255:
