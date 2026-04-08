@@ -13,44 +13,17 @@ def vector(
     cx, cy = current
     tx, ty = target
     dx, dy = tx - cx, ty - cy
+    dist_sq = dx * dx + dy * dy
 
-    if (distance := math.hypot(dx, dy)) < step:
+    if dist_sq < step * step:
         return (tx, ty), (dx, dy)
-    else:
-        if distance > 0:
-            dx, dy = dx / distance, dy / distance
 
-        return (cx + dx * step, cy + dy * step), (dx, dy)
+    distance = math.sqrt(dist_sq)
 
+    if distance > 0:
+        dx, dy = dx / distance, dy / distance
 
-def translate(
-    points: list[tuple[float, float]],
-    target: tuple[float, float]
-) -> list[tuple[float, float]]:
-    x1, y1 = points[0]
-    x2, y2 = points[-1]
-    tx, ty = target
-    cx, cy = (x1 + x2) / 2, (y1 + y2) / 2
-
-    return [(x + (tx - cx), y + (ty - cy)) for (x, y) in points]
-
-
-def rotate(
-    points: list[tuple[float, float]],
-    degree: float,
-    center: tuple[float, float] = None
-) -> list[tuple[float, float]]:
-    radians = math.radians(degree)
-    cos = math.cos(radians)
-    sin = math.sin(radians)
-
-    if center is None:
-        number = len(points)
-        cx, cy = sum(point[0] for point in points) / number, sum(point[1] for point in points) / number
-    else:
-        cx, cy = center
-
-    return [(cx + (x - cx) * cos - (y - cy) * sin, cy + (x - cx) * sin + (y - cy) * cos) for x, y in points]
+    return (cx + dx * step, cy + dy * step), (dx, dy)
 
 
 def approximate(
@@ -58,7 +31,34 @@ def approximate(
     limit: int = 180,
     step: int = 10
 ) -> int:
-    return 0 if (rounded := round((value % limit) / step) * step) == limit else rounded
+    return 0 if (rounded := round((value % limit) / step) * step) == limit else int(rounded)
+
+
+def clamp(
+    value: float,
+    minimum: float,
+    maximum: float
+) -> float:
+    if maximum < minimum:
+        maximum, minimum = minimum, maximum
+
+    if value > maximum:
+        return maximum
+    elif value < minimum:
+        return minimum
+    else:
+        return value
+
+
+def fibonacci(
+    former: float,
+    latter: float,
+    frequency: int
+) -> float:
+    for _ in range(0, frequency + 1):
+        former, latter = latter, former + latter
+
+    return former
 
 
 def direct(
@@ -72,19 +72,3 @@ def add(
     *packs: tuple[float, ...] | list[float] | set[float]
 ) -> tuple[float, ...]:
     return tuple(map(sum, zip(*packs)))
-
-
-def clamp(
-    value: float,
-    minimum: float,
-    maximum: float
-) -> float:
-    return max(min(value, max(minimum, maximum)), min(minimum, maximum))
-
-
-def fibonacci(
-    former: float,
-    latter: float,
-    frequency: int
-) -> float:
-    return former if frequency <= 0 else fibonacci(latter, former + latter, frequency - 1)

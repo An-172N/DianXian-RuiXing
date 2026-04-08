@@ -9,62 +9,65 @@ import pygame as pg
 
 
 from LOGIC.FILE import *
+from SCRIPT.HUMAN import Kli
 
 
-is_run = False
-is_pause = False
-is_summary = False
-is_talk = False
-is_save = False
-is_check = False
-is_level_load = False
-is_exit = False
+class One:
+    def __init__(th):
+        th.plane_group = pg.sprite.Group()
+        th.bullet_group = pg.sprite.Group()
+        th.brick_group = pg.sprite.Group()
+        th.item_group = pg.sprite.Group()
+        th.barrage_group = pg.sprite.Group()
+        th.particle_group = pg.sprite.Group()
+
+        th.is_pause = False
+        th.is_summary = False
+        th.is_talk = False
+        th.is_save = False
+        th.is_check = False
+        th.is_level_load = False
+        th.is_exit = False
+
+        th.major = Kli(th.bullet_group, th.particle_group, th.plane_group)
+        th.char = None
+        th.text = None
+
+        th.item_spawn_timer = 0
+        th.total_point = 0
+        th.combo_timer = 120
+        th.combo = 0
+        th.text_number = 0
+        th.text_part = 0
+        th.pop_timer = 0
 
 
-pop_timer = 0
-wait_load_timer = 0
-remaining_brick = []
+class Two:
+    def __init__(th):
+        th.is_run = False
+
+        th.power = 0
+        th.flash = 3
+        th.unflash = 1
+        th.score = 0
+        th.flashed = 0
+        th.game_total_point = 0
+        th.stage = 1
+        th.level = 1
+        th.wait_load_timer = 0
+
+        th.remaining_brick = []
 
 
-name = ''
+class Log:
+    def __init__(th):
+        th.name = ''
 
+        th.log = None
 
-item_spawn_timer = 0
-combo_timer = 120
-combo = 0
-
-
-power = 0
-flash = 3
-unflash = 1
-score = 0
-flashed = 0
-total_point = 0
-game_total_point = 0
-
-
-text_number = 0
-text_part = 0
-stage = 1
-level = 1
-
-
-char = None
-text = None
-major = None
-
-
-plane_group = pg.sprite.Group()
-bullet_group = pg.sprite.Group()
-brick_group = pg.sprite.Group()
-item_group = pg.sprite.Group()
-barrage_group = pg.sprite.Group()
-particle_group = pg.sprite.Group()
-
-
-json_files = get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
-index = 0
-total_files = len(json_files)
+        th.json_files = get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+        th.index = 0
+        th.total_files = len(th.json_files)
 
 
 def calculate_item_rate(number: int, condition: bool, critical: tuple) -> str:

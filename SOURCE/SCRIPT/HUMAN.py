@@ -17,12 +17,11 @@ import SCRIPT.SPRITE as Sprite
 
 
 class Basic(Base):
-    def __init__(th, image: pg.Surface, locate: tuple, hp: int, color: tuple, *group: pg.sprite.Group):
+    def __init__(th, image: pg.Surface, hp: int, color: tuple, *group: pg.sprite.Group):
         super().__init__(image, group[2], pos=(292, 60))
 
         th.group = group[0]
         th.particle_group = group[1]
-        th.locate = locate
         th.hp = hp
         th.color = color
         th.is_die = False
@@ -32,12 +31,13 @@ class Basic(Base):
         th.timer = 0
         th.bullets = 0
         th.index = 0
+        th.locate = (0, 0)
         th.target_pos = (292, 60)
 
 
 class Ono(Basic):
-    def __init__(th, locate: tuple, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((24, 0, 12, 26)), locate, 192, color_dict[1], *group)
+    def __init__(th, *group: pg.sprite.Group):
+        super().__init__(char_image.subsurface((24, 0, 12, 26)), 192, color_dict[1], *group)
 
         th.power = True
         th.sd = [th.fire] * 3 + [th.free, th.extend, th.final]
@@ -45,7 +45,7 @@ class Ono(Basic):
     def fire(th):
         if th.timer == 0:
             for i in range(0, 360, 15):
-                Sprite.Barrage(effective, 2, 4, th.color, i, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                Sprite.Barrage(effective, 2, 4, th.color, i, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, 3)
 
             sound_cache["fire"].play()
 
@@ -61,7 +61,7 @@ class Ono(Basic):
                     for k in (j - 180, j, 180 - delay):
                         delta = add(th.locate, (-th.x, -th.y))
 
-                        Sprite.Barrage(effective, 2, speed, th.color, direct(-delta[0], -delta[1]) + k, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                        Sprite.Barrage(effective, 2, speed, th.color, direct(-delta[0], -delta[1]) + k, (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, 3)
 
                 speed -= 0.5
 
@@ -71,7 +71,7 @@ class Ono(Basic):
         if th.bullets < 10:
             for i in range(0 + th.timer * 7, 360 + th.timer * 7, 180):
                 for j in range(0 + th.timer * 7, 360 + th.timer * 7, 90):
-                    Sprite.Barrage(effective, 2, 3.5, th.color, j, (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i))), 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                    Sprite.Barrage(effective, 2, 3.5, th.color, j, (th.x + 32 * cos(radians(i)),th.y + 32 * sin(radians(i))), 0, barrage_cache[(2, th.color)], th.group, 3)
 
             th.bullets += 1
 
@@ -83,7 +83,7 @@ class Ono(Basic):
             delta = add(th.locate, (-th.x, -th.y))
 
             for i in (2, 1, -1, -2):
-                Sprite.Barrage(effective, 2, 4, th.color, ((th.timer * 12) * i) + (direct(-delta[0], -delta[1]) + 180), (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                Sprite.Barrage(effective, 2, 4, th.color, ((th.timer * 12) * i) + (direct(-delta[0], -delta[1]) + 180), (th.x, th.y), 0, barrage_cache[(2, th.color)], th.group, 3)
 
             th.bullets += 1
 
@@ -106,11 +106,11 @@ class Ono(Basic):
                 pos = (th.x + 48 * cos(radians(i)), th.y + 48 * sin(radians(i)))
                 delta = add((th.x, th.y), (-pos[0], -pos[1]))
 
-                Sprite.Barrage(effective, 2, 3, color_dict[6], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, color_dict[6])], th.particle_group, False)
+                Sprite.Barrage(effective, 2, 3, color_dict[6], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, color_dict[6])], th.particle_group)
 
             sound_cache["charge"].play()
 
-            th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+            th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -120,8 +120,8 @@ class Ono(Basic):
 
 
 class Hro(Basic):
-    def __init__(th, locate: tuple, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((36, 0, 12, 26)), locate, 224, color_dict[2], *group)
+    def __init__(th, *group: pg.sprite.Group):
+        super().__init__(char_image.subsurface((36, 0, 12, 26)), 224, color_dict[2], *group)
 
         th.is_choose = False
         th.flash = True
@@ -138,7 +138,7 @@ class Hro(Basic):
             for i in range(-30, 31, 30):
                 delta = add((th.locate[0], th.locate[1]), (-pos[0], -pos[1]))
 
-                Sprite.Barrage(effective, 0, 4, th.color, direct(-delta[0], -delta[1]) + i, pos, 0, barrage_cache[(0, th.color)], th.group, radius=1.5)
+                Sprite.Barrage(effective, 0, 4, th.color, direct(-delta[0], -delta[1]) + i, pos, 0, barrage_cache[(0, th.color)], th.group, 2)
 
             th.bullets += 1
             sound_cache["fire"].play()
@@ -168,7 +168,7 @@ class Hro(Basic):
                 for j in range(45, 136, 90):
                     angle = direct(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
 
-                    Sprite.Barrage(effective, 0, 4, th.color, angle, current_pos, 0, barrage_cache[(0, th.color)], th.group, radius=1.5)
+                    Sprite.Barrage(effective, 0, 4, th.color, angle, current_pos, 0, barrage_cache[(0, th.color)], th.group, 2)
 
             th.bullets += 1
 
@@ -185,7 +185,7 @@ class Hro(Basic):
                         pos = (j, 60)
                         delta = add((th.locate[0], th.locate[1] - 160), (-pos[0], -pos[1]))
 
-                        Sprite.Barrage(effective, 0, speed, th.color, direct(-delta[0], -delta[1]) + k * 90, pos, 0, barrage_cache[(0, th.color)], th.group, radius=1.5)
+                        Sprite.Barrage(effective, 0, speed, th.color, direct(-delta[0], -delta[1]) + k * 90, pos, 0, barrage_cache[(0, th.color)], th.group, 2)
 
                 speed -= 0.6
 
@@ -218,7 +218,7 @@ class Hro(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+                th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot and not th.is_choose:
@@ -228,8 +228,8 @@ class Hro(Basic):
 
 
 class Nre(Basic):
-    def __init__(th, locate: tuple, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((48, 0, 12, 26)), locate, 256, color_dict[3], *group)
+    def __init__(th, *group: pg.sprite.Group):
+        super().__init__(char_image.subsurface((48, 0, 12, 26)), 256, color_dict[3], *group)
 
         th.power = True
         th.group_index = 1
@@ -321,7 +321,7 @@ class Nre(Basic):
 
                 sound_cache["charge"].play()
 
-                th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+                th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -331,8 +331,8 @@ class Nre(Basic):
 
 
 class Qdi(Basic):
-    def __init__(th, locate: tuple, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((60, 0, 12, 26)), locate, 96, color_dict[4], *group)
+    def __init__(th, *group: pg.sprite.Group):
+        super().__init__(char_image.subsurface((60, 0, 12, 26)), 96, color_dict[4], *group)
 
         th.power = True
 
@@ -341,7 +341,7 @@ class Qdi(Basic):
             pos = (randint(120, 465), randint(15, 230))
             delta = add(th.locate, (-pos[0], -pos[1]))
 
-            Sprite.Barrage(effective, 2, 3.5, th.color, direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
+            Sprite.Barrage(effective, 2, 3.5, th.color, direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, th.color)], th.group, 3)
 
             th.bullets += 1
 
@@ -351,7 +351,7 @@ class Qdi(Basic):
     def free(th):
         if th.timer == 0:
             for _ in range(64):
-                Sprite.Barrage(effective, 2, 4, th.color, randint(0, 360), (randint(120, 465), randint(15, 225)), 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                Sprite.Barrage(effective, 2, 4, th.color, randint(0, 360), (randint(120, 465), randint(15, 225)), 0, barrage_cache[(2, th.color)], th.group, 3)
 
             sound_cache["fire"].play()
 
@@ -362,7 +362,7 @@ class Qdi(Basic):
                 rands = randint(0, 30)
 
                 for j in range(0 + rands, 360 + rands, 30):
-                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, j, pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, j, pos, 0, barrage_cache[(2, th.color)], th.group, 3)
 
             sound_cache["fire"].play()
 
@@ -374,7 +374,7 @@ class Qdi(Basic):
                 rands = randint(0, 30)
 
                 for i in range(0 + rands, 360 + rands, 30):
-                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                    Sprite.Barrage(effective, 2, randint(2, 5), th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, 3)
 
             sound_cache["fire"].play()
 
@@ -396,14 +396,14 @@ class Qdi(Basic):
                     fast_speed -= fast_lose
                     slow_speed -= slow_lose
 
-                    Sprite.Barrage(effective, 2, fast_speed if i <= end else slow_speed, th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                    Sprite.Barrage(effective, 2, fast_speed if i <= end else slow_speed, th.color, i, pos, 0, barrage_cache[(2, th.color)], th.group, 3)
 
             sound_cache["fire"].play()
 
     def count(th):
         if th.bullets < 12 and th.timer % 2 == 0:
             for i in range(0, 360, 30):
-                Sprite.Barrage(effective, 2, randint(4, 6), th.color, i + 8 * th.bullets, th.rect.center, 0, barrage_cache[(2, th.color)], th.group, False, 3)
+                Sprite.Barrage(effective, 2, randint(4, 6), th.color, i + 8 * th.bullets, th.rect.center, 0, barrage_cache[(2, th.color)], th.group, 3)
 
             th.bullets += 1
 
@@ -428,11 +428,11 @@ class Qdi(Basic):
                 pos = (int(uniform(th.x - 48, th.x + 48)), int(uniform(th.y - 64, th.y + 64)))
                 delta = add((th.x, th.y), (-pos[0], -pos[1]))
 
-                Sprite.Barrage(effective, 2, 3, color_dict[6], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, color_dict[6])], th.particle_group, False)
+                Sprite.Barrage(effective, 2, 3, color_dict[6], direct(-delta[0], -delta[1]), pos, 0, barrage_cache[(2, color_dict[6])], th.particle_group)
 
             sound_cache["charge"].play()
 
-            th.point = Sprite.Rect(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+            th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -448,8 +448,7 @@ class Kli(Base):
         th.color = color_dict[5]
         th.collided = Invinc(180, 6)
         th.divided = Invinc(180, 4, th.reset_bullet)
-        th.point = Sprite.Rect(particle_cache[(2, color_dict[7])], group[2], radius=1)
-        th.point.radius = 2
+        th.point = Base(particle_cache[(2, color_dict[6])], radius=1)
         th.bomb_bullets = 0
         th.bullet_timer = 0
         th.bullets = 0

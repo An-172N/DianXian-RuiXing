@@ -16,12 +16,11 @@ class Base(pygame.sprite.Sprite):
         angle: float = 0,
         pos: tuple[int, int] = (0, 0),
         mask: bool = False,
-        rotate: bool = False,
         radius: float = None
     ) -> None:
         super().__init__(*group)
 
-        th.image = pygame.transform.rotate(image, angle) if rotate else image
+        th.image = pygame.transform.rotate(image, angle) if angle != 0 else image
         th.rect = th.image.get_rect(center=pos)
         th.angle = angle
         if radius:

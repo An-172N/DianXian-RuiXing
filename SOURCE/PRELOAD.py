@@ -37,7 +37,7 @@ icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))
 
 
 sound_cache = {
-    i: pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\{i.upper()}.flac'))) for i in ('pick', 'fire', 'charge')
+    i: pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\{i.upper()}.flac'))) for i in ('pick', 'fire', 'charge', 'tick')
 }
 
 
@@ -53,13 +53,13 @@ picture = {
 
 barrage_cache = {
     **{(2, color_dict[i]): Draw.circle((0, 0, 8, 8), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
-    (0, color_dict[2]): (surface := basic_image.subsurface((75, 7, 8, 8)).copy(), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
-    (0, color_dict[6]): basic_image.subsurface((75, 7, 8, 8))
+    (0, color_dict[2]): (surface := basic_image.subsurface(75, 7, 8, 8).copy(), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
+    (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8)
 }
 
 
 brick_cache = {
-    **{(i, color_dict[j]): basic_image.subsurface((k, 0, 15, 15)) for i, j, k in ((2, 1, 0), (0, 2, 15), (1, 3, 30), (2, 4, 45), (0, 6, 60))},
+    **{(i, color_dict[j]): basic_image.subsurface(k, 0, 15, 15) for i, j, k in ((2, 1, 0), (0, 2, 15), (1, 3, 30), (2, 4, 45), (0, 6, 60))},
     (2, color_dict[6]): Draw.circle((0, 0, 15, 15), 2, color_dict[6]).convert_alpha(),
     (1, color_dict[6]): Draw.rectangle((15, 15), 2, color_dict[6]).convert_alpha()
 }
@@ -67,8 +67,8 @@ brick_cache = {
 
 bullet = Draw.rectangle((15, 15), 0, color_dict[5]).convert()
 bullet_cache = {
-    "bullet": bullet.subsurface((0, 0, 2, 15)).convert_alpha(),
-    "bullet-cross": bullet.subsurface((2, 0, 2, 15)).convert_alpha(),
+    "bullet": bullet.subsurface(0, 0, 2, 15).convert_alpha(),
+    "bullet-cross": bullet.subsurface(2, 0, 2, 15).convert_alpha(),
     "bomb": bullet
 }
 
@@ -88,7 +88,7 @@ particle_cache = {
     (9, color_dict[5]): Draw.rectangle((9, 9), 0, color_dict[5]).convert(),
     (3, color_dict[3]): Draw.rectangle((3, 3), 0, color_dict[3]).convert(),
     **{(3 * i, color_dict[6]): Draw.rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
-    **{(2, color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 8)}
+    **{(2, color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
 }
 
 
