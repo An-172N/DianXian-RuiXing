@@ -6,3 +6,5 @@ from SCRIPT import KERNEL
 from SCRIPT import GLOBAL
 from SCRIPT import HUMAN
 from SCRIPT import SPRITE
+from SCRIPT import SPAWN
+from SCRIPT import SOME

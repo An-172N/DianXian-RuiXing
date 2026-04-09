@@ -31,7 +31,16 @@ color_dict = {
 }
 
 
+title = {
+    1: "水边的秋霜店 ~ Sweet Reservoir",
+    2: "X 在树林 ~ Hypnotized",
+    3: "午夜行至最高峰 ~ Thunder Studio",
+    4: "享受禁饮 ~ Point's Hideaway"
+}
+
+
 asset = lambda path: get_data(__name__, path)
+inverse = lambda pack: tuple(map(lambda x: -x, pack))
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
 
@@ -43,6 +52,8 @@ sound_cache = {
 
 char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alpha()
 basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
+blue_rect = Draw.rectangle((15, 15), 0, color_dict[5]).convert()
+white_rect = Draw.rectangle((12, 12), 0, color_dict[6]).convert()
 picture = {
     **{i: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE{i}BG.png'))).convert() for i in range(1, 5)},
     5: pg.Surface((345, 330)).convert(),
@@ -65,18 +76,17 @@ brick_cache = {
 }
 
 
-bullet = Draw.rectangle((15, 15), 0, color_dict[5]).convert()
 bullet_cache = {
-    "bullet": bullet.subsurface(0, 0, 2, 15).convert_alpha(),
-    "bullet-cross": bullet.subsurface(2, 0, 2, 15).convert_alpha(),
-    "bomb": bullet
+    "bullet": blue_rect.subsurface(0, 0, 2, 15).convert_alpha(),
+    "bullet-cross": blue_rect.subsurface(2, 0, 2, 15).convert_alpha(),
+    "bomb": blue_rect
 }
 
 
 line_cache = {
     (length, angle, color): pg.transform.rotate(Draw.rectangle((2, length), 0, color).convert_alpha(), angle)
     for length in (64, 128, 192)
-    for angle in range(0, 180, 10)
+    for angle in range(0, 180, 15)
     for color in (color_dict[5], color_dict[9])
 }
 
@@ -85,10 +95,11 @@ item_cache = {i: Draw.rectangle((9, 9), 2, color_dict[j]).convert() for i, j in 
 
 
 particle_cache = {
-    (9, color_dict[5]): Draw.rectangle((9, 9), 0, color_dict[5]).convert(),
+    (2, color_dict[6]): white_rect.subsurface(0, 0, 2, 2),
     (3, color_dict[3]): Draw.rectangle((3, 3), 0, color_dict[3]).convert(),
-    **{(3 * i, color_dict[6]): Draw.rectangle((3 * i, 3 * i), 0, color_dict[6]).convert() for i in range(1, 5)},
-    **{(2, color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 7)}
+    **{(i, color_dict[5]): blue_rect.subsurface(0, 0, i, i) for i in (9, 2)},
+    **{(3 * i, color_dict[6]): white_rect.subsurface(0, 0, 3 * i, 3 * i) for i in range(1, 5)},
+    **{(2, color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 5)}
 }
 
 
