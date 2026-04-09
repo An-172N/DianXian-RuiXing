@@ -196,17 +196,16 @@ def check_menu(screen: pg.Surface):
 
 
 def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60), shortly: bool=False):
-    func = lambda i, j: {"surface": font.render(i, False, (255, 255, 255)), "pos": j}
     group = (
         (
-            func(title, (8, 10)),
-            func(other, (8, 305))
+            render(title, (8, 10)),
+            render(other, (8, 305))
         ),
         (
-            *[func(text[i], (8, 60 + (25 * i))) for i in range(0, 5)],
+            *[render(text[i], (8, 60 + (25 * i))) for i in range(0, 5)],
         ),
         (
-            *[func(key[i], (275, 170 + (50 * i))) for i in range(0, 3)],
+            *[render(key[i], (275, 170 + (50 * i))) for i in range(0, 3)],
         )
     )
 
@@ -221,11 +220,10 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
 
 
 def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
-    func = lambda i, j: ({"surface": font.render(i, False, (255, 255, 255)), "pos": j},)
     group = (
-        func(title, (8, 10)),
-        func(text[0], (8, 60)),
-        func(text[1], (8, 85))
+        (render(title, (8, 10)),),
+        (render(text[0], (8, 60)),),
+        (render(text[1], (8, 85)),)
     )
 
     if one.pop_timer == interval[0]:
@@ -267,13 +265,13 @@ def level_logic(numbers: tuple, unflash: int):
 def item_collide():
     major = one.major
 
-    for item in pg.sprite.spritecollide(major, one.item_group, False):
+    for item in pg.sprite.spritecollide(major, one.item_group, True):
         one.combo_timer = 120
-        major.bullets = int(clamp(major.bullets + 1, 0, 6))
+        major.bullets = clamp(major.bullets + 1, 0, 6)
 
-        if item.type in ['flash', 'power']:
+        if item.type in ('flash', 'power'):
             if item.type == "power":
-                two.power = int(clamp(two.power + 1, 0, 32))
+                two.power = clamp(two.power + 1, 0, 32)
                 one.combo += 1
 
                 sound_cache["pick"].play()
@@ -287,8 +285,6 @@ def item_collide():
             two.game_total_point += 1
         else:
             sound_cache["charge"].play(maxtime=24)
-
-        item.kill()
 
 
 def barrage_collide():
@@ -460,6 +456,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
                 one.item_group.update()
                 one.particle_group.update()
                 one.brick_group.update()
+
                 barrage_collide()
                 bullet_collide()
                 item_collide()
@@ -469,13 +466,13 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
             if not one.is_level_load:
                 if two.wait_load_timer <= 90:
                     if two.wait_load_timer == 0:
-                        one.char, one.text = sprite_loader((two.stage, two.level), one.barrage_group, one.particle_group, one.brick_group)
+                        one.char, one.text = sprite_loader((two.stage, two.level), one.barrage_group, one.particle_group, one.brick_group, one.bullet_group)
                     two.wait_load_timer = pop_bricks(two.remaining_brick, brick_ready, two.wait_load_timer, one.brick_group)
                 else:
                     two.wait_load_timer, one.is_level_load, one.pop_timer, one.is_talk = close_summary(two.level, one.is_talk, two.remaining_brick, brick_ready)
-        
+
         display(screen, clock, version, title)
-        
+
         alpha, timer = fade_surface(alpha, timer, one.is_exit, picture[7], screen)
 
         pg.display.flip()

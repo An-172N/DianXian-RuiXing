@@ -41,6 +41,7 @@ title = {
 
 asset = lambda path: get_data(__name__, path)
 inverse = lambda pack: tuple(map(lambda x: -x, pack))
+render = lambda i, j: {"surface": font.render(i, False, (255, 255, 255)), "pos": j}
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
 
