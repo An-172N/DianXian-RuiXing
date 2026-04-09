@@ -372,7 +372,7 @@ def key_event():
                     (keydown_pause_dict[event.key](), sound_cache["pick"].play())
                 elif one.is_summary and event.key == pg.K_z:
                     two.score, one.is_summary, one.pop_timer, one.is_save, two.stage, two.level, two.unflash = summary_logic(two.score, one.total_point, two.power, two.unflash, one.combo, (two.stage, two.level))
-                    
+
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()

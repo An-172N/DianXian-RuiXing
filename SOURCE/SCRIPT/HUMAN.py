@@ -146,25 +146,13 @@ class Hro(Basic):
             sound_cache["fire"].play()
 
     def free(th):
-        bullets = (
-            {
-                'dx1': 120,
-                'dy1': 15,
-                'dx2': 465,
-                'dy2': 345
-            },
-            {
-                'dx1': 465,
-                'dy1': 15,
-                'dx2': 120,
-                'dy2': 345
-            }
-        )
-
         if th.bullets < 18:
-            for bullet_info in bullets:
-                start_pos = (bullet_info['dx1'], bullet_info['dy1'])
-                end_pos = (bullet_info['dx2'], bullet_info['dy2'])
+            for i in (0, 1):
+                dx1 = 120 if i else 465
+                dx2 = 465 if i else 120
+
+                start_pos = (dx1, 15)
+                end_pos = (dx2, 345)
                 current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
 
                 for j in range(45, 136, 90):
@@ -235,7 +223,7 @@ class Hro(Basic):
                         sound_cache['tick'].play()
                     if bullet.type == "bullet":
                         bullet.kill()
-                        
+
                     barrage.is_die = True
 
         th.x, th.y = vector((th.x, th.y), th.target_pos, 5)[0]
@@ -478,23 +466,11 @@ class Kli(Base):
 
         for i in range(0, p):
             for j in range(-q, q + 1, q):
-                dx = 0 + i * 10
-                dy = 0 + i * 12
-                bullet_type = (
-                    {
-                        'x': th.rect.left - dx,
-                        'y': th.rect.top + dy,
-                        'angle': j
-                    },
-                    {
-                        'x': th.rect.right + dx,
-                        'y': th.rect.top + dy,
-                        'angle': -j
-                    }
-                )
+                for k in (-1, 1):
+                    dx = th.rect.centerx + 6 * k + (0 + i * 10) * k
+                    dy = th.rect.top + (0 + i * 12)
 
-                for info in bullet_type:
-                    Barrage(effective, 16, th.color, info['angle'], (info['x'], info['y']), 4, bullet_cache["bullet"], th.bullet_group, form="bullet")
+                    Barrage(effective, 16, th.color, j * k, (dx, dy), 4, bullet_cache["bullet"], th.bullet_group, form="bullet")
 
         sound_cache["fire"].play(maxtime=32)
 
