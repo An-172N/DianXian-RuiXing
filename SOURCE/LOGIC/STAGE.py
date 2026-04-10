@@ -16,7 +16,6 @@ def load(
 ) -> str:
     content = file.decode(decode)
     lines = content.splitlines()
-
     for row, line in enumerate(lines):
         func(row, line, *args)
 
@@ -29,7 +28,6 @@ def follow(
     start: int = 1
 ) -> tuple[int, int]:
     stage, level = numbers
-
     if level >= end:
         stage += 1
         level = start

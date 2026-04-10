@@ -29,7 +29,6 @@ class Base(pygame.sprite.Sprite):
             th.mask = pygame.mask.from_surface(th.image)
         if form is not None:
             th.type = form
-
         th._x, th._y = pos
 
     @property
@@ -66,7 +65,6 @@ class Invinc:
         th.blink_interval = blink_interval
         th.func = func
         th.func_args = func_args
-
         th._condition = False
         th._visitable = True
         th._timer = 0
@@ -88,10 +86,8 @@ class Invinc:
     def update(th) -> None:
         if th._condition:
             th._timer += 1
-
             if th._timer >= th.end:
                 th.func(*th.func_args)
-
                 th._timer = 0
                 th._visitable = True
                 th._condition = False

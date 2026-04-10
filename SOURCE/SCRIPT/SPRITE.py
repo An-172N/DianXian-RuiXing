@@ -27,7 +27,6 @@ class Barrage(Base):
         rad = radians(th.angle)
         sin_, cos_ = sin(rad), cos(rad)
         th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
-
         if hasattr(th, "type") and th.type == "char":
             th.speed -= 0.1
             if th.speed < -4:
@@ -52,7 +51,6 @@ class Text(Base):
     def update(th):
         th.timer += 1
         th.y -= th.speed
-
         if th.timer >= th.kill_time[1]:
             th.kill()
         elif th.timer >= th.kill_time[0] and th.color != th.target_color:
@@ -79,10 +77,8 @@ class Item(Base):
 
     def update(th):
         th.y -= th.speed
-
         if th.type in ("power", "flash"):
             th.speed -= 0.1
-
             if th.speed < -2:
                 th.speed = -2
         if th.y >= 360:
@@ -102,7 +98,6 @@ class Line(Base):
 
     def update(th):
         th.timer += 1
-
         if th.timer >= 68:
             th.kill()
         elif th.timer >= 45 and th.image != th.target_image:

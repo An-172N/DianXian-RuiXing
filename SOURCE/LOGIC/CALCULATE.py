@@ -19,7 +19,6 @@ def vector(
         return (tx, ty), (dx, dy)
 
     distance = math.sqrt(dist_sq)
-
     if distance > 0:
         dx, dy = dx / distance, dy / distance
 
@@ -41,7 +40,6 @@ def clamp(
 ) -> float:
     if maximum < minimum:
         maximum, minimum = minimum, maximum
-
     if value > maximum:
         return maximum
     elif value < minimum:

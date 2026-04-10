@@ -58,9 +58,9 @@ keydown_start_dict = {
 
 
 keydown_over_dict = {
-    pg.K_RETURN: lambda: (save_file(log.name, two.score, two.game_total_point, two.flashed, two.flash, (two.stage, two.level)), reset()),
+    pg.K_RETURN: lambda: (save_file(log.name, two.score, two.total_point, two.flashed, two.flash, (two.stage, two.level)), reset()),
     pg.K_ESCAPE: lambda: reset(),
-    pg.K_BACKSPACE: lambda: setattr(two, "name", two.name[:-1])
+    pg.K_BACKSPACE: lambda: setattr(log, "name", log.name[:-1])
 }
 
 
@@ -88,7 +88,6 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
         f"{two.flash:02d}",
         f"{one.combo:02d}  ,  {one.major.bullets:02d}"
     )
-
     for info in (
         {"text": text[0], "pos": (39, 25)},
         {"text": text[1], "pos": (39, 50)},
@@ -105,14 +104,12 @@ def pause_menu(screen: pg.Surface):
     text = ("Esc 休息好了", "Del 不爬了") if one.pop_timer >= 60 else ("", "")
     if one.pop_timer == 60:
         shortly = True
-
     half_menu(screen, title, text, shortly=shortly)
 
 
 def load_menu(screen: pg.Surface):
     title = "这一站是————"
-    text = (f"Stage {two.stage if two.stage < 3 else 'Final' if two.stage == 3 else 'Extra'} - {two.level} !!", "START!!!!")
-
+    text = (f"Stage {get_stage(two.stage)} - {two.level} !!", "START!!!!")
     half_menu(screen, title, text)
 
 
@@ -121,7 +118,6 @@ def talk_menu(screen: pg.Surface):
         text = one.text[f"{one.text_part}"][f"{one.text_number}"]
         human = text["char"]
         content = (text["1"], text["2"] if "2" in text else '')
-
         half_menu(screen, human, content, (0, 6, 12))
     except KeyError:
         one.is_talk = False
@@ -129,7 +125,8 @@ def talk_menu(screen: pg.Surface):
 
 def summary_menu(screen: pg.Surface):
     shortly = False
-    stage = f"Stage {two.stage if two.stage < 3 else 'Final' if two.stage == 3 else 'Extra'} - {two.level} Clear! {'Hit Z Key.' if two.level <= 5 and one.pop_timer >= 60 else ''}"
+    hit = 'Hit Z Key.' if two.level <= 5 and one.pop_timer >= 60 else ''
+    stage = f"Stage {get_stage(two.stage)} - {two.level} Clear! {hit}"
     text = (
         f"得点 {one.total_point} * 512 = {one.total_point * 512}",
         f"无闪 {two.unflash} * 4096 = {two.unflash * 4096}",
@@ -140,15 +137,18 @@ def summary_menu(screen: pg.Surface):
     key = ("", "", "Z 继续")
     if one.pop_timer == 60:
         shortly = True
-
-    half_menu(screen, stage, (text[0], text[1]), shortly=shortly) if two.level <= 5 else full_menu(screen, stage, text, key, title.get(two.stage))
+    if two.level <= 5:
+        half_menu(screen, stage, (text[0], text[1]), shortly=shortly)
+    else:
+        full_menu(screen, stage, text, key, title.get(two.stage))
 
 
 def start_menu(screen: pg.Surface, version: str, title: str):
     other = "(C)opyright 2026 An_172N"
     text = (f"Ver {version}", '', '', '', '')
-    key = ("Z 爬山" if two.stage < 4 else "Z 下山", "C 日志" if log.total_files > 0 else "C 木鱼", "Q 拜拜")
-
+    climb = "Z 爬山" if two.stage < 4 else "Z 下山"
+    wood = "C 日志" if log.total_files > 0 else "C 木鱼"
+    key = (climb, wood, "Q 拜拜")
     full_menu(screen, title, text, key, other)
 
 
@@ -159,8 +159,8 @@ def save_menu(screen: pg.Surface):
     text = (
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {two.score} 分",
-        f"最终到达 {two.stage if two.stage < 3 else 'Final' if two.stage == 3 else 'Extra'} - {two.level} 站",
-        f"拾形点率为 {calculate_item_rate(two.game_total_point, two.stage <= 3, (153, 61))}",
+        f"最终到达 {get_stage(two.stage)} - {two.level} 站",
+        f"拾形点率为 {calculate_item_rate(two.total_point, two.stage <= 3, (153, 61))}",
         f"使用了 {two.flashed} 次形闪{'（躺' if two.flash == 0 else ''}"
     )
     key = ("", "Ent 记录", "Esc 算了")
@@ -171,7 +171,6 @@ def save_menu(screen: pg.Surface):
         for i in range(len(keys)):
             if keys[i]:
                 shortly = True
-
     full_menu(screen, title, text, key, name, shortly=shortly)
 
 
@@ -189,7 +188,6 @@ def check_menu(screen: pg.Surface):
             f"使用了 {logs['Flashed']} 次形闪{'（躺' if logs['Flash'] == 0 else ''}"
         )
         key = ("<-> 翻页", "Del 丢掉", "Esc 合上")
-
         full_menu(screen, title, text, key, f"谢谢 {logs['Name']} 的帮助")
     except:
         one.is_check = False
@@ -208,13 +206,11 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
             *[render(key[i], (275, 170 + (50 * i))) for i in range(0, 3)],
         )
     )
-
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
+    surface.blit(Change.layers(picture[5], group, one.pop_timer, interval, shortly), (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
-    surface.blit(Change.layers(picture[5], group, one.pop_timer, interval, shortly), (120, 15))
-
     if one.pop_timer < interval[2] + 1:
         one.pop_timer += 1
 
@@ -228,10 +224,10 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
 
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
+    source = Change.layers(picture[5].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly)
+    surface.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
-    surface.blit(Change.layers(picture[5].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly), (120, 15))
-
     if one.pop_timer < interval[2] + 1:
         one.pop_timer += 1
 
@@ -239,7 +235,6 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
 def summary_logic(score: int, total_point: int, power: int, unflash: int, combo: int, numbers: tuple):
     stage, level = numbers
     is_save = False
-
     score += GLOBAL.score_summary(total_point, power, unflash, combo, (stage, level))
     is_summary = False
     pop_timer = 0
@@ -253,9 +248,7 @@ def summary_logic(score: int, total_point: int, power: int, unflash: int, combo:
 
 def level_logic(numbers: tuple, unflash: int):
     stage, level = numbers
-
     one.__init__()
-
     stage, level = follow((stage, level), 6)
     unflash += 1
 
@@ -264,32 +257,26 @@ def level_logic(numbers: tuple, unflash: int):
 
 def item_collide():
     major = one.major
-
     for item in pg.sprite.spritecollide(major, one.item_group, True):
         one.combo_timer = 120
         major.bullets = clamp(major.bullets + 1, 0, 6)
-
         if item.type in ('flash', 'power'):
             if item.type == "power":
                 two.power = clamp(two.power + 1, 0, 32)
                 one.combo += 1
-
                 sound_cache["pick"].play()
             else:
                 two.flash += 1
                 one.combo += 1
-
                 Text(major.rect.midtop, (45, 60), 0.5, "Extend", color_dict[6], color_dict[2], one.particle_group)
-
             one.total_point += 1
-            two.game_total_point += 1
+            two.total_point += 1
         else:
             sound_cache["charge"].play(maxtime=24)
 
 
 def barrage_collide():
     major = one.major
-
     for barrage in pygame.sprite.spritecollide(major.point, one.barrage_group, False, collide):
         if barrage.color != color_dict[6]:
             if not major.collided.condition and not major.divided.condition:
@@ -299,10 +286,8 @@ def barrage_collide():
                 two.flashed += 1
                 if two.flash == 0:
                     one.is_save = True
-
                 spawn_particles(one.particle_group, 9, major.rect.center, (10, 16), color_dict[5], color_dict[6])
                 sound_cache["fire"].play()
-
             barrage.kill()
 
 
@@ -310,11 +295,9 @@ def bullet_collide():
     for bullet, hit_bricks in pg.sprite.groupcollide(one.bullet_group, one.brick_group, False, False, collide).items():
         for brick in hit_bricks:
             rect = brick.rect
-
             if brick.hp > 0:
                 two.score += 64
                 brick.hp -= bullet.damage
-
                 if brick.hp > 0 and sound_cache["tick"].get_num_channels() < 2:
                     spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     sound_cache["tick"].play()
@@ -325,22 +308,22 @@ def bullet_collide():
                         one.text_number = 0
                         one.is_talk = True
                         one.pop_timer = 0
-
                         for _ in range(12):
                             spawn_particles(one.particle_group, 2, rect.center, (2, 8), brick.color, color_dict[6])
                     else:
-                        spawn_barrage(two.stage, one.barrage_group, difficulty, brick.type, [brick.color, color_dict[6], color_dict[3]], rect.center, one.major.rect.center)
+                        colors = (brick.color, color_dict[6], color_dict[3])
+                        poses = (rect.center, one.major.rect.center)
+                        spawn_barrage(two.stage, one.barrage_group, difficulty, brick.type, colors, *poses)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
-
                     if sound_cache["fire"].get_num_channels() < 2:
                         sound_cache["fire"].play()
                     if hasattr(brick, "power"):
                         spawn(brick.power, Item, "power", 2.5, rect.center, one.item_group)
                     if hasattr(brick, "flash"):
                         spawn(brick.flash, Item, "flash", 2.5, rect.center, one.item_group)
-                    brick_blast(one.bullet_group, two.stage, [brick.color, color_dict[5], color_dict[3]], rect.midleft, rect.midright, rect.midbottom, rect.center)
+                    poses = (offset_y(rect.midleft, -1), offset_y(rect.midright, -1), offset_y(rect.midbottom, -1), rect.center)
+                    brick_blast(one.bullet_group, two.stage, [brick.color, color_dict[5], color_dict[3]], *poses)
                     brick.kill()
-
                 brick.is_die = True
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()
@@ -366,13 +349,11 @@ def key_event():
                         keydown_over_dict[event.key]()
                     else:
                         log.name = (log.name + event.unicode)[:8]
-
                     sound_cache["pick"].play()
                 elif one.is_pause and event.key in keydown_pause_dict:
                     (keydown_pause_dict[event.key](), sound_cache["pick"].play())
                 elif one.is_summary and event.key == pg.K_z:
                     two.score, one.is_summary, one.pop_timer, one.is_save, two.stage, two.level, two.unflash = summary_logic(two.score, one.total_point, two.power, two.unflash, one.combo, (two.stage, two.level))
-
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()
@@ -383,7 +364,6 @@ def key_event():
 
 def display(screen: pg.Surface, clock: pg.time.Clock, version: str, title: str):
     major = one.major
-
     if two.is_run:
         screen.blit(picture[two.stage], (120, 15))
         one.bullet_group.draw(screen)
@@ -393,7 +373,6 @@ def display(screen: pg.Surface, clock: pg.time.Clock, version: str, title: str):
         one.item_group.draw(screen)
         one.particle_group.draw(screen)
         one.barrage_group.draw(screen)
-
     if not one.is_exit:
         if one.is_check:
             check_menu(screen)
@@ -401,17 +380,15 @@ def display(screen: pg.Surface, clock: pg.time.Clock, version: str, title: str):
             start_menu(screen, version, title)
         else:
             for condition, func in (
-                (lambda: one.is_pause, pause_menu),
-                (lambda: not one.is_level_load, load_menu),
-                (lambda: one.is_talk, talk_menu),
-                (lambda: one.is_summary, summary_menu),
-                (lambda: one.is_save, save_menu)
+                (one.is_pause, pause_menu),
+                (not one.is_level_load, load_menu),
+                (one.is_talk, talk_menu),
+                (one.is_summary, summary_menu),
+                (one.is_save, save_menu)
             ):
-                if condition():
+                if condition:
                     func(screen)
-
                     break
-
     screen.blit(picture[6])
     situation(screen, clock)
 
@@ -423,7 +400,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
     two.power = clamp(args[3], 0, 32)
     alpha = 255
     timer = 0
-
     for text_info in (
         {"text": "分", "pos": (9, 25)},
         {"text": "刷", "pos": (9, 50)},
@@ -434,14 +410,11 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
         picture[6].blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
-
     while True:
         key_event()
-
         if two.is_run and not one.is_save and not one.is_pause:
             if not one.is_summary and not one.is_talk and one.is_level_load:
                 major = one.major
-
                 if hasattr(one.char, "locate"):
                     one.char.locate = major.rect.center
                 major.power = two.power
@@ -449,18 +422,15 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
                 if one.combo_timer <= 1 and one.combo > 0:
                     Text(major.rect.midtop, (45, 60), 0.5, f"{2 ** one.combo}", color_dict[6], color_dict[7], one.particle_group)
                 one.combo_timer, one.combo, two.score = GLOBAL.combo_counter(one.combo_timer, one.combo, two.score, 2 ** one.combo, 120)
-
                 one.plane_group.update()
                 one.bullet_group.update()
                 one.barrage_group.update()
                 one.item_group.update()
                 one.particle_group.update()
                 one.brick_group.update()
-
                 barrage_collide()
                 bullet_collide()
                 item_collide()
-
                 if len(one.brick_group) == 0 and len(one.item_group) == 0 and not one.is_talk:
                     one.is_summary = True
             if not one.is_level_load:
@@ -470,10 +440,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
                     two.wait_load_timer = pop_bricks(two.remaining_brick, brick_ready, two.wait_load_timer, one.brick_group)
                 else:
                     two.wait_load_timer, one.is_level_load, one.pop_timer, one.is_talk = close_summary(two.level, one.is_talk, two.remaining_brick, brick_ready)
-
         display(screen, clock, version, title)
-
         alpha, timer = fade_surface(alpha, timer, one.is_exit, picture[7], screen)
-
         pg.display.flip()
         clock.tick(60)
