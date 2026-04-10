@@ -13,11 +13,12 @@ def load(
     func: Callable[Concatenate[int, str, P], Any],
     *args: Any,
     decode: str = 'ascii'
-) -> str:
-    content = file.decode(decode)
-    lines = content.splitlines()
+) -> list[Any]:
+    content = []
+    arrange = file.decode(decode)
+    lines = arrange.splitlines()
     for row, line in enumerate(lines):
-        func(row, line, *args)
+        content.append(func(row, line, *args))
 
     return content
 

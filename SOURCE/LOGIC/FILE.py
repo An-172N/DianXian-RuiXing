@@ -26,8 +26,8 @@ def get(
     extension: str = '.json',
     reverse: bool = True
 ) -> list[str]:
+    files = []
     try:
-        files = []
         for file in os.listdir(folder):
             if file.endswith(extension) and os.path.isfile(path := os.path.join(folder, file)):
                 time = os.path.getmtime(path)
@@ -36,4 +36,4 @@ def get(
 
         return [path for _, path in files]
     except:
-        return []
+        return files
