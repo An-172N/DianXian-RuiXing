@@ -24,12 +24,12 @@ def load_json(filepath: str):
         return json.load(f)
 
 
-def spawn_barrage(stage: int, group: pg.sprite.Group, fib: list, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
-    if random() <= fib[stage - 1]:
+def spawn_barrage(stage: int, group: pg.sprite.Group, power: int, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
+    if random() <= difficulty[stage - 1] + power / 1000:
         {
             1: lambda: circle_barrage(type, color[0], spawn_pos, locate, group),
             2: lambda: polygon_barrage(type, color[0], spawn_pos, locate, group),
-            3: lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-32, 32), 345), group, color[1], color[2]),
+            3: lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group, color[1], color[2]),
             4: lambda: point_barrage(type, color[0], locate, group)
         }[stage]()
 

@@ -259,7 +259,7 @@ def item_collide():
     major = one.major
     for item in pg.sprite.spritecollide(major, one.item_group, True):
         one.combo_timer = 120
-        major.bullets = clamp(major.bullets + 1, 0, 6)
+        major.bullets = clamp(major.bullets + 1, 0, 3)
         if item.type in ('flash', 'power'):
             if item.type == "power":
                 two.power = clamp(two.power + 1, 0, 32)
@@ -313,7 +313,7 @@ def bullet_collide():
                     else:
                         colors = (brick.color, color_dict[6], color_dict[3])
                         poses = (rect.center, one.major.rect.center)
-                        spawn_barrage(two.stage, one.barrage_group, difficulty, brick.type, colors, *poses)
+                        spawn_barrage(two.stage, one.barrage_group, two.power, brick.type, colors, *poses)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     if sound_cache["fire"].get_num_channels() < 2:
                         sound_cache["fire"].play()

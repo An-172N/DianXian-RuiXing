@@ -13,30 +13,33 @@ from SCRIPT.SPRITE import *
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = approximate(randint(0, 360))
-        rands = choice([64, 128, 192])
+        rands = choice([48, 96, 160])
         image, target_image = [line_cache[(rands, angle, color_dict[i])] for i in (5, 9)]
         Line(color_dict[5], color_dict[9], 6, spawn_pos, image, target_image, group, True)
 
 
 def circle_brick(group: pg.sprite.Group, spawn_pos: tuple, delay: int):
+    image = bullet_cache["bullet"]
     for i in range(0 + delay, 360 + delay, 12):
-        image = bullet_cache["bullet"]
         Barrage(effective, 16, 0, i, spawn_pos, 4, image, group, form="bullet").update()
 
 
 def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
+    image = bullet_cache["bullet-cross"]
     for i, angle in enumerate(range(-30, 91, 60)):
         for j in (0, 1):
-            image = bullet_cache["bullet-cross"]
-            angle = angle + j * 180
-            Barrage(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross")
+            if angle in (30, -30) and j:
+                Barrage(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross")
+            elif angle == 90:
+                angle = angle + j * 180
+                Barrage(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross")
 
 
 def point_brick(group: pg.sprite.Group):
+    image = bullet_cache["bullet"]
     for _ in range(24):
         pos = (randint(120, 465), randint(15, 320))
         angle = randint(0, 360)
-        image = bullet_cache["bullet"]
         Barrage(effective, 16, 0, angle, pos, 4, image, group, form="bullet")
 
 
@@ -67,19 +70,19 @@ def circle_barrage(type: int, color: tuple, spawn_pos: tuple, locate: tuple, gro
 
 
 def polygon_barrage(type: int, color: tuple, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
+    image = barrage_cache[(type, color)]
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = add((i, locate[1]), inverse(spawn_pos))
         angle = direct(*inverse(delta))
-        image = barrage_cache[(type, color)]
         Barrage(effective, 3, color, angle, spawn_pos, 0, image, group, 2)
 
 
 def line_barrage(current: tuple, target: tuple, group: pg.sprite.Group, *color: tuple):
+    image, target_image = [particle_cache[(3, color[i])] for i in (0, 1)]
     while True:
         if not effective.collidepoint(current):
             break
 
-        image, target_image = [particle_cache[(3, color[i])] for i in (0, 1)]
         Line(color[0], color[1], 0, current, image, target_image, group)
 
         if math.dist(current, target) < 1e-6:
@@ -88,11 +91,11 @@ def line_barrage(current: tuple, target: tuple, group: pg.sprite.Group, *color: 
 
 
 def point_barrage(type: int, color: tuple, locate: tuple, group: pg.sprite.Group):
+    image = barrage_cache[(type, color)]
     for _ in range(3):
         pos = (randint(120, 465), randint(15, 225))
         delta = add(locate, inverse(pos))
         angle = direct(*inverse(delta))
-        image = barrage_cache[(type, color)]
         Barrage(effective, 4, color, angle, pos, 0, image, group, 3)
 
 
