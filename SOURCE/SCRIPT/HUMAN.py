@@ -344,11 +344,11 @@ class Qdi(Basic):
             sound_cache["fire"].play()
 
     def final(th):
-        if th.timer == 0:
-            pos = (randint(120, 465), randint(15, 170))
+        if 4 <= th.timer <= 12 and th.timer % 4 == 0:
+            pos = (randint(120, 465), randint(15, 160))
             for _ in range(10):
-                rands = randint(0, 30)
-                for i in range(0 + rands, 360 + rands, 30):
+                rands = randint(0, 60)
+                for i in range(0 + rands, 360 + rands, 60):
                     speed = randint(2, 5)
                     image = barrage_cache[(2, th.color)]
                     Barrage(effective, speed, th.color, i, pos, 0, image, th.barrage_group, 3)
