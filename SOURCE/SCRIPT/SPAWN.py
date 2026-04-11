@@ -13,7 +13,7 @@ from SCRIPT.SPRITE import *
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = approximate(randint(0, 360))
-        rands = choice([48, 96, 176])
+        rands = choice([48, 96, 160])
         image, target_image = [line_cache[(rands, angle, color_dict[i])] for i in (5, 9)]
         Line(color_dict[5], color_dict[9], 6, spawn_pos, image, target_image, group, True)
 
