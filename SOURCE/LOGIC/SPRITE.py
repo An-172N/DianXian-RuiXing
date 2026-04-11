@@ -10,17 +10,23 @@ import pygame
 
 class Base(pygame.sprite.Sprite):
     def __init__(th,
-        image: pygame.Surface,
+        original_image: pygame.Surface,
         *group: pygame.sprite.Group,
+        turn_image: pygame.Surface = None,
         form: int | str = None,
         angle: float = 0,
         pos: tuple[int, int] = (0, 0),
         mask: bool = False,
-        radius: float = None
+        radius: float = None,
+        rotate: bool = False
     ) -> None:
         super().__init__(*group)
 
-        th.image = pygame.transform.rotate(image, angle) if angle != 0 else image
+        th.original_image = original_image
+        th.turn_image = turn_image
+        if turn_image is not None:
+            th.turn_image_flipped = pygame.transform.flip(turn_image, True, False)
+        th.image = th.original_image if not rotate else pygame.transform.rotate(th.original_image, angle)
         th.rect = th.image.get_rect(center=pos)
         th.angle = angle
         if radius:
@@ -52,6 +58,17 @@ class Base(pygame.sprite.Sprite):
     ) -> None:
         th._y = value
         th.rect.centery = th._y
+
+    def swivel(th,
+        flip: bool,
+        turn: bool
+    ) -> None:
+        if flip:
+            th.image = th.turn_image_flipped
+        elif turn:
+            th.image = th.turn_image
+        else:
+            th.image = th.original_image
 
 
 class Invinc:

@@ -34,10 +34,10 @@ def spawn_barrage(stage: int, group: pg.sprite.Group, power: int, type: int, col
         }[stage]()
 
 
-def brick_blast(group: pg.sprite.Group, stage: int, color: list, *spawn_pos: tuple):
-    if color[0] == color_dict[6]:
+def brick_blast(group: pg.sprite.Group, stage: int, color: tuple, *spawn_pos: tuple):
+    if color == color_dict[6]:
         {
-            1: lambda: circle_brick(group, spawn_pos[3], randint(0, 45)),
+            1: lambda: circle_brick(group, spawn_pos[3]),
             2: lambda: polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2]),
             3: lambda: line_brick(group, spawn_pos[3]),
             4: lambda: point_brick(group)
@@ -82,7 +82,6 @@ def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, b
     if wait_load_timer >= 30 and wait_load_timer % 30 == 0:
         if not remaining_brick:
             remaining_brick = list(range(len(brick_ready)))
-
         if remaining_brick:
             size = len(remaining_brick) if wait_load_timer == 90 else min(len(brick_ready) // 3, len(remaining_brick))
             choose_brick = sample(remaining_brick, size)

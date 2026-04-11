@@ -14,20 +14,6 @@ class Change:
         pos: tuple[int, int]
 
     @staticmethod
-    def swivel(
-        original_image: pygame.Surface,
-        turn_image: pygame.Surface,
-        flip: bool,
-        turn: bool
-    ) -> pygame.Surface:
-        if flip:
-            return pygame.transform.flip(turn_image, True, False)
-        elif turn:
-            return turn_image
-        else:
-            return original_image
-
-    @staticmethod
     def layers(
         surface: pygame.Surface,
         group: tuple[tuple[LayersGroup]],

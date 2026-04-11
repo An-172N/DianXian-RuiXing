@@ -14,8 +14,8 @@ from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
-    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, radius: int=0, form: str=None):
-        super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius)
+    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, radius: int=0, form: str=None, rotate: bool=False):
+        super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
 
         th.effective = effective
         th.speed = speed

@@ -117,7 +117,6 @@ class Hro(Basic):
     def __init__(th, *group: pg.sprite.Group):
         super().__init__(char_image.subsurface((36, 0, 12, 26)), 224, color_dict[2], *group)
 
-        th.is_choose = False
         th.flash = True
         th.bullet_image = barrage_cache[(0, th.color)]
         th.sd = tuple([th.fire] * 2 + [th.free] + [th.fire] * 3 + [th.extend] + [th.fire] * 4 + [th.free, th.extend])
@@ -128,7 +127,7 @@ class Hro(Basic):
             for i in range(-30, 31, 30):
                 delta = add((th.locate[0], th.locate[1]), inverse(pos))
                 angle = direct(*inverse(delta)) + i
-                Barrage(effective, 4, th.color, angle, pos, 0, th.bullet_image, th.barrage_group, 2)
+                Barrage(effective, 4, th.color, angle, pos, 0, th.bullet_image, th.barrage_group, 2, rotate=True)
             th.bullets += 1
             sound_cache["fire"].play()
 
@@ -142,7 +141,7 @@ class Hro(Basic):
                 current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
                 for j in range(45, 136, 90):
                     angle = direct(*inverse(delta_vec)) + j + (th.timer * -6)
-                    Barrage(effective, 4, th.color, angle, current_pos, 0, th.bullet_image, th.barrage_group, 2)
+                    Barrage(effective, 4, th.color, angle, current_pos, 0, th.bullet_image, th.barrage_group, 2, rotate=True)
             th.bullets += 1
             if th.bullets % 3 == 0:
                 sound_cache["fire"].play()
@@ -156,7 +155,7 @@ class Hro(Basic):
                         pos = (j, 60)
                         delta = add((th.locate[0], th.locate[1] - 160), inverse(pos))
                         angle = direct(*inverse(delta)) + k * 90
-                        Barrage(effective, speed, th.color, angle, pos, 0, th.bullet_image, th.barrage_group, 2)
+                        Barrage(effective, speed, th.color, angle, pos, 0, th.bullet_image, th.barrage_group, 2, rotate=True)
                 speed -= 0.6
             sound_cache["fire"].play()
 
@@ -166,25 +165,21 @@ class Hro(Basic):
             th.target_pos = (choice((150, 220, 292, 365)), choice((60, 120, 180, 240)))
             th.bullets = 0
             th.timer = 0
-            th.is_choose = False
             th.can_shoot = True
-        if th.timer % 110 >= 91:
-            if not th.is_choose:
-                th.choice = th.sd[th.index]
-                th.index = (th.index + 1) if th.index < len(th.sd) - 1 else 0
-                th.is_choose = True
-            if th.timer % 91 == 0:
-                image = barrage_cache[(0, color_dict[6])]
-                for i in range(0, 360, 120 if th.choice == th.fire else 90):
-                    pos = (th.x + 45 * cos(radians(i)), th.y + 45 * sin(radians(i)))
-                    delta = add((th.x, th.y), inverse(pos))
-                    angle = direct(*inverse(delta))
-                    Barrage(effective, 3, color_dict[6], angle, pos, 0, image, th.particle_group)
-                sound_cache["charge"].play()
-                th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+        if th.timer % 91 == 0 and th.timer % 110 >= 91:
+            th.choice = th.sd[th.index]
+            th.index = (th.index + 1) if th.index < len(th.sd) - 1 else 0
+            image = barrage_cache[(0, color_dict[6])]
+            for i in range(0, 360, 120 if th.choice == th.fire else 90):
+                pos = (th.x + 45 * cos(radians(i)), th.y + 45 * sin(radians(i)))
+                delta = add((th.x, th.y), inverse(pos))
+                angle = direct(*inverse(delta))
+                Barrage(effective, 3, color_dict[6], angle, pos, 0, image, th.particle_group, rotate=True)
+            sound_cache["charge"].play()
+            th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
-        if th.can_shoot and not th.is_choose:
+        if th.can_shoot and th.timer < 91:
             th.choice()
         for barrage, hit_bullets in pg.sprite.groupcollide(th.barrage_group, th.bullet_group, True, False).items():
             for bullet in hit_bullets:
@@ -329,12 +324,12 @@ class Qdi(Basic):
 
     def last(th):
         if th.timer == 0:
-            target_pos = th.interval_locate
-            pos = (randint(120, 465), randint(15, 150))
-            delta = add(target_pos, inverse(pos))
+            bullets = choice([20, 24, 30, 40])
+            pos = th.rect.center
+            delta = add(th.locate, inverse(pos))
             angle = direct(*inverse(delta))
             end = randint(0 + int(angle), 360 + int(angle))
-            for i in range(0 + int(angle), 360 + int(angle), 360 // th.target_bullets):
+            for i in range(0 + int(angle), 360 + int(angle), 360 // bullets):
                 fast_speed = uniform(6.0, 7.0)
                 slow_speed = uniform(3.0, 4.0)
                 fast_lose = uniform(0.2, 0.55)
@@ -362,8 +357,6 @@ class Qdi(Basic):
             th.x, th.y = (randint(150, 435), randint(48, 96))
             th.bullets = 0
             th.timer = 0
-            th.interval_locate = th.locate
-            th.target_bullets = choice([20, 24, 30, 40])
             th.can_shoot = True
             th.choice = choice([th.fire] * 12 + [th.free] * 2 + [th.extend, th.final, th.last, th.count])
         if th.timer % 150 >= 145:
@@ -385,7 +378,7 @@ class Qdi(Basic):
 
 class Kli(Base):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((0, 0, 12, 26)), group[2], pos=(292, 332))
+        super().__init__(char_image.subsurface(0, 0, 12, 26), group[2], turn_image=char_image.subsurface(12, 0, 12, 26), pos=(292, 332))
 
         th.bullet_group = group[0]
         th.particle_group = group[1]
@@ -403,16 +396,16 @@ class Kli(Base):
         th.is_fast = False
 
     def fire(th):
-        image = bullet_cache["bullet"]
         p = 2 ** (th.power // 32)
         q = 2 ** (th.power // 16)
+        image = bullet_cache["bullet"]
         for i in range(0, p):
             for j in range(-q, q + 1, q):
                 for k in (-1, 1):
                     dx = th.rect.centerx + 6 * k
                     dy = th.rect.top + (0 + i * 12)
                     angle = j * k
-                    Barrage(effective, 16, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet")
+                    Barrage(effective, 16, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet", rotate=True)
         sound_cache["fire"].play(maxtime=32)
 
     def free(th):
@@ -435,8 +428,7 @@ class Kli(Base):
     def update(th):
         if th.divided.condition:
             th.free()
-        image, turn_image = [char_image.subsurface((i * 12, 0, 12, 26)) for i in (0, 1)]
-        th.image = Change.swivel(image, turn_image, th.is_move_right, th.is_move_left)
+        th.swivel(th.is_move_right, th.is_move_left)
         if th.is_move_left:
             th.x -= 8 if th.is_fast else 3
         if th.is_move_right:

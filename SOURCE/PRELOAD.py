@@ -81,14 +81,13 @@ brick_cache = {
 
 bullet_cache = {
     "bullet": blue_rect.subsurface(0, 0, 2, 15).convert_alpha(),
-    "bullet-cross": blue_rect.subsurface(2, 0, 2, 15).convert_alpha(),
     "bomb": blue_rect
 }
 
 
 line_cache = {
     (length, angle, color): pg.transform.rotate(Draw.rectangle((2, length), 0, color).convert_alpha(), angle)
-    for length in (48, 96, 160)
+    for length in (48, 96, 176)
     for angle in range(0, 180, 15)
     for color in (color_dict[5], color_dict[9])
 }
@@ -106,4 +105,4 @@ particle_cache = {
 }
 
 
-difficulty = [0.17 + (fibonacci(0, 1, i) / 100) for i in range(4, 8)]
+difficulty = tuple(0.17 + (fibonacci(0, 1, i) / 100) for i in range(4, 8))

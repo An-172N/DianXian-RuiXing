@@ -13,26 +13,27 @@ from SCRIPT.SPRITE import *
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = approximate(randint(0, 360))
-        rands = choice([48, 96, 160])
+        rands = choice([48, 96, 176])
         image, target_image = [line_cache[(rands, angle, color_dict[i])] for i in (5, 9)]
         Line(color_dict[5], color_dict[9], 6, spawn_pos, image, target_image, group, True)
 
 
-def circle_brick(group: pg.sprite.Group, spawn_pos: tuple, delay: int):
+def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):
     image = bullet_cache["bullet"]
+    delay = randint(0, 12)
     for i in range(0 + delay, 360 + delay, 12):
-        Barrage(effective, 16, 0, i, spawn_pos, 4, image, group, form="bullet").update()
+        Barrage(effective, 16, 0, i, spawn_pos, 4, image, group, form="bullet", rotate=True).update()
 
 
 def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
-    image = bullet_cache["bullet-cross"]
+    image = bullet_cache["bullet"]
     for i, angle in enumerate(range(-30, 91, 60)):
         for j in (0, 1):
             if angle in (30, -30) and j:
-                Barrage(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross")
+                Barrage(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross", rotate=True)
             elif angle == 90:
                 angle = angle + j * 180
-                Barrage(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross")
+                Barrage(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross", rotate=True)
 
 
 def point_brick(group: pg.sprite.Group):
@@ -40,7 +41,7 @@ def point_brick(group: pg.sprite.Group):
     for _ in range(24):
         pos = (randint(120, 465), randint(15, 320))
         angle = randint(0, 360)
-        Barrage(effective, 16, 0, angle, pos, 4, image, group, form="bullet")
+        Barrage(effective, 16, 0, angle, pos, 4, image, group, form="bullet", rotate=True)
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple):
@@ -74,7 +75,7 @@ def polygon_barrage(type: int, color: tuple, spawn_pos: tuple, locate: tuple, gr
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = add((i, locate[1]), inverse(spawn_pos))
         angle = direct(*inverse(delta))
-        Barrage(effective, 3, color, angle, spawn_pos, 0, image, group, 2)
+        Barrage(effective, 3, color, angle, spawn_pos, 0, image, group, 2, rotate=True)
 
 
 def line_barrage(current: tuple, target: tuple, group: pg.sprite.Group, *color: tuple):
@@ -82,9 +83,7 @@ def line_barrage(current: tuple, target: tuple, group: pg.sprite.Group, *color: 
     while True:
         if not effective.collidepoint(current):
             break
-
         Line(color[0], color[1], 0, current, image, target_image, group)
-
         if math.dist(current, target) < 1e-6:
             break
         current = vector(current, target, 3)[0]

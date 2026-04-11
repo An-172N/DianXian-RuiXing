@@ -322,7 +322,7 @@ def bullet_collide():
                     if hasattr(brick, "flash"):
                         spawn(brick.flash, Item, "flash", 2.5, rect.center, one.item_group)
                     poses = (offset_y(rect.midleft, -1), offset_y(rect.midright, -1), offset_y(rect.midbottom, -1), rect.center)
-                    brick_blast(one.bullet_group, two.stage, [brick.color, color_dict[5], color_dict[3]], *poses)
+                    brick_blast(one.bullet_group, two.stage, brick.color, *poses)
                     brick.kill()
                 brick.is_die = True
             if bullet.type in ("bullet", "bomb"):
