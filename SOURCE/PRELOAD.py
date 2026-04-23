@@ -46,6 +46,7 @@ get_stage = lambda stage: stage if stage < 3 else 'Final' if stage == 3 else 'Ex
 offset_y = lambda point, dy: (point[0], point[1] + dy)
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
+screen = pygame.display.set_mode((480, 360), pygame.FULLSCREEN|pygame.SCALED, vsync=1)
 
 
 sound_cache = {
@@ -87,7 +88,7 @@ bullet_cache = {
 
 line_cache = {
     (length, angle, color): pg.transform.rotate(Draw.rectangle((2, length), 0, color).convert_alpha(), angle)
-    for length in (48, 96, 160)
+    for length in (48, 96, 144)
     for angle in range(0, 180, 15)
     for color in (color_dict[5], color_dict[9])
 }

@@ -80,7 +80,7 @@ keyup_game_dict = {
 }
 
 
-def situation(screen: pg.Surface, clock: pg.time.Clock):
+def situation(clock: pg.time.Clock):
     text = (
         f"{two.score:9d}",
         f"{int(clock.get_fps()): 9d}",
@@ -98,32 +98,32 @@ def situation(screen: pg.Surface, clock: pg.time.Clock):
         screen.blit(font.render(f"{info['text']}", False, color_dict[6]), info["pos"])
 
 
-def pause_menu(screen: pg.Surface):
+def pause_menu():
     shortly = False
     title = "休息ing"
     text = ("Esc 休息好了", "Del 不爬了") if one.pop_timer >= 60 else ("", "")
     if one.pop_timer == 60:
         shortly = True
-    half_menu(screen, title, text, shortly=shortly)
+    half_menu(title, text, shortly=shortly)
 
 
-def load_menu(screen: pg.Surface):
+def load_menu():
     title = "这一站是————"
     text = (f"Stage {get_stage(two.stage)} - {two.level} !!", "START!!!!")
-    half_menu(screen, title, text)
+    half_menu(title, text)
 
 
-def talk_menu(screen: pg.Surface):
+def talk_menu():
     try:
         text = one.text[f"{one.text_part}"][f"{one.text_number}"]
         human = text["char"]
         content = (text["1"], text["2"] if "2" in text else '')
-        half_menu(screen, human, content, (0, 6, 12))
+        half_menu(human, content, (0, 6, 12))
     except KeyError:
         one.is_talk = False
 
 
-def summary_menu(screen: pg.Surface):
+def summary_menu():
     shortly = False
     hit = 'Hit Z Key.' if two.level <= 5 and one.pop_timer >= 60 else ''
     stage = f"Stage {get_stage(two.stage)} - {two.level} Clear! {hit}"
@@ -138,21 +138,21 @@ def summary_menu(screen: pg.Surface):
     if one.pop_timer == 60:
         shortly = True
     if two.level <= 5:
-        half_menu(screen, stage, (text[0], text[1]), shortly=shortly)
+        half_menu(stage, (text[0], text[1]), shortly=shortly)
     else:
-        full_menu(screen, stage, text, key, title.get(two.stage))
+        full_menu(stage, text, key, title.get(two.stage))
 
 
-def start_menu(screen: pg.Surface, version: str, title: str):
+def start_menu(version: str, title: str):
     other = "(C)opyright 2026 An_172N"
     text = (f"Ver {version}", '', '', '', '')
     climb = "Z 爬山" if two.stage < 4 else "Z 下山"
     wood = "C 日志" if log.total_files > 0 else "C 木鱼"
     key = (climb, wood, "Q 拜拜")
-    full_menu(screen, title, text, key, other)
+    full_menu(title, text, key, other)
 
 
-def save_menu(screen: pg.Surface):
+def save_menu():
     shortly = False
     title = "爬山日志"
     name = f"{f'谢谢 {log.name} 的帮助' if one.pop_timer >= 60 else ''}"
@@ -171,10 +171,10 @@ def save_menu(screen: pg.Surface):
         for i in range(len(keys)):
             if keys[i]:
                 shortly = True
-    full_menu(screen, title, text, key, name, shortly=shortly)
+    full_menu(title, text, key, name, shortly=shortly)
 
 
-def check_menu(screen: pg.Surface):
+def check_menu():
     try:
         if one.pop_timer == 0:
             log.log = load_json(log.json_files[log.index])[1]
@@ -188,12 +188,12 @@ def check_menu(screen: pg.Surface):
             f"使用了 {logs['Flashed']} 次形闪{'（躺' if logs['Flash'] == 0 else ''}"
         )
         key = ("<-> 翻页", "Del 丢掉", "Esc 合上")
-        full_menu(screen, title, text, key, f"谢谢 {logs['Name']} 的帮助")
+        full_menu(title, text, key, f"谢谢 {logs['Name']} 的帮助")
     except:
         one.is_check = False
 
 
-def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60), shortly: bool=False):
+def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60), shortly: bool=False):
     group = (
         (
             render(title, (8, 10)),
@@ -208,14 +208,14 @@ def full_menu(surface: pg.Surface, title: str, text: list, key: list, other: str
     )
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
-    surface.blit(Change.layers(picture[5], group, one.pop_timer, interval, shortly), (120, 15))
+    screen.blit(Change.layers(picture[5], group, one.pop_timer, interval, shortly), (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
     if one.pop_timer < interval[2] + 1:
         one.pop_timer += 1
 
 
-def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
+def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
     group = (
         (render(title, (8, 10)),),
         (render(text[0], (8, 60)),),
@@ -225,7 +225,7 @@ def half_menu(surface: pg.Surface, title: str, text: list, interval: tuple=(0, 3
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
     source = Change.layers(picture[5].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly)
-    surface.blit(source, (120, 15))
+    screen.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
     if one.pop_timer < interval[2] + 1:
@@ -362,7 +362,7 @@ def key_event():
                 keydown_game_dict[event.key]()
 
 
-def display(screen: pg.Surface, clock: pg.time.Clock, version: str, title: str):
+def display(clock: pg.time.Clock, version: str, title: str):
     major = one.major
     if two.is_run:
         screen.blit(picture[two.stage], (120, 15))
@@ -373,11 +373,18 @@ def display(screen: pg.Surface, clock: pg.time.Clock, version: str, title: str):
         one.item_group.draw(screen)
         one.particle_group.draw(screen)
         one.barrage_group.draw(screen)
+        if not one.is_save and not one.is_pause and not one.is_summary and not one.is_talk and one.is_level_load:
+            one.plane_group.update()
+            one.bullet_group.update()
+            one.barrage_group.update()
+            one.item_group.update()
+            one.particle_group.update()
+            one.brick_group.update()
     if not one.is_exit:
         if one.is_check:
-            check_menu(screen)
+            check_menu()
         elif not two.is_run:
-            start_menu(screen, version, title)
+            start_menu(version, title)
         else:
             for condition, func in (
                 (one.is_pause, pause_menu),
@@ -387,13 +394,13 @@ def display(screen: pg.Surface, clock: pg.time.Clock, version: str, title: str):
                 (one.is_save, save_menu)
             ):
                 if condition:
-                    func(screen)
+                    func()
                     break
     screen.blit(picture[6])
-    situation(screen, clock)
+    situation(clock)
 
 
-def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, title: str):
+def update(clock: pg.time.Clock, args: tuple, version: str, title: str):
     two.stage = clamp(args[0], 1, 4)
     two.level = clamp(args[1], 1, 6)
     two.flash = clamp(args[2], 1, 96)
@@ -422,12 +429,6 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
                 if one.combo_timer <= 1 and one.combo > 0:
                     Text(major.rect.midtop, (45, 60), 0.5, f"{2 ** one.combo}", color_dict[6], color_dict[7], one.particle_group)
                 one.combo_timer, one.combo, two.score = GLOBAL.combo_counter(one.combo_timer, one.combo, two.score, 2 ** one.combo, 120)
-                one.plane_group.update()
-                one.bullet_group.update()
-                one.barrage_group.update()
-                one.item_group.update()
-                one.particle_group.update()
-                one.brick_group.update()
                 barrage_collide()
                 bullet_collide()
                 item_collide()
@@ -440,7 +441,7 @@ def update(clock: pg.time.Clock, screen: pg.Surface, args: tuple, version: str, 
                     two.wait_load_timer = pop_bricks(two.remaining_brick, brick_ready, two.wait_load_timer, one.brick_group)
                 else:
                     two.wait_load_timer, one.is_level_load, one.pop_timer, one.is_talk = close_summary(two.level, one.is_talk, two.remaining_brick, brick_ready)
-        display(screen, clock, version, title)
+        display(clock, version, title)
         alpha, timer = fade_surface(alpha, timer, one.is_exit, picture[7], screen)
         pg.display.flip()
         clock.tick(60)

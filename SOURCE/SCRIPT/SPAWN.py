@@ -13,9 +13,9 @@ from SCRIPT.SPRITE import *
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
     for _ in range(12):
         angle = approximate(randint(0, 360))
-        rands = choice([48, 96, 160])
+        rands = choice([48, 96, 144])
         image, target_image = [line_cache[(rands, angle, color_dict[i])] for i in (5, 9)]
-        Line(color_dict[5], color_dict[9], 6, spawn_pos, image, target_image, group, True)
+        Line(color_dict[5], color_dict[9], 6, spawn_pos, None, 1, image, target_image, group, True)
 
 
 def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):
@@ -80,13 +80,17 @@ def polygon_barrage(type: int, color: tuple, spawn_pos: tuple, locate: tuple, gr
 
 def line_barrage(current: tuple, target: tuple, group: pg.sprite.Group, *color: tuple):
     image, target_image = [particle_cache[(3, color[i])] for i in (0, 1)]
+    start = current
+    count = 0
     while True:
         if not effective.collidepoint(current):
             break
-        Line(color[0], color[1], 0, current, image, target_image, group)
+        if 327 < current[1] < 336 or current == start:
+            Line(color[0], color[1], 0, current, target, count, image, target_image, group)
         if math.dist(current, target) < 1e-6:
             break
         current = vector(current, target, 3)[0]
+        count += 1
 
 
 def point_barrage(type: int, color: tuple, locate: tuple, group: pg.sprite.Group):

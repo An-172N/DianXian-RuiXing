@@ -10,7 +10,7 @@ import random
 def main():
     project = '点线 Project'
     title = '锐行 ~ Thunder Out of the Mountain'
-    version = '1.1.2'
+    version = '1.1.3'
     author = 'An_172N'
 
     sys.dont_write_bytecode = True
@@ -34,12 +34,10 @@ def main():
     pygame.font.init()
     pygame.mixer.init()
 
-    screen = pygame.display.set_mode((480, 360), pygame.FULLSCREEN|pygame.SCALED, vsync=1)
-
     import SCRIPT
 
     print(f"{project} | {title} | Ver {version} | By {author}")
-    SCRIPT.KERNEL.update(clock, screen, args_tuple, version, title)
+    SCRIPT.KERNEL.update(clock, args_tuple, version, title)
 
 
 if __name__ == "__main__":

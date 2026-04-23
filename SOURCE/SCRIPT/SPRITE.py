@@ -86,11 +86,15 @@ class Item(Base):
 
 
 class Line(Base):
-    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group, mask: bool=False):
+    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, target: tuple, count: int, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group, mask: bool=False):
         super().__init__(image, group, form="line", pos=pos, mask=mask)
 
         th.color = color
         th.target_color = target_color
+        th.pos = pos
+        th.count = count
+        if not count:
+            th.target = target
         if damage:
             th.damage = damage
         th.target_image = target_image
@@ -100,6 +104,11 @@ class Line(Base):
         th.timer += 1
         if th.timer >= 68:
             th.kill()
-        elif th.timer >= 45 and th.image != th.target_image:
-            th.color = th.target_color
-            th.image = th.target_image
+        elif th.timer >= 45:
+            if th.image != th.target_image:
+                th.color = th.target_color
+                th.image = th.target_image
+            if not th.count:
+                pg.draw.line(screen, th.color, th.pos, th.target, 3)
+        elif th.timer >= 0 and not th.count:
+            pg.draw.line(screen, th.color, th.pos, th.target, 3)

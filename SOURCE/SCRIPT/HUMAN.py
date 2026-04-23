@@ -396,16 +396,13 @@ class Kli(Base):
         th.is_fast = False
 
     def fire(th):
-        p = 2 ** (th.power // 32)
-        q = 2 ** (th.power // 16)
         image = bullet_cache["bullet"]
-        for i in range(0, p):
-            for j in range(-q, q + 1, q):
-                for k in (-1, 1):
-                    dx = th.rect.centerx + 6 * k
-                    dy = th.rect.top + (0 + i * 12)
-                    angle = j * k
-                    Barrage(effective, 16, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet", rotate=True)
+        for j in range(-1, 2, 1):
+            for k in (-1, 1):
+                dx = th.rect.centerx + 6 * k
+                dy = th.rect.top
+                angle = j * k
+                Barrage(effective, 16, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet", rotate=True)
         sound_cache["fire"].play(maxtime=32)
 
     def free(th):
