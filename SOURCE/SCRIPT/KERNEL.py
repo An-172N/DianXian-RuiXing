@@ -16,15 +16,15 @@ from LOGIC.CALCULATE import *
 from LOGIC.STAGE import *
 from LOGIC.FILE import *
 from LOGIC.SPRITE import *
-from SCRIPT import GLOBAL
+from SCRIPT.GLOBAL import *
 from SCRIPT.SPRITE import *
 from SCRIPT.SOME import *
 from SCRIPT.SPAWN import *
 
 
-one = GLOBAL.One()
-two = GLOBAL.Two()
-log = GLOBAL.Log()
+one = One()
+two = Two()
+log = Log()
 reset = lambda: (one.__init__(), two.__init__(), log.__init__())
 
 
@@ -234,25 +234,24 @@ def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool
 
 def summary_logic(score: int, total_point: int, power: int, unflash: int, combo: int, numbers: tuple):
     stage, level = numbers
-    is_save = False
-    score += GLOBAL.score_summary(total_point, power, unflash, combo, (stage, level))
+    score += score_summary(total_point, power, unflash, combo, (stage, level))
     is_summary = False
     pop_timer = 0
-    if stage >= 3 and level == 6:
-        is_save = True
-    else:
-        stage, level, unflash = level_logic((stage, level), unflash)
 
-    return score, is_summary, pop_timer, is_save, stage, level, unflash
+    return score, is_summary, pop_timer
 
 
 def level_logic(numbers: tuple, unflash: int):
     stage, level = numbers
-    one.__init__()
-    stage, level = follow((stage, level), 6)
-    unflash += 1
+    if stage >= 3 and level == 6:
+        is_save = True
+    else:
+        is_save = False
+        one.__init__()
+        stage, level = follow((stage, level), 6)
+        unflash += 1
 
-    return stage, level, unflash
+    return stage, level, unflash, is_save
 
 
 def item_collide():
@@ -311,9 +310,8 @@ def bullet_collide():
                         for _ in range(12):
                             spawn_particles(one.particle_group, 2, rect.center, (2, 8), brick.color, color_dict[6])
                     else:
-                        colors = (brick.color, color_dict[6], color_dict[3])
                         poses = (rect.center, one.major.rect.center)
-                        spawn_barrage(two.stage, one.barrage_group, two.power, brick.type, colors, *poses)
+                        spawn_barrage(two.stage, one.barrage_group, two.power, brick.type, *poses)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     if sound_cache["fire"].get_num_channels() < 2:
                         sound_cache["fire"].play()
@@ -321,8 +319,7 @@ def bullet_collide():
                         spawn(brick.power, Item, "power", 2.5, rect.center, one.item_group)
                     if hasattr(brick, "flash"):
                         spawn(brick.flash, Item, "flash", 2.5, rect.center, one.item_group)
-                    poses = (offset_y(rect.midleft, -1), offset_y(rect.midright, -1), offset_y(rect.midbottom, -1), rect.center)
-                    brick_blast(one.bullet_group, two.stage, brick.color, *poses)
+                    brick_blast(one.bullet_group, two.stage, brick.color, rect)
                     brick.kill()
                 brick.is_die = True
             if bullet.type in ("bullet", "bomb"):
@@ -351,9 +348,11 @@ def key_event():
                         log.name = (log.name + event.unicode)[:8]
                     sound_cache["pick"].play()
                 elif one.is_pause and event.key in keydown_pause_dict:
-                    (keydown_pause_dict[event.key](), sound_cache["pick"].play())
+                    keydown_pause_dict[event.key]()
+                    sound_cache["pick"].play()
                 elif one.is_summary and event.key == pg.K_z:
-                    two.score, one.is_summary, one.pop_timer, one.is_save, two.stage, two.level, two.unflash = summary_logic(two.score, one.total_point, two.power, two.unflash, one.combo, (two.stage, two.level))
+                    two.score, one.is_summary, one.pop_timer = summary_logic(two.score, one.total_point, two.power, two.unflash, one.combo, (two.stage, two.level))
+                    two.stage, two.level, two.unflash, one.is_save = level_logic((two.stage, two.level), two.unflash)
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()
@@ -373,13 +372,16 @@ def display(clock: pg.time.Clock, version: str, title: str):
         one.item_group.draw(screen)
         one.particle_group.draw(screen)
         one.barrage_group.draw(screen)
-        if not one.is_save and not one.is_pause and not one.is_summary and not one.is_talk and one.is_level_load:
-            one.plane_group.update()
-            one.bullet_group.update()
-            one.barrage_group.update()
-            one.item_group.update()
-            one.particle_group.update()
-            one.brick_group.update()
+        if not one.is_save and not one.is_talk and one.is_level_load:
+            part_condition = not one.is_pause and not one.is_summary
+            if part_condition:
+                one.plane_group.update()
+                one.bullet_group.update()
+            one.barrage_group.update(one.is_pause, one.is_summary)
+            if part_condition:
+                one.item_group.update()
+                one.particle_group.update(one.is_pause, one.is_summary)
+                one.brick_group.update()
     if not one.is_exit:
         if one.is_check:
             check_menu()
@@ -425,10 +427,11 @@ def update(clock: pg.time.Clock, args: tuple, version: str, title: str):
                 if hasattr(one.char, "locate"):
                     one.char.locate = major.rect.center
                 major.power = two.power
-                one.item_spawn_timer = spawn(one.item_spawn_timer >= 45 and len(one.brick_group) > 0, Item, "fire", -2, (randint(120, 465), 10), one.item_group, timer=one.item_spawn_timer)
+                item_condition = one.item_spawn_timer >= 45 and len(one.brick_group) > 0
+                one.item_spawn_timer = spawn(item_condition, Item, "fire", -2, (randint(120, 465), 10), one.item_group, timer=one.item_spawn_timer)
                 if one.combo_timer <= 1 and one.combo > 0:
                     Text(major.rect.midtop, (45, 60), 0.5, f"{2 ** one.combo}", color_dict[6], color_dict[7], one.particle_group)
-                one.combo_timer, one.combo, two.score = GLOBAL.combo_counter(one.combo_timer, one.combo, two.score, 2 ** one.combo, 120)
+                one.combo_timer, one.combo, two.score = combo_counter(one.combo_timer, one.combo, two.score, 2 ** one.combo, 120)
                 barrage_collide()
                 bullet_collide()
                 item_collide()

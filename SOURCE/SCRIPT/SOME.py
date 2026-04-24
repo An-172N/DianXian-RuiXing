@@ -15,7 +15,7 @@ import pygame as pg
 from PRELOAD import *
 from LOGIC.FILE import *
 from LOGIC.STAGE import *
-from SCRIPT.HUMAN import Ono, Hro, Nre, Qdi
+from SCRIPT.HUMAN import *
 from SCRIPT.SPAWN import *
 
 
@@ -24,22 +24,22 @@ def load_json(filepath: str):
         return json.load(f)
 
 
-def spawn_barrage(stage: int, group: pg.sprite.Group, power: int, type: int, color: tuple, spawn_pos: tuple, locate: tuple):
+def spawn_barrage(stage: int, group: pg.sprite.Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
     if random() <= difficulty[stage - 1] + power / 1000:
         {
-            1: lambda: circle_barrage(type, color[0], spawn_pos, locate, group),
-            2: lambda: polygon_barrage(type, color[0], spawn_pos, locate, group),
-            3: lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group, color[1], color[2]),
-            4: lambda: point_barrage(type, color[0], locate, group)
+            1: lambda: circle_barrage(type, color_dict[1], spawn_pos, locate, group),
+            2: lambda: polygon_barrage(type, color_dict[2], spawn_pos, locate, group),
+            3: lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group, color_dict[6], color_dict[3]),
+            4: lambda: point_barrage(type, color_dict[4], locate, group)
         }[stage]()
 
 
-def brick_blast(group: pg.sprite.Group, stage: int, color: tuple, *spawn_pos: tuple):
+def brick_blast(group: pg.sprite.Group, stage: int, color: tuple, rect: pg.Rect):
     if color == color_dict[6]:
         {
-            1: lambda: circle_brick(group, spawn_pos[3]),
-            2: lambda: polygon_brick(group, spawn_pos[0], spawn_pos[1], spawn_pos[2]),
-            3: lambda: line_brick(group, spawn_pos[3]),
+            1: lambda: circle_brick(group, rect.center),
+            2: lambda: polygon_brick(group, offset_y(rect.midleft, -1), offset_y(rect.midright, -1), offset_y(rect.midbottom, -1)),
+            3: lambda: line_brick(group, rect.center),
             4: lambda: point_brick(group)
         }[stage]()
 
@@ -58,12 +58,10 @@ def sprite_loader(numbers: tuple, *group: pg.sprite.Group):
     return char, text
 
 
-def spawn(condition: bool, sprite: object, *args, group: pg.sprite.Group = None, timer: int = 0):
+def spawn(condition: bool, sprite: object, *args, timer: int = 0):
     timer += 1
     if condition:
-        char = sprite(*args)
-        if group is not None:
-            group.add(char)
+        sprite(*args)
         timer = 0
 
     return timer

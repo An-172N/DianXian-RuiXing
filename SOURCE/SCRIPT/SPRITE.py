@@ -14,14 +14,34 @@ from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
+    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: pg.sprite.Group, radius: int=0, form: str=None, rotate: bool=False):
+        super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
+
+        th.effective = effective
+        th.speed = speed
+        th.color = color
+
+    def update(th, is_pause: bool, is_summary: bool):
+        if not is_pause and not is_summary:
+            rad = radians(th.angle)
+            sin_, cos_ = sin(rad), cos(rad)
+            th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
+            if hasattr(th, "type") and th.type == "char":
+                th.speed -= 0.1
+                if th.speed < -4:
+                    th.speed = -4
+            if not th.effective.collidepoint(th.rect.center):
+                th.kill()
+
+
+class Bullet(Base):
     def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, radius: int=0, form: str=None, rotate: bool=False):
         super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
 
         th.effective = effective
         th.speed = speed
         th.color = color
-        if damage:
-            th.damage = damage
+        th.damage = damage
 
     def update(th):
         rad = radians(th.angle)
@@ -48,7 +68,7 @@ class Text(Base):
 
         sound_cache["charge"].play(maxtime=128)
 
-    def update(th):
+    def update(th, _, __):
         th.timer += 1
         th.y -= th.speed
         if th.timer >= th.kill_time[1]:
@@ -100,8 +120,9 @@ class Line(Base):
         th.target_image = target_image
         th.timer = 0
 
-    def update(th):
-        th.timer += 1
+    def update(th, is_pause: bool, is_summary: bool):
+        if not is_pause and not is_summary:
+            th.timer += 1
         if th.timer >= 68:
             th.kill()
         elif th.timer >= 45:
@@ -112,3 +133,22 @@ class Line(Base):
                 pg.draw.line(screen, th.color, th.pos, th.target, 3)
         elif th.timer >= 0 and not th.count:
             pg.draw.line(screen, th.color, th.pos, th.target, 3)
+
+
+class LineBullet(Base):
+    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group, mask: bool=False):
+        super().__init__(image, group, form="line", pos=pos, mask=mask)
+
+        th.color = color
+        th.target_color = target_color
+        th.damage = damage
+        th.target_image = target_image
+        th.timer = 0
+
+    def update(th):
+        th.timer += 1
+        if th.timer >= 68:
+            th.kill()
+        elif th.timer >= 45 and th.image != th.target_image:
+            th.color = th.target_color
+            th.image = th.target_image
