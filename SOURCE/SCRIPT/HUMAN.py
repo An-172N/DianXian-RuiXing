@@ -18,8 +18,8 @@ from SCRIPT.SPRITE import *
 
 
 class Basic(Base):
-    def __init__(th, image: pg.Surface, hp: int, color: tuple, *group: pg.sprite.Group):
-        super().__init__(image, group[2], pos=(292, 60))
+    def __init__(th, image: pg.Surface, turn_image: pg.Surface, hp: int, color: tuple, *group: pg.sprite.Group):
+        super().__init__(image, group[2], turn_image=turn_image, pos=(292, 60))
 
         th.barrage_group = group[0]
         th.particle_group = group[1]
@@ -39,7 +39,7 @@ class Basic(Base):
 
 class Ono(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((24, 0, 12, 26)), 192, color_dict[1], *group)
+        super().__init__(char_image.subsurface((24, 0, 12, 26)), char_image.subsurface((36, 0, 12, 26)), 192, color_dict[1], *group)
 
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
@@ -110,12 +110,14 @@ class Ono(Basic):
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
             th.choice()
+        delay = th.x
         th.x, th.y = vector((th.x, th.y), th.target_pos, 4)[0]
+        th.swivel(th.x < delay, th.x > delay)
 
 
 class Hro(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((36, 0, 12, 26)), 224, color_dict[2], *group)
+        super().__init__(char_image.subsurface((48, 0, 12, 26)), char_image.subsurface((60, 0, 12, 26)), 224, color_dict[2], *group)
 
         th.flash = True
         th.bullet_image = barrage_cache[(0, th.color)]
@@ -191,12 +193,14 @@ class Hro(Basic):
                     if bullet.type == "bullet":
                         bullet.kill()
                     barrage.is_die = True
+        delay = th.x
         th.x, th.y = vector((th.x, th.y), th.target_pos, 5)[0]
+        th.swivel(th.x < delay, th.x > delay)
 
 
 class Nre(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((48, 0, 12, 26)), 256, color_dict[3], *group)
+        super().__init__(char_image.subsurface((72, 0, 12, 26)), char_image.subsurface((84, 0, 12, 26)), 256, color_dict[3], *group)
 
         th.power = True
         th.sd = (th.fire, th.free, th.fire, th.extend, th.fire, th.final, th.fire, th.last, th.extend, th.final, th.last)
@@ -274,12 +278,14 @@ class Nre(Basic):
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
             th.choice()
+        delay = th.x
         th.x, th.y = vector((th.x, th.y), th.target_pos, 6)[0]
+        th.swivel(th.x < delay, th.x > delay)
 
 
 class Qdi(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((60, 0, 12, 26)), 96, color_dict[4], *group)
+        super().__init__(char_image.subsurface((96, 0, 12, 26)), 96, color_dict[4], *group)
 
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
@@ -423,6 +429,11 @@ class Kli(Base):
             sound_cache["fire"].play(maxtime=32)
 
     def update(th):
+        keys = pygame.key.get_pressed()
+        th.is_move_left = True if keys[pg.K_LEFT] else False
+        th.is_move_right = True if keys[pg.K_RIGHT] else False
+        th.is_shoot = False if keys[pg.K_z] else True
+        th.is_fast = True if keys[pg.K_x] else False
         if th.divided.condition:
             th.free()
         th.swivel(th.is_move_right, th.is_move_left)

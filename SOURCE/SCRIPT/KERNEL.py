@@ -29,10 +29,6 @@ reset = lambda: (one.__init__(), two.__init__(), log.__init__())
 
 
 keydown_game_dict = {
-    pg.K_RIGHT: lambda: setattr(one.major, "is_move_right", True),
-    pg.K_LEFT: lambda: setattr(one.major, "is_move_left", True),
-    pg.K_x: lambda: setattr(one.major, "is_fast", True),
-    pg.K_z: lambda: setattr(one.major, "is_shoot", False),
     pg.K_SPACE: lambda: (lambda i: (setattr(one.major.divided, 'condition', i[0]), setattr(two, 'power', i[1])))(bomb(one.major.divided.condition, two.power, 12)),
     pg.K_ESCAPE: lambda: (setattr(one, "is_pause", True), setattr(one, "pop_timer", 0), sound_cache["pick"].play())
 }
@@ -69,14 +65,6 @@ keydown_check_dict = {
     pg.K_ESCAPE: lambda: (setattr(one, "is_check", False), setattr(log, "index", 0), setattr(one, "pop_timer", 0)),
     pg.K_LEFT: lambda: (setattr(log, "index", (log.index - 1) if log.index > 0 else log.total_files - 1), setattr(one, "pop_timer", 0)),
     pg.K_RIGHT: lambda: (setattr(log, "index", (log.index + 1) if log.index < log.total_files - 1 else 0), setattr(one, "pop_timer", 0))
-}
-
-
-keyup_game_dict = {
-    pg.K_RIGHT: lambda: setattr(one.major, "is_move_right", False),
-    pg.K_LEFT: lambda: setattr(one.major, "is_move_left", False),
-    pg.K_x: lambda: setattr(one.major, "is_fast", False),
-    pg.K_z: lambda: setattr(one.major, "is_shoot", True)
 }
 
 
@@ -330,9 +318,6 @@ def key_event():
     for event in pg.event.get():
         if event.type == pg.QUIT:
             sys.exit()
-        elif event.type == pg.KEYUP:
-            if not one.is_summary and one.is_level_load and event.key in keyup_game_dict:
-                keyup_game_dict[event.key]()
         elif event.type == pg.KEYDOWN:
             if one.pop_timer >= 60:
                 if one.is_check and event.key in keydown_check_dict:
