@@ -46,7 +46,7 @@ get_stage = lambda stage: stage if stage < 3 else 'Final' if stage == 3 else 'Ex
 offset_y = lambda point, dy: (point[0], point[1] + dy)
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
-screen = pygame.display.set_mode((480, 360), pygame.FULLSCREEN|pygame.SCALED, vsync=1)
+screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED, vsync=1)
 
 
 sound_cache = {

@@ -9,7 +9,6 @@ import pygame as pg
 
 
 from LOGIC.FILE import *
-from SCRIPT.HUMAN import Kli
 
 
 class One:
@@ -27,7 +26,6 @@ class One:
         th.is_check = False
         th.is_level_load = False
         th.is_exit = False
-        th.major = Kli(th.bullet_group, th.particle_group, th.plane_group)
         th.char = None
         th.text = None
         th.item_spawn_timer = 0

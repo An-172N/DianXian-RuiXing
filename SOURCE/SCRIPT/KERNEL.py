@@ -25,13 +25,8 @@ from SCRIPT.SPAWN import *
 one = One()
 two = Two()
 log = Log()
-reset = lambda: (one.__init__(), two.__init__(), log.__init__())
-
-
-keydown_game_dict = {
-    pg.K_SPACE: lambda: (lambda i: (setattr(one.major.divided, 'condition', i[0]), setattr(two, 'power', i[1])))(bomb(one.major.divided.condition, two.power, 12)),
-    pg.K_ESCAPE: lambda: (setattr(one, "is_pause", True), setattr(one, "pop_timer", 0), sound_cache["pick"].play())
-}
+major = Kli(one.bullet_group, one.particle_group, one.plane_group)
+reset = lambda: (one.__init__(), two.__init__(), log.__init__(), major.__init__(one.bullet_group, one.particle_group, one.plane_group))
 
 
 keydown_talk_dict = {
@@ -47,7 +42,7 @@ keydown_pause_dict = {
 
 
 keydown_start_dict = {
-    pg.K_z: lambda: (setattr(two, "is_run", True), setattr(one, "pop_timer", 0), one.__init__()),
+    pg.K_z: lambda: (setattr(two, "is_run", True), setattr(one, "pop_timer", 0)),
     pg.K_q: lambda: setattr(one, "is_exit", True),
     pg.K_c: lambda: (setattr(one, "is_check", True), setattr(one, "pop_timer", 0)) if log.total_files > 0 else None
 }
@@ -68,13 +63,13 @@ keydown_check_dict = {
 }
 
 
-def situation(clock: pg.time.Clock):
+def situation(clock: pg.Clock):
     text = (
         f"{two.score:9d}",
         f"{int(clock.get_fps()): 9d}",
-        f"{two.power:02d}  ,  {one.total_point:02d}",
+        f"{major.power:02d}  ,  {one.total_point:02d}",
         f"{two.flash:02d}",
-        f"{one.combo:02d}  ,  {one.major.bullets:02d}"
+        f"{one.combo:02d}  ,  {major.bullets:02d}"
     )
     for info in (
         {"text": text[0], "pos": (39, 25)},
@@ -119,7 +114,7 @@ def summary_menu():
         f"得点 {one.total_point} * 512 = {one.total_point * 512}",
         f"无闪 {two.unflash} * 4096 = {two.unflash * 4096}",
         f"面数 {two.stage} * 16384 = {two.stage * 16384}",
-        f"形力 {two.power} / 32 * 8192 = {int(two.power / 32 * 8192)}",
+        f"形力 {major.power} / 32 * 8192 = {int(major.power / 32 * 8192)}",
         ""
     )
     key = ("", "", "Z 继续")
@@ -234,8 +229,11 @@ def level_logic(numbers: tuple, unflash: int):
     if stage >= 3 and level == 6:
         is_save = True
     else:
+        power = major.power
         is_save = False
         one.__init__()
+        major.__init__(one.bullet_group, one.particle_group, one.plane_group)
+        major.power = power
         stage, level = follow((stage, level), 6)
         unflash += 1
 
@@ -243,13 +241,12 @@ def level_logic(numbers: tuple, unflash: int):
 
 
 def item_collide():
-    major = one.major
     for item in pg.sprite.spritecollide(major, one.item_group, True):
         one.combo_timer = 120
         major.bullets = clamp(major.bullets + 1, 0, 3)
         if item.type in ('flash', 'power'):
             if item.type == "power":
-                two.power = clamp(two.power + 1, 0, 32)
+                major.power = clamp(major.power + 1, 0, 32)
                 one.combo += 1
                 sound_cache["pick"].play()
             else:
@@ -263,8 +260,7 @@ def item_collide():
 
 
 def barrage_collide():
-    major = one.major
-    for barrage in pygame.sprite.spritecollide(major.point, one.barrage_group, False, collide):
+    for barrage in pg.sprite.spritecollide(major.point, one.barrage_group, False, collide):
         if barrage.color != color_dict[6]:
             if not major.collided.condition and not major.divided.condition:
                 major.collided.condition = True
@@ -298,8 +294,8 @@ def bullet_collide():
                         for _ in range(12):
                             spawn_particles(one.particle_group, 2, rect.center, (2, 8), brick.color, color_dict[6])
                     else:
-                        poses = (rect.center, one.major.rect.center)
-                        spawn_barrage(two.stage, one.barrage_group, two.power, brick.type, *poses)
+                        poses = (rect.center, major.rect.center)
+                        spawn_barrage(two.stage, one.barrage_group, major.power, brick.type, *poses)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     if sound_cache["fire"].get_num_channels() < 2:
                         sound_cache["fire"].play()
@@ -336,18 +332,19 @@ def key_event():
                     keydown_pause_dict[event.key]()
                     sound_cache["pick"].play()
                 elif one.is_summary and event.key == pg.K_z:
-                    two.score, one.is_summary, one.pop_timer = summary_logic(two.score, one.total_point, two.power, two.unflash, one.combo, (two.stage, two.level))
+                    two.score, one.is_summary, one.pop_timer = summary_logic(two.score, one.total_point, major.power, two.unflash, one.combo, (two.stage, two.level))
                     two.stage, two.level, two.unflash, one.is_save = level_logic((two.stage, two.level), two.unflash)
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()
                 sound_cache["pick"].play()
-            elif not one.is_summary and one.is_level_load and not one.is_talk and not one.is_pause and event.key in keydown_game_dict:
-                keydown_game_dict[event.key]()
+            elif not one.is_summary and one.is_level_load and not one.is_talk and not one.is_pause and event.key == pg.K_ESCAPE:
+                one.is_pause = True
+                one.pop_timer = 0
+                sound_cache["pick"].play()
 
 
-def display(clock: pg.time.Clock, version: str, title: str):
-    major = one.major
+def display(clock: pg.Clock, version: str, title: str):
     if two.is_run:
         screen.blit(picture[two.stage], (120, 15))
         one.bullet_group.draw(screen)
@@ -387,11 +384,11 @@ def display(clock: pg.time.Clock, version: str, title: str):
     situation(clock)
 
 
-def update(clock: pg.time.Clock, args: tuple, version: str, title: str):
+def update(clock: pg.Clock, args: tuple, version: str, title: str):
     two.stage = clamp(args[0], 1, 4)
     two.level = clamp(args[1], 1, 6)
     two.flash = clamp(args[2], 1, 96)
-    two.power = clamp(args[3], 0, 32)
+    major.power = clamp(args[3], 0, 32)
     alpha = 255
     timer = 0
     for text_info in (
@@ -408,10 +405,8 @@ def update(clock: pg.time.Clock, args: tuple, version: str, title: str):
         key_event()
         if two.is_run and not one.is_save and not one.is_pause:
             if not one.is_summary and not one.is_talk and one.is_level_load:
-                major = one.major
                 if hasattr(one.char, "locate"):
                     one.char.locate = major.rect.center
-                major.power = two.power
                 item_condition = one.item_spawn_timer >= 45 and len(one.brick_group) > 0
                 one.item_spawn_timer = spawn(item_condition, Item, "fire", -2, (randint(120, 465), 10), one.item_group, timer=one.item_spawn_timer)
                 if one.combo_timer <= 1 and one.combo > 0:
