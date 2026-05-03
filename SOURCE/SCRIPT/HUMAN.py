@@ -38,7 +38,7 @@ class Basic(Base):
 
 class Ono(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((24, 0, 12, 26)), char_image.subsurface((36, 0, 12, 26)), 192, color_dict[1], *group)
+        super().__init__(char_image.subsurface((24, 0, 12, 26)), char_image.subsurface((36, 0, 12, 26)), 224, color_dict[1], *group)
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
         th.sd = tuple([th.fire] * 3 + [th.free, th.extend, th.final])
@@ -115,7 +115,7 @@ class Ono(Basic):
 
 class Hro(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((48, 0, 12, 26)), char_image.subsurface((60, 0, 12, 26)), 224, color_dict[2], *group)
+        super().__init__(char_image.subsurface((48, 0, 12, 26)), char_image.subsurface((60, 0, 12, 26)), 256, color_dict[2], *group)
         th.flash = True
         th.bullet_image = barrage_cache[(0, th.color)]
         th.sd = tuple([th.fire] * 2 + [th.free] + [th.fire] * 3 + [th.extend] + [th.fire] * 4 + [th.free, th.extend])
@@ -197,7 +197,7 @@ class Hro(Basic):
 
 class Nre(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((72, 0, 12, 26)), char_image.subsurface((84, 0, 12, 26)), 256, color_dict[3], *group)
+        super().__init__(char_image.subsurface((72, 0, 12, 26)), char_image.subsurface((84, 0, 12, 26)), 288, color_dict[3], *group)
         th.power = True
         th.sd = (th.fire, th.free, th.fire, th.extend, th.fire, th.final, th.fire, th.last, th.extend, th.final, th.last)
 
@@ -281,7 +281,7 @@ class Nre(Basic):
 
 class Qdi(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((96, 0, 12, 26)), 96, color_dict[4], *group)
+        super().__init__(char_image.subsurface((96, 0, 12, 26)), 128, color_dict[4], *group)
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
 
@@ -396,13 +396,16 @@ class Kli(Base):
         th.is_fast = False
 
     def fire(th):
+        p = 2 ** (th.power // 32)
+        q = 1 * (th.power // 16)
         image = bullet_cache["bullet"]
-        for j in range(-1, 2, 1):
-            for k in (-1, 1):
-                dx = th.rect.centerx + 6 * k
-                dy = th.rect.top
-                angle = j * k
-                Bullet(effective, 16, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet", rotate=True)
+        for i in range(0, p):
+            for j in range(-q, q + 1, (q if th.power >= 16 else 1)):
+                for k in (-1, 1):
+                    dx = th.rect.centerx + 6 * k
+                    dy = th.rect.top + (0 + i * 12)
+                    angle = j * k
+                    Bullet(effective, 16, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet", rotate=True)
         sound_cache["fire"].play(maxtime=32)
 
     def free(th):
