@@ -453,3 +453,9 @@ class Kli(Base):
     def reset_bullet(th):
         th.bomb_bullets = 0
         th.bullet_timer = 0
+
+    def visitable(th):
+        return th.collided.visitable and th.divided.visitable
+    
+    def in_invinc(th):
+        return not th.collided.condition and not th.divided.condition

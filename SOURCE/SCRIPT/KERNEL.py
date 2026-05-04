@@ -30,8 +30,8 @@ reset = lambda: (one.__init__(), two.__init__(), log.__init__(), major.__init__(
 
 
 keydown_talk_dict = {
-    pg.K_z: lambda: (setattr(one, "text_number", one.text_number + 1), setattr(one, "pop_timer", 0)),
-    pg.K_x: lambda: (setattr(one, "is_talk", False), setattr(one, "pop_timer", 0))
+    pg.K_z: lambda: setattr(one, "text_number", one.text_number + 1),
+    pg.K_x: lambda: setattr(one, "is_talk", False)
 }
 
 
@@ -56,10 +56,10 @@ keydown_over_dict = {
 
 
 keydown_check_dict = {
-    pg.K_DELETE: lambda: (os.remove(log.json_files[log.index]), log.__init__(), setattr(one, "pop_timer", 0)),
-    pg.K_ESCAPE: lambda: (setattr(one, "is_check", False), setattr(log, "index", 0), setattr(one, "pop_timer", 0)),
-    pg.K_LEFT: lambda: (setattr(log, "index", (log.index - 1) if log.index > 0 else log.total_files - 1), setattr(one, "pop_timer", 0)),
-    pg.K_RIGHT: lambda: (setattr(log, "index", (log.index + 1) if log.index < log.total_files - 1 else 0), setattr(one, "pop_timer", 0))
+    pg.K_DELETE: lambda: (os.remove(log.json_files[log.index]), log.__init__()),
+    pg.K_ESCAPE: lambda: (setattr(one, "is_check", False), setattr(log, "index", 0)),
+    pg.K_LEFT: lambda: setattr(log, "index", (log.index - 1) if log.index > 0 else log.total_files - 1),
+    pg.K_RIGHT: lambda: setattr(log, "index", (log.index + 1) if log.index < log.total_files - 1 else 0)
 }
 
 
@@ -262,7 +262,7 @@ def item_collide():
 def barrage_collide():
     for barrage in pg.sprite.spritecollide(major.point, one.barrage_group, False, collide):
         if barrage.color != color_dict[6]:
-            if not major.collided.condition and not major.divided.condition:
+            if major.in_invinc():
                 major.collided.condition = True
                 two.unflash = 0
                 two.flash -= 1
@@ -318,6 +318,7 @@ def key_event():
             if one.pop_timer >= 60:
                 if one.is_check and event.key in keydown_check_dict:
                     keydown_check_dict[event.key]()
+                    setattr(one, "pop_timer", 0)
                     sound_cache["pick"].play()
                 elif not two.is_run and not one.is_check and not one.is_exit and event.key in keydown_start_dict:
                     sound_cache["pick"].play()
@@ -337,6 +338,7 @@ def key_event():
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()
+                setattr(one, "pop_timer", 0)
                 sound_cache["pick"].play()
             elif not one.is_summary and one.is_level_load and not one.is_talk and not one.is_pause and event.key == pg.K_ESCAPE:
                 one.is_pause = True
@@ -348,7 +350,7 @@ def display(clock: pg.Clock, version: str, title: str):
     if two.is_run:
         screen.blit(picture[two.stage], (120, 15))
         one.bullet_group.draw(screen)
-        if major.collided.visitable and major.divided.visitable and one.is_level_load:
+        if major.visitable() and one.is_level_load:
             one.plane_group.draw(screen)
         one.brick_group.draw(screen)
         one.item_group.draw(screen)
