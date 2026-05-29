@@ -72,12 +72,13 @@ keydown_check_dict = {
 
 
 def situation(clock: pg.Clock):
+    color = color_dict[6]
     text = (
         f"{two.score:9d}",
         f"{int(clock.get_fps()): 9d}",
-        f"{major.power:02d}  ,  {one.total_point:02d}",
+        f"{major.power:02d}  ,  {major.bullets:02d}",
         f"{two.flash:02d}",
-        f"{one.combo:02d}  ,  {major.bullets:02d}"
+        f"{one.combo:02d}  ,  {one.total_point:02d}"
     )
     for info in (
         {"text": text[0], "pos": (39, 25)},
@@ -86,7 +87,7 @@ def situation(clock: pg.Clock):
         {"text": text[3], "pos": (39, 295)},
         {"text": text[4], "pos": (39, 320)},
     ):
-        screen.blit(font.render(f"{info['text']}", False, color_dict[6]), info["pos"])
+        screen.blit(font.render(f"{info['text']}", False, color), info["pos"])
 
 
 def pause_menu():
@@ -100,7 +101,7 @@ def pause_menu():
 
 def load_menu():
     title = "这一站是————"
-    text = (f"Stage {get_stage(two.stage)} - {two.level} !!", "START!!!!")
+    text = (f"Stage {get_stage(two.stage)} - {two.level}!!", "START!!!!")
     half_menu(title, text)
 
 
@@ -185,22 +186,23 @@ def check_menu():
 
 
 def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60), shortly: bool=False):
+    color = color_dict[6]
     group = (
         (
-            {"surface": font.render(title, False, color_dict[6]), "pos": (8, 10)},
-            {"surface": font.render(other, False, color_dict[6]), "pos": (8, 305)}
+            {"surface": font.render(title, False, color), "pos": (8, 10)},
+            {"surface": font.render(other, False, color), "pos": (8, 305)}
         ),
         (
-            {"surface": font.render(text[0], False, color_dict[6]), "pos": (8, 60)},
-            {"surface": font.render(text[1], False, color_dict[6]), "pos": (8, 85)},
-            {"surface": font.render(text[2], False, color_dict[6]), "pos": (8, 110)},
-            {"surface": font.render(text[3], False, color_dict[6]), "pos": (8, 135)},
-            {"surface": font.render(text[4], False, color_dict[6]), "pos": (8, 160)}
+            {"surface": font.render(text[0], False, color), "pos": (8, 60)},
+            {"surface": font.render(text[1], False, color), "pos": (8, 85)},
+            {"surface": font.render(text[2], False, color), "pos": (8, 110)},
+            {"surface": font.render(text[3], False, color), "pos": (8, 135)},
+            {"surface": font.render(text[4], False, color), "pos": (8, 160)}
         ),
         (
-            {"surface": font.render(key[0], False, color_dict[6]), "pos": (275, 170)},
-            {"surface": font.render(key[1], False, color_dict[6]), "pos": (275, 220)},
-            {"surface": font.render(key[2], False, color_dict[6]), "pos": (275, 270)}
+            {"surface": font.render(key[0], False, color), "pos": (275, 170)},
+            {"surface": font.render(key[1], False, color), "pos": (275, 220)},
+            {"surface": font.render(key[2], False, color), "pos": (275, 270)}
         )
     )
     if one.pop_timer == interval[0]:
@@ -214,10 +216,11 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
 
 
 def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
+    color = color_dict[6]
     group = (
-        ({"surface": font.render(title, False, color_dict[6]), "pos": (8, 10)},),
-        ({"surface": font.render(text[0], False, color_dict[6]), "pos": (8, 60)},),
-        ({"surface": font.render(text[1], False, color_dict[6]), "pos": (8, 85)},)
+        ({"surface": font.render(title, False, color), "pos": (8, 10)},),
+        ({"surface": font.render(text[0], False, color), "pos": (8, 60)},),
+        ({"surface": font.render(text[1], False, color), "pos": (8, 85)},)
     )
 
     if one.pop_timer == interval[0]:
