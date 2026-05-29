@@ -64,8 +64,8 @@ def choose_brick(group: list, numbers: tuple, basic_power: int, basic_flash: int
 
 
 def circle_barrage(type: int, color: tuple, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
-    delta = add(locate, inverse(spawn_pos))
-    angle = direct(*inverse(delta))
+    delta = (locate[0] - spawn_pos[0], locate[1] - spawn_pos[1])
+    angle = direct(-delta[0], -delta[1])
     image = barrage_cache[(type, color)]
     Barrage(effective, 3, color, angle, spawn_pos, image, group, 3)
 
@@ -73,8 +73,8 @@ def circle_barrage(type: int, color: tuple, spawn_pos: tuple, locate: tuple, gro
 def polygon_barrage(type: int, color: tuple, spawn_pos: tuple, locate: tuple, group: pg.sprite.Group):
     image = barrage_cache[(type, color)]
     for i in range(locate[0] - 32, locate[0] + 33, 64):
-        delta = add((i, locate[1]), inverse(spawn_pos))
-        angle = direct(*inverse(delta))
+        delta = (i - spawn_pos[0], locate[1] - spawn_pos[1])
+        angle = direct(-delta[0], -delta[1])
         Barrage(effective, 3, color, angle, spawn_pos, image, group, 2, rotate=True)
 
 
@@ -97,8 +97,8 @@ def point_barrage(type: int, color: tuple, locate: tuple, group: pg.sprite.Group
     image = barrage_cache[(type, color)]
     for _ in range(3):
         pos = (randint(120, 465), randint(15, 225))
-        delta = add(locate, inverse(pos))
-        angle = direct(*inverse(delta))
+        delta = (locate[0] - pos[0], locate[1] - pos[1])
+        angle = direct(-delta[0], -delta[1])
         Barrage(effective, 4, color, angle, pos, image, group, 3)
 
 

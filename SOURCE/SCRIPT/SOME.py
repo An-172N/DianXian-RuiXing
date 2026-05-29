@@ -36,9 +36,10 @@ def spawn_barrage(stage: int, group: pg.sprite.Group, power: int, type: int, spa
 
 def brick_blast(group: pg.sprite.Group, stage: int, color: tuple, rect: pg.Rect):
     if color == color_dict[6]:
+        dy = lambda point, dy: (point[0], point[1] + dy)
         {
             1: lambda: circle_brick(group, rect.center),
-            2: lambda: polygon_brick(group, offset_y(rect.midleft, -1), offset_y(rect.midright, -1), offset_y(rect.midbottom, -1)),
+            2: lambda: polygon_brick(group, dy(rect.midleft, -1), dy(rect.midright, -1), dy(rect.midbottom, -1)),
             3: lambda: line_brick(group, rect.center),
             4: lambda: point_brick(group)
         }[stage]()
@@ -56,15 +57,6 @@ def sprite_loader(numbers: tuple, *group: pg.sprite.Group):
         choose_brick(brick_ready, (stage, level), 4, 1)
 
     return char, text
-
-
-def spawn(condition: bool, sprite: object, *args, timer: int = 0):
-    timer += 1
-    if condition:
-        sprite(*args)
-        timer = 0
-
-    return timer
 
 
 def choose_human(stage: int, *group: pg.sprite.Group):

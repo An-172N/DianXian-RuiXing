@@ -2,9 +2,6 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-from typing import Callable, Any
-
-
 import pygame
 
 
@@ -75,8 +72,8 @@ class Invinc:
     def __init__(th,
         end: int,
         blink_interval: int,
-        func: Callable[..., Any] = lambda: None,
-        *func_args: Any
+        func: object = lambda: None,
+        *func_args: object
     ) -> None:
         th.end = end
         th.blink_interval = blink_interval

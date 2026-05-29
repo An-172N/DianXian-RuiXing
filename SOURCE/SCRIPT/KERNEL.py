@@ -26,7 +26,12 @@ one = One()
 two = Two()
 log = Log()
 major = Kli(one.bullet_group, one.particle_group, one.plane_group)
-reset = lambda: (one.__init__(), two.__init__(), log.__init__(), major.__init__(one.bullet_group, one.particle_group, one.plane_group))
+reset = lambda: (
+    one.__init__(),
+    two.__init__(),
+    log.__init__(),
+    major.__init__(one.bullet_group, one.particle_group, one.plane_group)
+)
 
 
 keydown_talk_dict = {
@@ -49,7 +54,10 @@ keydown_start_dict = {
 
 
 keydown_over_dict = {
-    pg.K_RETURN: lambda: (save_file(log.name, two.score, two.total_point, two.flashed, two.flash, (two.stage, two.level)), reset()),
+    pg.K_RETURN: lambda: (
+        save_file(log.name, two.score, two.total_point, two.flashed, two.flash, (two.stage, two.level)),
+        reset()
+    ),
     pg.K_ESCAPE: lambda: reset(),
     pg.K_BACKSPACE: lambda: setattr(log, "name", log.name[:-1])
 }
@@ -179,19 +187,26 @@ def check_menu():
 def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60), shortly: bool=False):
     group = (
         (
-            render(title, (8, 10)),
-            render(other, (8, 305))
+            {"surface": font.render(title, False, color_dict[6]), "pos": (8, 10)},
+            {"surface": font.render(other, False, color_dict[6]), "pos": (8, 305)}
         ),
         (
-            *[render(text[i], (8, 60 + (25 * i))) for i in range(0, 5)],
+            {"surface": font.render(text[0], False, color_dict[6]), "pos": (8, 60)},
+            {"surface": font.render(text[1], False, color_dict[6]), "pos": (8, 85)},
+            {"surface": font.render(text[2], False, color_dict[6]), "pos": (8, 110)},
+            {"surface": font.render(text[3], False, color_dict[6]), "pos": (8, 135)},
+            {"surface": font.render(text[4], False, color_dict[6]), "pos": (8, 160)}
         ),
         (
-            *[render(key[i], (275, 170 + (50 * i))) for i in range(0, 3)],
+            {"surface": font.render(key[0], False, color_dict[6]), "pos": (275, 170)},
+            {"surface": font.render(key[1], False, color_dict[6]), "pos": (275, 220)},
+            {"surface": font.render(key[2], False, color_dict[6]), "pos": (275, 270)}
         )
     )
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
-    screen.blit(Change.layers(picture[5], group, one.pop_timer, interval, shortly), (120, 15))
+    source = Change.layers(picture[5], group, one.pop_timer, interval, shortly)
+    screen.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
     if one.pop_timer < interval[2] + 1:
@@ -200,9 +215,9 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
 
 def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
     group = (
-        (render(title, (8, 10)),),
-        (render(text[0], (8, 60)),),
-        (render(text[1], (8, 85)),)
+        ({"surface": font.render(title, False, color_dict[6]), "pos": (8, 10)},),
+        ({"surface": font.render(text[0], False, color_dict[6]), "pos": (8, 60)},),
+        ({"surface": font.render(text[1], False, color_dict[6]), "pos": (8, 85)},)
     )
 
     if one.pop_timer == interval[0]:
@@ -215,29 +230,25 @@ def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool
         one.pop_timer += 1
 
 
-def summary_logic(score: int, total_point: int, power: int, unflash: int, combo: int, numbers: tuple):
+def summary_logic(total_point: int, power: int, unflash: int, combo: int, numbers: tuple):
     stage, level = numbers
-    score += score_summary(total_point, power, unflash, combo, (stage, level))
-    is_summary = False
-    pop_timer = 0
-
-    return score, is_summary, pop_timer
+    two.score += score_summary(total_point, power, unflash, combo, (stage, level))
+    one.is_summary = False
+    one.pop_timer = 0
 
 
-def level_logic(numbers: tuple, unflash: int):
+def level_logic(numbers: tuple):
     stage, level = numbers
     if stage >= 3 and level == 6:
-        is_save = True
+        one.is_save = True
     else:
         power = major.power
-        is_save = False
+        one.is_save = False
         one.__init__()
         major.__init__(one.bullet_group, one.particle_group, one.plane_group)
         major.power = power
-        stage, level = follow((stage, level), 6)
-        unflash += 1
-
-    return stage, level, unflash, is_save
+        two.stage, two.level = follow((stage, level), 6)
+        two.unflash += 1
 
 
 def item_collide():
@@ -299,10 +310,10 @@ def bullet_collide():
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     if sound_cache["fire"].get_num_channels() < 2:
                         sound_cache["fire"].play()
-                    if hasattr(brick, "power"):
-                        spawn(brick.power, Item, "power", 2.5, rect.center, one.item_group)
-                    if hasattr(brick, "flash"):
-                        spawn(brick.flash, Item, "flash", 2.5, rect.center, one.item_group)
+                    if hasattr(brick, "power") and brick.power:
+                        Item("power", 2.5, rect.center, one.item_group)
+                    if hasattr(brick, "flash") and brick.flash:
+                        Item("flash", 2.5, rect.center, one.item_group)
                     brick_blast(one.bullet_group, two.stage, brick.color, rect)
                     brick.kill()
                 brick.is_die = True
@@ -333,8 +344,8 @@ def key_event():
                     keydown_pause_dict[event.key]()
                     sound_cache["pick"].play()
                 elif one.is_summary and event.key == pg.K_z:
-                    two.score, one.is_summary, one.pop_timer = summary_logic(two.score, one.total_point, major.power, two.unflash, one.combo, (two.stage, two.level))
-                    two.stage, two.level, two.unflash, one.is_save = level_logic((two.stage, two.level), two.unflash)
+                    summary_logic(one.total_point, major.power, two.unflash, one.combo, (two.stage, two.level))
+                    level_logic((two.stage, two.level))
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()
@@ -355,17 +366,11 @@ def display(clock: pg.Clock, version: str, title: str):
         one.brick_group.draw(screen)
         one.item_group.draw(screen)
         one.particle_group.draw(screen)
-        one.barrage_group.draw(screen)
-        if not one.is_save and not one.is_talk and one.is_level_load:
-            part_condition = not one.is_pause and not one.is_summary
-            if part_condition:
-                one.plane_group.update()
-                one.bullet_group.update()
-            one.barrage_group.update(one.is_pause, one.is_summary)
-            if part_condition:
-                one.item_group.update()
-                one.particle_group.update(one.is_pause, one.is_summary)
-                one.brick_group.update()
+        if two.stage == 3:
+            for line in one.barrage_group:
+                line.draw_line()
+        else:
+            one.barrage_group.draw(screen)
     if not one.is_exit:
         if one.is_check:
             check_menu()
@@ -398,7 +403,7 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
         {"text": "刷", "pos": (9, 50)},
         {"text": '形', "pos": (9, 270)},
         {"text": '闪', "pos": (9, 295)},
-        {"text": '连', "pos": (9, 320)},
+        {"text": '连', "pos": (9, 320)}
     ):
         picture[6].blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
     picture[6].set_clip(window)
@@ -409,11 +414,19 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
             if not one.is_summary and not one.is_talk and one.is_level_load:
                 if hasattr(one.char, "locate"):
                     one.char.locate = major.rect.center
-                item_condition = one.item_spawn_timer >= 45 and len(one.brick_group) > 0
-                one.item_spawn_timer = spawn(item_condition, Item, "fire", -2, (randint(120, 465), 10), one.item_group, timer=one.item_spawn_timer)
+                one.item_spawn_timer += 1
+                if one.item_spawn_timer >= 45 and len(one.brick_group) > 0:
+                    Item("fire", -2, (randint(120, 465), 10), one.item_group)
+                    one.item_spawn_timer = 0
                 if one.combo_timer <= 1 and one.combo > 0:
                     Text(major.rect.midtop, (45, 60), 0.5, f"{2 ** one.combo}", color_dict[6], color_dict[7], one.particle_group)
                 one.combo_timer, one.combo, two.score = combo_counter(one.combo_timer, one.combo, two.score, 2 ** one.combo, 120)
+                one.plane_group.update()
+                one.bullet_group.update()
+                one.barrage_group.update()
+                one.item_group.update()
+                one.particle_group.update()
+                one.brick_group.update()
                 barrage_collide()
                 bullet_collide()
                 item_collide()

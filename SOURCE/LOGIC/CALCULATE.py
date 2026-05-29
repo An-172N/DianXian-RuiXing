@@ -64,9 +64,3 @@ def direct(
     y: float
 ) -> float:
     return math.degrees(math.atan2(x, y)) % 360
-
-
-def add(
-    *packs: tuple[float, ...] | list[float] | set[float]
-) -> tuple[float, ...]:
-    return tuple(map(sum, zip(*packs)))

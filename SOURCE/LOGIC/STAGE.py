@@ -2,18 +2,13 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-from typing import Callable, Any, ParamSpec, Concatenate
-
-
-P = ParamSpec('P')
-
 
 def load(
     file: bytes,
-    func: Callable[Concatenate[int, str, P], Any],
-    *args: Any,
+    func: object,
+    *args: object,
     decode: str = 'ascii'
-) -> list[Any]:
+) -> list[object]:
     content = []
     arrange = file.decode(decode)
     lines = arrange.splitlines()

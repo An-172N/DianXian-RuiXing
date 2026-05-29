@@ -58,8 +58,8 @@ class Ono(Basic):
                 for j in range(-30, 31, 30):
                     delay += 20
                     for k in (j - 180, j, 180 - delay):
-                        delta = add(th.locate, (-th.x, -th.y))
-                        angle = direct(*inverse(delta)) + k
+                        delta = (th.locate[0] - th.x, th.locate[1] - th.y)
+                        angle = direct(-delta[0], -delta[1]) + k
                         Barrage(effective, speed, th.color, angle, (th.x, th.y), th.bullet_image, th.barrage_group, 3)
                 speed -= 0.5
             sound_cache["fire"].play()
@@ -76,9 +76,9 @@ class Ono(Basic):
 
     def final(th):
         if th.bullets < 24:
-            delta = add(th.locate, (-th.x, -th.y))
+            delta = (th.locate[0] - th.x, th.locate[1] - th.y)
             for i in (2, 1, -1, -2):
-                angle = ((th.timer * 12) * i) + (direct(*inverse(delta)) + 180)
+                angle = ((th.timer * 12) * i) + (direct(-delta[0], -delta[1]) + 180)
                 pos = (th.x, th.y)
                 Barrage(effective, 4, th.color, angle, pos, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
@@ -99,8 +99,8 @@ class Ono(Basic):
             image = barrage_cache[(2, color_dict[6])]
             for i in range(0, 360, 30):
                 pos = (th.x + 48 * cos(radians(i)), th.y + 48 * sin(radians(i)))
-                delta = add((th.x, th.y), inverse(pos))
-                angle = direct(*inverse(delta))
+                delta = (th.x - pos[0], th.y - pos[1])
+                angle = direct(-delta[0], -delta[1])
                 Barrage(effective, 3, color_dict[6], angle, pos, image, th.particle_group)
             sound_cache["charge"].play()
             th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
@@ -124,8 +124,8 @@ class Hro(Basic):
         if th.timer % 6 == 0 and th.bullets < 3:
             pos = (th.x, th.y)
             for i in range(-30, 31, 30):
-                delta = add((th.locate[0], th.locate[1]), inverse(pos))
-                angle = direct(*inverse(delta)) + i
+                delta = (th.locate[0] - pos[0], th.locate[1] - pos[1])
+                angle = direct(-delta[0], -delta[1]) + i
                 Barrage(effective, 4, th.color, angle, pos, th.bullet_image, th.barrage_group, 2, rotate=True)
             th.bullets += 1
             sound_cache["fire"].play()
@@ -139,7 +139,7 @@ class Hro(Basic):
                 end_pos = (dx2, 345)
                 current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
                 for j in range(45, 136, 90):
-                    angle = direct(*inverse(delta_vec)) + j + (th.timer * -6)
+                    angle = direct(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
                     Barrage(effective, 4, th.color, angle, current_pos, th.bullet_image, th.barrage_group, 2, rotate=True)
             th.bullets += 1
             if th.bullets % 3 == 0:
@@ -152,8 +152,8 @@ class Hro(Basic):
                 for j in (150, 185, 220, 255, 292, 327, 365, 400, 435):
                     for k in range(0, 4):
                         pos = (j, 60)
-                        delta = add((th.locate[0], th.locate[1] - 160), inverse(pos))
-                        angle = direct(*inverse(delta)) + k * 90
+                        delta = (th.locate[0] - pos[0], (th.locate[1] - 160) - pos[1])
+                        angle = direct(-delta[0], -delta[1]) + k * 90
                         Barrage(effective, speed, th.color, angle, pos, th.bullet_image, th.barrage_group, 2, rotate=True)
                 speed -= 0.6
             sound_cache["fire"].play()
@@ -171,8 +171,8 @@ class Hro(Basic):
             image = barrage_cache[(0, color_dict[6])]
             for i in range(0, 360, 120 if th.choice == th.fire else 90):
                 pos = (th.x + 45 * cos(radians(i)), th.y + 45 * sin(radians(i)))
-                delta = add((th.x, th.y), inverse(pos))
-                angle = direct(*inverse(delta))
+                delta = (th.x - pos[0], th.y - pos[1])
+                angle = direct(-delta[0], -delta[1])
                 Barrage(effective, 3, color_dict[6], angle, pos, image, th.particle_group, rotate=True)
             sound_cache["charge"].play()
             th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
@@ -265,8 +265,8 @@ class Nre(Basic):
             image = particle_cache[(9, color_dict[6])]
             for _ in range(8):
                 pos = (int(uniform(th.x - 48, th.x + 48)), th.y)
-                delta = add((th.x, th.y), inverse(pos))
-                angle = direct(*inverse(delta))
+                delta = (th.x - pos[0], th.y - pos[1])
+                angle = direct(-delta[0], -delta[1])
                 Barrage(effective, 3, color_dict[6], angle, pos, image, th.particle_group)
             sound_cache["charge"].play()
             th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
@@ -281,15 +281,15 @@ class Nre(Basic):
 
 class Qdi(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((96, 0, 12, 26)), 128, color_dict[4], *group)
+        super().__init__(char_image.subsurface((96, 0, 12, 26)), char_image.subsurface((108, 0, 12, 26)), 128, color_dict[4], *group)
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
 
     def fire(th):
         if th.bullets < 6 and th.timer % 2 == 0:
             pos = (randint(120, 465), randint(15, 230))
-            delta = add(th.locate, inverse(pos))
-            angle = direct(*inverse(delta))
+            delta = (th.locate[0] - pos[0], th.locate[1] - pos[1])
+            angle = direct(-delta[0], -delta[1])
             Barrage(effective, 3.5, th.color, angle, pos, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
             if th.bullets % 2 == 0:
@@ -327,8 +327,8 @@ class Qdi(Basic):
         if th.timer == 0:
             bullets = choice([20, 24, 30, 40])
             pos = th.rect.center
-            delta = add(th.locate, inverse(pos))
-            angle = direct(*inverse(delta))
+            delta = (th.locate[0] - pos[0], th.locate[1] - pos[1])
+            angle = direct(-delta[0], -delta[1])
             end = randint(0 + int(angle), 360 + int(angle))
             for i in range(0 + int(angle), 360 + int(angle), 360 // bullets):
                 fast_speed = uniform(6.0, 7.0)
@@ -360,14 +360,16 @@ class Qdi(Basic):
             th.timer = 0
             th.can_shoot = True
             th.choice = choice([th.fire] * 12 + [th.free] * 2 + [th.extend, th.final, th.last, th.count])
+        delay = th.x
         if th.timer % 150 >= 145:
             th.x += choice([-4, 4])
+        th.swivel(th.x < delay, th.x > delay)
         if th.timer % 125 == 0 and th.timer % 150 >= 125:
             image = barrage_cache[(2, color_dict[6])]
             for _ in range(12):
                 pos = (int(uniform(th.x - 48, th.x + 48)), int(uniform(th.y - 64, th.y + 64)))
-                delta = add((th.x, th.y), inverse(pos))
-                angle = direct(*inverse(delta))
+                delta = (th.x - pos[0], th.y - pos[1])
+                angle = direct(-delta[0], -delta[1])
                 Barrage(effective, 3, color_dict[6], angle, pos, image, th.particle_group)
             sound_cache["charge"].play()
             th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))

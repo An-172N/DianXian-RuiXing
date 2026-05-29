@@ -40,17 +40,17 @@ title = {
 
 
 asset = lambda path: get_data(__name__, path)
-inverse = lambda pack: tuple(map(lambda x: -x, pack))
-render = lambda i, j: {"surface": font.render(i, False, (255, 255, 255)), "pos": j}
 get_stage = lambda stage: stage if stage < 3 else 'Final' if stage == 3 else 'Extra'
-offset_y = lambda point, dy: (point[0], point[1] + dy)
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 icon = pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
 screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED, vsync=1)
 
 
 sound_cache = {
-    i: pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\{i.upper()}.flac'))) for i in ('pick', 'fire', 'charge', 'tick')
+    'pick': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\PICK.flac'))),
+    'fire': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\FIRE.flac'))),
+    'charge': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\CHARGE.flac'))),
+    'tick': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\TICK.flac')))
 }
 
 
@@ -59,7 +59,10 @@ basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_al
 blue_rect = Draw.rectangle((15, 15), 0, color_dict[5]).convert()
 white_rect = Draw.rectangle((12, 12), 0, color_dict[6]).convert()
 picture = {
-    **{i: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE{i}BG.png'))).convert() for i in range(1, 5)},
+    1: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE1BG.png'))),
+    2: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE2BG.png'))),
+    3: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE3BG.png'))),
+    4: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE4BG.png'))),
     5: pg.Surface((345, 330)).convert(),
     6: pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
     7: pg.Surface((480, 360)).convert()
@@ -67,14 +70,20 @@ picture = {
 
 
 barrage_cache = {
-    **{(2, color_dict[i]): Draw.circle((0, 0, 8, 8), 0, color_dict[i]).convert_alpha() for i in (1, 4, 6)},
+    (2, color_dict[1]): Draw.circle((0, 0, 8, 8), 0, color_dict[1]).convert_alpha(),
+    (2, color_dict[4]): Draw.circle((0, 0, 8, 8), 0, color_dict[4]).convert_alpha(),
+    (2, color_dict[6]): Draw.circle((0, 0, 8, 8), 0, color_dict[6]).convert_alpha(),
     (0, color_dict[2]): (surface := basic_image.subsurface(75, 7, 8, 8).copy(), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8)
 }
 
 
 brick_cache = {
-    **{(i, color_dict[j]): basic_image.subsurface(k, 0, 15, 15) for i, j, k in ((2, 1, 0), (0, 2, 15), (1, 3, 30), (2, 4, 45), (0, 6, 60))},
+    (2, color_dict[1]): basic_image.subsurface(0, 0, 15, 15),
+    (0, color_dict[2]): basic_image.subsurface(15, 0, 15, 15),
+    (1, color_dict[3]): basic_image.subsurface(30, 0, 15, 15),
+    (2, color_dict[4]): basic_image.subsurface(45, 0, 15, 15),
+    (0, color_dict[6]): basic_image.subsurface(60, 0, 15, 15),
     (2, color_dict[6]): Draw.circle((0, 0, 15, 15), 2, color_dict[6]).convert_alpha(),
     (1, color_dict[6]): Draw.rectangle((15, 15), 2, color_dict[6]).convert_alpha()
 }
@@ -94,15 +103,26 @@ line_cache = {
 }
 
 
-item_cache = {i: Draw.rectangle((9, 9), 2, color_dict[j]).convert() for i, j in (("flash", 2), ("power", 5), ("fire", 6))}
+item_cache = {
+    "flash": Draw.rectangle((9, 9), 2, color_dict[2]).convert(),
+    "power": Draw.rectangle((9, 9), 2, color_dict[5]).convert(),
+    "fire": Draw.rectangle((9, 9), 2, color_dict[6]).convert()
+}
 
 
 particle_cache = {
     (2, color_dict[6]): white_rect.subsurface(0, 0, 2, 2),
     (3, color_dict[3]): Draw.rectangle((3, 3), 0, color_dict[3]).convert(),
-    **{(i, color_dict[5]): blue_rect.subsurface(0, 0, i, i) for i in (9, 2)},
-    **{(3 * i, color_dict[6]): white_rect.subsurface(0, 0, 3 * i, 3 * i) for i in range(1, 5)},
-    **{(2, color_dict[i]): Draw.rectangle((2, 2), 0, color_dict[i]).convert() for i in range(1, 5)}
+    (9, color_dict[5]): blue_rect.subsurface(0, 0, 9, 9),
+    (2, color_dict[5]): blue_rect.subsurface(0, 0, 2, 2),
+    (3, color_dict[6]): white_rect.subsurface(0, 0, 3, 3),
+    (6, color_dict[6]): white_rect.subsurface(0, 0, 6, 6),
+    (9, color_dict[6]): white_rect.subsurface(0, 0, 9, 9),
+    (12, color_dict[6]): white_rect.subsurface(0, 0, 12, 12),
+    (2, color_dict[1]): Draw.rectangle((2, 2), 0, color_dict[1]).convert(),
+    (2, color_dict[2]): Draw.rectangle((2, 2), 0, color_dict[2]).convert(),
+    (2, color_dict[3]): Draw.rectangle((2, 2), 0, color_dict[3]).convert(),
+    (2, color_dict[4]): Draw.rectangle((2, 2), 0, color_dict[4]).convert()
 }
 
 

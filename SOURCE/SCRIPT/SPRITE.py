@@ -21,17 +21,16 @@ class Barrage(Base):
         th.speed = speed
         th.color = color
 
-    def update(th, is_pause: bool, is_summary: bool):
-        if not is_pause and not is_summary:
-            rad = radians(th.angle)
-            sin_, cos_ = sin(rad), cos(rad)
-            th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
-            if hasattr(th, "type") and th.type == "char":
-                th.speed -= 0.1
-                if th.speed < -4:
-                    th.speed = -4
-            if not th.effective.collidepoint(th.rect.center):
-                th.kill()
+    def update(th):
+        rad = radians(th.angle)
+        sin_, cos_ = sin(rad), cos(rad)
+        th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
+        if hasattr(th, "type") and th.type == "char":
+            th.speed -= 0.1
+            if th.speed < -4:
+                th.speed = -4
+        if not th.effective.collidepoint(th.rect.center):
+            th.kill()
 
 
 class Bullet(Base):
@@ -68,7 +67,7 @@ class Text(Base):
 
         sound_cache["charge"].play(maxtime=128)
 
-    def update(th, _, __):
+    def update(th):
         th.timer += 1
         th.y -= th.speed
         if th.timer >= th.kill_time[1]:
@@ -120,19 +119,18 @@ class Line(Base):
         th.target_image = target_image
         th.timer = 0
 
-    def update(th, is_pause: bool, is_summary: bool):
-        if not is_pause and not is_summary:
-            th.timer += 1
+    def draw_line(th):
+        if not th.count:
+            pg.draw.line(screen, th.color, th.pos, th.target, 3)
+
+    def update(th):
+        th.timer += 1
         if th.timer >= 68:
             th.kill()
         elif th.timer >= 45:
             if th.image != th.target_image:
                 th.color = th.target_color
                 th.image = th.target_image
-            if not th.count:
-                pg.draw.line(screen, th.color, th.pos, th.target, 3)
-        elif th.timer >= 0 and not th.count:
-            pg.draw.line(screen, th.color, th.pos, th.target, 3)
 
 
 class LineBullet(Base):
