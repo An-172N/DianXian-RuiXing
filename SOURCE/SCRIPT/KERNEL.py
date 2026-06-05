@@ -274,7 +274,7 @@ def item_collide():
 
 
 def barrage_collide():
-    for barrage in pg.sprite.spritecollide(major.point, one.barrage_group, False, collide):
+    for barrage in pg.sprite.spritecollide(major, one.barrage_group, False, collide):
         if barrage.color != color_dict[6]:
             if major.in_invinc():
                 major.collided.condition = True
@@ -305,7 +305,8 @@ def bullet_collide():
                         one.text_number = 0
                         one.is_talk = True
                         one.pop_timer = 0
-                        for _ in range(12):
+                        one.particle_group.empty()
+                        for _ in range(8):
                             spawn_particles(one.particle_group, 2, rect.center, (2, 8), brick.color, color_dict[6])
                     else:
                         poses = (rect.center, major.rect.center)

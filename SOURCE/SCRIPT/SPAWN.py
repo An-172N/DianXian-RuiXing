@@ -11,18 +11,23 @@ from SCRIPT.SPRITE import *
 
 
 def line_brick(group: pg.sprite.Group, spawn_pos: tuple):
-    for _ in range(12):
-        angle = approximate(randint(0, 360))
-        rands = choice([48, 96, 160])
-        image, target_image = [line_cache[(rands, angle, color_dict[i])] for i in (5, 9)]
-        LineBullet(color_dict[5], color_dict[9], 6, spawn_pos, image, target_image, group, True)
+    rands = (48, 96, 160)
+    color1, color2 = color_dict[5], color_dict[9]
+    basic_list = [(approximate(randint(0, 360)), choice(rands)) for _ in range(12)]
+    filtered_dict = {}
+    for a, b in basic_list:
+        if a not in filtered_dict or b > filtered_dict[a][1]:
+            filtered_dict[a] = (a, b)
+    for angle, length in filtered_dict.values():
+        image, target_image = [line_cache[(length, angle, i)] for i in (color1, color2)]
+        LineBullet(color1, color2, 6, spawn_pos, image, target_image, group, True)
 
 
 def circle_brick(group: pg.sprite.Group, spawn_pos: tuple):
     image = bullet_cache["bullet"]
     delay = randint(0, 12)
     for i in range(0 + delay, 360 + delay, 12):
-        Bullet(effective, 16, 0, i, spawn_pos, 4, image, group, form="bullet", rotate=True).update()
+        Bullet(effective, 15, 0, i, spawn_pos, 4, image, group, form="bullet", rotate=True).update()
 
 
 def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
@@ -30,10 +35,10 @@ def polygon_brick(group: pg.sprite.Group, *spawn_pos: tuple):
     for i, angle in enumerate(range(-30, 91, 60)):
         for j in (0, 1):
             if angle in (30, -30) and j:
-                Bullet(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross", rotate=True)
+                Bullet(effective, 15, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross", rotate=True)
             elif angle == 90:
                 angle = angle + j * 180
-                Bullet(effective, 16, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross", rotate=True)
+                Bullet(effective, 15, 0, angle, spawn_pos[i], 4, image, group, form="bullet-cross", rotate=True)
 
 
 def point_brick(group: pg.sprite.Group):
@@ -41,7 +46,7 @@ def point_brick(group: pg.sprite.Group):
     for _ in range(24):
         pos = (randint(120, 465), randint(15, 320))
         angle = randint(0, 360)
-        Bullet(effective, 16, 0, angle, pos, 4, image, group, form="bullet", rotate=True)
+        Bullet(effective, 15, 0, angle, pos, 4, image, group, form="bullet", rotate=True)
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple):
@@ -103,8 +108,8 @@ def point_barrage(type: int, color: tuple, locate: tuple, group: pg.sprite.Group
 
 
 def spawn_particles(group: pg.sprite.Group, size: int, pos: tuple, speeds: tuple, color1: tuple, color2: tuple=None):
-    rands = randint(0, 45)
-    for i in range(0 + rands, 360 + rands, 45):
+    rands = randint(0, 60)
+    for i in range(0 + rands, 360 + rands, 60):
         color = color1 if color2 is None else choice([color1, color2])
         speed = uniform(speeds[0], speeds[1])
         image = particle_cache[(size, color)]

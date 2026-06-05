@@ -89,8 +89,8 @@ class Brick(Base):
 
 
 class Item(Base):
-    def __init__(th, type: str, speed: float, pos: tuple, *group: pg.sprite.Group):
-        super().__init__(item_cache[type], *group, form=type, pos=pos)
+    def __init__(th, type: str, speed: float, pos: tuple, group: pg.sprite.Group):
+        super().__init__(item_cache[type], group, form=type, pos=pos)
 
         th.speed = speed
 

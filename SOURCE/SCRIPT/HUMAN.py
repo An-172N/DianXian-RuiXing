@@ -38,7 +38,8 @@ class Basic(Base):
 
 class Ono(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((24, 0, 12, 26)), char_image.subsurface((36, 0, 12, 26)), 224, color_dict[1], *group)
+        subsurface = char_image.subsurface
+        super().__init__(subsurface((24, 0, 12, 26)), subsurface((36, 0, 12, 26)), 224, color_dict[1], *group)
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
         th.sd = tuple([th.fire] * 3 + [th.free, th.extend, th.final])
@@ -115,7 +116,8 @@ class Ono(Basic):
 
 class Hro(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((48, 0, 12, 26)), char_image.subsurface((60, 0, 12, 26)), 256, color_dict[2], *group)
+        subsurface = char_image.subsurface
+        super().__init__(subsurface((48, 0, 12, 26)), subsurface((60, 0, 12, 26)), 256, color_dict[2], *group)
         th.flash = True
         th.bullet_image = barrage_cache[(0, th.color)]
         th.sd = tuple([th.fire] * 2 + [th.free] + [th.fire] * 3 + [th.extend] + [th.fire] * 4 + [th.free, th.extend])
@@ -197,7 +199,8 @@ class Hro(Basic):
 
 class Nre(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((72, 0, 12, 26)), char_image.subsurface((84, 0, 12, 26)), 288, color_dict[3], *group)
+        subsurface = char_image.subsurface
+        super().__init__(subsurface((72, 0, 12, 26)), subsurface((84, 0, 12, 26)), 288, color_dict[3], *group)
         th.power = True
         th.sd = (th.fire, th.free, th.fire, th.extend, th.fire, th.final, th.fire, th.last, th.extend, th.final, th.last)
 
@@ -281,7 +284,8 @@ class Nre(Basic):
 
 class Qdi(Basic):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface((96, 0, 12, 26)), char_image.subsurface((108, 0, 12, 26)), 128, color_dict[4], *group)
+        subsurface = char_image.subsurface
+        super().__init__(subsurface((96, 0, 12, 26)), subsurface((108, 0, 12, 26)), 128, color_dict[4], *group)
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
 
@@ -381,13 +385,13 @@ class Qdi(Basic):
 
 class Kli(Base):
     def __init__(th, *group: pg.sprite.Group):
-        super().__init__(char_image.subsurface(0, 0, 12, 26), group[2], turn_image=char_image.subsurface(12, 0, 12, 26), pos=(292, 332))
+        subsurface = char_image.subsurface
+        super().__init__(subsurface(0, 0, 12, 26), group[2], turn_image=subsurface(12, 0, 12, 26), pos=(292, 332), radius=1)
         th.bullet_group = group[0]
         th.particle_group = group[1]
         th.color = color_dict[5]
         th.collided = Invinc(180, 6)
         th.divided = Invinc(180, 4, th.reset_bullet)
-        th.point = Base(particle_cache[(2, color_dict[6])], radius=1)
         th.bomb_bullets = 0
         th.bullet_timer = 0
         th.bullets = 0
@@ -407,7 +411,7 @@ class Kli(Base):
                     dx = th.rect.centerx + 6 * k
                     dy = th.rect.top + (0 + i * 12)
                     angle = j * k
-                    Bullet(effective, 16, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet", rotate=True)
+                    Bullet(effective, 15, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet")
         sound_cache["fire"].play(maxtime=32)
 
     def free(th):
@@ -444,7 +448,6 @@ class Kli(Base):
             th.x += 8 if th.is_fast else 3
         th.x = clamp(th.x, window.left, window.right)
         th.y = 331 if th.is_fast else 332
-        th.point.rect.center = th.rect.center
         th.divided.update()
         th.collided.update()
         if th.is_shoot and th.bullets > 0:
