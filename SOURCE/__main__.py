@@ -33,6 +33,7 @@ def main():
     pygame.display.set_caption(title)
     pygame.font.init()
     pygame.mixer.init()
+    pygame.mixer.set_num_channels(2)
 
     import SCRIPT.KERNEL
 

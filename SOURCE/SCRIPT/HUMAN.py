@@ -75,7 +75,7 @@ class Ono(Basic):
                     Barrage(effective, 3.5, th.color, j, pos, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
             if th.bullets % 3 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(48 if th.bullets < 9 else 0))
 
     def final(th):
         if th.bullets < 24:
@@ -86,7 +86,7 @@ class Ono(Basic):
                 Barrage(effective, 4, th.color, angle, pos, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
             if th.bullets % 3 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(48 if th.bullets < 24 else 0))
 
     def update(th):
         th.timer += 1
@@ -133,7 +133,7 @@ class Hro(Basic):
                 angle = direct(-delta[0], -delta[1]) + i
                 Barrage(effective, 4, th.color, angle, pos, th.bullet_image, th.barrage_group, 2, rotate=True)
             th.bullets += 1
-            sound_cache["fire"].play()
+            sound_cache["fire"].play(maxtime=(98 if th.bullets < 3 else 0))
 
     def free(th):
         if th.bullets < 18:
@@ -148,13 +148,13 @@ class Hro(Basic):
                     Barrage(effective, 4, th.color, angle, current_pos, th.bullet_image, th.barrage_group, 2, rotate=True)
             th.bullets += 1
             if th.bullets % 3 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(48 if th.bullets < 18 else 0))
 
     def extend(th):
         if th.timer == 0:
             speed = 6
             for _ in range(6):
-                for j in (150, 185, 220, 255, 292, 327, 365, 400, 435):
+                for j in range(152, 468, 35):
                     for k in range(0, 4):
                         pos = (j, 60)
                         delta = (th.locate[0] - pos[0], (th.locate[1] - 160) - pos[1])
@@ -190,8 +190,7 @@ class Hro(Basic):
                 if not hasattr(barrage, "is_die"):
                     barrage.is_die = False
                 if not barrage.is_die:
-                    if sound_cache['tick'].get_num_channels() < 2:
-                        sound_cache['tick'].play()
+                    sound_cache['tick'].play()
                     if bullet.type == "bullet":
                         bullet.kill()
                     barrage.is_die = True
@@ -220,7 +219,7 @@ class Nre(Basic):
             line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
             th.bullets += 1
             if th.bullets % 3 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(48 if th.bullets < 15 else 0))
 
     def extend(th):
         if th.bullets < 8 and th.timer % 3 == 0:
@@ -231,7 +230,7 @@ class Nre(Basic):
             line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
             th.bullets += 1
             if th.bullets % 2 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(98 if th.bullets < 8 else 0))
 
     def final(th):
         if th.bullets < 12 and th.timer % 2 == 0:
@@ -243,7 +242,7 @@ class Nre(Basic):
                     line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
             th.bullets += 1
             if th.bullets % 2 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(65 if th.bullets < 12 else 0))
 
     def last(th):
         if th.bullets < 20 and th.timer % 2 == 0:
@@ -255,7 +254,7 @@ class Nre(Basic):
                 line_barrage(rands, pos, th.barrage_group, color_dict[6], color_dict[3])
             th.bullets += 1
             if th.bullets % 2 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(65 if th.bullets < 20 else 0))
 
     def update(th):
         th.timer += 1
@@ -302,7 +301,7 @@ class Qdi(Basic):
             Barrage(effective, 3.5, th.color, angle, pos, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
             if th.bullets % 2 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(65 if th.bullets < 6 else 0))
 
     def free(th):
         if th.timer == 0:
@@ -359,7 +358,7 @@ class Qdi(Basic):
                 Barrage(effective, speed, th.color, angle, th.rect.center, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
             if th.bullets % 2 == 0:
-                sound_cache["fire"].play()
+                sound_cache["fire"].play(maxtime=(65 if th.bullets < 12 else 0))
 
     def update(th):
         th.timer += 1

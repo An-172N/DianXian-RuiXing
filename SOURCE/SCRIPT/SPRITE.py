@@ -101,7 +101,7 @@ class Item(Base):
 
 class Line(Base):
     def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, target: tuple, count: int, image: pg.Surface, target_image: pg.Surface, group: Group, mask: bool=False):
-        super().__init__(image, group, form="line", pos=pos, mask=mask)
+        super().__init__(image, group, form="line", pos=pos, mask=mask, radius=1.5)
         th.color = color
         th.target_color = target_color
         th.pos = pos

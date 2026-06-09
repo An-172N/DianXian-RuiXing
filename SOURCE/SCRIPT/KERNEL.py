@@ -254,9 +254,9 @@ def item_collide():
                 major.power = clamp(major.power + 1, 0, 32)
                 if (power < 16 or power < 32) and major.power % 16 == 0:
                     Text(major.rect.midtop, (45, 60), 0.5, "Power UP", color_dict[6], color_dict[5], one.particle_group)
-                one.combo += 1
-                if sound_cache["charge"].get_num_channels() == 0:
+                else:
                     sound_cache["pick"].play()
+                one.combo += 1
             else:
                 two.flash += 1
                 one.combo += 1
@@ -306,8 +306,7 @@ def bullet_collide():
                         poses = (rect.center, major.rect.center)
                         spawn_barrage(two.stage, one.barrage_group, major.power, brick.type, *poses)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
-                    if sound_cache["fire"].get_num_channels() < 2:
-                        sound_cache["fire"].play()
+                    sound_cache["fire"].play()
                     if hasattr(brick, "power") and brick.power:
                         Item("power", 2.5, rect.center, one.item_group)
                     if hasattr(brick, "flash") and brick.flash:
