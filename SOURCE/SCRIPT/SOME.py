@@ -10,6 +10,7 @@ from random import random, sample
 
 
 import pygame as pg
+from pygame.sprite import Group
 
 
 from PRELOAD import *
@@ -24,7 +25,7 @@ def load_json(filepath: str):
         return json.load(f)
 
 
-def spawn_barrage(stage: int, group: pg.sprite.Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
+def spawn_barrage(stage: int, group: Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
     if random() <= difficulty[stage - 1] + power / 1000:
         {
             1: lambda: circle_barrage(type, color_dict[1], spawn_pos, locate, group),
@@ -34,7 +35,7 @@ def spawn_barrage(stage: int, group: pg.sprite.Group, power: int, type: int, spa
         }[stage]()
 
 
-def brick_blast(group: pg.sprite.Group, stage: int, color: tuple, rect: pg.Rect):
+def brick_blast(group: Group, stage: int, color: tuple, rect: pg.Rect):
     if color == color_dict[6]:
         dy = lambda point, dy: (point[0], point[1] + dy)
         {
@@ -45,12 +46,12 @@ def brick_blast(group: pg.sprite.Group, stage: int, color: tuple, rect: pg.Rect)
         }[stage]()
 
 
-def sprite_loader(numbers: tuple, *group: pg.sprite.Group):
+def sprite_loader(numbers: tuple, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
     stage, level = numbers
     char = None
     text = None
     if level == 6:
-        char = choose_human(stage, *group)
+        char = choose_human(stage, barrage_group, particle_group, brick_group, bullet_group)
         text = json.loads(asset(rf"ASSET\JSON\{stage}.json").decode('utf-8'))
     else:
         load(asset(rf"ASSET\STAGE\{stage}-{level}.stg"), load_brick, color_dict[stage], 4, 0.031, (127, 22), (15, 15))
@@ -59,16 +60,16 @@ def sprite_loader(numbers: tuple, *group: pg.sprite.Group):
     return char, text
 
 
-def choose_human(stage: int, *group: pg.sprite.Group):
+def choose_human(stage: int, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
     return {
         1: Ono,
         2: Hro,
         3: Nre,
         4: Qdi
-    }[stage](*group)
+    }[stage](barrage_group, particle_group, brick_group, bullet_group)
 
 
-def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, brick_group: pg.sprite.Group):
+def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, brick_group: Group):
     if wait_load_timer >= 30 and wait_load_timer % 30 == 0:
         if not remaining_brick:
             remaining_brick = list(range(len(brick_ready)))

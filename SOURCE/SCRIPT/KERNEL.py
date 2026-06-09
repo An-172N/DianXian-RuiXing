@@ -192,18 +192,8 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
             {"surface": font.render(title, False, color), "pos": (8, 10)},
             {"surface": font.render(other, False, color), "pos": (8, 305)}
         ),
-        (
-            {"surface": font.render(text[0], False, color), "pos": (8, 60)},
-            {"surface": font.render(text[1], False, color), "pos": (8, 85)},
-            {"surface": font.render(text[2], False, color), "pos": (8, 110)},
-            {"surface": font.render(text[3], False, color), "pos": (8, 135)},
-            {"surface": font.render(text[4], False, color), "pos": (8, 160)}
-        ),
-        (
-            {"surface": font.render(key[0], False, color), "pos": (275, 170)},
-            {"surface": font.render(key[1], False, color), "pos": (275, 220)},
-            {"surface": font.render(key[2], False, color), "pos": (275, 270)}
-        )
+        tuple({"surface": font.render(text[i], False, color), "pos": (8, 60 + 25 * i)} for i in range(5)),
+        tuple({"surface": font.render(key[i], False, color), "pos": (275, 170 + 50 * i)} for i in range(3))
     )
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
@@ -260,9 +250,13 @@ def item_collide():
         major.bullets = clamp(major.bullets + 1, 0, 3)
         if item.type in ('flash', 'power'):
             if item.type == "power":
+                power = major.power
                 major.power = clamp(major.power + 1, 0, 32)
+                if (power < 16 or power < 32) and major.power % 16 == 0:
+                    Text(major.rect.midtop, (45, 60), 0.5, "Power UP", color_dict[6], color_dict[5], one.particle_group)
                 one.combo += 1
-                sound_cache["pick"].play()
+                if sound_cache["charge"].get_num_channels() == 0:
+                    sound_cache["pick"].play()
             else:
                 two.flash += 1
                 one.combo += 1

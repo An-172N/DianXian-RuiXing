@@ -7,6 +7,7 @@ from math import radians, sin, cos
 
 
 import pygame as pg
+from pygame.sprite import Group
 
 
 from PRELOAD import *
@@ -18,11 +19,11 @@ from SCRIPT.SPRITE import *
 
 
 class Basic(Base):
-    def __init__(th, image: pg.Surface, turn_image: pg.Surface, hp: int, color: tuple, *group: pg.sprite.Group):
-        super().__init__(image, group[2], turn_image=turn_image, pos=(292, 60))
-        th.barrage_group = group[0]
-        th.particle_group = group[1]
-        th.bullet_group = group[3]
+    def __init__(th, image: pg.Surface, turn_image: pg.Surface, hp: int, color: tuple, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
+        super().__init__(image, brick_group, turn_image=turn_image, pos=(292, 60))
+        th.barrage_group = barrage_group
+        th.particle_group = particle_group
+        th.bullet_group = bullet_group
         th.hp = hp
         th.color = color
         th.is_die = False
@@ -37,8 +38,9 @@ class Basic(Base):
 
 
 class Ono(Basic):
-    def __init__(th, *group: pg.sprite.Group):
+    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
         subsurface = char_image.subsurface
+        group = (barrage_group, particle_group, brick_group, bullet_group)
         super().__init__(subsurface((24, 0, 12, 26)), subsurface((36, 0, 12, 26)), 224, color_dict[1], *group)
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
@@ -115,8 +117,9 @@ class Ono(Basic):
 
 
 class Hro(Basic):
-    def __init__(th, *group: pg.sprite.Group):
+    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
         subsurface = char_image.subsurface
+        group = (barrage_group, particle_group, brick_group, bullet_group)
         super().__init__(subsurface((48, 0, 12, 26)), subsurface((60, 0, 12, 26)), 256, color_dict[2], *group)
         th.flash = True
         th.bullet_image = barrage_cache[(0, th.color)]
@@ -198,8 +201,9 @@ class Hro(Basic):
 
 
 class Nre(Basic):
-    def __init__(th, *group: pg.sprite.Group):
+    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
         subsurface = char_image.subsurface
+        group = (barrage_group, particle_group, brick_group, bullet_group)
         super().__init__(subsurface((72, 0, 12, 26)), subsurface((84, 0, 12, 26)), 288, color_dict[3], *group)
         th.power = True
         th.sd = (th.fire, th.free, th.fire, th.extend, th.fire, th.final, th.fire, th.last, th.extend, th.final, th.last)
@@ -283,8 +287,9 @@ class Nre(Basic):
 
 
 class Qdi(Basic):
-    def __init__(th, *group: pg.sprite.Group):
+    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
         subsurface = char_image.subsurface
+        group = (barrage_group, particle_group, brick_group, bullet_group)
         super().__init__(subsurface((96, 0, 12, 26)), subsurface((108, 0, 12, 26)), 128, color_dict[4], *group)
         th.bullet_image = barrage_cache[(2, th.color)]
         th.power = True
@@ -384,11 +389,11 @@ class Qdi(Basic):
 
 
 class Kli(Base):
-    def __init__(th, *group: pg.sprite.Group):
+    def __init__(th, bullet_group: Group, particle_group: Group, plane_group: Group):
         subsurface = char_image.subsurface
-        super().__init__(subsurface(0, 0, 12, 26), group[2], turn_image=subsurface(12, 0, 12, 26), pos=(292, 332), radius=1)
-        th.bullet_group = group[0]
-        th.particle_group = group[1]
+        super().__init__(subsurface(0, 0, 12, 26), plane_group, turn_image=subsurface(12, 0, 12, 26), pos=(292, 332), radius=1)
+        th.bullet_group = bullet_group
+        th.particle_group = particle_group
         th.color = color_dict[5]
         th.collided = Invinc(180, 6)
         th.divided = Invinc(180, 4, th.reset_bullet)

@@ -6,6 +6,7 @@ from math import radians, sin, cos
 
 
 import pygame as pg
+from pygame.sprite import Group
 
 
 from PRELOAD import *
@@ -14,9 +15,8 @@ from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
-    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: pg.sprite.Group, radius: int=0, form: str=None, rotate: bool=False):
+    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: Group, radius: int=0, form: str=None, rotate: bool=False):
         super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
-
         th.effective = effective
         th.speed = speed
         th.color = color
@@ -34,9 +34,8 @@ class Barrage(Base):
 
 
 class Bullet(Base):
-    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: pg.sprite.Group, radius: int=0, form: str=None, rotate: bool=False):
+    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: Group, radius: int=0, form: str=None, rotate: bool=False):
         super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
-
         th.effective = effective
         th.speed = speed
         th.color = color
@@ -55,16 +54,14 @@ class Bullet(Base):
 
 
 class Text(Base):
-    def __init__(th, pos: tuple, kill_time: tuple, speed: float, text: str, color: tuple, target_color: tuple, group: pg.sprite.Group):
+    def __init__(th, pos: tuple, kill_time: tuple, speed: float, text: str, color: tuple, target_color: tuple, group: Group):
         super().__init__(font.render(text, False, color), group, pos=pos)
-
         th.text = text
         th.color = color
         th.target_color = target_color
         th.kill_time = kill_time
         th.speed = speed
         th.timer = 0
-
         sound_cache["charge"].play(maxtime=128)
 
     def update(th):
@@ -80,7 +77,6 @@ class Text(Base):
 class Brick(Base):
     def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pg.Surface):
         super().__init__(image, form=form, pos=pos, mask=True)
-
         th.color = color
         th.hp = hp
         th.power = False
@@ -89,9 +85,8 @@ class Brick(Base):
 
 
 class Item(Base):
-    def __init__(th, type: str, speed: float, pos: tuple, group: pg.sprite.Group):
+    def __init__(th, type: str, speed: float, pos: tuple, group: Group):
         super().__init__(item_cache[type], group, form=type, pos=pos)
-
         th.speed = speed
 
     def update(th):
@@ -105,9 +100,8 @@ class Item(Base):
 
 
 class Line(Base):
-    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, target: tuple, count: int, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group, mask: bool=False):
+    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, target: tuple, count: int, image: pg.Surface, target_image: pg.Surface, group: Group, mask: bool=False):
         super().__init__(image, group, form="line", pos=pos, mask=mask)
-
         th.color = color
         th.target_color = target_color
         th.pos = pos
@@ -134,11 +128,8 @@ class Line(Base):
 
 
 class LineBullet(Base):
-    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: pg.sprite.Group, mask: bool=False):
+    def __init__(th, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: Group, mask: bool=False):
         super().__init__(image, group, form="line", pos=pos, mask=mask)
-
-        th.color = color
-        th.target_color = target_color
         th.damage = damage
         th.target_image = target_image
         th.timer = 0
@@ -148,5 +139,4 @@ class LineBullet(Base):
         if th.timer >= 68:
             th.kill()
         elif th.timer >= 45 and th.image != th.target_image:
-            th.color = th.target_color
             th.image = th.target_image

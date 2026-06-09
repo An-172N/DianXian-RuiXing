@@ -38,25 +38,12 @@ def clamp(
     minimum: float,
     maximum: float
 ) -> float:
-    if maximum < minimum:
-        maximum, minimum = minimum, maximum
     if value > maximum:
         return maximum
     elif value < minimum:
         return minimum
     else:
         return value
-
-
-def fibonacci(
-    former: float,
-    latter: float,
-    frequency: int
-) -> float:
-    for _ in range(0, frequency + 1):
-        former, latter = latter, former + latter
-
-    return former
 
 
 def direct(

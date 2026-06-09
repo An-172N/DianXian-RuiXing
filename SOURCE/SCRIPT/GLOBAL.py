@@ -5,7 +5,7 @@
 import os
 
 
-import pygame as pg
+from pygame.sprite import Group
 
 
 from LOGIC.FILE import *
@@ -13,12 +13,12 @@ from LOGIC.FILE import *
 
 class One:
     def __init__(th):
-        th.plane_group = pg.sprite.Group()
-        th.bullet_group = pg.sprite.Group()
-        th.brick_group = pg.sprite.Group()
-        th.item_group = pg.sprite.Group()
-        th.barrage_group = pg.sprite.Group()
-        th.particle_group = pg.sprite.Group()
+        th.plane_group = Group()
+        th.bullet_group = Group()
+        th.brick_group = Group()
+        th.item_group = Group()
+        th.barrage_group = Group()
+        th.particle_group = Group()
         th.is_pause = False
         th.is_summary = False
         th.is_talk = False
@@ -67,7 +67,6 @@ def score_summary(total_point: int, power: int, unflash: int, combo: int, number
 
 def combo_counter(timer: int, count: int, score: int, bonus: int, end: int) -> tuple:
     timer -= 1
-
     if timer <= 0:
         if count > 0:
             score += bonus
