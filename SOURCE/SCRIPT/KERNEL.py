@@ -283,13 +283,15 @@ def barrage_collide():
 
 
 def bullet_collide():
+    count = 0
     for bullet, hit_bricks in pg.sprite.groupcollide(one.bullet_group, one.brick_group, False, False, collide).items():
         for brick in hit_bricks:
             rect = brick.rect
+            count += 1
             if brick.hp > 0:
                 two.score += 64
                 brick.hp -= bullet.damage
-                if brick.hp > 0 and sound_cache["tick"].get_num_channels() < 2:
+                if brick.hp > 0 and count < 2:
                     spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     sound_cache["tick"].play()
             if brick.hp <= 0:
