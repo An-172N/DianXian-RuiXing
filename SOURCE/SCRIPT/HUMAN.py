@@ -120,7 +120,7 @@ class Hro(Basic):
     def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
         subsurface = char_image.subsurface
         group = (barrage_group, particle_group, brick_group, bullet_group)
-        super().__init__(subsurface((48, 0, 12, 26)), subsurface((60, 0, 12, 26)), 640, color_dict[2], *group)
+        super().__init__(subsurface((48, 0, 12, 26)), subsurface((60, 0, 12, 26)), 768, color_dict[2], *group)
         th.flash = True
         th.bullet_image = barrage_cache[(0, color_dict[6])]
         th.sd = tuple([th.fire] * 2 + [th.free] + [th.fire] * 3 + [th.extend] + [th.fire] * 4 + [th.free, th.extend])
@@ -203,7 +203,7 @@ class Nre(Basic):
     def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
         subsurface = char_image.subsurface
         group = (barrage_group, particle_group, brick_group, bullet_group)
-        super().__init__(subsurface((72, 0, 12, 26)), subsurface((84, 0, 12, 26)), 768, color_dict[3], *group)
+        super().__init__(subsurface((72, 0, 12, 26)), subsurface((84, 0, 12, 26)), 1024, color_dict[3], *group)
         th.power = True
         th.sd = (th.fire, th.free, th.fire, th.extend, th.fire, th.final, th.fire, th.last, th.extend, th.final, th.last)
 
@@ -409,11 +409,11 @@ class Kli(Base):
         p = 2 ** (th.power // 32)
         q = 1 * (th.power // 16)
         image = bullet_cache["bullet"]
-        for i in range(0, p):
+        for _ in range(0, p):
             for j in range(-q, q + 1, (q if th.power >= 16 else 1)):
                 for k in (-1, 1):
                     dx = th.rect.centerx + 6 * k
-                    dy = th.rect.top + (0 + i * 12)
+                    dy = th.rect.top
                     angle = j * k
                     Bullet(effective, 15, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet")
         sound_cache["fire"].play(maxtime=32)
@@ -465,6 +465,6 @@ class Kli(Base):
 
     def visitable(th):
         return th.collided.visitable and th.divided.visitable
-    
+
     def in_invinc(th):
         return not th.collided.condition and not th.divided.condition

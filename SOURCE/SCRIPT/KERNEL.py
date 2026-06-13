@@ -389,11 +389,7 @@ def display(clock: pg.Clock, version: str, title: str):
     situation(clock)
 
 
-def update(clock: pg.Clock, args: tuple, version: str, title: str):
-    two.stage = clamp(args[0], 1, 4)
-    two.level = clamp(args[1], 1, 6)
-    two.flash = clamp(args[2], 1, 96)
-    major.power = clamp(args[3], 0, 32)
+def update(clock: pg.Clock, version: str, title: str):
     alpha = 255
     timer = 0
     for text_info in (

@@ -3,8 +3,6 @@
 
 
 import sys
-import argparse
-import random
 
 
 def main():
@@ -16,14 +14,6 @@ def main():
     sys.dont_write_bytecode = True
     for module in ('numpy', 'timidity', 'pygame.examples'):
         sys.modules[module] = None
-
-    parser = argparse.ArgumentParser()
-    for i, j in (('-stage', 1), ('-level', 1), ('-flash', 3), ('-power', 0), ('-seed', None)):
-        parser.add_argument(i, type=int, default=j)
-    args = parser.parse_args()
-    args_tuple = (int(args.stage), int(args.level), int(args.flash), int(args.power))
-
-    random.seed(args.seed)
 
     import pygame
 
@@ -38,7 +28,7 @@ def main():
     import SCRIPT.KERNEL
 
     print(f"{project} | {title} | Ver {version} | By {author}")
-    SCRIPT.KERNEL.update(clock, args_tuple, version, title)
+    SCRIPT.KERNEL.update(clock, version, title)
 
 
 if __name__ == "__main__":

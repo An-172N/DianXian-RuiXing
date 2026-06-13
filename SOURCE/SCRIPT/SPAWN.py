@@ -53,23 +53,26 @@ def point_brick(group: Group):
         Bullet(effective, 15, 0, angle, pos, 4, image, group, form="bullet", rotate=True)
 
 
-def load_brick(row: int, line: str, color: tuple, hp: int, rate: float, size: tuple, interval: tuple):
+def load_brick(row: int, line: str, color: tuple, hp: int, size: tuple, interval: tuple):
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
-            c = color if uniform(0, 1) >= rate else color_dict[6]
             pos = (size[0] + i * interval[0], size[1] + row * interval[1])
-            image = brick_cache[(shape, c)]
-            brick_ready.append(Brick(shape, hp, c, pos, image))
+            image = brick_cache[(shape, color)]
+            brick_ready.append(Brick(shape, hp, color, pos, image))
 
 
 def choose_brick(group: list, numbers: tuple, power: int, flash: int):
     choose_power = sample(range(len(group)), power + numbers[0] + numbers[1])
     choose_flash = sample(range(len(group)), flash)
+    choose_white = sample(range(len(group)), 6)
     for i in choose_power:
         group[i].power = True
     for i in choose_flash:
         group[i].flash = True
+    for i in choose_white:
+        group[i].image = brick_cache[(group[i].type, color_dict[6])]
+        group[i].color = color_dict[6]
 
 
 def circle_barrage(type: int, pos: tuple, locate: tuple, group: Group):
