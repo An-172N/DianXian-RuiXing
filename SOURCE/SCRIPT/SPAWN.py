@@ -23,7 +23,7 @@ def line_brick(group: Group, pos: tuple):
             filtered_dict[a] = (a, b)
     for angle, length in filtered_dict.values():
         image, target_image = [line_cache[(length, angle, i)] for i in (color1, color2)]
-        LineBullet(6, pos, image, target_image, group, True)
+        LineBullet(6, pos, image, target_image, group)
 
 
 def circle_brick(group: Group, pos: tuple):
@@ -72,43 +72,43 @@ def choose_brick(group: list, numbers: tuple, power: int, flash: int):
         group[i].flash = True
 
 
-def circle_barrage(type: int, color: tuple, pos: tuple, locate: tuple, group: Group):
+def circle_barrage(type: int, pos: tuple, locate: tuple, group: Group):
     delta = (locate[0] - pos[0], locate[1] - pos[1])
     angle = direct(-delta[0], -delta[1])
-    image = barrage_cache[(type, color)]
-    Barrage(effective, 3, color, angle, pos, image, group, 3)
+    image = barrage_cache[(type, color_dict[6])]
+    Barrage(effective, 3, angle, pos, image, group, 3)
 
 
-def polygon_barrage(type: int, color: tuple, pos: tuple, locate: tuple, group: Group):
-    image = barrage_cache[(type, color)]
+def polygon_barrage(type: int, pos: tuple, locate: tuple, group: Group):
+    image = barrage_cache[(type, color_dict[6])]
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = (i - pos[0], locate[1] - pos[1])
         angle = direct(-delta[0], -delta[1])
-        Barrage(effective, 3, color, angle, pos, image, group, 2, rotate=True)
+        Barrage(effective, 3, angle, pos, image, group, 2, rotate=True)
 
 
 def line_barrage(current: tuple, target: tuple, group: Group, color1: tuple, color2: tuple):
-    image, target_image = [particle_cache[(3, i)] for i in (color1, color2)]
+    image= particle_cache[(3, color1)]
     start = current
     count = 0
     while True:
         if not effective.collidepoint(current):
             break
         if 327 < current[1] < 336 or current == start:
-            Line(color1, color2, 0, current, target, count, image, target_image, group)
+            Line(color1, color2, 0, current, target, count, image, group)
         if math.dist(current, target) < 1e-6:
             break
         current = vector(current, target, 3)[0]
         count += 1
 
 
-def point_barrage(type: int, color: tuple, locate: tuple, group: Group):
-    image = barrage_cache[(type, color)]
+def point_barrage(type: int, locate: tuple, group: Group):
+    image = barrage_cache[(type, color_dict[6])]
     for _ in range(3):
         pos = (randint(120, 465), randint(15, 225))
         delta = (locate[0] - pos[0], locate[1] - pos[1])
         angle = direct(-delta[0], -delta[1])
-        Barrage(effective, 4, color, angle, pos, image, group, 3)
+        Barrage(effective, 4, angle, pos, image, group, 3)
 
 
 def spawn_particles(group: Group, size: int, pos: tuple, speeds: tuple, color1: tuple, color2: tuple=None):
@@ -117,4 +117,4 @@ def spawn_particles(group: Group, size: int, pos: tuple, speeds: tuple, color1: 
         color = color1 if color2 is None else choice([color1, color2])
         speed = uniform(speeds[0], speeds[1])
         image = particle_cache[(size, color)]
-        Barrage(effective, speed, color, i, pos, image, group)
+        Barrage(effective, speed, i, pos, image, group)

@@ -28,10 +28,10 @@ def load_json(filepath: str):
 def spawn_barrage(stage: int, group: Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
     if random() <= difficulty[stage - 1] + power / 1000:
         {
-            1: lambda: circle_barrage(type, color_dict[1], spawn_pos, locate, group),
-            2: lambda: polygon_barrage(type, color_dict[2], spawn_pos, locate, group),
+            1: lambda: circle_barrage(type, spawn_pos, locate, group),
+            2: lambda: polygon_barrage(type, spawn_pos, locate, group),
             3: lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group, color_dict[6], color_dict[3]),
-            4: lambda: point_barrage(type, color_dict[4], locate, group)
+            4: lambda: point_barrage(type, locate, group)
         }[stage]()
 
 

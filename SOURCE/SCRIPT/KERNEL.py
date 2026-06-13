@@ -224,8 +224,7 @@ def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool
 
 
 def summary_logic(total_point: int, power: int, unflash: int, combo: int, numbers: tuple):
-    stage, level = numbers
-    two.score += score_summary(total_point, power, unflash, combo, (stage, level))
+    two.score += score_summary(total_point, power, unflash, combo, numbers)
     one.is_summary = False
     one.pop_timer = 0
 
@@ -269,7 +268,7 @@ def item_collide():
 
 def barrage_collide():
     for barrage in pg.sprite.spritecollide(major, one.barrage_group, False, collide):
-        if barrage.color != color_dict[6]:
+        if (two.stage == 3 and barrage.color != color_dict[6]) or two.stage != 3:
             if major.in_invinc():
                 major.collided.condition = True
                 two.unflash = 0

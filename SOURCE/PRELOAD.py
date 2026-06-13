@@ -57,7 +57,6 @@ char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alph
 basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
 blue_rect = Draw.rectangle((15, 15), 0, color_dict[5]).convert()
 white_rect = Draw.rectangle((12, 12), 0, color_dict[6]).convert()
-purple_rect = Draw.rectangle((3, 3), 0, color_dict[3]).convert()
 picture = {
     1: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE1BG.png'))).convert(),
     2: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE2BG.png'))).convert(),
@@ -70,10 +69,8 @@ picture = {
 
 
 barrage_cache = {
-    (2, color_dict[1]): Draw.circle((0, 0, 8, 8), 0, color_dict[1]).convert_alpha(),
-    (2, color_dict[4]): Draw.circle((0, 0, 8, 8), 0, color_dict[4]).convert_alpha(),
     (2, color_dict[6]): Draw.circle((0, 0, 8, 8), 0, color_dict[6]).convert_alpha(),
-    (0, color_dict[2]): (surface := basic_image.subsurface(75, 7, 8, 8).copy(), surface.fill(color_dict[2], special_flags=pg.BLEND_RGBA_MULT))[0],
+    (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8)
 }
 
@@ -111,18 +108,17 @@ item_cache = {
 
 
 particle_cache = {
-    (2, color_dict[6]): white_rect.subsurface(0, 0, 2, 2),
-    (3, color_dict[3]): purple_rect,
-    (9, color_dict[5]): blue_rect.subsurface(0, 0, 9, 9),
+    (2, color_dict[1]): Draw.rectangle((2, 2), 0, color_dict[1]).convert(),
+    (2, color_dict[2]): Draw.rectangle((2, 2), 0, color_dict[2]).convert(),
+    (2, color_dict[3]): Draw.rectangle((2, 2), 0, color_dict[3]).convert(),
+    (2, color_dict[4]): Draw.rectangle((2, 2), 0, color_dict[4]).convert(),
     (2, color_dict[5]): blue_rect.subsurface(0, 0, 2, 2),
+    (9, color_dict[5]): blue_rect.subsurface(0, 0, 9, 9),
+    (2, color_dict[6]): white_rect.subsurface(0, 0, 2, 2),
     (3, color_dict[6]): white_rect.subsurface(0, 0, 3, 3),
     (6, color_dict[6]): white_rect.subsurface(0, 0, 6, 6),
     (9, color_dict[6]): white_rect.subsurface(0, 0, 9, 9),
-    (12, color_dict[6]): white_rect,
-    (2, color_dict[1]): barrage_cache[(2, color_dict[1])].subsurface(4, 4, 2, 2),
-    (2, color_dict[2]): barrage_cache[(0, color_dict[2])].subsurface(4, 4, 2, 2),
-    (2, color_dict[3]): purple_rect.subsurface(0, 0, 2, 2),
-    (2, color_dict[4]): barrage_cache[(2, color_dict[4])].subsurface(4, 4, 2, 2)
+    (12, color_dict[6]): white_rect
 }
 
 

@@ -15,11 +15,10 @@ from LOGIC.SPRITE import *
 
 
 class Barrage(Base):
-    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, image: pg.Surface, group: Group, radius: int=0, form: str=None, rotate: bool=False):
+    def __init__(th, effective: pg.Rect, speed: float, angle: float, pos: tuple, image: pg.Surface, group: Group, radius: int=0, form: str=None, rotate: bool=False):
         super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
         th.effective = effective
         th.speed = speed
-        th.color = color
 
     def update(th):
         rad = radians(th.angle)
@@ -100,8 +99,8 @@ class Item(Base):
 
 
 class Line(Base):
-    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, target: tuple, count: int, image: pg.Surface, target_image: pg.Surface, group: Group, mask: bool=False):
-        super().__init__(image, group, form="line", pos=pos, mask=mask, radius=1.5)
+    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, target: tuple, count: int, image: pg.Surface, group: Group):
+        super().__init__(image, group, form="line", pos=pos, radius=1.5)
         th.color = color
         th.target_color = target_color
         th.pos = pos
@@ -110,7 +109,6 @@ class Line(Base):
             th.target = target
         if damage:
             th.damage = damage
-        th.target_image = target_image
         th.timer = 0
 
     def draw_line(th):
@@ -122,14 +120,13 @@ class Line(Base):
         if th.timer >= 68:
             th.kill()
         elif th.timer >= 45:
-            if th.image != th.target_image:
+            if th.color != th.target_color:
                 th.color = th.target_color
-                th.image = th.target_image
 
 
 class LineBullet(Base):
-    def __init__(th, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: Group, mask: bool=False):
-        super().__init__(image, group, form="line", pos=pos, mask=mask)
+    def __init__(th, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: Group):
+        super().__init__(image, group, form="line", pos=pos, mask=True)
         th.damage = damage
         th.target_image = target_image
         th.timer = 0
