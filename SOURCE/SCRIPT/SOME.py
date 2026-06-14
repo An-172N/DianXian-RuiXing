@@ -26,24 +26,25 @@ def load_json(filepath: str):
 
 
 def spawn_barrage(stage: int, group: Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
-    if random() <= difficulty[stage - 1] + power / 1000:
-        {
-            1: lambda: circle_barrage(type, spawn_pos, locate, group),
-            2: lambda: polygon_barrage(type, spawn_pos, locate, group),
-            3: lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group, color_dict[6], color_dict[3]),
-            4: lambda: point_barrage(type, locate, group)
-        }[stage]()
+    index = stage - 1
+    if random() <= difficulty[index] + power / 1000:
+        (
+            lambda: circle_barrage(type, spawn_pos, locate, group),
+            lambda: polygon_barrage(type, spawn_pos, locate, group),
+            lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group, color_dict[6], color_dict[3]),
+            lambda: point_barrage(type, locate, group)
+        )[index]()
 
 
 def brick_blast(group: Group, stage: int, color: tuple, rect: pg.Rect):
     if color == color_dict[6]:
         dy = lambda point, dy: (point[0], point[1] + dy)
-        {
-            1: lambda: circle_brick(group, rect.center),
-            2: lambda: polygon_brick(group, dy(rect.midleft, -1), dy(rect.midright, -1), dy(rect.midbottom, -1)),
-            3: lambda: line_brick(group, rect.center),
-            4: lambda: point_brick(group)
-        }[stage]()
+        (
+            lambda: circle_brick(group, rect.center),
+            lambda: polygon_brick(group, dy(rect.midleft, -1), dy(rect.midright, -1), dy(rect.midbottom, -1)),
+            lambda: line_brick(group, rect.center),
+            lambda: point_brick(group)
+        )[stage - 1]()
 
 
 def sprite_loader(numbers: tuple, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
@@ -61,12 +62,12 @@ def sprite_loader(numbers: tuple, barrage_group: Group, particle_group: Group, b
 
 
 def choose_human(stage: int, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
-    return {
-        1: Ono,
-        2: Hro,
-        3: Nre,
-        4: Qdi
-    }[stage](barrage_group, particle_group, brick_group, bullet_group)
+    return (
+        Ono,
+        Hro,
+        Nre,
+        Qdi
+    )[stage - 1](barrage_group, particle_group, brick_group, bullet_group)
 
 
 def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, brick_group: Group):
@@ -123,7 +124,7 @@ def save_file(name: str, score: int, total_point: int, flashed: int, flash: int,
         'Name': name,
         'Score': score,
         'Stage': f"{get_stage(stage)} - {level}",
-        'Rate': calculate_item_rate(total_point, stage <= 3, (153, 61)),
+        'Rate': calculate_item_rate(total_point, stage <= 3),
         'Flashed': flashed,
         'Date': time[0],
         'Flash': flash
@@ -131,5 +132,5 @@ def save_file(name: str, score: int, total_point: int, flashed: int, flash: int,
     record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.json', ("DX00", content))
 
 
-def calculate_item_rate(number: int, condition: bool, critical: tuple):
-    return f"{(number / (critical[0] if condition else critical[1])) * 100:.2f} %"
+def calculate_item_rate(number: int, condition: bool):
+    return f"{(number / (153 if condition else 61) * 100):.2f} %"

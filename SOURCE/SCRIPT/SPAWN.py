@@ -30,7 +30,7 @@ def circle_brick(group: Group, pos: tuple):
     image = bullet_cache["bullet"]
     delay = randint(0, 12)
     for i in range(0 + delay, 360 + delay, 12):
-        Bullet(effective, 15, 0, i, pos, 4, image, group, form="bullet", rotate=True).update()
+        Bullet(effective, 15, i, pos, 4, image, group, "bullet", True).update()
 
 
 def polygon_brick(group: Group, pos1: tuple, pos2: tuple, pos3: tuple):
@@ -39,10 +39,10 @@ def polygon_brick(group: Group, pos1: tuple, pos2: tuple, pos3: tuple):
     for i, angle in enumerate(range(-30, 91, 60)):
         for j in (0, 1):
             if angle in (30, -30) and j:
-                Bullet(effective, 15, 0, angle, pos[i], 4, image, group, form="bullet-cross", rotate=True)
+                Bullet(effective, 15, angle, pos[i], 4, image, group, "bullet-cross", True)
             elif angle == 90:
                 angle = angle + j * 180
-                Bullet(effective, 15, 0, angle, pos[i], 4, image, group, form="bullet-cross", rotate=True)
+                Bullet(effective, 15, angle, pos[i], 4, image, group, "bullet-cross", True)
 
 
 def point_brick(group: Group):
@@ -50,7 +50,7 @@ def point_brick(group: Group):
     for _ in range(24):
         pos = (randint(120, 465), randint(15, 320))
         angle = randint(0, 360)
-        Bullet(effective, 15, 0, angle, pos, 4, image, group, form="bullet", rotate=True)
+        Bullet(effective, 15, angle, pos, 4, image, group, "bullet", True)
 
 
 def load_brick(row: int, line: str, color: tuple, hp: int, size: tuple, interval: tuple):

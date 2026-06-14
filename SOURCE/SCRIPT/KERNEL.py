@@ -26,12 +26,6 @@ one = One()
 two = Two()
 log = Log()
 major = Kli(one.bullet_group, one.particle_group, one.plane_group)
-reset = lambda: (
-    one.__init__(),
-    two.__init__(),
-    log.__init__(),
-    major.__init__(one.bullet_group, one.particle_group, one.plane_group)
-)
 
 
 keydown_talk_dict = {
@@ -41,15 +35,15 @@ keydown_talk_dict = {
 
 
 keydown_pause_dict = {
-    pg.K_ESCAPE: lambda: (setattr(one, "is_pause", False), setattr(one, "pop_timer", 0)),
+    pg.K_ESCAPE: lambda: setattr(one, "is_pause", False),
     pg.K_DELETE: lambda: reset()
 }
 
 
 keydown_start_dict = {
-    pg.K_z: lambda: (setattr(two, "is_run", True), setattr(one, "pop_timer", 0)),
+    pg.K_z: lambda: setattr(two, "is_run", True),
     pg.K_q: lambda: setattr(one, "is_exit", True),
-    pg.K_c: lambda: (setattr(one, "is_check", True), setattr(one, "pop_timer", 0)) if log.total_files > 0 else None
+    pg.K_c: lambda: setattr(one, "is_check", True) if log.total_files > 0 else None
 }
 
 
@@ -71,6 +65,13 @@ keydown_check_dict = {
 }
 
 
+def reset():
+    one.__init__()
+    two.__init__()
+    log.__init__()
+    major.__init__(one.bullet_group, one.particle_group, one.plane_group)
+
+
 def situation(clock: pg.Clock):
     color = color_dict[6]
     text = (
@@ -81,13 +82,13 @@ def situation(clock: pg.Clock):
         f"{one.combo:02d}  ,  {one.total_point:02d}"
     )
     for info in (
-        {"text": text[0], "pos": (39, 25)},
-        {"text": text[1], "pos": (39, 50)},
-        {"text": text[2], "pos": (39, 270)},
-        {"text": text[3], "pos": (39, 295)},
-        {"text": text[4], "pos": (39, 320)},
+        (text[0], (39, 25)),
+        (text[1], (39, 50)),
+        (text[2], (39, 270)),
+        (text[3], (39, 295)),
+        (text[4], (39, 320)),
     ):
-        screen.blit(font.render(f"{info['text']}", False, color), info["pos"])
+        screen.blit(font.render(f"{info[0]}", False, color), info[1])
 
 
 def pause_menu():
@@ -152,7 +153,7 @@ def save_menu():
         f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
         f"得到了 {two.score} 分",
         f"最终到达 {get_stage(two.stage)} - {two.level} 站",
-        f"拾形点率为 {calculate_item_rate(two.total_point, two.stage <= 3, (153, 61))}",
+        f"拾形点率为 {calculate_item_rate(two.total_point, two.stage <= 3)}",
         f"使用了 {two.flashed} 次形闪{'（躺' if two.flash == 0 else ''}"
     )
     key = ("", "Ent 记录", "Esc 算了")
@@ -189,11 +190,11 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
     color = color_dict[6]
     group = (
         (
-            {"surface": font.render(title, False, color), "pos": (8, 10)},
-            {"surface": font.render(other, False, color), "pos": (8, 305)}
+            (font.render(title, False, color), (8, 10)),
+            (font.render(other, False, color), (8, 305))
         ),
-        tuple({"surface": font.render(text[i], False, color), "pos": (8, 60 + 25 * i)} for i in range(5)),
-        tuple({"surface": font.render(key[i], False, color), "pos": (275, 170 + 50 * i)} for i in range(3))
+        tuple((font.render(text[i], False, color), (8, 60 + 25 * i)) for i in range(5)),
+        tuple((font.render(key[i], False, color), (275, 170 + 50 * i)) for i in range(3))
     )
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
@@ -208,9 +209,9 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
 def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
     color = color_dict[6]
     group = (
-        ({"surface": font.render(title, False, color), "pos": (8, 10)},),
-        ({"surface": font.render(text[0], False, color), "pos": (8, 60)},),
-        ({"surface": font.render(text[1], False, color), "pos": (8, 85)},)
+        ((font.render(title, False, color), (8, 10)),),
+        ((font.render(text[0], False, color), (8, 60)),),
+        ((font.render(text[1], False, color), (8, 85)),)
     )
 
     if one.pop_timer == interval[0]:
@@ -255,11 +256,10 @@ def item_collide():
                     Text(major.rect.midtop, (45, 60), 0.5, "Power UP", color_dict[6], color_dict[5], one.particle_group)
                 else:
                     sound_cache["pick"].play()
-                one.combo += 1
             else:
                 two.flash += 1
-                one.combo += 1
                 Text(major.rect.midtop, (45, 60), 0.5, "Extend", color_dict[6], color_dict[2], one.particle_group)
+            one.combo += 1
             one.total_point += 1
             two.total_point += 1
         else:
@@ -304,8 +304,7 @@ def bullet_collide():
                         for _ in range(8):
                             spawn_particles(one.particle_group, 2, rect.center, (2, 8), brick.color, color_dict[6])
                     else:
-                        poses = (rect.center, major.rect.center)
-                        spawn_barrage(two.stage, one.barrage_group, major.power, brick.type, *poses)
+                        spawn_barrage(two.stage, one.barrage_group, major.power, brick.type, rect.center, major.rect.center)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     sound_cache["fire"].play()
                     if hasattr(brick, "power") and brick.power:
@@ -327,11 +326,12 @@ def key_event():
             if one.pop_timer >= 60:
                 if one.is_check and event.key in keydown_check_dict:
                     keydown_check_dict[event.key]()
-                    setattr(one, "pop_timer", 0)
+                    one.pop_timer = 0
                     sound_cache["pick"].play()
                 elif not two.is_run and not one.is_check and not one.is_exit and event.key in keydown_start_dict:
                     sound_cache["pick"].play()
                     keydown_start_dict[event.key]()
+                    one.pop_timer = 0
                 elif one.is_save:
                     if event.key in keydown_over_dict:
                         keydown_over_dict[event.key]()
@@ -340,14 +340,16 @@ def key_event():
                     sound_cache["pick"].play()
                 elif one.is_pause and event.key in keydown_pause_dict:
                     keydown_pause_dict[event.key]()
+                    one.pop_timer = 0
                     sound_cache["pick"].play()
                 elif one.is_summary and event.key == pg.K_z:
-                    summary_logic(one.total_point, major.power, two.unflash, one.combo, (two.stage, two.level))
-                    level_logic((two.stage, two.level))
+                    numbers = (two.stage, two.level)
+                    summary_logic(one.total_point, major.power, two.unflash, one.combo, numbers)
+                    level_logic(numbers)
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()
-                setattr(one, "pop_timer", 0)
+                one.pop_timer = 0
                 sound_cache["pick"].play()
             elif not one.is_summary and one.is_level_load and not one.is_talk and not one.is_pause and event.key == pg.K_ESCAPE:
                 one.is_pause = True
@@ -370,36 +372,32 @@ def display(clock: pg.Clock, version: str, title: str):
         else:
             one.barrage_group.draw(screen)
     if not one.is_exit:
-        if one.is_check:
-            check_menu()
-        elif not two.is_run:
-            start_menu(version, title)
-        else:
-            for condition, func in (
-                (one.is_pause, pause_menu),
-                (not one.is_level_load, load_menu),
-                (one.is_talk, talk_menu),
-                (one.is_summary, summary_menu),
-                (one.is_save, save_menu)
-            ):
-                if condition:
-                    func()
-                    break
+        if one.is_check: check_menu()
+        elif not two.is_run: start_menu(version, title)
+        elif one.is_pause: pause_menu()
+        elif not one.is_level_load: load_menu()
+        elif one.is_talk: talk_menu()
+        elif one.is_summary: summary_menu()
+        elif one.is_save: save_menu()
     screen.blit(picture[6])
     situation(clock)
 
 
-def update(clock: pg.Clock, version: str, title: str):
+def update(clock: pg.Clock, args: tuple, version: str, title: str):
+    two.stage = clamp(args[0], 1, 4)
+    two.level = clamp(args[1], 1, 6)
+    two.flash = clamp(args[2], 1, 96)
+    major.power = clamp(args[3], 0, 32)
     alpha = 255
     timer = 0
     for text_info in (
-        {"text": "分", "pos": (9, 25)},
-        {"text": "刷", "pos": (9, 50)},
-        {"text": '形', "pos": (9, 270)},
-        {"text": '闪', "pos": (9, 295)},
-        {"text": '连', "pos": (9, 320)}
+        ("分", (9, 25)),
+        ("刷", (9, 50)),
+        ('形', (9, 270)),
+        ('闪', (9, 295)),
+        ('连', (9, 320))
     ):
-        picture[6].blit(font.render(f"{text_info['text']}", False, color_dict[6]), text_info["pos"])
+        picture[6].blit(font.render(f"{text_info[0]}", False, color_dict[6]), text_info[1])
     picture[6].set_clip(window)
     picture[6].fill((0, 0, 0, 0))
     while True:

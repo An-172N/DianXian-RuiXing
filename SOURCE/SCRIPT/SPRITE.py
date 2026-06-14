@@ -16,7 +16,7 @@ from LOGIC.SPRITE import *
 
 class Barrage(Base):
     def __init__(th, effective: pg.Rect, speed: float, angle: float, pos: tuple, image: pg.Surface, group: Group, radius: int=0, form: str=None, rotate: bool=False):
-        super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
+        super().__init__(image, group, None, form, angle, pos, radius=radius, rotate=rotate)
         th.effective = effective
         th.speed = speed
 
@@ -33,11 +33,10 @@ class Barrage(Base):
 
 
 class Bullet(Base):
-    def __init__(th, effective: pg.Rect, speed: float, color: tuple, angle: float, pos: tuple, damage: int, image: pg.Surface, group: Group, radius: int=0, form: str=None, rotate: bool=False):
-        super().__init__(image, group, form=form, angle=angle, pos=pos, radius=radius, rotate=rotate)
+    def __init__(th, effective: pg.Rect, speed: float, angle: float, pos: tuple, damage: int, image: pg.Surface, group: Group, form: str=None, rotate: bool=False):
+        super().__init__(image, group, None, form, angle, pos, rotate=rotate)
         th.effective = effective
         th.speed = speed
-        th.color = color
         th.damage = damage
 
     def update(th):
@@ -90,10 +89,9 @@ class Item(Base):
 
     def update(th):
         th.y -= th.speed
-        if th.type in ("power", "flash"):
-            th.speed -= 0.1
-            if th.speed < -2:
-                th.speed = -2
+        th.speed -= 0.1
+        if th.speed < -2:
+            th.speed = -2
         if th.y >= 360:
             th.kill()
 

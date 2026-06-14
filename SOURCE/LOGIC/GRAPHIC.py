@@ -2,21 +2,14 @@
 # 此代码遵循 GPLv3.0 协议
 
 
-from typing import TypedDict
-
-
 import pygame
 
 
 class Change:
-    class LayersGroup(TypedDict):
-        surface: pygame.Surface
-        pos: tuple[int, int]
-
     @staticmethod
     def layers(
         surface: pygame.Surface,
-        group: tuple[tuple[LayersGroup]],
+        group: tuple[tuple[pygame.Surface, tuple[int, int]], ...],
         timer: int,
         interval: tuple[int, ...],
         shortly: bool,
@@ -26,12 +19,12 @@ class Change:
             surface.fill(color)
             for i in range(len(group)):
                 for j in group[i]:
-                    surface.blit(j["surface"], j["pos"])
+                    surface.blit(j[0], j[1])
         else:
             for i in range(len(group)):
                 if timer == interval[i]:
                     for j in group[i]:
-                        surface.blit(j["surface"], j["pos"])
+                        surface.blit(j[0], j[1])
 
         return surface
 

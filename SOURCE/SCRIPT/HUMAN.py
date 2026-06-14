@@ -20,7 +20,7 @@ from SCRIPT.SPRITE import *
 
 class Basic(Base):
     def __init__(th, image: pg.Surface, turn_image: pg.Surface, hp: int, color: tuple, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
-        super().__init__(image, brick_group, turn_image=turn_image, pos=(292, 60))
+        super().__init__(image, brick_group, turn_image, pos=(292, 60))
         th.barrage_group = barrage_group
         th.particle_group = particle_group
         th.bullet_group = bullet_group
@@ -390,7 +390,7 @@ class Qdi(Basic):
 class Kli(Base):
     def __init__(th, bullet_group: Group, particle_group: Group, plane_group: Group):
         subsurface = char_image.subsurface
-        super().__init__(subsurface(0, 0, 12, 26), plane_group, turn_image=subsurface(12, 0, 12, 26), pos=(292, 332), radius=1)
+        super().__init__(subsurface(0, 0, 12, 26), plane_group, subsurface(12, 0, 12, 26), pos=(292, 332), radius=1)
         th.bullet_group = bullet_group
         th.particle_group = particle_group
         th.color = color_dict[5]
@@ -415,7 +415,7 @@ class Kli(Base):
                     dx = th.rect.centerx + 6 * k
                     dy = th.rect.top
                     angle = j * k
-                    Bullet(effective, 15, th.color, angle, (dx, dy), 4, image, th.bullet_group, form="bullet")
+                    Bullet(effective, 15, angle, (dx, dy), 4, image, th.bullet_group, form="bullet")
         sound_cache["fire"].play(maxtime=32)
 
     def free(th):
@@ -426,12 +426,12 @@ class Kli(Base):
                 rands = choice([3, 6, 9, 12])
                 speed = uniform(1, 2)
                 image = particle_cache[(rands, color_dict[6])]
-                Barrage(effective, speed, th.color, 0, pos, image, th.particle_group, form='char')
+                Barrage(effective, speed, 0, pos, image, th.particle_group, form='char')
             sound_cache["charge"].play()
         if th.bullet_timer >= 30 and th.bomb_bullets < 6:
             image = bullet_cache["bomb"]
             for i in range(120, 466, 15):
-                Bullet(effective, -24, th.color, 0, (i, 0), 6, image, th.bullet_group, form="bomb")
+                Bullet(effective, -24, 0, (i, 0), 6, image, th.bullet_group, form="bomb")
             th.bomb_bullets += 1
             sound_cache["fire"].play(maxtime=32)
 

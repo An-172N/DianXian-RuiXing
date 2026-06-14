@@ -153,7 +153,8 @@
     - 处理：[WaveShop](https://github.com/victimofleisure/WaveShop)
   - 图像：[Krita](https://krita.org/zh-cn)
   - 打包：[Zipapp](https://docs.python.org/3/library/zipapp.html)
-
-**本项目网址：https://github.com/An-172N/DianXian-RuiXing** *（感兴趣的话就点个星吧~*  
+- ### 本项目网址 *（感兴趣的话就点个星吧~*  
+  - https://github.com/An-172N/DianXian-RuiXing
+  - https://gitee.com/an172n/DianXian-RuiXing
 
 **(C)opyright 2026 An_172N**  

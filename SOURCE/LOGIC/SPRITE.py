@@ -8,7 +8,7 @@ import pygame
 class Base(pygame.sprite.Sprite):
     def __init__(th,
         original_image: pygame.Surface,
-        *group: pygame.sprite.Group,
+        group: pygame.sprite.Group = None,
         turn_image: pygame.Surface = None,
         form: int | str = None,
         angle: float = 0,
@@ -17,8 +17,7 @@ class Base(pygame.sprite.Sprite):
         radius: float = None,
         rotate: bool = False
     ) -> None:
-        super().__init__(*group)
-
+        super().__init__(group) if group is not None else super().__init__()
         th.original_image = original_image
         th.turn_image = turn_image
         if turn_image is not None:
