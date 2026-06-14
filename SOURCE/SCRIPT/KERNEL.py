@@ -41,9 +41,9 @@ keydown_pause_dict = {
 
 
 keydown_start_dict = {
-    pg.K_z: lambda: setattr(two, "is_run", True),
+    pg.K_z: lambda: (setattr(two, "is_run", True), setattr(one, "pop_timer", 0)),
     pg.K_q: lambda: setattr(one, "is_exit", True),
-    pg.K_c: lambda: setattr(one, "is_check", True) if log.total_files > 0 else None
+    pg.K_c: lambda: (setattr(one, "is_check", True), setattr(one, "pop_timer", 0)) if log.total_files > 0 else None
 }
 
 
@@ -65,10 +65,11 @@ keydown_check_dict = {
 }
 
 
-def reset():
+def reset(thorough: bool=True):
     one.__init__()
-    two.__init__()
-    log.__init__()
+    if thorough:
+        two.__init__()
+        log.__init__()
     major.__init__(one.bullet_group, one.particle_group, one.plane_group)
 
 
@@ -237,8 +238,7 @@ def level_logic(numbers: tuple):
     else:
         power = major.power
         one.is_save = False
-        one.__init__()
-        major.__init__(one.bullet_group, one.particle_group, one.plane_group)
+        reset(False)
         major.power = power
         two.stage, two.level = follow((stage, level), 6)
         two.unflash += 1
@@ -331,7 +331,6 @@ def key_event():
                 elif not two.is_run and not one.is_check and not one.is_exit and event.key in keydown_start_dict:
                     sound_cache["pick"].play()
                     keydown_start_dict[event.key]()
-                    one.pop_timer = 0
                 elif one.is_save:
                     if event.key in keydown_over_dict:
                         keydown_over_dict[event.key]()
