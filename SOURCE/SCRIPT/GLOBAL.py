@@ -8,7 +8,7 @@ import os
 from pygame.sprite import Group
 
 
-from LOGIC.FILE import *
+from LOGIC import *
 
 
 class One:
@@ -56,7 +56,7 @@ class Log:
     def __init__(th):
         th.name = ''
         th.log = None
-        th.json_files = get(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+        th.json_files = get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
         th.index = 0
         th.total_files = len(th.json_files)
 

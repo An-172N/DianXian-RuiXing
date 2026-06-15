@@ -12,10 +12,7 @@ import pygame as pg
 
 
 from PRELOAD import *
-from LOGIC.CALCULATE import *
-from LOGIC.STAGE import *
-from LOGIC.FILE import *
-from LOGIC.SPRITE import *
+from LOGIC import *
 from SCRIPT.GLOBAL import *
 from SCRIPT.SPRITE import *
 from SCRIPT.SOME import *
@@ -128,7 +125,7 @@ def summary_menu():
         f"形力 {major.power} / 32 * 8192 = {int(major.power / 32 * 8192)}",
         ""
     )
-    key = ("", "", "Z 继续")
+    key = "", "", "Z 继续"
     if one.pop_timer == 60:
         shortly = True
     if two.level <= 5:
@@ -139,10 +136,10 @@ def summary_menu():
 
 def start_menu(version: str, title: str):
     other = "(C)opyright 2026 An_172N"
-    text = (f"Ver {version}", '', '', '', '')
+    text = f"Ver {version}", '', '', '', ''
     climb = "Z 爬山" if two.stage < 4 else "Z 下山"
     wood = "C 日志" if log.total_files > 0 else "C 木鱼"
-    key = (climb, wood, "Q 拜拜")
+    key = climb, wood, "Q 拜拜"
     full_menu(title, text, key, other)
 
 
@@ -157,7 +154,7 @@ def save_menu():
         f"拾形点率为 {calculate_item_rate(two.total_point, two.stage <= 3)}",
         f"使用了 {two.flashed} 次形闪{'（躺' if two.flash == 0 else ''}"
     )
-    key = ("", "Ent 记录", "Esc 算了")
+    key = "", "Ent 记录", "Esc 算了"
     if one.pop_timer == 60:
         shortly = True
     if one.pop_timer >= 60:
@@ -181,7 +178,7 @@ def check_menu():
             f"拾形点率为 {logs['Rate']}",
             f"使用了 {logs['Flashed']} 次形闪{'（躺' if logs['Flash'] == 0 else ''}"
         )
-        key = ("<-> 翻页", "Del 丢掉", "Esc 合上")
+        key = "<-> 翻页", "Del 丢掉", "Esc 合上"
         full_menu(title, text, key, f"谢谢 {logs['Name']} 的帮助")
     except:
         one.is_check = False
@@ -199,7 +196,7 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
     )
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
-    source = Change.layers(picture[5], group, one.pop_timer, interval, shortly)
+    source = animate_pop(picture[5], group, one.pop_timer, interval, shortly)
     screen.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
@@ -217,7 +214,7 @@ def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool
 
     if one.pop_timer == interval[0]:
         picture[5].fill(color_dict[8])
-    source = Change.layers(picture[5].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly)
+    source = animate_pop(picture[5].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly)
     screen.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
@@ -240,7 +237,7 @@ def level_logic(numbers: tuple):
         one.is_save = False
         reset(False)
         major.power = power
-        two.stage, two.level = follow((stage, level), 6)
+        two.stage, two.level = follow_stage((stage, level), 6)
         two.unflash += 1
 
 
@@ -267,7 +264,7 @@ def item_collide():
 
 
 def barrage_collide():
-    for barrage in pg.sprite.spritecollide(major, one.barrage_group, False, collide):
+    for barrage in pg.sprite.spritecollide(major, one.barrage_group, False, collide_sprite):
         if (two.stage == 3 and barrage.color != color_dict[6]) or two.stage != 3:
             if major.in_invinc():
                 major.collided.condition = True
@@ -283,7 +280,7 @@ def barrage_collide():
 
 def bullet_collide():
     count = 0
-    for bullet, hit_bricks in pg.sprite.groupcollide(one.bullet_group, one.brick_group, False, False, collide).items():
+    for bullet, hit_bricks in pg.sprite.groupcollide(one.bullet_group, one.brick_group, False, False, collide_sprite).items():
         for brick in hit_bricks:
             rect = brick.rect
             count += 1

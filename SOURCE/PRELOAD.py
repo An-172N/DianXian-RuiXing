@@ -9,8 +9,7 @@ from pkgutil import get_data
 import pygame as pg
 
 
-from LOGIC.GRAPHIC import *
-from LOGIC.CALCULATE import *
+from LOGIC import *
 
 
 window = pg.Rect(120, 15, 345, 330)
@@ -55,8 +54,8 @@ sound_cache = {
 
 char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alpha()
 basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
-blue_rect = Draw.rectangle((15, 15), 0, color_dict[5]).convert()
-white_rect = Draw.rectangle((12, 12), 0, color_dict[6]).convert()
+blue_rect = draw_rectangle((15, 15), 0, color_dict[5]).convert()
+white_rect = draw_rectangle((12, 12), 0, color_dict[6]).convert()
 picture = {
     1: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE1BG.png'))).convert(),
     2: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE2BG.png'))).convert(),
@@ -69,7 +68,7 @@ picture = {
 
 
 barrage_cache = {
-    (2, color_dict[6]): Draw.circle((0, 0, 8, 8), 0, color_dict[6]).convert_alpha(),
+    (2, color_dict[6]): draw_circle((0, 0, 8, 8), 0, color_dict[6]).convert_alpha(),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8)
 }
@@ -81,8 +80,8 @@ brick_cache = {
     (1, color_dict[3]): basic_image.subsurface(30, 0, 15, 15),
     (2, color_dict[4]): basic_image.subsurface(45, 0, 15, 15),
     (0, color_dict[6]): basic_image.subsurface(60, 0, 15, 15),
-    (2, color_dict[6]): Draw.circle((0, 0, 15, 15), 2, color_dict[6]).convert_alpha(),
-    (1, color_dict[6]): Draw.rectangle((15, 15), 2, color_dict[6]).convert_alpha()
+    (2, color_dict[6]): draw_circle((0, 0, 15, 15), 2, color_dict[6]).convert_alpha(),
+    (1, color_dict[6]): draw_rectangle((15, 15), 2, color_dict[6]).convert_alpha()
 }
 
 
@@ -93,7 +92,7 @@ bullet_cache = {
 
 
 line_cache = {
-    (length, angle, color): pg.transform.rotate(Draw.rectangle((2, length), 0, color).convert_alpha(), angle)
+    (length, angle, color): pg.transform.rotate(draw_rectangle((2, length), 0, color).convert_alpha(), angle)
     for length in (48, 96, 160)
     for angle in range(0, 180, 15)
     for color in (color_dict[5], color_dict[9])
@@ -101,17 +100,17 @@ line_cache = {
 
 
 item_cache = {
-    "flash": Draw.rectangle((9, 9), 2, color_dict[2]).convert(),
-    "power": Draw.rectangle((9, 9), 2, color_dict[5]).convert(),
-    "fire": Draw.rectangle((9, 9), 2, color_dict[6]).convert()
+    "flash": draw_rectangle((9, 9), 2, color_dict[2]).convert(),
+    "power": draw_rectangle((9, 9), 2, color_dict[5]).convert(),
+    "fire": draw_rectangle((9, 9), 2, color_dict[6]).convert()
 }
 
 
 particle_cache = {
-    (2, color_dict[1]): Draw.rectangle((2, 2), 0, color_dict[1]).convert(),
-    (2, color_dict[2]): Draw.rectangle((2, 2), 0, color_dict[2]).convert(),
-    (2, color_dict[3]): Draw.rectangle((2, 2), 0, color_dict[3]).convert(),
-    (2, color_dict[4]): Draw.rectangle((2, 2), 0, color_dict[4]).convert(),
+    (2, color_dict[1]): draw_rectangle((2, 2), 0, color_dict[1]).convert(),
+    (2, color_dict[2]): draw_rectangle((2, 2), 0, color_dict[2]).convert(),
+    (2, color_dict[3]): draw_rectangle((2, 2), 0, color_dict[3]).convert(),
+    (2, color_dict[4]): draw_rectangle((2, 2), 0, color_dict[4]).convert(),
     (2, color_dict[5]): blue_rect.subsurface(0, 0, 2, 2),
     (9, color_dict[5]): blue_rect.subsurface(0, 0, 9, 9),
     (2, color_dict[6]): white_rect.subsurface(0, 0, 2, 2),

@@ -10,8 +10,7 @@ from pygame.sprite import Group
 
 
 from PRELOAD import *
-from LOGIC.CALCULATE import *
-from LOGIC.SPRITE import *
+from LOGIC import *
 
 
 class Barrage(Base):

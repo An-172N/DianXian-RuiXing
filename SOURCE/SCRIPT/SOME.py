@@ -14,8 +14,7 @@ from pygame.sprite import Group
 
 
 from PRELOAD import *
-from LOGIC.FILE import *
-from LOGIC.STAGE import *
+from LOGIC import *
 from SCRIPT.HUMAN import *
 from SCRIPT.SPAWN import *
 
@@ -55,7 +54,7 @@ def sprite_loader(numbers: tuple, barrage_group: Group, particle_group: Group, b
         char = choose_human(stage, barrage_group, particle_group, brick_group, bullet_group)
         text = json.loads(asset(rf"ASSET\JSON\{stage}.json").decode('utf-8'))
     else:
-        load(asset(rf"ASSET\STAGE\{stage}-{level}.stg"), load_brick, color_dict[stage], 4, (127, 22), (15, 15))
+        load_stage(asset(rf"ASSET\STAGE\{stage}-{level}.stg"), load_brick, color_dict[stage], 4, (127, 22), (15, 15))
         choose_brick(brick_ready, (stage, level), 4, 1)
 
     return char, text
@@ -129,7 +128,7 @@ def save_file(name: str, score: int, total_point: int, flashed: int, flash: int,
         'Date': time[0],
         'Flash': flash
     }
-    record(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.json', ("DX00", content))
+    record_json(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.json', ("DX00", content))
 
 
 def calculate_item_rate(number: int, condition: bool):
