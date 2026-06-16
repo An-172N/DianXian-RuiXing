@@ -1,7 +1,6 @@
 # (C)opyright 2026 An_172N
 # 此代码遵循 GPLv3.0 协议
 
-
 import sys
 import argparse
 import random
@@ -31,10 +30,10 @@ def main():
     pygame.mixer.init()
     pygame.mixer.set_num_channels(2)
 
-    import SCRIPT.KERNEL
+    import KERNEL
 
     print(f"{project} | {title} | Ver {version} | By {author}")
-    SCRIPT.KERNEL.update(clock, args_tuple, version, title)
+    KERNEL.update(clock, args_tuple, version, title)
 
 
 if __name__ == "__main__":

@@ -1,11 +1,9 @@
 # (C)opyright 2026 An_172N
 # 此代码遵循 GPLv3.0 协议
 
-
 import math
 import json
 import os
-
 
 import pygame
 
@@ -30,14 +28,15 @@ def vector(
         return (tx, ty), (dx, dy)
     return (cx + dx * step, cy + dy * step), (dx, dy)
 
-
 def approximate(
     value: float,
     limit: int = 180,
     step: int = 15
 ) -> int:
-    return 0 if (rounded := round((value % limit) / step) * step) == limit else int(rounded)
-
+    if (rounded := round((value % limit) / step) * step) == limit:
+        return 0
+    else:
+        return int(rounded)
 
 def clamp(
     value: float,
@@ -51,57 +50,50 @@ def clamp(
     else:
         return value
 
-
 def bearing(
     x: float,
     y: float
 ) -> float:
     return math.degrees(math.atan2(x, y)) % 360
 
-
 def record_json(
     folder: str,
     file: str,
     content: tuple[str, str],
-    encode: str = 'utf-8'
 ) -> None:
     if not os.path.exists(folder):
         os.makedirs(folder)
     dump = [content[0]]
     dump.append(content[1])
 
-    with open(f'{folder}/{file}', 'w', encoding=encode) as f:
+    with open(f'{folder}/{file}', 'w', encoding='utf-8') as f:
         return json.dump(dump, f, indent=4)
 
-
-def get_files(
+def get_jsons(
     folder: str,
-    extension: str = '.json',
-    reverse: bool = True
 ) -> list[str]:
     files = []
     try:
         for file in os.listdir(folder):
-            if file.endswith(extension) and os.path.isfile(path := os.path.join(folder, file)):
+            path = os.path.join(folder, file)
+            if file.endswith('.json') and os.path.isfile(path):
                 time = os.path.getmtime(path)
                 files.append((time, path))
-        files.sort(key=lambda x: x[0], reverse=reverse)
+        files.sort(key=lambda x: x[0], reverse=True)
 
         return [path for _, path in files]
     except:
         return files
     
-
 def animate_pop(
     surface: pygame.Surface,
     group: tuple[tuple[pygame.Surface, tuple[int, int]], ...],
     timer: int,
     interval: tuple[int, ...],
-    shortly: bool,
-    color: tuple[int, int, int, int] = (0, 0, 0, 0)
+    shortly: bool
 ) -> pygame.Surface:
     if shortly:
-        surface.fill(color)
+        surface.fill((0, 0, 0, 0))
         for i in range(len(group)):
             for j in group[i]:
                 surface.blit(j[0], j[1])
@@ -113,29 +105,25 @@ def animate_pop(
 
     return surface
 
-
 def draw_rectangle(
     size: tuple[float, float],
-    border: int | float,
+    border: int,
     color: tuple[int, int, int],
-    radius: tuple[int, int, int, int] = (-1, -1, -1, -1)
 ) -> pygame.Surface:
     return (
         surface := pygame.Surface(size, pygame.SRCALPHA),
-        pygame.draw.rect(surface, color, surface.get_rect(), border, -1, *radius)
+        pygame.draw.rect(surface, color, surface.get_rect(), border)
     )[0]
-
 
 def draw_circle(
     xy_size: tuple[float, float, float, float],
-    border: float,
+    border: int,
     color: tuple[int, int, int]
 ) -> pygame.Surface:
     return (
         surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA),
         pygame.draw.ellipse(surface, color, xy_size, border)
     )[0]
-
 
 class Base(pygame.sprite.Sprite):
     def __init__(th,
@@ -198,7 +186,6 @@ class Base(pygame.sprite.Sprite):
         else:
             th.image = th.original_image
 
-
 class Invinc:
     def __init__(th,
         end: int,
@@ -225,7 +212,6 @@ class Invinc:
             else:
                 th.visitable = (th.timer // th.blink_interval) % 2 == 1
 
-
 def use_bomb(
     condition: bool,
     power: int,
@@ -236,7 +222,6 @@ def use_bomb(
         power -= critical
 
     return condition, power
-
 
 def collide_sprite(
     sprite1: pygame.sprite.Sprite,
@@ -249,31 +234,23 @@ def collide_sprite(
     else:
         return pygame.sprite.collide_rect(sprite1, sprite2)
 
-
-def load_stage(
+def process_lines(
     file: bytes,
     func: object,
     *args: object,
-    decode: str = 'ascii'
 ) -> list[object]:
-    content = []
-    arrange = file.decode(decode)
-    lines = arrange.splitlines()
-    for row, line in enumerate(lines):
-        content.append(func(row, line, *args))
+    lines = file.decode('ascii').splitlines()
 
-    return content
-
+    return [func(row, line, *args) for row, line in enumerate(lines)]
 
 def follow_stage(
     numbers: tuple[int, int],
     end: int,
-    start: int = 1
 ) -> tuple[int, int]:
     stage, level = numbers
     if level >= end:
         stage += 1
-        level = start
+        level = 1
     else:
         level += 1
 

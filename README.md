@@ -152,7 +152,7 @@
     - 制作：[PMD](http://www5.airnet.ne.jp/kajapon/tool.html) *（喜欢 YM2203*
     - 处理：[WaveShop](https://github.com/victimofleisure/WaveShop)
   - 图像：[Krita](https://krita.org/zh-cn)
-  - 打包：[Zipapp](https://docs.python.org/3/library/zipapp.html)
+  - 打包：[7-Zip](https://www.7-zip.org)
 - ### 本项目网址 *（感兴趣的话就点个星吧~*  
   - https://github.com/An-172N/DianXian-RuiXing
   - https://gitee.com/an172n/DianXian-RuiXing

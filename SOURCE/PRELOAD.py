@@ -1,13 +1,10 @@
 # (C)opyright 2026 An_172N
 # 此代码遵循 GPLv3.0 协议
 
-
 from io import BytesIO
 from pkgutil import get_data
 
-
 import pygame as pg
-
 
 from LOGIC import *
 
@@ -15,7 +12,6 @@ from LOGIC import *
 window = pg.Rect(120, 15, 345, 330)
 effective = pg.Rect(105, 0, 375, 360)
 brick_ready = []
-
 
 color_dict = {
     1: (255, 128, 0),
@@ -29,20 +25,19 @@ color_dict = {
     9: (32, 0, 128)
 }
 
-
-title = {
+stage_title = {
     1: "水边的秋霜店 ~ Sweet Reservoir",
     2: "X 在树林 ~ Hypnotized",
     3: "午夜行至最高峰 ~ Thunder Studio",
     4: "享受禁饮 ~ Point's Hideaway"
 }
 
-
 asset = lambda path: get_data(__name__, path)
 get_stage = lambda stage: stage if stage < 3 else 'Final' if stage == 3 else 'Extra'
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED, vsync=1)
-
+difficulty = (0.22, 0.25, 0.3, 0.38)
+pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
 
 sound_cache = {
     'pick': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\PICK.flac'))),
@@ -50,7 +45,6 @@ sound_cache = {
     'charge': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\CHARGE.flac'))),
     'tick': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\TICK.flac')))
 }
-
 
 char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alpha()
 basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
@@ -66,13 +60,11 @@ picture = {
     7: pg.Surface((480, 360)).convert()
 }
 
-
 barrage_cache = {
     (2, color_dict[6]): draw_circle((0, 0, 8, 8), 0, color_dict[6]).convert_alpha(),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8)
 }
-
 
 brick_cache = {
     (2, color_dict[1]): basic_image.subsurface(0, 0, 15, 15),
@@ -84,12 +76,10 @@ brick_cache = {
     (1, color_dict[6]): draw_rectangle((15, 15), 2, color_dict[6]).convert_alpha()
 }
 
-
 bullet_cache = {
     "bullet": blue_rect.subsurface(0, 0, 2, 15).convert_alpha(),
     "bomb": blue_rect
 }
-
 
 line_cache = {
     (length, angle, color): pg.transform.rotate(draw_rectangle((2, length), 0, color).convert_alpha(), angle)
@@ -98,13 +88,11 @@ line_cache = {
     for color in (color_dict[5], color_dict[9])
 }
 
-
 item_cache = {
     "flash": draw_rectangle((9, 9), 2, color_dict[2]).convert(),
     "power": draw_rectangle((9, 9), 2, color_dict[5]).convert(),
     "fire": draw_rectangle((9, 9), 2, color_dict[6]).convert()
 }
-
 
 particle_cache = {
     (2, color_dict[1]): draw_rectangle((2, 2), 0, color_dict[1]).convert(),
@@ -119,9 +107,3 @@ particle_cache = {
     (9, color_dict[6]): white_rect.subsurface(0, 0, 9, 9),
     (12, color_dict[6]): white_rect
 }
-
-
-difficulty = (0.22, 0.25, 0.3, 0.38)
-
-
-pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
