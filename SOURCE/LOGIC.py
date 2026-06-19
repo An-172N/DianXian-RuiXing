@@ -2,7 +2,6 @@
 # 此代码遵循 GPLv3.0 协议
 
 import math
-import json
 import os
 
 import pygame
@@ -56,27 +55,25 @@ def bearing(
 ) -> float:
     return math.degrees(math.atan2(x, y)) % 360
 
-def record_json(
+def record_file(
     folder: str,
     file: str,
-    content: tuple[str, str],
+    content: str,
 ) -> None:
     if not os.path.exists(folder):
         os.makedirs(folder)
-    dump = [content[0]]
-    dump.append(content[1])
 
     with open(f'{folder}/{file}', 'w', encoding='utf-8') as f:
-        return json.dump(dump, f, indent=4)
+        return f.write(content)
 
-def get_jsons(
+def get_texts(
     folder: str,
 ) -> list[str]:
     files = []
     try:
         for file in os.listdir(folder):
             path = os.path.join(folder, file)
-            if file.endswith('.json') and os.path.isfile(path):
+            if file.endswith('.txt') and os.path.isfile(path):
                 time = os.path.getmtime(path)
                 files.append((time, path))
         files.sort(key=lambda x: x[0], reverse=True)
@@ -84,7 +81,7 @@ def get_jsons(
         return [path for _, path in files]
     except:
         return files
-    
+
 def animate_pop(
     surface: pygame.Surface,
     group: tuple[tuple[pygame.Surface, tuple[int, int]], ...],
@@ -111,7 +108,7 @@ def draw_rectangle(
     color: tuple[int, int, int],
 ) -> pygame.Surface:
     return (
-        surface := pygame.Surface(size, pygame.SRCALPHA),
+        surface := pygame.Surface(size, pygame.SRCALPHA).convert_alpha(),
         pygame.draw.rect(surface, color, surface.get_rect(), border)
     )[0]
 
@@ -121,7 +118,7 @@ def draw_circle(
     color: tuple[int, int, int]
 ) -> pygame.Surface:
     return (
-        surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA),
+        surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA).convert_alpha(),
         pygame.draw.ellipse(surface, color, xy_size, border)
     )[0]
 

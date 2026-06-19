@@ -11,7 +11,6 @@ from LOGIC import *
 
 window = pg.Rect(120, 15, 345, 330)
 effective = pg.Rect(105, 0, 375, 360)
-brick_ready = []
 
 color_dict = {
     1: (255, 128, 0),
@@ -34,6 +33,13 @@ stage_title = {
 
 asset = lambda path: get_data(__name__, path)
 get_stage = lambda stage: stage if stage < 3 else 'Final' if stage == 3 else 'Extra'
+get_logs = lambda date, score, stage, rate, flashed, flash: (
+    f"今天是 {date}",
+    f"得到了 {score} 分",
+    f"最终到达 {stage} 站",
+    f"拾形点率为 {rate}",
+    f"使用了 {flashed} 次形闪{'（躺' if flash == 0 else ''}"
+)
 font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED, vsync=1)
 difficulty = (0.22, 0.25, 0.3, 0.38)
@@ -61,7 +67,7 @@ picture = {
 }
 
 barrage_cache = {
-    (2, color_dict[6]): draw_circle((0, 0, 8, 8), 0, color_dict[6]).convert_alpha(),
+    (2, color_dict[6]): draw_circle((0, 0, 8, 8), 0, color_dict[6]),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8)
 }
@@ -72,8 +78,8 @@ brick_cache = {
     (1, color_dict[3]): basic_image.subsurface(30, 0, 15, 15),
     (2, color_dict[4]): basic_image.subsurface(45, 0, 15, 15),
     (0, color_dict[6]): basic_image.subsurface(60, 0, 15, 15),
-    (2, color_dict[6]): draw_circle((0, 0, 15, 15), 2, color_dict[6]).convert_alpha(),
-    (1, color_dict[6]): draw_rectangle((15, 15), 2, color_dict[6]).convert_alpha()
+    (2, color_dict[6]): draw_circle((0, 0, 15, 15), 2, color_dict[6]),
+    (1, color_dict[6]): draw_rectangle((15, 15), 2, color_dict[6])
 }
 
 bullet_cache = {
@@ -82,7 +88,7 @@ bullet_cache = {
 }
 
 line_cache = {
-    (length, angle, color): pg.transform.rotate(draw_rectangle((2, length), 0, color).convert_alpha(), angle)
+    (length, angle, color): pg.transform.rotate(draw_rectangle((2, length), 0, color), angle)
     for length in (48, 96, 160)
     for angle in range(0, 180, 15)
     for color in (color_dict[5], color_dict[9])

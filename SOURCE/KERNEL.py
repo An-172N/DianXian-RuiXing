@@ -1,6 +1,7 @@
 # (C)opyright 2026 An_172N
 # 此代码遵循 GPLv3.0 协议
 
+import json
 import sys
 import os
 from datetime import datetime
@@ -38,6 +39,8 @@ class One:
         th.text_number = 0
         th.text_part = 0
         th.pop_timer = 0
+        th.remaining_brick = []
+        th.brick_ready = []
 
 class Two:
     def __init__(th):
@@ -51,15 +54,14 @@ class Two:
         th.stage = 1
         th.level = 1
         th.wait_load_timer = 0
-        th.remaining_brick = []
 
 class Log:
     def __init__(th):
         th.name = ''
         th.log = None
-        th.json_files = get_jsons(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+        th.files = get_texts(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
         th.index = 0
-        th.total_files = len(th.json_files)
+        th.total_files = len(th.files)
 
 def score_summary(total_point: int, power: int, unflash: int, combo: int, numbers: tuple) -> int:
     return total_point * 512 + unflash * 4096 + ((2 ** combo) if combo > 0 else 0) + ((numbers[0] * 16384) if numbers[1] == 6 else 0) + ((int(power / 32 * 8192)) if numbers[1] == 6 else 0)
@@ -182,7 +184,7 @@ class Hro(Basic):
 
     def fire(th):
         if th.timer % 6 == 0 and th.bullets < 3:
-            pos = (th.x, th.y)
+            pos = th.rect.center
             for i in range(-30, 31, 30):
                 delta = th.locate[0] - pos[0], th.locate[1] - pos[1]
                 angle = bearing(-delta[0], -delta[1]) + i
@@ -265,13 +267,13 @@ class Nre(Basic):
     def fire(th):
         if th.timer == 0:
             for i in range(th.locate[0] - 35, th.locate[0] + 36, 23):
-                line_barrage((i, 15), (i, 345), th.barrage_group, color_dict[6], color_dict[3])
+                line_barrage((i, 15), (i, 345), th.barrage_group)
             sound_cache["fire"].play()
 
     def free(th):
         if th.bullets < 16:
             current, target = (randint(120, 465), 15), (randint(120, 465), 345)
-            line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
+            line_barrage(current, target, th.barrage_group)
             th.bullets += 1
             if th.bullets % 3 == 0:
                 sound_cache["fire"].play(maxtime=(48 if th.bullets < 15 else 0))
@@ -281,10 +283,10 @@ class Nre(Basic):
             for j in (1, -1):
                 x = th.interval_locate[0] + th.bullets * j * 24
                 current, target = (x, 15), (x, 345)
-                line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
+                line_barrage(current, target, th.barrage_group)
             y = (th.locate[1] - 13) - th.bullets * 24
             current, target = (120, y), (465, y)
-            line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
+            line_barrage(current, target, th.barrage_group)
             th.bullets += 1
             if th.bullets % 2 == 0:
                 sound_cache["fire"].play(maxtime=(98 if th.bullets < 8 else 0))
@@ -292,11 +294,11 @@ class Nre(Basic):
     def final(th):
         if th.bullets < 12 and th.timer % 2 == 0:
             current, target = (220 + th.bullets * 25, 15), (320 + th.bullets * 25, 345)
-            line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
+            line_barrage(current, target, th.barrage_group)
             if th.bullets < 6:
                 for i in (120, 465):
                     current, target = (i, 15), (292 + th.bullets * choice([32, -32]), 345)
-                    line_barrage(current, target, th.barrage_group, color_dict[6], color_dict[3])
+                    line_barrage(current, target, th.barrage_group)
             th.bullets += 1
             if th.bullets % 2 == 0:
                 sound_cache["fire"].play(maxtime=(65 if th.bullets < 12 else 0))
@@ -306,10 +308,10 @@ class Nre(Basic):
             rad = radians(th.bullets * 18)
             pos = th.x + 478 * cos(rad), th.y + 478 * sin(rad)
             rands = randint(120, 465), randint(15, 255)
-            line_barrage(th.interval_pos, pos, th.barrage_group, color_dict[6], color_dict[3])
+            line_barrage(th.interval_pos, pos, th.barrage_group)
             for _ in range(3):
                 pos = rands[0] + 478 * cos(rad), rands[1] + 478 * sin(rad)
-                line_barrage(rands, pos, th.barrage_group, color_dict[6], color_dict[3])
+                line_barrage(rands, pos, th.barrage_group)
             th.bullets += 1
             if th.bullets % 2 == 0:
                 sound_cache["fire"].play(maxtime=(65 if th.bullets < 20 else 0))
@@ -328,7 +330,7 @@ class Nre(Basic):
         if th.timer % 100 >= 82 and th.timer % 82 == 0:
             image = particle_cache[(9, color_dict[6])]
             for _ in range(8):
-                pos = int(uniform(th.x - 48, th.x + 48)), th.y
+                pos = randint(th.x - 48, th.x + 48), th.y
                 delta = th.x - pos[0], th.y - pos[1]
                 angle = bearing(-delta[0], -delta[1])
                 Barrage(effective, 3, angle, pos, image, th.particle_group)
@@ -415,6 +417,15 @@ class Qdi(Basic):
             if th.bullets % 2 == 0:
                 sound_cache["fire"].play(maxtime=(65 if th.bullets < 12 else 0))
 
+    def what(th):
+        if th.bullets < 8 and th.timer % 2 == 0:
+            for i in range(90, 271, randint(5, 30)):
+                pos = (120 + th.bullets * 44, th.rect.centery)
+                Barrage(effective, randint(2, 4), i, pos, th.bullet_image, th.barrage_group, 3)
+            th.bullets += 1
+            if th.bullets % 2 == 0:
+                sound_cache["fire"].play(maxtime=(65 if th.bullets < 8 else 0))
+
     def update(th):
         th.timer += 1
         if th.timer % 150 == 0:
@@ -422,7 +433,7 @@ class Qdi(Basic):
             th.bullets = 0
             th.timer = 0
             th.can_shoot = True
-            th.choice = choice((th.fire,) * 12 + (th.free,) * 2 + (th.extend, th.final, th.last, th.count))
+            th.choice = choice((th.fire,) * 12 + (th.free,) * 2 + (th.extend, th.final, th.last, th.count, th.what))
         delay = th.x
         if th.timer % 150 >= 145:
             th.x += choice((-4, 4))
@@ -430,7 +441,7 @@ class Qdi(Basic):
         if th.timer % 125 == 0 and th.timer % 150 >= 125:
             image = barrage_cache[(2, color_dict[6])]
             for _ in range(12):
-                pos = int(uniform(th.x - 48, th.x + 48)), int(uniform(th.y - 64, th.y + 64))
+                pos = randint(th.x - 48, th.x + 48), randint(th.y - 64, th.y + 64)
                 delta = th.x - pos[0], th.y - pos[1]
                 angle = bearing(-delta[0], -delta[1])
                 Barrage(effective, 3, angle, pos, image, th.particle_group)
@@ -520,50 +531,45 @@ class Kli(Base):
         return not th.collided.condition and not th.divided.condition
 
 
-def load_json(filepath: str):
-    with open(filepath, 'r', encoding='utf-8') as f:
-        return json.load(f)
+def load_file(file: str):
+    with open(file, 'r', encoding='utf-8') as f:
+        log.log = f.readline().split(',')
 
-def spawn_barrage(stage: int, group: Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
-    index = stage - 1
+def spawn_barrage(group: Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
+    index = two.stage - 1
     if uniform(0, 1) <= difficulty[index] + power / 1000:
         (
             lambda: circle_barrage(type, spawn_pos, locate, group),
             lambda: polygon_barrage(type, spawn_pos, locate, group),
-            lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group, color_dict[6], color_dict[3]),
+            lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group),
             lambda: point_barrage(type, locate, group)
         )[index]()
 
-def brick_blast(group: Group, stage: int, color: tuple, rect: pg.Rect):
+def brick_blast(group: Group, stage: int, color: tuple, pos: tuple):
     if color == color_dict[6]:
-        dy = lambda point, dy: (point[0], point[1] + dy)
         (
-            lambda: circle_brick(group, rect.center),
-            lambda: polygon_brick(group, dy(rect.midleft, -1), dy(rect.midright, -1), dy(rect.midbottom, -1)),
-            lambda: line_brick(group, rect.center),
+            lambda: circle_brick(group, pos),
+            lambda: polygon_brick(group, pos),
+            lambda: line_brick(group, pos),
             lambda: point_brick(group)
         )[stage - 1]()
 
-def sprite_loader(numbers: tuple, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
-    stage, level = numbers
-    char = None
-    text = None
+def sprite_loader():
+    stage, level = two.stage, two.level
     if level == 6:
-        char = choose_human(stage, barrage_group, particle_group, brick_group, bullet_group)
-        text = json.loads(asset(rf"ASSET\JSON\{stage}.json").decode('utf-8'))
+        one.char = choose_human()
+        one.text = json.loads(asset(rf"ASSET\JSON\{stage}.json").decode('utf-8'))
     else:
         process_lines(asset(rf"ASSET\STAGE\{stage}-{level}.stg"), load_brick, color_dict[stage], 4, (127, 22), (15, 15))
-        choose_brick(brick_ready, (stage, level), 4, 1)
+        choose_brick(one.brick_ready, (stage, level), 4, 1)
 
-    return char, text
-
-def choose_human(stage: int, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
+def choose_human():
     return (
         Ono,
         Hro,
         Nre,
         Qdi
-    )[stage - 1](barrage_group, particle_group, brick_group, bullet_group)
+    )[two.stage - 1](one.barrage_group, one.particle_group, one.brick_group, one.bullet_group)
 
 def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, brick_group: Group):
     if wait_load_timer >= 30 and wait_load_timer % 30 == 0:
@@ -579,14 +585,12 @@ def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, b
 
     return wait_load_timer
 
-def close_summary(level: int, is_talk: bool, remaining_brick: list, brick_ready: list):
+def close_summary(level: int, is_talk: bool):
     wait_load_timer = 0
     is_level_load = True
     pop_timer = 0
     if level == 6:
         is_talk = True
-    remaining_brick.clear()
-    brick_ready.clear()
 
     return wait_load_timer, is_level_load, pop_timer, is_talk
 
@@ -612,16 +616,9 @@ def save_file(name: str, score: int, total_point: int, flashed: int, flash: int,
     stage, level = numbers
     name = name.translate(str.maketrans('!<>:"/\\|?*', '__________'))
     time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
-    content = {
-        'Name': name,
-        'Score': score,
-        'Stage': f"{get_stage(stage)} - {level}",
-        'Rate': calculate_item_rate(total_point, stage <= 3),
-        'Flashed': flashed,
-        'Date': time[0],
-        'Flash': flash
-    }
-    record_json(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.json', ("DX00", content))
+    rate = calculate_item_rate(total_point, stage <= 3)
+    content = f"{name},{score},{f'{get_stage(stage)} - {level}'},{rate},{flashed},{time[0]},{flash}"
+    record_file(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.txt', content)
 
 def calculate_item_rate(number: int, condition: bool):
     return f"{(number / (153 if condition else 61) * 100):.2f} %"
@@ -645,16 +642,12 @@ def circle_brick(group: Group, pos: tuple):
     for i in range(0 + delay, 360 + delay, 12):
         Bullet(effective, 16, i, pos, 4, image, group, "bullet", True).update()
 
-def polygon_brick(group: Group, pos1: tuple, pos2: tuple, pos3: tuple):
+def polygon_brick(group: Group, pos: tuple):
     image = bullet_cache["bullet"]
-    pos = pos1, pos2, pos3
-    for i, angle in enumerate(range(-30, 91, 60)):
-        if angle in (30, -30):
-            Bullet(effective, 16, angle, pos[i], 4, image, group, "bullet-cross", True)
-        elif angle == 90:
-            for j in (0, 1):
-                angle = angle + j * 180
-                Bullet(effective, 16, angle, pos[i], 4, image, group, "bullet-cross", True)
+    for i in (-1, 1):
+        for angle in range(-30, -91, -60):
+            angle = angle * i
+            Bullet(effective, 16, angle, pos, 4, image, group, "bullet-cross", True)
 
 def point_brick(group: Group):
     image = bullet_cache["bullet"]
@@ -669,7 +662,7 @@ def load_brick(row: int, line: str, color: tuple, hp: int, size: tuple, interval
             shape = int(line[i])
             pos = size[0] + i * interval[0], size[1] + row * interval[1]
             image = brick_cache[(shape, color)]
-            brick_ready.append(Brick(shape, hp, color, pos, image))
+            one.brick_ready.append(Brick(shape, hp, color, pos, image))
 
 def choose_brick(group: list, numbers: tuple, power: int, flash: int):
     choose_power = sample(range(len(group)), power + numbers[0] + numbers[1])
@@ -696,15 +689,16 @@ def polygon_barrage(type: int, pos: tuple, locate: tuple, group: Group):
         angle = bearing(-delta[0], -delta[1])
         Barrage(effective, 3, angle, pos, image, group, 2, rotate=True)
 
-def line_barrage(current: tuple, target: tuple, group: Group, color1: tuple, color2: tuple):
-    image= particle_cache[(3, color1)]
+def line_barrage(current: tuple, target: tuple, group: Group):
+    color = color_dict[6], color_dict[3]
+    image = particle_cache[(3, color[0])]
     start = current
     count = 0
     while True:
         if not effective.collidepoint(current):
             break
         if 327 < current[1] < 336 or current == start:
-            Line(color1, color2, 0, current, target, count, image, group)
+            Line(color[0], color[1], 0, current, target, count, image, group)
         if math.dist(current, target) < 1e-6:
             break
         current = vector(current, target, 3)[0]
@@ -922,13 +916,9 @@ def save_menu():
     shortly = False
     title = "爬山日志"
     name = f"{f'谢谢 {log.name} 的帮助' if one.pop_timer >= 60 else ''}"
-    text = (
-        f"今天是 {datetime.now().strftime('%Y-%m-%d')}",
-        f"得到了 {two.score} 分",
-        f"最终到达 {get_stage(two.stage)} - {two.level} 站",
-        f"拾形点率为 {calculate_item_rate(two.total_point, two.stage <= 3)}",
-        f"使用了 {two.flashed} 次形闪{'（躺' if two.flash == 0 else ''}"
-    )
+    rate = calculate_item_rate(two.total_point, two.stage <= 3)
+    date = datetime.now().strftime('%Y-%m-%d')
+    text = get_logs(date, two.score, f"{get_stage(two.stage)} - {two.level}", rate, two.flashed, two.flash)
     key = "", "Ent 记录", "Esc 算了"
     if one.pop_timer == 60:
         shortly = True
@@ -942,18 +932,12 @@ def save_menu():
 def check_menu():
     try:
         if one.pop_timer == 0:
-            log.log = load_json(log.json_files[log.index])[1]
+            load_file(log.files[log.index])
         logs = log.log
         title = f"爬山日志簿第 {log.total_files - log.index} / {log.total_files} 页"
-        text = (
-            f"今天是 {logs['Date']}",
-            f"得到了 {logs['Score']} 分",
-            f"最终到达 {logs['Stage']} 站",
-            f"拾形点率为 {logs['Rate']}",
-            f"使用了 {logs['Flashed']} 次形闪{'（躺' if logs['Flash'] == 0 else ''}"
-        )
+        text = get_logs(logs[5], logs[1], logs[2], logs[3], logs[4], int(logs[6]))
         key = "<-> 翻页", "Del 丢掉", "Esc 合上"
-        full_menu(title, text, key, f"谢谢 {logs['Name']} 的帮助")
+        full_menu(title, text, key, f"谢谢 {logs[0]} 的帮助")
     except:
         one.is_check = False
 
@@ -993,21 +977,20 @@ def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool
     if one.pop_timer < interval[2] + 1:
         one.pop_timer += 1
 
-def summary_logic(total_point: int, power: int, unflash: int, combo: int, numbers: tuple):
-    two.score += score_summary(total_point, power, unflash, combo, numbers)
+def summary_logic():
+    two.score += score_summary(one.total_point, major.power, two.unflash, one.combo, (two.stage, two.level))
     one.is_summary = False
     one.pop_timer = 0
 
-def level_logic(numbers: tuple):
-    stage, level = numbers
-    if stage >= 3 and level == 6:
+def level_logic():
+    if two.stage >= 3 and two.level == 6:
         one.is_save = True
     else:
         power = major.power
         one.is_save = False
         reset(False)
         major.power = power
-        two.stage, two.level = follow_stage((stage, level), 6)
+        two.stage, two.level = follow_stage((two.stage, two.level), 6)
         two.unflash += 1
 
 def item_collide():
@@ -1066,16 +1049,16 @@ def bullet_collide():
                         one.pop_timer = 0
                         one.particle_group.empty()
                         for _ in range(8):
-                            spawn_particles(one.particle_group, 2, rect.center, (2, 8), brick.color, color_dict[6])
+                            spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     else:
-                        spawn_barrage(two.stage, one.barrage_group, major.power, brick.type, rect.center, major.rect.center)
+                        spawn_barrage(one.barrage_group, major.power, brick.type, rect.center, major.rect.center)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     sound_cache["fire"].play()
                     if hasattr(brick, "power") and brick.power:
                         Item("power", 2.5, rect.center, one.item_group)
                     if hasattr(brick, "flash") and brick.flash:
                         Item("flash", 2.5, rect.center, one.item_group)
-                    brick_blast(one.bullet_group, two.stage, brick.color, rect)
+                    brick_blast(one.bullet_group, two.stage, brick.color, rect.center)
                     brick.kill()
                 brick.is_die = True
             if bullet.type in ("bullet", "bomb"):
@@ -1105,9 +1088,8 @@ def key_event():
                     one.pop_timer = 0
                     sound_cache["pick"].play()
                 elif one.is_summary and event.key == pg.K_z:
-                    numbers = (two.stage, two.level)
-                    summary_logic(one.total_point, major.power, two.unflash, one.combo, numbers)
-                    level_logic(numbers)
+                    summary_logic()
+                    level_logic()
                     sound_cache["pick"].play()
             elif one.is_talk and not one.is_pause and event.key in keydown_talk_dict and one.pop_timer >= 12:
                 keydown_talk_dict[event.key]()
@@ -1187,10 +1169,10 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
             if not one.is_level_load:
                 if two.wait_load_timer <= 90:
                     if two.wait_load_timer == 0:
-                        one.char, one.text = sprite_loader((two.stage, two.level), one.barrage_group, one.particle_group, one.brick_group, one.bullet_group)
-                    two.wait_load_timer = pop_bricks(two.remaining_brick, brick_ready, two.wait_load_timer, one.brick_group)
+                        sprite_loader()
+                    two.wait_load_timer = pop_bricks(one.remaining_brick, one.brick_ready, two.wait_load_timer, one.brick_group)
                 else:
-                    two.wait_load_timer, one.is_level_load, one.pop_timer, one.is_talk = close_summary(two.level, one.is_talk, two.remaining_brick, brick_ready)
+                    two.wait_load_timer, one.is_level_load, one.pop_timer, one.is_talk = close_summary(two.level, one.is_talk)
         display(clock, version, title)
         alpha, timer = fade_surface(alpha, timer, one.is_exit, picture[7], screen)
         pg.display.flip()
@@ -1228,7 +1210,7 @@ keydown_over_dict = {
 }
 
 keydown_check_dict = {
-    pg.K_DELETE: lambda: (os.remove(log.json_files[log.index]), log.__init__()),
+    pg.K_DELETE: lambda: (os.remove(log.files[log.index]), log.__init__()),
     pg.K_ESCAPE: lambda: (setattr(one, "is_check", False), setattr(log, "index", 0)),
     pg.K_LEFT: lambda: setattr(log, "index", (log.index - 1) if log.index > 0 else log.total_files - 1),
     pg.K_RIGHT: lambda: setattr(log, "index", (log.index + 1) if log.index < log.total_files - 1 else 0)
