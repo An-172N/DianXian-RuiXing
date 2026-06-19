@@ -585,14 +585,12 @@ def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, b
 
     return wait_load_timer
 
-def close_summary(level: int, is_talk: bool):
-    wait_load_timer = 0
-    is_level_load = True
-    pop_timer = 0
-    if level == 6:
-        is_talk = True
-
-    return wait_load_timer, is_level_load, pop_timer, is_talk
+def close_summary():
+    two.wait_load_timer = 0
+    one.is_level_load = True
+    one.pop_timer = 0
+    if two.level == 6:
+        one.is_talk = True
 
 def fade_surface(alpha: int, timer: int, is_exit: bool, surface: pg.Surface, screen: pg.Surface):
     if is_exit:
@@ -614,7 +612,7 @@ def fade_surface(alpha: int, timer: int, is_exit: bool, surface: pg.Surface, scr
 
 def save_file(name: str, score: int, total_point: int, flashed: int, flash: int, numbers: tuple):
     stage, level = numbers
-    name = name.translate(str.maketrans('!<>:"/\\|?*', '__________'))
+    name = name.translate(str.maketrans('!<>:"/\\|?*,', '___________'))
     time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
     rate = calculate_item_rate(total_point, stage <= 3)
     content = f"{name},{score},{f'{get_stage(stage)} - {level}'},{rate},{flashed},{time[0]},{flash}"
@@ -1172,7 +1170,7 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
                         sprite_loader()
                     two.wait_load_timer = pop_bricks(one.remaining_brick, one.brick_ready, two.wait_load_timer, one.brick_group)
                 else:
-                    two.wait_load_timer, one.is_level_load, one.pop_timer, one.is_talk = close_summary(two.level, one.is_talk)
+                    close_summary()
         display(clock, version, title)
         alpha, timer = fade_surface(alpha, timer, one.is_exit, picture[7], screen)
         pg.display.flip()
