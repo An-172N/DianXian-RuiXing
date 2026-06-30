@@ -892,22 +892,21 @@ def summary_menu():
         f"无闪 {two.unflash} * 4096 = {two.unflash * 4096}",
         f"面数 {two.stage} * 16384 = {two.stage * 16384}",
         f"形力 {major.power} / 32 * 8192 = {int(major.power / 32 * 8192)}",
-        ""
     )
-    key = "", "", "Z 继续"
+    key = "Z 继续",
     if one.pop_timer == 60:
         shortly = True
     if two.level <= 5:
         half_menu(stage, (text[0], text[1]), shortly=shortly)
     else:
-        full_menu(stage, text, key, stage_title[two.stage])
+        full_menu(stage, text, key, stage_title[two.stage - 1])
 
 def start_menu(version: str, title: str):
     other = "(C)opyright 2026 An_172N"
-    text = f"Ver {version}", '', '', '', ''
+    text = f"Ver {version}",
     climb = "Z 爬山" if two.stage < 4 else "Z 下山"
     wood = "C 日志" if log.total_files > 0 else "C 木鱼"
-    key = climb, wood, "Q 拜拜"
+    key = "Q 拜拜", wood, climb
     full_menu(title, text, key, other)
 
 def save_menu():
@@ -917,7 +916,7 @@ def save_menu():
     rate = calculate_item_rate(two.total_point, two.stage <= 3)
     date = datetime.now().strftime('%Y-%m-%d')
     text = get_logs(date, two.score, f"{get_stage(two.stage)} - {two.level}", rate, two.flashed, two.flash)
-    key = "", "Ent 记录", "Esc 算了"
+    key = "Esc 算了", "Ent 记录"
     if one.pop_timer == 60:
         shortly = True
     if one.pop_timer >= 60:
@@ -934,7 +933,7 @@ def check_menu():
         logs = log.log
         title = f"爬山日志簿第 {log.total_files - log.index} / {log.total_files} 页"
         text = get_logs(logs[5], logs[1], logs[2], logs[3], logs[4], int(logs[6]))
-        key = "<-> 翻页", "Del 丢掉", "Esc 合上"
+        key = "Esc 合上", "Del 丢掉", "<-> 翻页"
         full_menu(title, text, key, f"谢谢 {logs[0]} 的帮助")
     except:
         one.is_check = False
@@ -946,12 +945,12 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
             (font.render(title, False, color), (8, 10)),
             (font.render(other, False, color), (8, 305))
         ),
-        tuple((font.render(text[i], False, color), (8, 60 + 25 * i)) for i in range(5)),
-        tuple((font.render(key[i], False, color), (275, 170 + 50 * i)) for i in range(3))
+        tuple((font.render(text[i], False, color), (8, 60 + 25 * i)) for i in range(len(text))),
+        tuple((font.render(key[i], False, color), (275, 270 - 50 * i)) for i in range(len(key)))
     )
     if one.pop_timer == interval[0]:
-        picture[5].fill(color_dict[8])
-    source = animate_pop(picture[5], group, one.pop_timer, interval, shortly)
+        picture[0].fill(color_dict[8])
+    source = animate_pop(picture[0], group, one.pop_timer, interval, shortly)
     screen.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
@@ -967,8 +966,8 @@ def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool
     )
 
     if one.pop_timer == interval[0]:
-        picture[5].fill(color_dict[8])
-    source = animate_pop(picture[5].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly)
+        picture[0].fill(color_dict[8])
+    source = animate_pop(picture[0].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly)
     screen.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
@@ -1120,7 +1119,7 @@ def display(clock: pg.Clock, version: str, title: str):
         elif one.is_talk: talk_menu()
         elif one.is_summary: summary_menu()
         elif one.is_save: save_menu()
-    screen.blit(picture[6])
+    screen.blit(picture[5])
     situation(clock)
 
 def update(clock: pg.Clock, args: tuple, version: str, title: str):
@@ -1128,6 +1127,7 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
     two.level = clamp(args[1], 1, 6)
     two.flash = clamp(args[2], 1, 96)
     major.power = clamp(args[3], 0, 32)
+    black_surface = pg.Surface((480, 360)).convert()
     alpha = 255
     timer = 0
     for text_info in (
@@ -1137,9 +1137,9 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
         ('闪', (9, 295)),
         ('连', (9, 320))
     ):
-        picture[6].blit(font.render(f"{text_info[0]}", False, color_dict[6]), text_info[1])
-    picture[6].set_clip(window)
-    picture[6].fill((0, 0, 0, 0))
+        picture[5].blit(font.render(f"{text_info[0]}", False, color_dict[6]), text_info[1])
+    picture[5].set_clip(window)
+    picture[5].fill((0, 0, 0, 0))
     while True:
         key_event()
         if two.is_run and not one.is_save and not one.is_pause:
@@ -1172,7 +1172,7 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
                 else:
                     close_summary()
         display(clock, version, title)
-        alpha, timer = fade_surface(alpha, timer, one.is_exit, picture[7], screen)
+        alpha, timer = fade_surface(alpha, timer, one.is_exit, black_surface, screen)
         pg.display.flip()
         clock.tick(60)
 

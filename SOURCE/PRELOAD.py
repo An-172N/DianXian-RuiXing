@@ -24,12 +24,12 @@ color_dict = {
     9: (32, 0, 128)
 }
 
-stage_title = {
-    1: "水边的秋霜店 ~ Sweet Reservoir",
-    2: "X 在树林 ~ Hypnotized",
-    3: "午夜行至最高峰 ~ Thunder Studio",
-    4: "享受禁饮 ~ Point's Hideaway"
-}
+stage_title = (
+    "水边的秋霜店 ~ Sweet Reservoir",
+    "X 在树林 ~ Hypnotized",
+    "午夜行至最高峰 ~ Thunder Studio",
+    "享受禁饮 ~ Point's Hideaway"
+)
 
 asset = lambda path: get_data(__name__, path)
 get_stage = lambda stage: stage if stage < 3 else 'Final' if stage == 3 else 'Extra'
@@ -56,15 +56,14 @@ char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alph
 basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
 blue_rect = draw_rectangle((15, 15), 0, color_dict[5]).convert()
 white_rect = draw_rectangle((12, 12), 0, color_dict[6]).convert()
-picture = {
-    1: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE1BG.png'))).convert(),
-    2: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE2BG.png'))).convert(),
-    3: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE3BG.png'))).convert(),
-    4: pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE4BG.png'))).convert(),
-    5: pg.Surface((345, 330)).convert(),
-    6: pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
-    7: pg.Surface((480, 360)).convert()
-}
+picture = (
+    pg.Surface((345, 330)).convert(),
+    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE1BG.png'))).convert(),
+    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE2BG.png'))).convert(),
+    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE3BG.png'))).convert(),
+    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE4BG.png'))).convert(),
+    pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
+)
 
 barrage_cache = {
     (2, color_dict[6]): draw_circle((0, 0, 8, 8), 0, color_dict[6]),
