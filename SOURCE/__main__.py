@@ -9,7 +9,7 @@ import random
 def main():
     project = '点线 Project'
     title = '锐行 ~ Thunder Out of the Mountain'
-    version = '1.2'
+    version = '1.2.1'
     author = 'An_172N'
     sys.dont_write_bytecode = True
     for module in ('numpy', 'timidity', 'pygame.examples'):
