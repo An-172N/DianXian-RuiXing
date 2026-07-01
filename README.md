@@ -119,7 +119,7 @@
   - 这是角色们的介绍文档
   - 分有主主角和主角 *（主角就是每面末站的 BOSS，按面数从上到下排*
 - ### DX00.pyz
-  - 游戏的主程序，包含有代码和资产
+  - 游戏的主程序
   - 双击就可以开始爬山啦 *（要有 [Python 和 Pygame-CE 环境](#本项目使用以下第三方资源)*
 - ### LICENSE
   - 顾名思义就是许可证
@@ -153,5 +153,7 @@
     - 处理：[WaveShop](https://github.com/victimofleisure/WaveShop)
   - 图像：[Krita](https://krita.org/zh-cn)
   - 打包：[7-Zip](https://www.7-zip.org)
+- ### 本项目网址 *（感兴趣的话就点个星吧~*
+  - https://github.com/An-172N/DianXian-RuiXing
 
 **(C)opyright 2026 An_172N**  
