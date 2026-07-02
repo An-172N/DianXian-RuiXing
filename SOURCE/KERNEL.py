@@ -14,7 +14,6 @@ from pygame.sprite import Group
 from PRELOAD import *
 from LOGIC import *
 
-
 class One:
     def __init__(th):
         th.plane_group = Group()
@@ -59,14 +58,19 @@ class Log:
     def __init__(th):
         th.name = ''
         th.log = None
-        th.files = get_texts(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+        th.files = get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
         th.index = 0
         th.total_files = len(th.files)
 
-def score_summary(total_point: int, power: int, unflash: int, combo: int, numbers: tuple) -> int:
-    return total_point * 512 + unflash * 4096 + ((2 ** combo) if combo > 0 else 0) + ((numbers[0] * 16384) if numbers[1] == 6 else 0) + ((int(power / 32 * 8192)) if numbers[1] == 6 else 0)
+def score_summary(total_point, power, unflash, combo, numbers):
+    return (
+        total_point * 512 + unflash * 4096 +
+        ((2 ** combo) if combo > 0 else 0) +
+        ((numbers[0] * 16384) if numbers[1] == 6 else 0) +
+        ((int(power / 32 * 8192)) if numbers[1] == 6 else 0)
+    )
 
-def combo_counter(timer: int, count: int, score: int, bonus: int, end: int) -> tuple:
+def combo_counter(timer, count, score, bonus, end):
     timer -= 1
     if timer <= 0:
         if count > 0:
@@ -76,9 +80,8 @@ def combo_counter(timer: int, count: int, score: int, bonus: int, end: int) -> t
 
     return timer, count, score
 
-
 class Basic(Base):
-    def __init__(th, image: pg.Surface, turn_image: pg.Surface, hp: int, color: tuple, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
+    def __init__(th, image, turn_image, hp, color, barrage_group, particle_group, brick_group, bullet_group):
         super().__init__(image, brick_group, turn_image, pos=(292, 60))
         th.barrage_group = barrage_group
         th.particle_group = particle_group
@@ -96,7 +99,7 @@ class Basic(Base):
         th.target_pos = (292, 60)
 
 class Ono(Basic):
-    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
+    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
         subsurface = char_image.subsurface
         group = barrage_group, particle_group, brick_group, bullet_group
         super().__init__(subsurface((24, 0, 12, 26)), subsurface((36, 0, 12, 26)), 512, color_dict[1], *group)
@@ -174,7 +177,7 @@ class Ono(Basic):
         th.swivel(th.x < delay, th.x > delay)
 
 class Hro(Basic):
-    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
+    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
         subsurface = char_image.subsurface
         group = barrage_group, particle_group, brick_group, bullet_group
         super().__init__(subsurface((48, 0, 12, 26)), subsurface((60, 0, 12, 26)), 768, color_dict[2], *group)
@@ -257,7 +260,7 @@ class Hro(Basic):
         th.swivel(th.x < delay, th.x > delay)
 
 class Nre(Basic):
-    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
+    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
         subsurface = char_image.subsurface
         group = barrage_group, particle_group, brick_group, bullet_group
         super().__init__(subsurface((72, 0, 12, 26)), subsurface((84, 0, 12, 26)), 1024, color_dict[3], *group)
@@ -345,7 +348,7 @@ class Nre(Basic):
         th.swivel(th.x < delay, th.x > delay)
 
 class Qdi(Basic):
-    def __init__(th, barrage_group: Group, particle_group: Group, brick_group: Group, bullet_group: Group):
+    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
         subsurface = char_image.subsurface
         group = barrage_group, particle_group, brick_group, bullet_group
         super().__init__(subsurface((96, 0, 12, 26)), subsurface((108, 0, 12, 26)), 128, color_dict[4], *group)
@@ -453,7 +456,7 @@ class Qdi(Basic):
             th.choice()
 
 class Kli(Base):
-    def __init__(th, bullet_group: Group, particle_group: Group, plane_group: Group):
+    def __init__(th, bullet_group, particle_group, plane_group):
         subsurface = char_image.subsurface
         super().__init__(subsurface(0, 0, 12, 26), plane_group, subsurface(12, 0, 12, 26), pos=(292, 332), radius=1)
         th.bullet_group = bullet_group
@@ -507,7 +510,7 @@ class Kli(Base):
         th.is_shoot = False if keys[pg.K_z] else True
         th.is_fast = True if keys[pg.K_x] else False
         if keys[pg.K_SPACE]:
-            th.divided.condition, th.power = use_bomb(th.divided.condition, th.power, 12)
+            th.divided.condition, th.power = one_shot(th.divided.condition, th.power, 12)
         if th.divided.condition:
             th.free()
         th.swivel(th.x > x, th.x < x)
@@ -530,12 +533,11 @@ class Kli(Base):
     def in_invinc(th):
         return not th.collided.condition and not th.divided.condition
 
-
-def load_file(file: str):
+def load_file(file):
     with open(file, 'r', encoding='utf-8') as f:
         log.log = f.readline().split(',')
 
-def spawn_barrage(group: Group, power: int, type: int, spawn_pos: tuple, locate: tuple):
+def spawn_barrage(group, power, type, spawn_pos, locate):
     index = two.stage - 1
     if uniform(0, 1) <= difficulty[index] + power / 1000:
         (
@@ -545,7 +547,7 @@ def spawn_barrage(group: Group, power: int, type: int, spawn_pos: tuple, locate:
             lambda: point_barrage(type, locate, group)
         )[index]()
 
-def brick_blast(group: Group, stage: int, color: tuple, pos: tuple):
+def brick_blast(group, stage, color, pos):
     if color == color_dict[6]:
         (
             lambda: circle_brick(group, pos),
@@ -560,7 +562,7 @@ def sprite_loader():
         one.char = choose_human()
         one.text = json.loads(asset(rf"ASSET\JSON\{stage}.json").decode('utf-8'))
     else:
-        process_lines(asset(rf"ASSET\STAGE\{stage}-{level}.stg"), load_brick, color_dict[stage], 4, (127, 22), (15, 15))
+        process_lines(asset(rf"ASSET\STAGE\{stage}-{level}.stg").decode('ascii'), load_brick, color_dict[stage], 4, (127, 22), (15, 15))
         choose_brick(one.brick_ready, (stage, level), 4, 1)
 
 def choose_human():
@@ -571,7 +573,7 @@ def choose_human():
         Qdi
     )[two.stage - 1](one.barrage_group, one.particle_group, one.brick_group, one.bullet_group)
 
-def pop_bricks(remaining_brick: list, brick_ready: list, wait_load_timer: int, brick_group: Group):
+def pop_bricks(remaining_brick, brick_ready, wait_load_timer, brick_group):
     if wait_load_timer >= 30 and wait_load_timer % 30 == 0:
         if not remaining_brick:
             remaining_brick = list(range(len(brick_ready)))
@@ -592,7 +594,7 @@ def close_summary():
     if two.level == 6:
         one.is_talk = True
 
-def fade_surface(alpha: int, timer: int, is_exit: bool, surface: pg.Surface, screen: pg.Surface):
+def fade_surface(alpha, timer, is_exit, surface, screen):
     if is_exit:
         if timer % 30 == 0 and alpha < 255:
             alpha += 85
@@ -610,7 +612,7 @@ def fade_surface(alpha: int, timer: int, is_exit: bool, surface: pg.Surface, scr
 
     return alpha, timer
 
-def save_file(name: str, score: int, total_point: int, flashed: int, flash: int, numbers: tuple):
+def save_file(name, score, total_point, flashed, flash, numbers):
     stage, level = numbers
     name = name.translate(str.maketrans('!<>:"/\\|?*,', '___________'))
     time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
@@ -618,11 +620,11 @@ def save_file(name: str, score: int, total_point: int, flashed: int, flash: int,
     content = f"{name},{score},{f'{get_stage(stage)} - {level}'},{rate},{flashed},{time[0]},{flash}"
     record_file(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.txt', content)
 
-def calculate_item_rate(number: int, condition: bool):
+def calculate_item_rate(number, condition):
     return f"{(number / (153 if condition else 61) * 100):.2f} %"
 
 
-def line_brick(group: Group, pos: tuple):
+def line_brick(group, pos):
     rands = 48, 96, 160
     color1, color2 = color_dict[5], color_dict[9]
     basic_list = [(approximate(randint(0, 360)), choice(rands)) for _ in range(12)]
@@ -634,27 +636,27 @@ def line_brick(group: Group, pos: tuple):
         image, target_image = [line_cache[(length, angle, i)] for i in (color1, color2)]
         LineBullet(4, pos, image, target_image, group)
 
-def circle_brick(group: Group, pos: tuple):
+def circle_brick(group, pos):
     image = bullet_cache["bullet"]
     delay = randint(0, 12)
     for i in range(0 + delay, 360 + delay, 12):
         Bullet(effective, 16, i, pos, 4, image, group, "bullet", True).update()
 
-def polygon_brick(group: Group, pos: tuple):
+def polygon_brick(group, pos):
     image = bullet_cache["bullet"]
     for i in (-1, 1):
         for angle in range(-30, -91, -60):
             angle = angle * i
             Bullet(effective, 16, angle, pos, 4, image, group, "bullet-cross", True)
 
-def point_brick(group: Group):
+def point_brick(group):
     image = bullet_cache["bullet"]
     for _ in range(24):
         pos = randint(120, 465), randint(15, 320)
         angle = randint(0, 360)
         Bullet(effective, 16, angle, pos, 4, image, group, "bullet", True)
 
-def load_brick(row: int, line: str, color: tuple, hp: int, size: tuple, interval: tuple):
+def load_brick(row, line, color, hp, size, interval):
     for i in range(len(line)):
         if line[i] != 'o':
             shape = int(line[i])
@@ -662,7 +664,7 @@ def load_brick(row: int, line: str, color: tuple, hp: int, size: tuple, interval
             image = brick_cache[(shape, color)]
             one.brick_ready.append(Brick(shape, hp, color, pos, image))
 
-def choose_brick(group: list, numbers: tuple, power: int, flash: int):
+def choose_brick(group, numbers, power, flash):
     choose_power = sample(range(len(group)), power + numbers[0] + numbers[1])
     choose_flash = sample(range(len(group)), flash)
     choose_white = sample(range(len(group)), 6)
@@ -674,20 +676,20 @@ def choose_brick(group: list, numbers: tuple, power: int, flash: int):
         group[i].image = brick_cache[(group[i].type, color_dict[6])]
         group[i].color = color_dict[6]
 
-def circle_barrage(type: int, pos: tuple, locate: tuple, group: Group):
+def circle_barrage(type, pos, locate, group):
     delta = locate[0] - pos[0], locate[1] - pos[1]
     angle = bearing(-delta[0], -delta[1])
     image = barrage_cache[(type, color_dict[6])]
     Barrage(effective, 3, angle, pos, image, group, 3)
 
-def polygon_barrage(type: int, pos: tuple, locate: tuple, group: Group):
+def polygon_barrage(type, pos, locate, group):
     image = barrage_cache[(type, color_dict[6])]
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = i - pos[0], locate[1] - pos[1]
         angle = bearing(-delta[0], -delta[1])
         Barrage(effective, 3, angle, pos, image, group, 2, rotate=True)
 
-def line_barrage(current: tuple, target: tuple, group: Group):
+def line_barrage(current, target, group):
     color = color_dict[6], color_dict[3]
     image = particle_cache[(3, color[0])]
     start = current
@@ -702,7 +704,7 @@ def line_barrage(current: tuple, target: tuple, group: Group):
         current = vector(current, target, 3)[0]
         count += 1
 
-def point_barrage(type: int, locate: tuple, group: Group):
+def point_barrage(type, locate, group):
     image = barrage_cache[(type, color_dict[6])]
     for _ in range(3):
         pos = randint(120, 465), randint(15, 225)
@@ -710,7 +712,7 @@ def point_barrage(type: int, locate: tuple, group: Group):
         angle = bearing(-delta[0], -delta[1])
         Barrage(effective, 4, angle, pos, image, group, 3)
 
-def spawn_particles(group: Group, size: int, pos: tuple, speeds: tuple, color1: tuple, color2: tuple=None):
+def spawn_particles(group, size, pos, speeds, color1, color2=None):
     rands = randint(0, 60)
     for i in range(0 + rands, 360 + rands, 60):
         color = color1 if color2 is None else choice((color1, color2))
@@ -720,7 +722,7 @@ def spawn_particles(group: Group, size: int, pos: tuple, speeds: tuple, color1: 
 
 
 class Barrage(Base):
-    def __init__(th, effective: pg.Rect, speed: float, angle: float, pos: tuple, image: pg.Surface, group: Group, radius: int=0, form: str=None, rotate: bool=False):
+    def __init__(th, effective, speed, angle, pos, image, group, radius=0, form=None, rotate=False):
         super().__init__(image, group, None, form, angle, pos, radius=radius, rotate=rotate)
         th.effective = effective
         th.speed = speed
@@ -737,7 +739,7 @@ class Barrage(Base):
             th.kill()
 
 class Bullet(Base):
-    def __init__(th, effective: pg.Rect, speed: float, angle: float, pos: tuple, damage: int, image: pg.Surface, group: Group, form: str=None, rotate: bool=False):
+    def __init__(th, effective, speed, angle, pos, damage, image, group, form=None, rotate=False):
         super().__init__(image, group, None, form, angle, pos, rotate=rotate)
         th.effective = effective
         th.speed = speed
@@ -755,12 +757,12 @@ class Bullet(Base):
             th.kill()
 
 class Text(Base):
-    def __init__(th, pos: tuple, kill_time: tuple, speed: float, text: str, color: tuple, target_color: tuple, group: Group):
+    def __init__(th, pos, kill_times, speed, text, color, target_color, group):
         super().__init__(font.render(text, False, color), group, pos=pos)
         th.text = text
         th.color = color
         th.target_color = target_color
-        th.kill_time = kill_time
+        th.kill_times = kill_times
         th.speed = speed
         th.timer = 0
         sound_cache["charge"].play(maxtime=128)
@@ -768,14 +770,14 @@ class Text(Base):
     def update(th):
         th.timer += 1
         th.y -= th.speed
-        if th.timer >= th.kill_time[1]:
+        if th.timer >= th.kill_times[1]:
             th.kill()
-        elif th.timer >= th.kill_time[0] and th.color != th.target_color:
+        elif th.timer >= th.kill_times[0] and th.color != th.target_color:
             th.color = th.target_color
             th.image = font.render(th.text, False, th.color)
 
 class Brick(Base):
-    def __init__(th, form: str, hp: int, color: tuple, pos: tuple, image: pg.Surface):
+    def __init__(th, form, hp, color, pos, image):
         super().__init__(image, form=form, pos=pos, mask=True)
         th.color = color
         th.hp = hp
@@ -784,7 +786,7 @@ class Brick(Base):
         th.is_die = False
 
 class Item(Base):
-    def __init__(th, type: str, speed: float, pos: tuple, group: Group):
+    def __init__(th, type, speed, pos, group):
         super().__init__(item_cache[type], group, form=type, pos=pos)
         th.speed = speed
 
@@ -797,7 +799,7 @@ class Item(Base):
             th.kill()
 
 class Line(Base):
-    def __init__(th, color: tuple, target_color: tuple, damage: int, pos: tuple, target: tuple, count: int, image: pg.Surface, group: Group):
+    def __init__(th, color, target_color, damage, pos, target, count, image, group):
         super().__init__(image, group, form="line", pos=pos, radius=1.5)
         th.color = color
         th.target_color = target_color
@@ -822,7 +824,7 @@ class Line(Base):
                 th.color = th.target_color
 
 class LineBullet(Base):
-    def __init__(th, damage: int, pos: tuple, image: pg.Surface, target_image: pg.Surface, group: Group):
+    def __init__(th, damage, pos, image, target_image, group):
         super().__init__(image, group, form="line", pos=pos, mask=True)
         th.damage = damage
         th.target_image = target_image
@@ -835,15 +837,14 @@ class LineBullet(Base):
         elif th.timer >= 45 and th.image != th.target_image:
             th.image = th.target_image
 
-
-def reset(thorough: bool=True):
+def reset(thorough=True):
     one.__init__()
     if thorough:
         two.__init__()
         log.__init__()
     major.__init__(one.bullet_group, one.particle_group, one.plane_group)
 
-def situation(clock: pg.Clock):
+def situation(clock):
     color = color_dict[6]
     text = (
         f"{two.score:9d}",
@@ -938,15 +939,15 @@ def check_menu():
     except:
         one.is_check = False
 
-def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0, 30, 60), shortly: bool=False):
+def full_menu(title, texts, keys, other, interval=(0, 30, 60), shortly=False):
     color = color_dict[6]
     group = (
         (
             (font.render(title, False, color), (8, 10)),
             (font.render(other, False, color), (8, 305))
         ),
-        tuple((font.render(text[i], False, color), (8, 60 + 25 * i)) for i in range(len(text))),
-        tuple((font.render(key[i], False, color), (275, 270 - 50 * i)) for i in range(len(key)))
+        tuple((font.render(texts[i], False, color), (8, 60 + 25 * i)) for i in range(len(texts))),
+        tuple((font.render(keys[i], False, color), (275, 270 - 50 * i)) for i in range(len(keys)))
     )
     if one.pop_timer == interval[0]:
         picture[0].fill(color_dict[8])
@@ -957,12 +958,12 @@ def full_menu(title: str, text: list, key: list, other: str, interval: tuple=(0,
     if one.pop_timer < interval[2] + 1:
         one.pop_timer += 1
 
-def half_menu(title: str, text: list, interval: tuple=(0, 30, 60), shortly: bool=False):
+def half_menu(title, texts, interval=(0, 30, 60), shortly=False):
     color = color_dict[6]
     group = (
         ((font.render(title, False, color), (8, 10)),),
-        ((font.render(text[0], False, color), (8, 60)),),
-        ((font.render(text[1], False, color), (8, 85)),)
+        ((font.render(texts[0], False, color), (8, 60)),),
+        ((font.render(texts[1], False, color), (8, 85)),)
     )
 
     if one.pop_timer == interval[0]:
@@ -987,7 +988,7 @@ def level_logic():
         one.is_save = False
         reset(False)
         major.power = power
-        two.stage, two.level = follow_stage((two.stage, two.level), 6)
+        two.stage, two.level = carry(two.stage, two.level, 1, 6)
         two.unflash += 1
 
 def item_collide():
@@ -1097,7 +1098,7 @@ def key_event():
                 one.pop_timer = 0
                 sound_cache["pick"].play()
 
-def display(clock: pg.Clock, version: str, title: str):
+def display(clock, version, title):
     if two.is_run:
         screen.blit(picture[two.stage], (120, 15))
         one.bullet_group.draw(screen)
@@ -1122,7 +1123,7 @@ def display(clock: pg.Clock, version: str, title: str):
     screen.blit(picture[5])
     situation(clock)
 
-def update(clock: pg.Clock, args: tuple, version: str, title: str):
+def update(clock, args, version, title):
     two.stage = clamp(args[0], 1, 4)
     two.level = clamp(args[1], 1, 6)
     two.flash = clamp(args[2], 1, 96)
@@ -1175,7 +1176,6 @@ def update(clock: pg.Clock, args: tuple, version: str, title: str):
         alpha, timer = fade_surface(alpha, timer, one.is_exit, black_surface, screen)
         pg.display.flip()
         clock.tick(60)
-
 
 one = One()
 two = Two()

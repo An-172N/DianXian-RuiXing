@@ -7,11 +7,7 @@ import os
 import pygame
 
 
-def vector(
-    current: tuple[float, float],
-    target: tuple[float, float],
-    step: int,
-) -> tuple[tuple[float, float], tuple[float, float]]:
+def vector(current, target, step):
     cx, cy = current
     tx, ty = target
     dx, dy = tx - cx, ty - cy
@@ -27,21 +23,13 @@ def vector(
         return (tx, ty), (dx, dy)
     return (cx + dx * step, cy + dy * step), (dx, dy)
 
-def approximate(
-    value: float,
-    limit: int = 180,
-    step: int = 15
-) -> int:
+def approximate(value, limit=180, step=15):
     if (rounded := round((value % limit) / step) * step) == limit:
         return 0
     else:
         return int(rounded)
 
-def clamp(
-    value: float,
-    minimum: float,
-    maximum: float
-) -> float:
+def clamp(value, minimum, maximum):
     if value > maximum:
         return maximum
     elif value < minimum:
@@ -49,91 +37,59 @@ def clamp(
     else:
         return value
 
-def bearing(
-    x: float,
-    y: float
-) -> float:
+def bearing(x, y):
     return math.degrees(math.atan2(x, y)) % 360
 
-def record_file(
-    folder: str,
-    file: str,
-    content: str,
-) -> None:
+def record_file(folder, file, content, encode='utf-8'):
     if not os.path.exists(folder):
         os.makedirs(folder)
 
-    with open(f'{folder}/{file}', 'w', encoding='utf-8') as f:
+    with open(f'{folder}/{file}', 'w', encoding=encode) as f:
         return f.write(content)
 
-def get_texts(
-    folder: str,
-) -> list[str]:
+def get_files(folder, extension='.txt', reverse=True):
     files = []
     try:
+        folder = "".join(folder)
         for file in os.listdir(folder):
             path = os.path.join(folder, file)
-            if file.endswith('.txt') and os.path.isfile(path):
+            if file.endswith(extension) and os.path.isfile(path):
                 time = os.path.getmtime(path)
                 files.append((time, path))
-        files.sort(key=lambda x: x[0], reverse=True)
+        files.sort(key=lambda x: x[0], reverse=reverse)
 
         return [path for _, path in files]
     except:
         return files
 
-def animate_pop(
-    surface: pygame.Surface,
-    group: tuple[tuple[pygame.Surface, tuple[int, int]], ...],
-    timer: int,
-    interval: tuple[int, ...],
-    shortly: bool
-) -> pygame.Surface:
+def animate_pop(surface, image_pos_pairs, timer, interval, shortly):
     if shortly:
         surface.fill((0, 0, 0, 0))
-        for i in range(len(group)):
-            for j in group[i]:
+        for i in range(len(image_pos_pairs)):
+            for j in image_pos_pairs[i]:
                 surface.blit(j[0], j[1])
     else:
-        for i in range(len(group)):
+        for i in range(len(image_pos_pairs)):
             if timer == interval[i]:
-                for j in group[i]:
+                for j in image_pos_pairs[i]:
                     surface.blit(j[0], j[1])
 
     return surface
 
-def draw_rectangle(
-    size: tuple[float, float],
-    border: int,
-    color: tuple[int, int, int],
-) -> pygame.Surface:
+def draw_rectangle(size, border, color):
     return (
         surface := pygame.Surface(size, pygame.SRCALPHA).convert_alpha(),
         pygame.draw.rect(surface, color, surface.get_rect(), border)
     )[0]
 
-def draw_circle(
-    xy_size: tuple[float, float, float, float],
-    border: int,
-    color: tuple[int, int, int]
-) -> pygame.Surface:
+def draw_circle(xy_size, border, color):
     return (
         surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA).convert_alpha(),
         pygame.draw.ellipse(surface, color, xy_size, border)
     )[0]
 
 class Base(pygame.sprite.Sprite):
-    def __init__(th,
-        original_image: pygame.Surface,
-        group: pygame.sprite.Group = None,
-        turn_image: pygame.Surface = None,
-        form: int | str = None,
-        angle: float = 0,
-        pos: tuple[int, int] = (0, 0),
-        mask: bool = False,
-        radius: float = None,
-        rotate: bool = False
-    ) -> None:
+    def __init__(th,original_image, group=None, turn_image=None, form=None, angle=0, pos=(0, 0), mask=False, radius=None, rotate=False):
         super().__init__(group) if group is not None else super().__init__()
         th.original_image = original_image
         th.turn_image = turn_image
@@ -151,31 +107,24 @@ class Base(pygame.sprite.Sprite):
         th._x, th._y = pos
 
     @property
-    def x(th) -> float:
+    def x(th):
         return th._x
 
     @x.setter
-    def x(th,
-        value: float
-    ) -> None:
+    def x(th, value):
         th._x = value
         th.rect.centerx = th._x
 
     @property
-    def y(th) -> float:
+    def y(th):
         return th._y
 
     @y.setter
-    def y(th,
-        value: float
-    ) -> None:
+    def y(th, value):
         th._y = value
         th.rect.centery = th._y
 
-    def swivel(th,
-        flip: bool,
-        turn: bool
-    ) -> None:
+    def swivel(th, flip, turn):
         if flip:
             th.image = th.turn_image_flipped
         elif turn:
@@ -184,13 +133,8 @@ class Base(pygame.sprite.Sprite):
             th.image = th.original_image
 
 class Invinc:
-    def __init__(th,
-        end: int,
-        blink_interval: int,
-        func: object = lambda: None,
-        *func_args: object
-    ) -> None:
-        th.end = end
+    def __init__(th, end_time, blink_interval, func=lambda: None, *func_args):
+        th.end = end_time
         th.blink_interval = blink_interval
         th.func = func
         th.func_args = func_args
@@ -198,7 +142,7 @@ class Invinc:
         th.visitable = True
         th.timer = 0
 
-    def update(th) -> None:
+    def update(th):
         if th.condition:
             th.timer += 1
             if th.timer >= th.end:
@@ -209,21 +153,14 @@ class Invinc:
             else:
                 th.visitable = (th.timer // th.blink_interval) % 2 == 1
 
-def use_bomb(
-    condition: bool,
-    power: int,
-    critical: int
-) -> tuple[bool, int]:
+def one_shot(condition, power, critical):
     if not condition and power >= critical:
         condition = True
         power -= critical
 
     return condition, power
 
-def collide_sprite(
-    sprite1: pygame.sprite.Sprite,
-    sprite2: pygame.sprite.Sprite
-) -> tuple[int, int] | bool | None:
+def collide_sprite(sprite1, sprite2):
     if hasattr(sprite1, 'mask') and hasattr(sprite2, 'mask'):
         return pygame.sprite.collide_mask(sprite1, sprite2)
     elif hasattr(sprite1, 'radius') and hasattr(sprite2, 'radius'):
@@ -231,24 +168,14 @@ def collide_sprite(
     else:
         return pygame.sprite.collide_rect(sprite1, sprite2)
 
-def process_lines(
-    file: bytes,
-    func: object,
-    *args: object,
-) -> list[object]:
-    lines = file.decode('ascii').splitlines()
+def process_lines(content, func, *args):
+    return [func(row, line, *args) for row, line in enumerate("".join(content).splitlines())]
 
-    return [func(row, line, *args) for row, line in enumerate(lines)]
-
-def follow_stage(
-    numbers: tuple[int, int],
-    end: int,
-) -> tuple[int, int]:
-    stage, level = numbers
-    if level >= end:
-        stage += 1
-        level = 1
+def carry(former, latter, start, final):
+    if latter >= final:
+        former += 1
+        latter = start
     else:
-        level += 1
+        latter += 1
 
-    return stage, level
+    return former, latter
