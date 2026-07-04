@@ -5,7 +5,6 @@ import sys
 import argparse
 import random
 
-
 def main():
     project = '点线 Project'
     title = '锐行 ~ Thunder Out of the Mountain'
@@ -34,7 +33,6 @@ def main():
 
     print(f"{project} | {title} | Ver {version} | By {author}")
     KERNEL.update(clock, args_tuple, version, title)
-
 
 if __name__ == "__main__":
     main()

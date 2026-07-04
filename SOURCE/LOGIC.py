@@ -6,7 +6,6 @@ import os
 
 import pygame
 
-
 def vector(current, target, step):
     cx, cy = current
     tx, ty = target
@@ -76,6 +75,17 @@ def animate_pop(surface, image_pos_pairs, timer, interval, shortly):
 
     return surface
 
+def blit_text(text, font, color, fixed_char_width):
+    height = font.get_height()
+    width = len(text) * fixed_char_width
+    surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    for i, char in enumerate(text):
+        char_surface = font.render(char, False, color)
+        x_offset = 0
+        surface.blit(char_surface, (i * fixed_char_width + x_offset, 0))
+
+    return surface
+
 def draw_rectangle(size, border, color):
     return (
         surface := pygame.Surface(size, pygame.SRCALPHA).convert_alpha(),
@@ -89,7 +99,7 @@ def draw_circle(xy_size, border, color):
     )[0]
 
 class Base(pygame.sprite.Sprite):
-    def __init__(th,original_image, group=None, turn_image=None, form=None, angle=0, pos=(0, 0), mask=False, radius=None, rotate=False):
+    def __init__(th, original_image, group=None, turn_image=None, form=None, angle=0, pos=(0, 0), mask=False, radius=None, rotate=False):
         super().__init__(group) if group is not None else super().__init__()
         th.original_image = original_image
         th.turn_image = turn_image

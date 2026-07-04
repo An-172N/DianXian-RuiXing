@@ -539,7 +539,7 @@ def load_file(file):
 
 def spawn_barrage(group, power, type, spawn_pos, locate):
     index = two.stage - 1
-    if uniform(0, 1) <= difficulty[index] + power / 1000:
+    if uniform(0, 1) <= rank[index] + power / 1000:
         (
             lambda: circle_barrage(type, spawn_pos, locate, group),
             lambda: polygon_barrage(type, spawn_pos, locate, group),
@@ -622,7 +622,6 @@ def save_file(name, score, total_point, flashed, flash, numbers):
 
 def calculate_item_rate(number, condition):
     return f"{(number / (153 if condition else 61) * 100):.2f} %"
-
 
 def line_brick(group, pos):
     rands = 48, 96, 160
@@ -720,7 +719,6 @@ def spawn_particles(group, size, pos, speeds, color1, color2=None):
         image = particle_cache[(size, color)]
         Barrage(effective, speed, i, pos, image, group)
 
-
 class Barrage(Base):
     def __init__(th, effective, speed, angle, pos, image, group, radius=0, form=None, rotate=False):
         super().__init__(image, group, None, form, angle, pos, radius=radius, rotate=rotate)
@@ -749,10 +747,6 @@ class Bullet(Base):
         rad = radians(th.angle)
         sin_, cos_ = sin(rad), cos(rad)
         th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
-        if hasattr(th, "type") and th.type == "char":
-            th.speed -= 0.1
-            if th.speed < -4:
-                th.speed = -4
         if not th.effective.collidepoint(th.rect.center):
             th.kill()
 
@@ -860,7 +854,7 @@ def situation(clock):
         (text[3], (39, 295)),
         (text[4], (39, 320)),
     ):
-        screen.blit(font.render(f"{info[0]}", False, color), info[1])
+        screen.blit(blit_text(info[0], font, color, 8), info[1])
 
 def pause_menu():
     shortly = False
