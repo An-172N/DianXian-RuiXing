@@ -46,7 +46,7 @@ def record_file(folder, file, content, encode='utf-8'):
     with open(f'{folder}/{file}', 'w', encoding=encode) as f:
         return f.write(content)
 
-def get_files(folder, extension='.txt', reverse=True):
+def get_files(folder, extension='.dx00', reverse=True):
     files = []
     try:
         folder = "".join(folder)

@@ -58,7 +58,7 @@ class Log:
     def __init__(th):
         th.name = ''
         th.log = None
-        th.files = get_files(f'{os.environ["USERPROFILE"]}/Saved Games/DX00')
+        th.files = get_files(f'{os.path.expanduser("~")}/Saved Games/DX00')
         th.index = 0
         th.total_files = len(th.files)
 
@@ -618,7 +618,7 @@ def save_file(name, score, total_point, flashed, flash, numbers):
     time = (datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H-%M-%S'))
     rate = calculate_item_rate(total_point, stage <= 3)
     content = f"{name},{score},{f'{get_stage(stage)} - {level}'},{rate},{flashed},{time[0]},{flash}"
-    record_file(f'{os.environ["USERPROFILE"]}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.txt', content)
+    record_file(f'{os.path.expanduser("~")}/Saved Games/DX00', f'{name}_{time[0]}_{time[1]}.dx00', content)
 
 def calculate_item_rate(number, condition):
     return f"{(number / (153 if condition else 61) * 100):.2f} %"
