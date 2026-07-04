@@ -40,14 +40,14 @@
   - 在对话中按 Z 下一则对话
     - 也可以按 X 跳过
   - 按 Esc 休息一下
-  - 角色操控看[主主角](#主主角)吧
+  - 主主角操控看[主主角](#主主角)吧
 - ### 休息ing
   - 按 Esc 休息完了
   - 不想爬就按 Del 吧 *（按完就返回主界面了*
 - ### 存日志
   - 按 Esc 不存
-  - 按 Enter 存 *（存在 User/Saved Games/DX00 里*
-  - 可以存致谢人的名称 *（其实就是玩家，最多 8 个字符*
+  - 按 Enter 存 *（存在 用户根目录/Saved Games/DX00 里*
+  - 可以存致谢人的名称 *（最多 8 个字符*
 - ### 看日志
   - 按 Esc 合上
   - 按 Del 扔掉
@@ -139,7 +139,7 @@
   - 程序代码遵循 [GNU GPLv3.0](./LICENSE) 协议
   - CHAR.txt 保留所有权利，且禁止用于 AI 训练 *（认真的*
 - ### 本项目使用以下第三方资源
-  - 编程语言：[Python](https://www.python.org) *（需要安装哦*
+  - 编程语言：[Python](https://www.python.org) *（可能需要安装哦*
     - 推荐 3.10 - π
   - 游戏库：[Pygame-CE](https://github.com/pygame-community/pygame-ce) *（这个也是*
     - 可以在命令提示符输入 pip install pygame-ce 回车
