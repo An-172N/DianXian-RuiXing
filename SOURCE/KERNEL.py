@@ -854,7 +854,7 @@ def situation(clock):
         (text[3], (39, 295)),
         (text[4], (39, 320)),
     ):
-        screen.blit(blit_text(info[0], font, color, 8), info[1])
+        screen.blit(font.render(info[0], False, color), info[1])
 
 def pause_menu():
     shortly = False

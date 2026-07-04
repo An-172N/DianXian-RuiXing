@@ -75,17 +75,6 @@ def animate_pop(surface, image_pos_pairs, timer, interval, shortly):
 
     return surface
 
-def blit_text(text, font, color, fixed_char_width):
-    height = font.get_height()
-    width = len(text) * fixed_char_width
-    surface = pygame.Surface((width, height), pygame.SRCALPHA)
-    for i, char in enumerate(text):
-        char_surface = font.render(char, False, color)
-        x_offset = 0
-        surface.blit(char_surface, (i * fixed_char_width + x_offset, 0))
-
-    return surface
-
 def draw_rectangle(size, border, color):
     return (
         surface := pygame.Surface(size, pygame.SRCALPHA).convert_alpha(),

@@ -39,7 +39,7 @@ get_logs = lambda date, score, stage, rate, flashed, flash: (
     f"拾形点率为 {rate}",
     f"使用了 {flashed} 次形闪{'（躺' if flash == 0 else ''}"
 )
-font = pg.font.SysFont("notosanssc", 15)
+font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
 screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED, vsync=1)
 rank = (0.22, 0.25, 0.3, 0.38)
 pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))

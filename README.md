@@ -143,8 +143,11 @@
     - 推荐 3.10 - π
   - 游戏库：[Pygame-CE](https://github.com/pygame-community/pygame-ce) *（这个也是*
     - 可以在命令提示符输入 pip install pygame-ce 回车
-  - 字体：[Noto Sans SC](https://github.com/notofonts/noto-cjk) *（字体不对劲就需要安装哦，不是 Noto Sans CJK SC*
-    - Regular 类型最适合了
+  - 字体：[GNU Unifont](https://www.unifoundry.com/unifont) *（子集化后的，我称它为 Uni3500*
+    - 子集化用到的
+      - 工具：[字体子集化](http://font.ssjjss.com/font-subset)、[Fonttools](https://github.com/fonttools/fonttools)
+      - 仓库：[常用汉字集](https://gitee.com/feng_xingkai/chinese)
+    - 遵循 [SIL OFL 1.1](https://www.unifoundry.com/OFL-1.1.txt) 协议
   - 音频
     - 制作：[PMD](http://www5.airnet.ne.jp/kajapon/tool.html) *（喜欢 YM2203*
     - 处理：[WaveShop](https://github.com/victimofleisure/WaveShop)
