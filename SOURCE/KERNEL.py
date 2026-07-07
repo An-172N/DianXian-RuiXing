@@ -560,9 +560,9 @@ def sprite_loader():
     stage, level = two.stage, two.level
     if level == 6:
         one.char = choose_human()
-        one.text = json.loads(asset(rf"ASSET\JSON\{stage}.json").decode('utf-8'))
+        one.text = json.loads(asset(f"ASSET/JSON/{stage}.json").decode('utf-8'))
     else:
-        process_lines(asset(rf"ASSET\STAGE\{stage}-{level}.stg").decode('ascii'), load_brick, color_dict[stage], 4, (127, 22), (15, 15))
+        process_lines(asset(f"ASSET/STAGE/{stage}-{level}.stg").decode('ascii'), load_brick, color_dict[stage], 4, (127, 22), (15, 15))
         choose_brick(one.brick_ready, (stage, level), 4, 1)
 
 def choose_human():

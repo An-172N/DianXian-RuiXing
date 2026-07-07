@@ -39,29 +39,29 @@ get_logs = lambda date, score, stage, rate, flashed, flash: (
     f"拾形点率为 {rate}",
     f"使用了 {flashed} 次形闪{'（躺' if flash == 0 else ''}"
 )
-font = pg.font.Font(BytesIO(asset(r'ASSET\FONT\UNI3500.otf')), 15)
+font = pg.font.Font(BytesIO(asset('ASSET/FONT/UNI3500.otf')), 15)
 screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED, vsync=1)
 rank = (0.22, 0.25, 0.3, 0.38)
-pg.display.set_icon(pg.image.load(BytesIO(asset(r'ASSET\IMAGE\ICON.png'))))
+pg.display.set_icon(pg.image.load(BytesIO(asset('ASSET/IMAGE/ICON.png'))))
 
 sound_cache = {
-    'pick': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\PICK.flac'))),
-    'fire': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\FIRE.flac'))),
-    'charge': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\CHARGE.flac'))),
-    'tick': pg.mixer.Sound(BytesIO(asset(rf'ASSET\FLAC\TICK.flac')))
+    'pick': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/PICK.flac'))),
+    'fire': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/FIRE.flac'))),
+    'charge': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/CHARGE.flac'))),
+    'tick': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/TICK.flac')))
 }
 
-char_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\CHAR.png'))).convert_alpha()
-basic_image = pg.image.load(BytesIO(asset(r'ASSET\IMAGE\BASIC.png'))).convert_alpha()
+char_image = pg.image.load(BytesIO(asset('ASSET/IMAGE/CHAR.png'))).convert_alpha()
+basic_image = pg.image.load(BytesIO(asset('ASSET/IMAGE/BASIC.png'))).convert_alpha()
 blue_rect = draw_rectangle((15, 15), 0, color_dict[5]).convert()
 white_rect = draw_rectangle((12, 12), 0, color_dict[6]).convert()
 picture = (
     pg.Surface((345, 330)).convert(),
-    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE1BG.png'))).convert(),
-    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE2BG.png'))).convert(),
-    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE3BG.png'))).convert(),
-    pg.image.load(BytesIO(asset(rf'ASSET\IMAGE\STAGE4BG.png'))).convert(),
-    pg.image.load(BytesIO(asset(r'ASSET\IMAGE\GAMEBG.png'))).convert_alpha(),
+    pg.image.load(BytesIO(asset('ASSET/IMAGE/STAGE1BG.png'))).convert(),
+    pg.image.load(BytesIO(asset('ASSET/IMAGE/STAGE2BG.png'))).convert(),
+    pg.image.load(BytesIO(asset('ASSET/IMAGE/STAGE3BG.png'))).convert(),
+    pg.image.load(BytesIO(asset('ASSET/IMAGE/STAGE4BG.png'))).convert(),
+    pg.image.load(BytesIO(asset('ASSET/IMAGE/GAMEBG.png'))).convert_alpha(),
 )
 
 barrage_cache = {
