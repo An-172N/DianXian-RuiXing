@@ -22,11 +22,12 @@ def vector(current, target, step):
         return (tx, ty), (dx, dy)
     return (cx + dx * step, cy + dy * step), (dx, dy)
 
-def approximate(value, limit=180, step=15):
-    if (rounded := round((value % limit) / step) * step) == limit:
-        return 0
-    else:
-        return int(rounded)
+def coordinate(position, angle, length):
+    radians = math.radians(angle)
+    x = position[0] + length * math.cos(radians)
+    y = position[1] + length * math.sin(radians)
+
+    return x, y
 
 def clamp(value, minimum, maximum):
     if value > maximum:
@@ -88,7 +89,7 @@ def draw_circle(xy_size, border, color):
     )[0]
 
 class Base(pygame.sprite.Sprite):
-    def __init__(th, original_image, group=None, turn_image=None, form=None, angle=0, pos=(0, 0), mask=False, radius=None, rotate=False):
+    def __init__(th, original_image, group=None, turn_image=None, form=None, angle=0, pos=(0, 0), radius=None, rotate=False):
         super().__init__(group) if group is not None else super().__init__()
         th.original_image = original_image
         th.turn_image = turn_image
@@ -99,8 +100,6 @@ class Base(pygame.sprite.Sprite):
         th.angle = angle
         if radius:
             th.radius = radius
-        if mask:
-            th.mask = pygame.mask.from_surface(th.image)
         if form is not None:
             th.type = form
         th._x, th._y = pos
@@ -160,8 +159,8 @@ def one_shot(condition, power, critical):
     return condition, power
 
 def collide_sprite(sprite1, sprite2):
-    if hasattr(sprite1, 'mask') and hasattr(sprite2, 'mask'):
-        return pygame.sprite.collide_mask(sprite1, sprite2)
+    if hasattr(sprite1, "start_pos"):
+        return sprite2.rect.clipline(*sprite1.start_pos, *sprite1.end_pos)
     elif hasattr(sprite1, 'radius') and hasattr(sprite2, 'radius'):
         return pygame.sprite.collide_circle(sprite1, sprite2)
     else:

@@ -11,7 +11,7 @@ def main():
     version = '1.2.1'
     author = 'An_172N'
     sys.dont_write_bytecode = True
-    for module in ('numpy', 'timidity', 'pygame.examples'):
+    for module in ('numpy', 'timidity'):
         sys.modules[module] = None
     parser = argparse.ArgumentParser()
     for i, j in (('-s', 1), ('-l', 1), ('-f', 3), ('-p', 0), ('-sd', None)):

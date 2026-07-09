@@ -44,7 +44,6 @@ class One:
 class Two:
     def __init__(th):
         th.is_run = False
-        th.power = 0
         th.flash = 3
         th.unflash = 1
         th.score = 0
@@ -191,7 +190,7 @@ class Hro(Basic):
             for i in range(-30, 31, 30):
                 delta = th.locate[0] - pos[0], th.locate[1] - pos[1]
                 angle = bearing(-delta[0], -delta[1]) + i
-                Barrage(effective, 4, angle, pos, th.bullet_image, th.barrage_group, 2, rotate=True)
+                Barrage(effective, 4, angle, pos, th.bullet_image, th.barrage_group, 2, True)
             th.bullets += 1
             sound_cache["fire"].play(maxtime=(98 if th.bullets < 3 else 0))
 
@@ -205,7 +204,7 @@ class Hro(Basic):
                 current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
                 for j in range(45, 136, 90):
                     angle = bearing(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
-                    Barrage(effective, 4, angle, current_pos, th.bullet_image, th.barrage_group, 2, rotate=True)
+                    Barrage(effective, 4, angle, current_pos, th.bullet_image, th.barrage_group, 2, True)
             th.bullets += 1
             if th.bullets % 3 == 0:
                 sound_cache["fire"].play(maxtime=(48 if th.bullets < 18 else 0))
@@ -219,7 +218,7 @@ class Hro(Basic):
                         pos = j, 60
                         delta = th.locate[0] - pos[0], (th.locate[1] - 160) - pos[1]
                         angle = bearing(-delta[0], -delta[1]) + k * 90
-                        Barrage(effective, speed, angle, pos, th.bullet_image, th.barrage_group, 2, rotate=True)
+                        Barrage(effective, speed, angle, pos, th.bullet_image, th.barrage_group, 2, True)
                 speed -= 0.6
             sound_cache["fire"].play()
 
@@ -624,16 +623,12 @@ def calculate_item_rate(number, condition):
     return f"{(number / (153 if condition else 61) * 100):.2f} %"
 
 def line_brick(group, pos):
-    rands = 48, 96, 160
-    color1, color2 = color_dict[5], color_dict[9]
-    basic_list = [(approximate(randint(0, 360)), choice(rands)) for _ in range(12)]
-    filtered_dict = {}
-    for a, b in basic_list:
-        if a not in filtered_dict or b > filtered_dict[a][1]:
-            filtered_dict[a] = (a, b)
-    for angle, length in filtered_dict.values():
-        image, target_image = [line_cache[(length, angle, i)] for i in (color1, color2)]
-        LineBullet(4, pos, image, target_image, group)
+    for _ in range(12):
+        rands = choice((24, 48, 80))
+        angle = 15 * randint(0, 11)
+        start = coordinate(pos, angle, rands)
+        end = coordinate(pos, angle - 180, rands)
+        LineBullet(4, start, end, color_dict[5], color_dict[9], group)
 
 def circle_brick(group, pos):
     image = bullet_cache["bullet"]
@@ -686,7 +681,7 @@ def polygon_barrage(type, pos, locate, group):
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         delta = i - pos[0], locate[1] - pos[1]
         angle = bearing(-delta[0], -delta[1])
-        Barrage(effective, 3, angle, pos, image, group, 2, rotate=True)
+        Barrage(effective, 3, angle, pos, image, group, 2, True)
 
 def line_barrage(current, target, group):
     color = color_dict[6], color_dict[3]
@@ -697,7 +692,7 @@ def line_barrage(current, target, group):
         if not effective.collidepoint(current):
             break
         if 327 < current[1] < 336 or current == start:
-            Line(color[0], color[1], 0, current, target, count, image, group)
+            Line(color[0], color[1], current, target, count, image, group)
         if math.dist(current, target) < 1e-6:
             break
         current = vector(current, target, 3)[0]
@@ -720,8 +715,8 @@ def spawn_particles(group, size, pos, speeds, color1, color2=None):
         Barrage(effective, speed, i, pos, image, group)
 
 class Barrage(Base):
-    def __init__(th, effective, speed, angle, pos, image, group, radius=0, form=None, rotate=False):
-        super().__init__(image, group, None, form, angle, pos, radius=radius, rotate=rotate)
+    def __init__(th, effective, speed, angle, pos, image, group, radius=0, rotate=False, form=None):
+        super().__init__(image, group, None, form, angle, pos, radius, rotate)
         th.effective = effective
         th.speed = speed
 
@@ -729,7 +724,7 @@ class Barrage(Base):
         rad = radians(th.angle)
         sin_, cos_ = sin(rad), cos(rad)
         th.x, th.y = th.x - (sin_ * th.speed), th.y - (cos_ * th.speed)
-        if hasattr(th, "type") and th.type == "char":
+        if getattr(th, "type", None) == "char":
             th.speed -= 0.1
             if th.speed < -4:
                 th.speed = -4
@@ -772,7 +767,7 @@ class Text(Base):
 
 class Brick(Base):
     def __init__(th, form, hp, color, pos, image):
-        super().__init__(image, form=form, pos=pos, mask=True)
+        super().__init__(image, form=form, pos=pos)
         th.color = color
         th.hp = hp
         th.power = False
@@ -793,21 +788,19 @@ class Item(Base):
             th.kill()
 
 class Line(Base):
-    def __init__(th, color, target_color, damage, pos, target, count, image, group):
-        super().__init__(image, group, form="line", pos=pos, radius=1.5)
+    def __init__(th, color, target_color, pos, target, count, image, group):
+        super().__init__(image, group, pos=pos, radius=1.5)
         th.color = color
         th.target_color = target_color
-        th.pos = pos
+        th.start_pos = pos
         th.count = count
         if not count:
-            th.target = target
-        if damage:
-            th.damage = damage
+            th.target_pos = target
         th.timer = 0
 
     def draw_line(th):
         if not th.count:
-            pg.draw.line(screen, th.color, th.pos, th.target, 3)
+            pg.draw.line(screen, th.color, th.start_pos, th.target_pos, 3)
 
     def update(th):
         th.timer += 1
@@ -818,18 +811,24 @@ class Line(Base):
                 th.color = th.target_color
 
 class LineBullet(Base):
-    def __init__(th, damage, pos, image, target_image, group):
-        super().__init__(image, group, form="line", pos=pos, mask=True)
+    def __init__(th, damage, start, end, color, target_color, group):
+        super().__init__(particle_cache[(2, color_dict[4])], group, pos=(0, 0), form="line")
         th.damage = damage
-        th.target_image = target_image
+        th.color = color
+        th.start_pos = start
+        th.end_pos = end
+        th.target_color = target_color
         th.timer = 0
+
+    def draw_bullet(th):
+        pg.draw.line(screen, th.color, th.start_pos, th.end_pos, 2)
 
     def update(th):
         th.timer += 1
         if th.timer >= 68:
             th.kill()
-        elif th.timer >= 45 and th.image != th.target_image:
-            th.image = th.target_image
+        elif th.timer >= 45 and th.color != th.target_color:
+            th.color = th.target_color
 
 def reset(thorough=True):
     one.__init__()
@@ -842,7 +841,7 @@ def situation(clock):
     color = color_dict[6]
     text = (
         f"{two.score:9d}",
-        f"{int(clock.get_fps()): 9d}",
+        f"{int(clock.get_fps()):9d}",
         f"{major.power:02d}  ,  {major.bullets:02d}",
         f"{two.flash:02d}",
         f"{one.combo:02d}  ,  {one.total_point:02d}"
@@ -912,13 +911,9 @@ def save_menu():
     date = datetime.now().strftime('%Y-%m-%d')
     text = get_logs(date, two.score, f"{get_stage(two.stage)} - {two.level}", rate, two.flashed, two.flash)
     key = "Esc 算了", "Ent 记录"
-    if one.pop_timer == 60:
+    keys = pg.key.get_pressed()
+    if one.pop_timer == 60 or (one.pop_timer >= 60 and any(keys[i] for i in range(len(keys)))):
         shortly = True
-    if one.pop_timer >= 60:
-        keys = pg.key.get_pressed()
-        for i in range(len(keys)):
-            if keys[i]:
-                shortly = True
     full_menu(title, text, key, name, shortly=shortly)
 
 def check_menu():
@@ -993,7 +988,7 @@ def item_collide():
             if item.type == "power":
                 power = major.power
                 major.power = clamp(major.power + 1, 0, 32)
-                if (power < 16 or power < 32) and major.power % 16 == 0:
+                if power < 32 and major.power % 16 == 0:
                     Text(major.rect.midtop, (45, 60), 0.5, "Power UP", color_dict[6], color_dict[5], one.particle_group)
                 else:
                     sound_cache["pick"].play()
@@ -1046,9 +1041,9 @@ def bullet_collide():
                         spawn_barrage(one.barrage_group, major.power, brick.type, rect.center, major.rect.center)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     sound_cache["fire"].play()
-                    if hasattr(brick, "power") and brick.power:
+                    if getattr(brick, "power", None):
                         Item("power", 2.5, rect.center, one.item_group)
-                    if hasattr(brick, "flash") and brick.flash:
+                    if getattr(brick, "flash", None):
                         Item("flash", 2.5, rect.center, one.item_group)
                     brick_blast(one.bullet_group, two.stage, brick.color, rect.center)
                     brick.kill()
@@ -1095,7 +1090,11 @@ def key_event():
 def display(clock, version, title):
     if two.is_run:
         screen.blit(picture[two.stage], (120, 15))
-        one.bullet_group.draw(screen)
+        for barrage in one.bullet_group:
+            if hasattr(barrage, "start_pos"):
+                barrage.draw_bullet()
+            else:
+                screen.blit(barrage.image, barrage.rect)
         if major.visitable() and one.is_level_load:
             one.plane_group.draw(screen)
         one.brick_group.draw(screen)
@@ -1106,33 +1105,32 @@ def display(clock, version, title):
                 line.draw_line()
         else:
             one.barrage_group.draw(screen)
-    if not one.is_exit:
-        if one.is_check: check_menu()
-        elif not two.is_run: start_menu(version, title)
-        elif one.is_pause: pause_menu()
-        elif not one.is_level_load: load_menu()
-        elif one.is_talk: talk_menu()
-        elif one.is_summary: summary_menu()
-        elif one.is_save: save_menu()
+    if one.is_check: check_menu()
+    elif not two.is_run: start_menu(version, title)
+    elif one.is_pause: pause_menu()
+    elif not one.is_level_load: load_menu()
+    elif one.is_talk: talk_menu()
+    elif one.is_summary: summary_menu()
+    elif one.is_save: save_menu()
     screen.blit(picture[5])
     situation(clock)
 
 def update(clock, args, version, title):
     two.stage = clamp(args[0], 1, 4)
     two.level = clamp(args[1], 1, 6)
-    two.flash = clamp(args[2], 1, 96)
+    two.flash = clamp(args[2], 1, 80)
     major.power = clamp(args[3], 0, 32)
     black_surface = pg.Surface((480, 360)).convert()
     alpha = 255
     timer = 0
-    for text_info in (
+    for info in (
         ("分", (9, 25)),
         ("刷", (9, 50)),
         ('形', (9, 270)),
         ('闪', (9, 295)),
         ('连', (9, 320))
     ):
-        picture[5].blit(font.render(f"{text_info[0]}", False, color_dict[6]), text_info[1])
+        picture[5].blit(font.render(info[0], False, color_dict[6]), info[1])
     picture[5].set_clip(window)
     picture[5].fill((0, 0, 0, 0))
     while True:

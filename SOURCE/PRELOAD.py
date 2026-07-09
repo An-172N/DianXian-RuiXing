@@ -40,7 +40,7 @@ get_logs = lambda date, score, stage, rate, flashed, flash: (
     f"使用了 {flashed} 次形闪{'（躺' if flash == 0 else ''}"
 )
 font = pg.font.Font(BytesIO(asset('ASSET/FONT/UNI3500.otf')), 15)
-screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED, vsync=1)
+screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED)
 rank = (0.22, 0.25, 0.3, 0.38)
 pg.display.set_icon(pg.image.load(BytesIO(asset('ASSET/IMAGE/ICON.png'))))
 
@@ -83,13 +83,6 @@ brick_cache = {
 bullet_cache = {
     "bullet": blue_rect.subsurface(0, 0, 2, 15).convert_alpha(),
     "bomb": blue_rect
-}
-
-line_cache = {
-    (length, angle, color): pg.transform.rotate(draw_rectangle((2, length), 0, color), angle)
-    for length in (48, 96, 160)
-    for angle in range(0, 180, 15)
-    for color in (color_dict[5], color_dict[9])
 }
 
 item_cache = {
