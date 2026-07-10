@@ -37,20 +37,22 @@ def clamp(value, minimum, maximum):
     else:
         return value
 
-def bearing(x, y):
-    return math.degrees(math.atan2(x, y)) % 360
+def bearing(point_a, point_b):
+    ax, ay = point_a
+    bx, by = point_b
+
+    return math.degrees(math.atan2(bx - ax, by - ay)) % 360
 
 def record_file(folder, file, content, encode='utf-8'):
     if not os.path.exists(folder):
         os.makedirs(folder)
 
     with open(f'{folder}/{file}', 'w', encoding=encode) as f:
-        return f.write(content)
+        f.write(content)
 
 def get_files(folder, extension='.dx00', reverse=True):
     files = []
     try:
-        folder = "".join(folder)
         for file in os.listdir(folder):
             path = os.path.join(folder, file)
             if file.endswith(extension) and os.path.isfile(path):
@@ -73,8 +75,6 @@ def animate_pop(surface, image_pos_pairs, timer, interval, shortly):
             if timer == interval[i]:
                 for j in image_pos_pairs[i]:
                     surface.blit(j[0], j[1])
-
-    return surface
 
 def draw_rectangle(size, border, color):
     return (
@@ -167,7 +167,7 @@ def collide_sprite(sprite1, sprite2):
         return pygame.sprite.collide_rect(sprite1, sprite2)
 
 def process_lines(content, func, *args):
-    return [func(row, line, *args) for row, line in enumerate("".join(content).splitlines())]
+    return [func(row, line, *args) for row, line in enumerate(content.splitlines())]
 
 def carry(former, latter, start, final):
     if latter >= final:

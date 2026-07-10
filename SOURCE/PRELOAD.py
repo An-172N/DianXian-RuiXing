@@ -51,8 +51,10 @@ sound_cache = {
     'tick': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/TICK.flac')))
 }
 
-char_image = pg.image.load(BytesIO(asset('ASSET/IMAGE/CHAR.png'))).convert_alpha()
-basic_image = pg.image.load(BytesIO(asset('ASSET/IMAGE/BASIC.png'))).convert_alpha()
+char_image = pg.image.load(BytesIO(asset('ASSET/IMAGE/CHAR.png'))).convert()
+char_image.set_colorkey(color_dict[8])
+basic_image = pg.image.load(BytesIO(asset('ASSET/IMAGE/BASIC.png'))).convert()
+basic_image.set_colorkey(color_dict[7])
 blue_rect = draw_rectangle((15, 15), 0, color_dict[5]).convert()
 white_rect = draw_rectangle((12, 12), 0, color_dict[6]).convert()
 picture = (

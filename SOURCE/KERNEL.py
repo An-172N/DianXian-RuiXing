@@ -80,11 +80,10 @@ def combo_counter(timer, count, score, bonus, end):
     return timer, count, score
 
 class Basic(Base):
-    def __init__(th, image, turn_image, hp, color, barrage_group, particle_group, brick_group, bullet_group):
+    def __init__(th, image, turn_image, hp, color, barrage_group, particle_group, brick_group):
         super().__init__(image, brick_group, turn_image, pos=(292, 60))
         th.barrage_group = barrage_group
         th.particle_group = particle_group
-        th.bullet_group = bullet_group
         th.hp = hp
         th.color = color
         th.is_die = False
@@ -98,9 +97,9 @@ class Basic(Base):
         th.target_pos = (292, 60)
 
 class Ono(Basic):
-    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
+    def __init__(th, barrage_group, particle_group, brick_group):
         subsurface = char_image.subsurface
-        group = barrage_group, particle_group, brick_group, bullet_group
+        group = barrage_group, particle_group, brick_group
         super().__init__(subsurface((24, 0, 12, 26)), subsurface((36, 0, 12, 26)), 512, color_dict[1], *group)
         th.bullet_image = barrage_cache[(2, color_dict[6])]
         th.power = True
@@ -120,8 +119,7 @@ class Ono(Basic):
                 for j in range(-30, 31, 30):
                     delay += 20
                     for k in (j - 180, j, 180 - delay):
-                        delta = th.locate[0] - th.x, th.locate[1] - th.y
-                        angle = bearing(-delta[0], -delta[1]) + k
+                        angle = bearing(th.locate, th.rect.center) + k
                         Barrage(effective, speed, angle, (th.x, th.y), th.bullet_image, th.barrage_group, 3)
                 speed -= 0.5
             sound_cache["fire"].play()
@@ -139,9 +137,8 @@ class Ono(Basic):
 
     def final(th):
         if th.bullets < 24:
-            delta = th.locate[0] - th.x, th.locate[1] - th.y
             for i in (2, 1, -1, -2):
-                angle = th.timer * 12 * i + (bearing(-delta[0], -delta[1]) + 180)
+                angle = th.timer * 12 * i + (bearing(th.locate, th.rect.center) + 180)
                 Barrage(effective, 4, angle, th.rect.center, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
             if th.bullets % 3 == 0:
@@ -162,11 +159,10 @@ class Ono(Basic):
             for i in range(0, 360, 30):
                 rad2 = radians(i)
                 pos = th.x + 48 * cos(rad2), th.y + 48 * sin(rad2)
-                delta = th.x - pos[0], th.y - pos[1]
-                angle = bearing(-delta[0], -delta[1])
+                angle = bearing(th.rect.center, pos)
                 Barrage(effective, 3, angle, pos, image, th.particle_group)
             sound_cache["charge"].play()
-            th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+            th.point = Base(particle_cache[(2, color_dict[6])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -176,9 +172,9 @@ class Ono(Basic):
         th.swivel(th.x < delay, th.x > delay)
 
 class Hro(Basic):
-    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
+    def __init__(th, barrage_group, particle_group, brick_group):
         subsurface = char_image.subsurface
-        group = barrage_group, particle_group, brick_group, bullet_group
+        group = barrage_group, particle_group, brick_group
         super().__init__(subsurface((48, 0, 12, 26)), subsurface((60, 0, 12, 26)), 768, color_dict[2], *group)
         th.flash = True
         th.bullet_image = barrage_cache[(0, color_dict[6])]
@@ -188,8 +184,7 @@ class Hro(Basic):
         if th.timer % 6 == 0 and th.bullets < 3:
             pos = th.rect.center
             for i in range(-30, 31, 30):
-                delta = th.locate[0] - pos[0], th.locate[1] - pos[1]
-                angle = bearing(-delta[0], -delta[1]) + i
+                angle = bearing(th.locate, pos) + i
                 Barrage(effective, 4, angle, pos, th.bullet_image, th.barrage_group, 2, True)
             th.bullets += 1
             sound_cache["fire"].play(maxtime=(98 if th.bullets < 3 else 0))
@@ -201,9 +196,9 @@ class Hro(Basic):
                 dx2 = 465 if i else 120
                 start_pos = dx1, 15
                 end_pos = dx2, 345
-                current_pos, delta_vec = vector(start_pos, end_pos, th.bullets * 25)
+                current_pos = vector(start_pos, end_pos, th.bullets * 25)[0]
                 for j in range(45, 136, 90):
-                    angle = bearing(-delta_vec[0], -delta_vec[1]) + j + (th.timer * -6)
+                    angle = bearing(end_pos, start_pos) + j + (th.timer * -6)
                     Barrage(effective, 4, angle, current_pos, th.bullet_image, th.barrage_group, 2, True)
             th.bullets += 1
             if th.bullets % 3 == 0:
@@ -216,8 +211,7 @@ class Hro(Basic):
                 for j in range(152, 468, 35):
                     for k in range(0, 4):
                         pos = j, 60
-                        delta = th.locate[0] - pos[0], (th.locate[1] - 160) - pos[1]
-                        angle = bearing(-delta[0], -delta[1]) + k * 90
+                        angle = bearing((th.locate[0], th.locate[1] -160), pos) + k * 90
                         Barrage(effective, speed, angle, pos, th.bullet_image, th.barrage_group, 2, True)
                 speed -= 0.6
             sound_cache["fire"].play()
@@ -236,32 +230,22 @@ class Hro(Basic):
             for i in range(0, 360, 120 if th.choice == th.fire else 90):
                 rad = radians(i)
                 pos = th.x + 45 * cos(rad), th.y + 45 * sin(rad)
-                delta = th.x - pos[0], th.y - pos[1]
-                angle = bearing(-delta[0], -delta[1])
+                angle = bearing(th.rect.center, pos)
                 Barrage(effective, 3, angle, pos, image, th.particle_group, rotate=True)
             sound_cache["charge"].play()
-            th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+            th.point = Base(particle_cache[(2, color_dict[6])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot and th.timer < 91:
             th.choice()
-        for barrage, hit_bullets in pg.sprite.groupcollide(th.barrage_group, th.bullet_group, True, False).items():
-            for bullet in hit_bullets:
-                if not hasattr(barrage, "is_die"):
-                    barrage.is_die = False
-                if not barrage.is_die:
-                    sound_cache['tick'].play()
-                    if bullet.type == "bullet":
-                        bullet.kill()
-                    barrage.is_die = True
         delay = th.x
         th.x, th.y = vector((th.x, th.y), th.target_pos, 5)[0]
         th.swivel(th.x < delay, th.x > delay)
 
 class Nre(Basic):
-    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
+    def __init__(th, barrage_group, particle_group, brick_group):
         subsurface = char_image.subsurface
-        group = barrage_group, particle_group, brick_group, bullet_group
+        group = barrage_group, particle_group, brick_group
         super().__init__(subsurface((72, 0, 12, 26)), subsurface((84, 0, 12, 26)), 1024, color_dict[3], *group)
         th.power = True
         th.sd = th.fire, th.free, th.fire, th.extend, th.fire, th.final, th.fire, th.last, th.extend, th.final, th.last
@@ -333,11 +317,10 @@ class Nre(Basic):
             image = particle_cache[(9, color_dict[6])]
             for _ in range(8):
                 pos = randint(th.x - 48, th.x + 48), th.y
-                delta = th.x - pos[0], th.y - pos[1]
-                angle = bearing(-delta[0], -delta[1])
+                angle = bearing(th.rect.center, pos)
                 Barrage(effective, 3, angle, pos, image, th.particle_group)
             sound_cache["charge"].play()
-            th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+            th.point = Base(particle_cache[(2, color_dict[6])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -347,9 +330,9 @@ class Nre(Basic):
         th.swivel(th.x < delay, th.x > delay)
 
 class Qdi(Basic):
-    def __init__(th, barrage_group, particle_group, brick_group, bullet_group):
+    def __init__(th, barrage_group, particle_group, brick_group):
         subsurface = char_image.subsurface
-        group = barrage_group, particle_group, brick_group, bullet_group
+        group = barrage_group, particle_group, brick_group
         super().__init__(subsurface((96, 0, 12, 26)), subsurface((108, 0, 12, 26)), 128, color_dict[4], *group)
         th.bullet_image = barrage_cache[(2, color_dict[6])]
         th.power = True
@@ -357,8 +340,7 @@ class Qdi(Basic):
     def fire(th):
         if th.bullets < 6 and th.timer % 2 == 0:
             pos = randint(120, 465), randint(15, 230)
-            delta = th.locate[0] - pos[0], th.locate[1] - pos[1]
-            angle = bearing(-delta[0], -delta[1])
+            angle = bearing(th.locate, pos)
             Barrage(effective, 3.5, angle, pos, th.bullet_image, th.barrage_group, 3)
             th.bullets += 1
             if th.bullets % 2 == 0:
@@ -396,8 +378,7 @@ class Qdi(Basic):
         if th.timer == 0:
             bullets = choice((20, 24, 30, 40))
             pos = th.rect.center
-            delta = th.locate[0] - pos[0], th.locate[1] - pos[1]
-            angle = int(bearing(-delta[0], -delta[1]))
+            angle = int(bearing(th.locate, pos))
             end = randint(0 + angle, 360 + angle)
             for i in range(0 + angle, 360 + angle, 360 // bullets):
                 fast_speed, slow_speed = uniform(6.0, 7.0), uniform(3.0, 4.0)
@@ -444,11 +425,10 @@ class Qdi(Basic):
             image = barrage_cache[(2, color_dict[6])]
             for _ in range(12):
                 pos = randint(th.x - 48, th.x + 48), randint(th.y - 64, th.y + 64)
-                delta = th.x - pos[0], th.y - pos[1]
-                angle = bearing(-delta[0], -delta[1])
+                angle = bearing(th.rect.center, pos)
                 Barrage(effective, 3, angle, pos, image, th.particle_group)
             sound_cache["charge"].play()
-            th.point = Base(particle_cache[(2, color_dict[1])], pos=(th.x, th.y))
+            th.point = Base(particle_cache[(2, color_dict[6])], pos=(th.x, th.y))
         if th.point:
             pg.sprite.spritecollide(th.point, th.particle_group, True)
         if th.can_shoot:
@@ -570,7 +550,7 @@ def choose_human():
         Hro,
         Nre,
         Qdi
-    )[two.stage - 1](one.barrage_group, one.particle_group, one.brick_group, one.bullet_group)
+    )[two.stage - 1](one.barrage_group, one.particle_group, one.brick_group)
 
 def pop_bricks(remaining_brick, brick_ready, wait_load_timer, brick_group):
     if wait_load_timer >= 30 and wait_load_timer % 30 == 0:
@@ -600,10 +580,10 @@ def fade_surface(alpha, timer, is_exit, surface, screen):
         timer -= 1
         surface.set_alpha(alpha)
         screen.blit(surface)
-        if timer <= -30:
+        if timer < -30:
             sys.exit()
     elif alpha > 0 and not is_exit:
-        if timer % 30 == 0 and alpha > 0:
+        if timer % 30 == 0:
             alpha -= 85
         timer += 1
         surface.set_alpha(alpha)
@@ -626,8 +606,7 @@ def line_brick(group, pos):
     for _ in range(12):
         rands = choice((24, 48, 80))
         angle = 15 * randint(0, 11)
-        start = coordinate(pos, angle, rands)
-        end = coordinate(pos, angle - 180, rands)
+        start, end = coordinate(pos, angle, rands), coordinate(pos, angle - 180, rands)
         LineBullet(4, start, end, color_dict[5], color_dict[9], group)
 
 def circle_brick(group, pos):
@@ -671,16 +650,14 @@ def choose_brick(group, numbers, power, flash):
         group[i].color = color_dict[6]
 
 def circle_barrage(type, pos, locate, group):
-    delta = locate[0] - pos[0], locate[1] - pos[1]
-    angle = bearing(-delta[0], -delta[1])
+    angle = bearing(locate, pos)
     image = barrage_cache[(type, color_dict[6])]
     Barrage(effective, 3, angle, pos, image, group, 3)
 
 def polygon_barrage(type, pos, locate, group):
     image = barrage_cache[(type, color_dict[6])]
     for i in range(locate[0] - 32, locate[0] + 33, 64):
-        delta = i - pos[0], locate[1] - pos[1]
-        angle = bearing(-delta[0], -delta[1])
+        angle = bearing((i, locate[1]), pos)
         Barrage(effective, 3, angle, pos, image, group, 2, True)
 
 def line_barrage(current, target, group):
@@ -702,8 +679,7 @@ def point_barrage(type, locate, group):
     image = barrage_cache[(type, color_dict[6])]
     for _ in range(3):
         pos = randint(120, 465), randint(15, 225)
-        delta = locate[0] - pos[0], locate[1] - pos[1]
-        angle = bearing(-delta[0], -delta[1])
+        angle = bearing(locate, pos)
         Barrage(effective, 4, angle, pos, image, group, 3)
 
 def spawn_particles(group, size, pos, speeds, color1, color2=None):
@@ -806,9 +782,8 @@ class Line(Base):
         th.timer += 1
         if th.timer >= 68:
             th.kill()
-        elif th.timer >= 45:
-            if th.color != th.target_color:
-                th.color = th.target_color
+        elif th.timer >= 45 and th.color != th.target_color:
+            th.color = th.target_color
 
 class LineBullet(Base):
     def __init__(th, damage, start, end, color, target_color, group):
@@ -940,8 +915,8 @@ def full_menu(title, texts, keys, other, interval=(0, 30, 60), shortly=False):
     )
     if one.pop_timer == interval[0]:
         picture[0].fill(color_dict[8])
-    source = animate_pop(picture[0], group, one.pop_timer, interval, shortly)
-    screen.blit(source, (120, 15))
+    animate_pop(picture[0], group, one.pop_timer, interval, shortly)
+    screen.blit(picture[0], (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
     if one.pop_timer < interval[2] + 1:
@@ -957,7 +932,8 @@ def half_menu(title, texts, interval=(0, 30, 60), shortly=False):
 
     if one.pop_timer == interval[0]:
         picture[0].fill(color_dict[8])
-    source = animate_pop(picture[0].subsurface((0, 0, 345, 110)), group, one.pop_timer, interval, shortly)
+    source = picture[0].subsurface((0, 0, 345, 110))
+    animate_pop(source, group, one.pop_timer, interval, shortly)
     screen.blit(source, (120, 15))
     if one.pop_timer == interval[2]:
         sound_cache["pick"].play()
@@ -1050,6 +1026,16 @@ def bullet_collide():
                 brick.is_die = True
             if bullet.type in ("bullet", "bomb"):
                 bullet.kill()
+    if isinstance(one.char, Hro):
+        for barrage, hit_bullets in pg.sprite.groupcollide(one.barrage_group, one.bullet_group, True, False).items():
+            for bullet in hit_bullets:
+                if not hasattr(barrage, "is_die"):
+                    barrage.is_die = False
+                if not barrage.is_die:
+                    sound_cache['tick'].play()
+                    if bullet.type == "bullet":
+                        bullet.kill()
+                    barrage.is_die = True
 
 def key_event():
     for event in pg.event.get():
@@ -1090,11 +1076,11 @@ def key_event():
 def display(clock, version, title):
     if two.is_run:
         screen.blit(picture[two.stage], (120, 15))
-        for barrage in one.bullet_group:
-            if hasattr(barrage, "start_pos"):
-                barrage.draw_bullet()
+        for bullet in one.bullet_group:
+            if hasattr(bullet, "start_pos"):
+                bullet.draw_bullet()
             else:
-                screen.blit(barrage.image, barrage.rect)
+                screen.blit(bullet.image, bullet.rect)
         if major.visitable() and one.is_level_load:
             one.plane_group.draw(screen)
         one.brick_group.draw(screen)
