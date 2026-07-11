@@ -831,12 +831,9 @@ def situation(clock):
         screen.blit(font.render(info[0], False, color), info[1])
 
 def pause_menu():
-    shortly = False
     title = "休息ing"
     text = ("Esc 休息好了", "Del 不爬了") if one.pop_timer >= 60 else ("", "")
-    if one.pop_timer == 60:
-        shortly = True
-    half_menu(title, text, shortly=shortly)
+    half_menu(title, text, shortly=one.pop_timer == 60)
 
 def load_menu():
     title = "这一站是————"
@@ -853,7 +850,6 @@ def talk_menu():
         one.is_talk = False
 
 def summary_menu():
-    shortly = False
     hit = 'Hit Z Key.' if two.level <= 5 and one.pop_timer >= 60 else ''
     stage = f"Stage {get_stage(two.stage)} - {two.level} Clear! {hit}"
     text = (
@@ -863,10 +859,8 @@ def summary_menu():
         f"形力 {major.power} / 32 * 8192 = {int(major.power / 32 * 8192)}",
     )
     key = "Z 继续",
-    if one.pop_timer == 60:
-        shortly = True
     if two.level <= 5:
-        half_menu(stage, (text[0], text[1]), shortly=shortly)
+        half_menu(stage, (text[0], text[1]), shortly=one.pop_timer == 60)
     else:
         full_menu(stage, text, key, stage_title[two.stage - 1])
 
@@ -879,7 +873,6 @@ def start_menu(version: str, title: str):
     full_menu(title, text, key, other)
 
 def save_menu():
-    shortly = False
     title = "爬山日志"
     name = f"{f'谢谢 {log.name} 的帮助' if one.pop_timer >= 60 else ''}"
     rate = calculate_item_rate(two.total_point, two.stage <= 3)
@@ -887,8 +880,7 @@ def save_menu():
     text = get_logs(date, two.score, f"{get_stage(two.stage)} - {two.level}", rate, two.flashed, two.flash)
     key = "Esc 算了", "Ent 记录"
     keys = pg.key.get_pressed()
-    if one.pop_timer == 60 or (one.pop_timer >= 60 and any(keys[i] for i in range(len(keys)))):
-        shortly = True
+    shortly = one.pop_timer == 60 or (one.pop_timer >= 60 and any(keys[i] for i in range(len(keys))))
     full_menu(title, text, key, name, shortly=shortly)
 
 def check_menu():
