@@ -1039,7 +1039,7 @@ def key_event():
                     keydown_check_dict[event.key]()
                     one.pop_timer = 0
                     sound_cache["pick"].play()
-                elif not two.is_run and not one.is_check and not one.is_exit and event.key in keydown_start_dict:
+                elif not (two.is_run or one.is_check or one.is_exit) and event.key in keydown_start_dict:
                     sound_cache["pick"].play()
                     keydown_start_dict[event.key]()
                 elif one.is_save:
@@ -1060,7 +1060,7 @@ def key_event():
                 keydown_talk_dict[event.key]()
                 one.pop_timer = 0
                 sound_cache["pick"].play()
-            elif not one.is_summary and one.is_level_load and not one.is_talk and not one.is_pause and event.key == pg.K_ESCAPE:
+            elif one.is_level_load and event.key == pg.K_ESCAPE and not (one.is_summary or one.is_talk or one.is_pause):
                 one.is_pause = True
                 one.pop_timer = 0
                 sound_cache["pick"].play()
