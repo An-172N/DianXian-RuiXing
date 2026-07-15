@@ -8,8 +8,6 @@ import pygame as pg
 
 from LOGIC import *
 
-window = pg.Rect(120, 15, 345, 330)
-effective = pg.Rect(105, 0, 375, 360)
 
 color_dict = {
     1: (255, 128, 0),
@@ -23,12 +21,14 @@ color_dict = {
     9: (32, 0, 128)
 }
 
+
 stage_title = (
     "水边的秋霜店 ~ Sweet Reservoir",
     "X 在树林 ~ Hypnotized",
     "午夜行至最高峰 ~ Thunder Studio",
     "享受禁饮 ~ Point's Hideaway"
 )
+
 
 asset = lambda path: get_data(__name__, path)
 get_stage = lambda stage: stage if stage < 3 else 'Final' if stage == 3 else 'Extra'
@@ -39,10 +39,14 @@ get_logs = lambda date, score, stage, rate, flashed, flash: (
     f"拾形点率为 {rate}",
     f"使用了 {flashed} 次形闪{'（躺' if flash == 0 else ''}"
 )
+
+window = pg.Rect(120, 15, 345, 330)
+effective = pg.Rect(105, 0, 375, 360)
 font = pg.font.Font(BytesIO(asset('ASSET/FONT/UNI3500.otf')), 15)
 screen = pg.display.set_mode((480, 360), pg.FULLSCREEN|pg.SCALED)
 rank = (0.22, 0.25, 0.3, 0.38)
 pg.display.set_icon(pg.image.load(BytesIO(asset('ASSET/IMAGE/ICON.png'))))
+
 
 sound_cache = {
     'pick': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/PICK.flac'))),
@@ -50,6 +54,7 @@ sound_cache = {
     'charge': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/CHARGE.flac'))),
     'tick': pg.mixer.Sound(BytesIO(asset('ASSET/FLAC/TICK.flac')))
 }
+
 
 char_image = pg.image.load(BytesIO(asset('ASSET/IMAGE/CHAR.png'))).convert()
 char_image.set_colorkey(color_dict[8])
@@ -66,11 +71,13 @@ picture = (
     pg.image.load(BytesIO(asset('ASSET/IMAGE/GAMEBG.png'))).convert_alpha(),
 )
 
+
 barrage_cache = {
     (2, color_dict[6]): draw_circle((0, 0, 8, 8), 0, color_dict[6]),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8),
     (0, color_dict[6]): basic_image.subsurface(75, 7, 8, 8)
 }
+
 
 brick_cache = {
     (2, color_dict[1]): basic_image.subsurface(0, 0, 15, 15),
@@ -82,16 +89,19 @@ brick_cache = {
     (1, color_dict[6]): draw_rectangle((15, 15), 2, color_dict[6])
 }
 
+
 bullet_cache = {
     "bullet": blue_rect.subsurface(0, 0, 2, 15).convert_alpha(),
     "bomb": blue_rect
 }
+
 
 item_cache = {
     "flash": draw_rectangle((9, 9), 2, color_dict[2]).convert(),
     "power": draw_rectangle((9, 9), 2, color_dict[5]).convert(),
     "fire": draw_rectangle((9, 9), 2, color_dict[6]).convert()
 }
+
 
 particle_cache = {
     (2, color_dict[1]): draw_rectangle((2, 2), 0, color_dict[1]).convert(),

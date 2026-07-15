@@ -6,6 +6,7 @@ import os
 
 import pygame
 
+
 def vector(current, target, step):
     cx, cy = current
     tx, ty = target
@@ -22,12 +23,14 @@ def vector(current, target, step):
         return (tx, ty), (dx, dy)
     return (cx + dx * step, cy + dy * step), (dx, dy)
 
+
 def coordinate(position, angle, length):
     radians = math.radians(angle)
     x = position[0] + length * math.cos(radians)
     y = position[1] + length * math.sin(radians)
 
     return x, y
+
 
 def clamp(value, minimum, maximum):
     if value > maximum:
@@ -37,11 +40,13 @@ def clamp(value, minimum, maximum):
     else:
         return value
 
+
 def bearing(point_a, point_b):
     ax, ay = point_a
     bx, by = point_b
 
     return math.degrees(math.atan2(bx - ax, by - ay)) % 360
+
 
 def record_file(folder, file, content, encode='utf-8'):
     if not os.path.exists(folder):
@@ -49,6 +54,7 @@ def record_file(folder, file, content, encode='utf-8'):
 
     with open(f'{folder}/{file}', 'w', encoding=encode) as f:
         f.write(content)
+
 
 def get_files(folder, extension='.dx00', reverse=True):
     files = []
@@ -64,6 +70,7 @@ def get_files(folder, extension='.dx00', reverse=True):
     except:
         return files
 
+
 def animate_pop(surface, image_pos_pairs, timer, interval, shortly):
     if shortly:
         surface.fill((0, 0, 0, 0))
@@ -76,17 +83,20 @@ def animate_pop(surface, image_pos_pairs, timer, interval, shortly):
                 for j in image_pos_pairs[i]:
                     surface.blit(j[0], j[1])
 
+
 def draw_rectangle(size, border, color):
     return (
         surface := pygame.Surface(size, pygame.SRCALPHA).convert_alpha(),
         pygame.draw.rect(surface, color, surface.get_rect(), border)
     )[0]
 
+
 def draw_circle(xy_size, border, color):
     return (
         surface := pygame.Surface((xy_size[2], xy_size[3]), pygame.SRCALPHA).convert_alpha(),
         pygame.draw.ellipse(surface, color, xy_size, border)
     )[0]
+
 
 class Base(pygame.sprite.Sprite):
     def __init__(th, original_image, group=None, turn_image=None, form=None, angle=0, pos=(0, 0), radius=None, rotate=False):
@@ -130,6 +140,7 @@ class Base(pygame.sprite.Sprite):
         else:
             th.image = th.original_image
 
+
 class Invinc:
     def __init__(th, end_time, blink_interval, func=lambda: None, *func_args):
         th.end = end_time
@@ -151,12 +162,14 @@ class Invinc:
             else:
                 th.visitable = (th.timer // th.blink_interval) % 2 == 1
 
+
 def one_shot(condition, power, critical):
     if not condition and power >= critical:
         condition = True
         power -= critical
 
     return condition, power
+
 
 def collide_sprite(sprite1, sprite2):
     if hasattr(sprite1, "start_pos"):
@@ -166,8 +179,10 @@ def collide_sprite(sprite1, sprite2):
     else:
         return pygame.sprite.collide_rect(sprite1, sprite2)
 
+
 def process_lines(content, func, *args):
     return [func(row, line, *args) for row, line in enumerate(content.splitlines())]
+
 
 def carry(former, latter, start, final):
     if latter >= final:
