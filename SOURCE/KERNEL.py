@@ -175,7 +175,7 @@ class Ono(Basic):
         if th.can_shoot:
             th.choice()
         delay = th.x
-        th.x, th.y = vector((th.x, th.y), th.target_pos, 4)[0]
+        th.x, th.y = vector((th.x, th.y), th.target_pos, 4)
         th.swivel(th.x < delay, th.x > delay)
 
 
@@ -204,7 +204,7 @@ class Hro(Basic):
                 dx2 = 465 if i else 120
                 start_pos = dx1, 15
                 end_pos = dx2, 345
-                current_pos = vector(start_pos, end_pos, th.bullets * 25)[0]
+                current_pos = vector(start_pos, end_pos, th.bullets * 25)
                 for j in range(45, 136, 90):
                     angle = bearing(end_pos, start_pos) + j + (th.timer * -6)
                     Barrage(effective, 4, angle, current_pos, th.bullet_image, th.barrage_group, 2, True)
@@ -247,7 +247,7 @@ class Hro(Basic):
         if th.can_shoot and th.timer < 91:
             th.choice()
         delay = th.x
-        th.x, th.y = vector((th.x, th.y), th.target_pos, 5)[0]
+        th.x, th.y = vector((th.x, th.y), th.target_pos, 5)
         th.swivel(th.x < delay, th.x > delay)
 
 
@@ -335,7 +335,7 @@ class Nre(Basic):
         if th.can_shoot:
             th.choice()
         delay = th.x
-        th.x, th.y = vector((th.x, th.y), th.target_pos, 6)[0]
+        th.x, th.y = vector((th.x, th.y), th.target_pos, 6)
         th.swivel(th.x < delay, th.x > delay)
 
 
@@ -529,14 +529,14 @@ def load_file(file):
         log.log = f.readline().split(',')
 
 
-def spawn_barrage(group, power, type, spawn_pos, locate):
+def spawn_barrage(group, power, spawn_pos, locate):
     index = two.stage - 1
     if uniform(0, 1) <= rank[index] + power / 1000:
         (
-            lambda: circle_barrage(type, spawn_pos, locate, group),
-            lambda: polygon_barrage(type, spawn_pos, locate, group),
+            lambda: circle_barrage(spawn_pos, locate, group),
+            lambda: polygon_barrage(spawn_pos, locate, group),
             lambda: line_barrage((randint(120, 465), 15), (locate[0] + randint(-64, 64), 345), group),
-            lambda: point_barrage(type, locate, group)
+            lambda: point_barrage(locate, group)
         )[index]()
 
 
@@ -677,14 +677,14 @@ def choose_brick(group, numbers, power, flash):
         group[i].color = color_dict[6]
 
 
-def circle_barrage(type, pos, locate, group):
+def circle_barrage(pos, locate, group):
     angle = bearing(locate, pos)
-    image = barrage_cache[(type, color_dict[6])]
+    image = barrage_cache[(2, color_dict[6])]
     Barrage(effective, 3, angle, pos, image, group, 3)
 
 
-def polygon_barrage(type, pos, locate, group):
-    image = barrage_cache[(type, color_dict[6])]
+def polygon_barrage(pos, locate, group):
+    image = barrage_cache[(0, color_dict[6])]
     for i in range(locate[0] - 32, locate[0] + 33, 64):
         angle = bearing((i, locate[1]), pos)
         Barrage(effective, 3, angle, pos, image, group, 2, True)
@@ -702,12 +702,12 @@ def line_barrage(current, target, group):
             Line(color[0], color[1], current, target, count, image, group)
         if math.dist(current, target) < 1e-6:
             break
-        current = vector(current, target, 3)[0]
+        current = vector(current, target, 3)
         count += 1
 
 
-def point_barrage(type, locate, group):
-    image = barrage_cache[(type, color_dict[6])]
+def point_barrage(locate, group):
+    image = barrage_cache[(2, color_dict[6])]
     for _ in range(3):
         pos = randint(120, 465), randint(15, 225)
         angle = bearing(locate, pos)
@@ -788,8 +788,8 @@ class Brick(Base):
 
 
 class Item(Base):
-    def __init__(th, type, speed, pos, group):
-        super().__init__(item_cache[type], group, form=type, pos=pos)
+    def __init__(th, form, speed, pos, group):
+        super().__init__(item_cache[form], group, form=form, pos=pos)
         th.speed = speed
 
     def update(th):
@@ -1061,7 +1061,7 @@ def bullet_collide():
                         for _ in range(8):
                             spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     else:
-                        spawn_barrage(one.barrage_group, major.power, brick.type, rect.center, major.rect.center)
+                        spawn_barrage(one.barrage_group, major.power, rect.center, major.rect.center)
                         spawn_particles(one.particle_group, 2, rect.center, (4, 8), brick.color, color_dict[6])
                     sound_cache["fire"].play()
                     if getattr(brick, "power", None):

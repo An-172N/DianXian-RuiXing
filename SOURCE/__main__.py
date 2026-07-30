@@ -9,7 +9,7 @@ import random
 def main():
     project = '点线 Project'
     title = '锐行 ~ Thunder Out of the Mountain'
-    version = '1.2.1'
+    version = '1.2.2'
     author = 'An_172N'
     sys.dont_write_bytecode = True
     sys.modules['numpy'] = None
