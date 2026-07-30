@@ -14,14 +14,14 @@ def vector(current, target, step):
     dist_sq = dx * dx + dy * dy
 
     if not dist_sq:
-        return (tx, ty), (0.0, 0.0)
+        return (tx, ty)
 
     distance = math.sqrt(dist_sq)
     dx, dy = dx / distance, dy / distance
 
     if dist_sq < step * step:
-        return (tx, ty), (dx, dy)
-    return (cx + dx * step, cy + dy * step), (dx, dy)
+        return (tx, ty)
+    return (cx + dx * step, cy + dy * step)
 
 
 def coordinate(position, angle, length):
