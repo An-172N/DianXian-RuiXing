@@ -64,6 +64,10 @@ class Log:
         th.index = 0
         th.total_files = len(th.files)
 
+    def load_file(th, file):
+        with open(file, 'r', encoding='utf-8') as f:
+            th.log = f.readline().split(',')
+
 
 def score_summary(total_point, power, unflash, combo, numbers):
     return (
@@ -161,7 +165,7 @@ class Ono(Basic):
             th.can_shoot = True
             th.choice = th.sd[th.index]
             th.index = (th.index + 1) if th.index < len(th.sd) - 1 else 0
-        if th.timer % 99 == 0 and th.timer % 120 >= 99: 
+        if th.timer % 99 == 0 and th.timer % 120 >= 99:
             image = barrage_cache[(2, color_dict[6])]
             for i in range(0, 360, 30):
                 rad2 = radians(i)
@@ -522,11 +526,6 @@ class Kli(Base):
 
     def in_invinc(th):
         return not th.collided.condition and not th.divided.condition
-
-
-def load_file(file):
-    with open(file, 'r', encoding='utf-8') as f:
-        log.log = f.readline().split(',')
 
 
 def spawn_barrage(group, power, spawn_pos, locate):
@@ -910,7 +909,7 @@ def summary_menu():
         full_menu(stage, text, key, stage_title[two.stage - 1])
 
 
-def start_menu(version: str, title: str):
+def start_menu(version, title):
     other = "(C)opyright 2026 An_172N"
     text = f"Ver {version}",
     climb = "Z 爬山" if two.stage < 4 else "Z 下山"
@@ -934,7 +933,7 @@ def save_menu():
 def check_menu():
     try:
         if one.pop_timer == 0:
-            load_file(log.files[log.index])
+            log.load_file(log.files[log.index])
         logs = log.log
         title = f"爬山日志簿第 {log.total_files - log.index} / {log.total_files} 页"
         text = get_logs(logs[5], logs[1], logs[2], logs[3], logs[4], int(logs[6]))

@@ -1,6 +1,7 @@
 # (C)opyright 2026 An_172N
 # 此代码遵循 GPLv3.0 协议
 
+import heapq
 import math
 import os
 
@@ -29,7 +30,7 @@ def coordinate(position, angle, length):
     x = position[0] + length * math.cos(radians)
     y = position[1] + length * math.sin(radians)
 
-    return x, y
+    return (x, y)
 
 
 def clamp(value, minimum, maximum):
@@ -51,24 +52,26 @@ def bearing(point_a, point_b):
 def record_file(folder, file, content, encode='utf-8'):
     if not os.path.exists(folder):
         os.makedirs(folder)
-
     with open(f'{folder}/{file}', 'w', encoding=encode) as f:
         f.write(content)
 
 
-def get_files(folder, extension='.dx00', reverse=True):
-    files = []
+def get_files(folder, extension='.dx00', reverse=True, count=32):
     try:
-        for file in os.listdir(folder):
-            path = os.path.join(folder, file)
-            if file.endswith(extension) and os.path.isfile(path):
-                time = os.path.getmtime(path)
-                files.append((time, path))
-        files.sort(key=lambda x: x[0], reverse=reverse)
+        def file_iter():
+            for f in os.listdir(folder):
+                path = os.path.join(folder, f)
+                if f.endswith(extension) and os.path.isfile(path):
+                    yield (os.path.getmtime(path), path)
 
-        return [path for _, path in files]
+        if reverse:
+            top = heapq.nlargest(count, file_iter(), key=lambda x: x[0])
+        else:
+            top = heapq.nsmallest(count, file_iter(), key=lambda x: x[0])
+
+        return [path for _, path in top]
     except:
-        return files
+        return []
 
 
 def animate_pop(surface, image_pos_pairs, timer, interval, shortly):
@@ -168,7 +171,7 @@ def one_shot(condition, power, critical):
         condition = True
         power -= critical
 
-    return condition, power
+    return (condition, power)
 
 
 def collide_sprite(sprite1, sprite2):
@@ -191,4 +194,4 @@ def carry(former, latter, start, final):
     else:
         latter += 1
 
-    return former, latter
+    return (former, latter)

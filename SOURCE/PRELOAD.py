@@ -68,7 +68,7 @@ picture = (
     pg.image.load(BytesIO(asset('ASSET/IMAGE/STAGE2BG.png'))).convert(),
     pg.image.load(BytesIO(asset('ASSET/IMAGE/STAGE3BG.png'))).convert(),
     pg.image.load(BytesIO(asset('ASSET/IMAGE/STAGE4BG.png'))).convert(),
-    pg.image.load(BytesIO(asset('ASSET/IMAGE/GAMEBG.png'))).convert_alpha(),
+    pg.image.load(BytesIO(asset('ASSET/IMAGE/GAMEBG.png'))).convert_alpha()
 )
 
 
