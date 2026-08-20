@@ -35,13 +35,13 @@ def main():
 
     clock = pygame.time.Clock()
     pygame.display.init()
+    pygame.display.set_caption(title)
     pygame.font.init()
     pygame.mixer.init()
     pygame.mixer.set_num_channels(2)
 
     import KERNEL
 
-    pygame.display.set_caption(title)
     print(read_resource("README.md"))
     KERNEL.update(clock, (int(args.s), int(args.l), int(args.f), int(args.p)), version, title)
 
