@@ -1,6 +1,7 @@
 # (C)opyright 2026 An_172N
 # 此代码遵循 GPLv3.0 协议
 
+import sys
 import os
 from datetime import datetime
 from random import randint, choice, uniform, sample
@@ -581,7 +582,7 @@ def fade_surface(alpha, timer, is_exit, surface, screen):
         surface.set_alpha(alpha)
         screen.blit(surface)
         if timer < -30:
-            return alpha, timer, True
+            sys.exit()
     elif alpha > 0 and not is_exit:
         if timer % 30 == 0:
             alpha -= 85
@@ -589,7 +590,7 @@ def fade_surface(alpha, timer, is_exit, surface, screen):
         surface.set_alpha(alpha)
         screen.blit(surface)
 
-    return alpha, timer, False
+    return alpha, timer
 
 
 def save_file(name, score, total_point, flashed, flash, numbers):
@@ -1053,7 +1054,7 @@ def bullet_collide():
 def key_event():
     for event in pg.event.get():
         if event.type == pg.QUIT:
-            return True
+            sys.exit()
         elif event.type == pg.KEYDOWN:
             if one.menu.timer >= 60:
                 if one.is_check and event.key in keydown_check_dict:
@@ -1085,8 +1086,6 @@ def key_event():
                 one.is_pause = True
                 one.menu.reset_timer()
                 sound_cache["pick"].play()
-
-    return False
 
 
 def display(clock, version, title):
@@ -1137,9 +1136,7 @@ def update(clock, args, version, title):
     picture[5].set_clip(window)
     picture[5].fill((0, 0, 0, 0))
     while True:
-        if key_event():
-            pg.quit()
-            break
+        key_event()
         if two.is_run and not one.is_save and not one.is_pause:
             if not one.is_summary and not one.is_talk and one.is_level_load:
                 if hasattr(one.char, "locate"):
@@ -1170,10 +1167,7 @@ def update(clock, args, version, title):
                 else:
                     close_summary()
         display(clock, version, title)
-        alpha, timer, is_exit = fade_surface(alpha, timer, one.is_exit, black_surface, screen)
-        if is_exit:
-            pg.quit()
-            break
+        alpha, timer = fade_surface(alpha, timer, one.is_exit, black_surface, screen)
         pg.display.flip()
         clock.tick(60)
 
