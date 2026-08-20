@@ -832,6 +832,7 @@ def reset(thorough=True):
     if thorough:
         two.__init__()
         log.__init__(f'{os.path.expanduser("~")}/Saved Games/DX00')
+        log.get_logs()
     major.__init__(one.bullet_group, one.particle_group, one.plane_group)
 
 
@@ -1175,6 +1176,7 @@ def update(clock, args, version, title):
 one = One()
 two = Two()
 log = Log(f'{os.path.expanduser("~")}/Saved Games/DX00')
+log.get_logs()
 major = Kli(one.bullet_group, one.particle_group, one.plane_group)
 
 
@@ -1208,7 +1210,7 @@ keydown_over_dict = {
 
 
 keydown_check_dict = {
-    pg.K_DELETE: lambda: log.delete_log(),
+    pg.K_DELETE: lambda: (log.delete_log(), log.get_logs()),
     pg.K_ESCAPE: lambda: reset(),
     pg.K_LEFT: lambda: log.turn_page("down"),
     pg.K_RIGHT: lambda: log.turn_page("up")
